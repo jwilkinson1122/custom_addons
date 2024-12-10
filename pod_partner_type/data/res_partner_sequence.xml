@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- The noupdate parameter is used to indicate if the values in 
+        the xml file must be re-imported when a module in updated.
+        For example, if we have a file with demo datas and we use noupdate="1", 
+        if we delete a demo record and update the module, the
+        deleted data not will be imported again. With noupdate="0", 
+        instead, the record will be reimported again if it doesn't exist in the db. -->
+
+        <record id="sequence_partners_custom_vendors" model="ir.sequence">
+            <field name="name">Vendor Serial</field>
+            <field name="code">res.partner.vendor.custom.serial</field>
+            <field name="prefix">VNDR</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+        <record id="sequence_partners_custom_clients" model="ir.sequence">
+            <field name="name">Client Serial</field>
+            <field name="code">res.partner.client.custom.serial</field>
+            <field name="prefix">CLNT</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

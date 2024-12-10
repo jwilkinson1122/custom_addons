@@ -2,13 +2,6 @@
 
 <odoo>
     <data>
-        <!-- <record id="association0" model="res.association">
-            <field name="name">Odoo Community Association</field>
-        </record>
-
-        <record id="base.partner_demo_portal" model="res.partner">
-            <field name="association_id" ref="association0" />
-        </record> -->
 
         <!-- Accounts -->
         <record id="parent_account_1" model="res.partner">
@@ -16,7 +9,7 @@
             <field name="is_parent_account" eval="True"/>
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="practice_type_id" ref="clinic"/>
+            <field name="partner_type" ref="clinic"/>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -33,7 +26,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="practice_type_id" ref="clinic"/>
+            <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="parent_account_1"/>
             <field name="type">delivery</field>
             <field name="street">1337 N San Joaquin St</field>
@@ -50,7 +43,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="practice_type_id" ref="clinic"/>
+            <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="parent_account_1"/>
             <field name="type">delivery</field>
             <field name="street">1611 Peony Dr</field>
@@ -67,7 +60,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="practice_type_id" ref="clinic"/>
+            <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="child_location_1"/>
             <field name="type">delivery</field>
             <field name="street">1839 Arbor Way</field>
@@ -84,7 +77,7 @@
             <field name="is_company" eval="True"/>
             <field name="is_location" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="practice_type_id" ref="clinic"/>
+            <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="child_location_2"/>
             <field name="type">delivery</field>
             <field name="street">77 Santa Barbara Rd</field>

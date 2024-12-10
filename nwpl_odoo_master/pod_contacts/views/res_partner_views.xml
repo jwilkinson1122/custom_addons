@@ -75,7 +75,7 @@
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
             <field name="display_name" position="after">
-                <field name="internal_code" />
+                <field name="customer_number" />
             </field>
             <field name="active" position="after">
                 <field name="location_count" />
@@ -108,11 +108,6 @@
                     <field string="Patients" name="patient_records" widget="statinfo"/>
                 </button>
             </div> -->
-            <!-- <xpath expr="//field[@name='parent_id']/.." position="before">
-                <div class="o_row">
-                    <field name="association_id" placeholder="Association Name..." invisible="is_company"/>
-                </div>
-            </xpath> -->
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_parent_account" invisible="1" />
                 <field name="is_company" invisible="1" />
@@ -142,15 +137,12 @@
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <!-- <field name="association_id" placeholder="Association Name..." invisible="is_company"/> -->
                         <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_account', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_location" class="fw-bold" />
                         <field name="parent_id" placeholder="Account / Location" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_practitioner" class="fw-bold" />
                         <!-- <field name="active" invisible="1"/> -->
                         <field name="active" invisible="1"/>
                         <label for="is_commercial_partner" string="Commercial Partner"/>
-
                         <field name="is_commercial_partner" />
-
                     </div>
                 </div>
             </xpath>
@@ -164,7 +156,7 @@
                         <span class="o_form_label o_td_label" name="address_name">
                             <b invisible="not parent_id or type != 'membership'">Membership Contact Address</b>
                             <field name="type" placeholder="Address Type" readonly="user_ids" required="1" class="fw-bold"/>
-                            <field name="practice_type" placeholder="Practice Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
+                            <field name="partner_type" placeholder="Partner Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
                         </span>
                         <div class="o_address_format">
                             <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
@@ -189,7 +181,7 @@
                         <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
                         <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
                         <field name="active_lang_count" placeholder="Active Language" invisible="1" />
-                        <field name="internal_code"/>
+                        <field name="customer_number"/>
                         <field name="ref" />
                         <field name="lang" placeholder="Language" invisible="active_lang_count &lt;= 1" />
                         <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
@@ -222,7 +214,7 @@
                             <field name="id" />
                             <field name="color" />
                             <field name="ref"/>
-                            <field name="internal_code"/>
+                            <field name="customer_number"/>
                             <field name="name" />
                             <field name="title" />
                             <field name="type" />
@@ -262,8 +254,8 @@
                                                         <li t-if="record.ref.raw_value">
                                                 ID: <field name="ref" />
                                                         </li>
-                                                        <li t-if="record.internal_code.raw_value">
-                                                Internal ID: <field name="internal_code" />
+                                                        <li t-if="record.customer_number.raw_value">
+                                                Internal ID: <field name="customer_number" />
                                                         </li>
                                                         <li t-if="record.phone">
                                                 Phone: <field name="phone" />
@@ -397,20 +389,6 @@
         </field>
     </record>
 
-    <!-- <record id="contact_name" model="ir.ui.view">
-        <field name="name">partner.contact.association.contact.name</field>
-        <field name="inherit_id" ref="base.contact_name" />
-        <field name="arch" type="xml">
-            <xpath expr="//t[@t-if='object.name']" position="before">
-                <t t-if="object.association_id">
-                    <span itemprop="addressAssocation" t-esc="object.association_id.name" />
-                    <br />
-                </t>
-            </xpath>
-        </field>
-    </record>
- -->
-
     <record id="res_partner_child_ids_kanban_view_custom" model="ir.ui.view">
         <field name="name">res.partner.child.ids.kanban.custom</field>
         <field name="model">res.partner</field>
@@ -462,7 +440,7 @@
                 <field name="parent_id" column_invisible="context.get('default_is_parent_account', False)"/>
             </xpath>
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="internal_code"/>
+                <field name="customer_number"/>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
@@ -484,10 +462,10 @@
                     <attribute name="filter_domain">['|', '|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self), ('association_name', 'ilike', self)]</attribute>
                 </field> -->
                 <xpath expr="//search" position="inside">
-                    <field name="name" filter_domain="['|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('internal_code', '=', self), ('company_registry', 'ilike', self)]"/>
+                    <field name="name" filter_domain="['|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('customer_number', '=', self), ('company_registry', 'ilike', self)]"/>
                     <!-- <field name="association_name" filter_domain="[('association_name', 'ilike', self)]" /> -->
                     <field name="ref" filter_domain="[('ref','ilike',self)]" />
-                    <field name="internal_code" filter_domain="[('internal_code','ilike',self)]" />
+                    <field name="customer_number" filter_domain="[('customer_number','ilike',self)]" />
                     <separator />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
@@ -519,7 +497,7 @@
             'default_is_parent_account':True,
             'default_is_partner': True,
             'default_type': '',
-            'default_practice_type': '',
+            'default_partner_type': '',
             'prevent_recursion': True,
             }</field>
         <field name="search_view_id" ref="res_partner_search_view" />
@@ -545,7 +523,7 @@
             'default_is_location': True,
             'default_is_partner': True,
             'default_type': '',
-            'default_practice_type': '',
+            'default_partner_type': '',
             'prevent_recursion': True,
             }</field>
         <field name="help" type="html">

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
- 
+
 from odoo import models, fields
 
 
-class ContactPracticeType(models.Model):
-    _name = 'contact.practice.type'
-    _description = 'Practice Types'
+class ContactPartnerType(models.Model):
+    _name = "contact.partner.type"
+    _description = "Partner Types"
 
     name = fields.Char(
         required=True,

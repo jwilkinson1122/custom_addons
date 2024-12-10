@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pod_partner_type_pod_partner_type_full_access,pod_partner_type.pod_partner_type,base.model_res_partner,pod_partner_type.group_crm_show_revenues_field,1,1,1,1
+access_pod_partner_type_pod_partner_type_no_perm,pod_partner_type.pod_partner_type,base.model_res_partner,pod_partner_type.group_crm_hide_revenues_field,0,0,0,0

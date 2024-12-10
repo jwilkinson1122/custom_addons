@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_custom_customer_number_inherit" model="ir.ui.view">
+        <field name="name">res.partner.custom.partner.serial.model.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="customer_number" optional="show"/>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="partner_type"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+
+    <record id="view_res_partner_customer_numbers_and_types_search_and_filters_and_groups" model="ir.ui.view">
+        <field name="name">view.res.partner.partner.serials.and.types.search.and.filters.and.groups.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <!-- Searchable fields -->
+            <field name="name" position="before">
+                <field name="customer_number" filter_domain="[('customer_number', 'ilike', self)]"/>
+            </field>
+
+            <!-- Filters fields -->
+            <filter name="type_person" position="before">
+                <filter string="Clients" name="partner_client_filter" domain="[('partner_type', '=', 'client')]"/>
+                <filter string="Vendors" name="partner_vendor_filter" domain="[('partner_type', '=', 'vendor')]"/>
+                <separator/>
+            </filter>
+            <!-- Group By fields -->
+
+            <filter name="salesperson" position="before">
+                <filter name="groupby_partner_type" string="Partner Type" context="{'group_by':'partner_type'}"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+
+
+    <!-- <record id="crm_lead_view_form_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.form.without.revenues</field>
+        <field name="model">crm.lead</field>
+
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="crm_case_kanban_view_leads_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.lead.without.revenues</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//progressbar" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+            </xpath>            
+            <xpath expr="//field[@name='expected_revenue'][@widget='monetary']" position="attributes"> 
+
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="crm_case_tree_view_oppor_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.tree.lead.without.revenues</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+          
+            <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="crm_case_calendar_view_leads_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.calendar.lead.without.revenues</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_calendar_view_leads"/>
+        <field name="arch" type="xml">
+          
+            <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="crm_lead_view_pivot_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.view.pivot.without.revenues</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_pivot"/>
+        <field name="arch" type="xml">
+          
+            <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="crm_lead_view_graph_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.view.graph.without.revenues</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+          
+        </field>
+    </record> -->
+
+    <!-- <record id="crm_lead_view_activity_without_revenues" model="ir.ui.view">
+        <field name="name">crm.lead.view.activity.without.revenues</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_activity"/>
+        <field name="arch" type="xml">
+          
+            <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                <attribute name="groups">pod_partner_type.group_crm_show_revenues_field</attribute>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- <record id="purchase_order_kpis_tree_inherit_purchase_analytic" model="ir.ui.view">
+        <field name="name">purchase.order.kpis.tree (purchase_analytic)</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree" />
+        <field name="arch" type="xml">
+            <field name="origin" position="before">
+                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" optional="show" />
+            </field>
+        </field>
+    </record> -->
+    <!-- <record id="purchase_order_view_tree_inherit_purchase_analytic" model="ir.ui.view">
+        <field name="name">purchase.order.tree (purchase_analytic)</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree" />
+        <field name="arch" type="xml">
+            <field name="origin" position="before">
+                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" readonly="state == 'cancel' or state == 'done'" optional="show" />
+            </field>
+        </field>
+    </record> -->
+    <!-- <record id="purchase_order_view_form_inherit_purchase_analytic" model="ir.ui.view">
+        <field name="name">purchase.order.form (purchase_analytic)</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <field name="partner_ref" position="after">
+                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting" />
+                <field name="analytic_distribution" invisible="1" />
+            </field>
+            <field name="order_line" position="attributes">
+                <attribute name="context" operation="update">
+                    {
+                        "default_analytic_distribution": analytic_distribution,
+                    }
+                </attribute>
+            </field>
+        </field>
+    </record> -->
+
+    <!-- Top menu item -->
+
+
+
+    <!-- <menuitem id="crm_menu_purchase_orders" name="Purchase Order" parent="crm.crm_menu_root" action="purchase.purchase_rfq" sequence="4"/> -->
+
+
+</odoo>

@@ -27,6 +27,9 @@
 
     <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
 
-    <menuitem id="contact_roles_menu" name="Roles" parent="contacts.res_partner_menu_config" sequence="0" action="contact_role_action" />
+    <menuitem id="contact_partner_type_menu" name="Partner Types" parent="contacts.res_partner_menu_config" sequence="0" action="contact_partner_type_action" />
+
+    <menuitem id="contact_roles_menu" name="Contact Roles" parent="contacts.res_partner_menu_config" sequence="1" action="contact_role_action" />
+
 
 </odoo>

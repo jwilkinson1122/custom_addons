@@ -51,10 +51,6 @@ class ResPartnerType(models.Model):
         default="company",
     )
 
-    # is_account
-    # is_affiliate
-    # is_supplier
-
     is_account = fields.Boolean(
         string="Account",
         default=True,

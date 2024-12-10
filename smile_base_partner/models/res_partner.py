@@ -15,21 +15,6 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    # parent_id = fields.Many2one(ondelete="restrict")
-    # parent_id = fields.Many2one(
-    #     "res.partner",
-    #     ondelete="restrict",
-    #     domain="[('is_company', '=', True), ('partner_type_id', 'in', parent_type_ids)]",
-    #     string="Parent Company",
-    # )
-
-    # parent_id = fields.Many2one(
-    #     "res.partner",
-    #     ondelete="restrict",
-    #     domain="[('is_company', '=', True), ('partner_type_id', 'in', parent_type_ids)]",
-    #     string="Parent Company",
-    # )
-
     parent_id = fields.Many2one(
         "res.partner",
         index=True,
@@ -39,7 +24,7 @@ class ResPartner(models.Model):
     )
 
     type = fields.Selection(default=False)
-    # partner_type_id = fields.Many2one("res.partner.type", "Partner Type")
+
     partner_type_id = fields.Many2one(
         "res.partner.type",
         "Partner Type",
@@ -59,6 +44,13 @@ class ResPartner(models.Model):
         "parent_id",
         "Contacts",
         domain=[("is_company", "=", False)],
+    )
+
+    affiliate_ids = fields.One2many(
+        comodel_name="res.partner",
+        inverse_name="parent_id",
+        string="Affiliate Companies",
+        domain=[("is_company", "=", True), ("is_affiliate", "=", True)],
     )
 
     affiliates_count = fields.Integer(
@@ -106,12 +98,6 @@ class ResPartner(models.Model):
             self.can_have_parent = self.partner_type_id.can_have_parent
             if self.partner_type_id.can_have_parent:
                 self.parent_is_required = self.partner_type_id.parent_is_required
-
-    # @api.onchange("company_type")
-    # def _onchange_company_type(self):
-    #     self.partner_type_id = False
-    #     if self.company_type == "company":
-    #         self.parent_id = False
 
     @api.onchange("company_type")
     def _onchange_company_type(self):
@@ -267,16 +253,8 @@ class ResPartner(models.Model):
         self._format_args(args)
         return super(ResPartner, self).name_search(name, args, operator, limit)
 
-    # @api.model
-    # def _search(self, args, offset=0, limit=None, order=None, count=False):
-    #     args += [("id", "!=", 1)]
-    #     return super(ResPartner, self)._search(
-    #         args, offset=offset, limit=limit, order=order, count=count
-    #     )
-
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False):
-        # args += [("id", "!=", 1)]
         self._format_args(args)
         return super(ResPartner, self)._search(args, offset, limit, order, count)
 

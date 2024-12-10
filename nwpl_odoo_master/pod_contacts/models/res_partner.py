@@ -38,13 +38,9 @@ class Partner(models.Model):
     is_patient = fields.Boolean(string="Patient", default=False)
 
     ref = fields.Char(string="Customer Number", index=True)
-    internal_code = fields.Char(
-        "Internal Code", readonly=True, default=lambda self: _("New")
+    customer_number = fields.Char(
+        "Customer Number", readonly=True, default=lambda self: _("New")
     )
-    # association_id = fields.Many2one("res.association")
-    # association_name = fields.Char(
-    #     related="association_id.name", string="Association Name", store=True
-    # )
 
     parent_id = fields.Many2one(
         "res.partner",
@@ -60,51 +56,39 @@ class Partner(models.Model):
     location_ids = fields.One2many(
         "res.partner", compute="_compute_locations", string="Locations", readonly=True
     )
+
     location_count = fields.Integer(
         string="Location Count", compute="_compute_location_and_practitioner_counts"
     )
-    location_text = fields.Char(compute="_compute_location_text")
-    practice_type_id = fields.Many2one(
-        string="Practice Type", comodel_name="contact.practice.type"
-    )
-    practice_type = fields.Selection(
-        [
-            ("clinic", "Clinic"),
-            ("hospital", "Hospital"),
-            ("military_va", "Military/VA"),
-            ("other", "Other"),
-        ],
-        string="Practice Type",
-        default="clinic",
-    )
 
-    # type = fields.Selection(
-    #     [
-    #         ("contact", "Contact"),
-    #         ("invoice", "Invoice Address"),
-    #         ("delivery", "Delivery Address"),
-    #         ("other", "Other Address"),
-    #     ],
-    #     string="Address Type",
-    #     default="contact",
-    #     help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
-    #     "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
-    #     "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
-    #     "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
-    #     "- Other: Other address for the company (e.g. subsidiary, ...)",
+    location_text = fields.Char(compute="_compute_location_text")
+
+    # partner_type = fields.Many2one(
+    #     string="Partner Type", comodel_name="contact.partner.type"
     # )
 
-    # type = fields.Selection(
-    #     selection_add=[
-    #         ("membership", "Membership Contact Address"),
-    #         ("order", "Order Address"),
+    partner_type = fields.Many2one(
+        string="Partner Type",
+        comodel_name="contact.partner.type",
+        help="Select the type of partner this belongs to.",
+    )
+
+    # partner_type = fields.Selection(
+    #     [
+    #         ("clinic", "Clinic"),
+    #         ("hospital", "Hospital"),
+    #         ("military_va", "Military/VA"),
+    #         ("other", "Other"),
     #     ],
-    #     ondelete={"membership": "set default", "contact": "set default"},
+    #     string="Partner Type",
+    #     default="clinic",
     # )
 
     type = fields.Selection(
         selection_add=[("order", "Order Address")], ondelete={"contact": "set default"}
     )
+
+    # type = fields.Selection(default=False)
 
     fax_number = fields.Char(string="Fax")
 
@@ -346,9 +330,9 @@ class Partner(models.Model):
 
     @api.model
     def create(self, vals):
-        # If internal_code is not provided or set to "New", generate a new code
-        if not vals.get("internal_code") or vals.get("internal_code") == _("New"):
-            vals["internal_code"] = self.env["ir.sequence"].next_by_code(
+        # If customer_number is not provided or set to "New", generate a new code
+        if not vals.get("customer_number") or vals.get("customer_number") == _("New"):
+            vals["customer_number"] = self.env["ir.sequence"].next_by_code(
                 "partner.internal.code"
             ) or _("New")
         # Call the original create method to create the partner
@@ -359,19 +343,19 @@ class Partner(models.Model):
             partner.check_contact("create")
 
         # If internal code is not provided, generate it based on the parent's internal code
-        if not partner.internal_code and partner.parent_id:
+        if not partner.customer_number and partner.parent_id:
             parent_partner = partner.parent_id
-            if parent_partner.internal_code:
+            if parent_partner.customer_number:
                 # Append a digit to the parent's internal code
-                internal_code = (
-                    parent_partner.internal_code + "1"
+                customer_number = (
+                    parent_partner.customer_number + "1"
                 )  # Modify this as needed
-                partner.write({"internal_code": internal_code})
-        elif not partner.internal_code:
+                partner.write({"customer_number": customer_number})
+        elif not partner.customer_number:
             # If no parent, generate a new internal code
             partner.write(
                 {
-                    "internal_code": self.env["ir.sequence"].next_by_code(
+                    "customer_number": self.env["ir.sequence"].next_by_code(
                         "partner.internal.code"
                     )
                 }

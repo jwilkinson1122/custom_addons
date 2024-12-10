@@ -38,10 +38,10 @@
         <field name="inherit_id" ref="pod_contacts.inherit_res_partner_kanban_view"/>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-             <xpath expr="//field[@name='active']" position="after">
+            <xpath expr="//field[@name='active']" position="after">
                 <field name="location_count" />
             </xpath>
-             <xpath expr="//div[hasclass('oe_kanban_bottom_right')]" position="inside">
+            <xpath expr="//div[hasclass('oe_kanban_bottom_right')]" position="inside">
                 <span t-if="record.is_location.raw_value and record.location_count.value>0" class="badge badge-pill">
                     <i class="fa fa-fw fa-sitemap" role="img" aria-label="Locations" title="Locations" />
                     <t t-esc="record.location_count.value" />
@@ -79,7 +79,7 @@
             'default_is_parent_account':True,
             'default_is_partner': True,
             'default_type': '',
-            'default_practice_type': '',
+            'default_partner_type': '',
             }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
