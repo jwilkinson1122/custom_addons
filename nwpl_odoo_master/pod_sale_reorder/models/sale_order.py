@@ -30,3 +30,17 @@ class Saleorder(models.Model):
             "res_id": new_order.id,
             "target": "new",
         }
+
+    def action_open_sale_order(self):
+        """
+        Opens the sale order in a form view.
+        """
+        self.ensure_one()
+        return {
+            "name": _("Sale Order"),
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "view_mode": "form",
+            "res_id": self.id,
+            "target": "current",
+        }

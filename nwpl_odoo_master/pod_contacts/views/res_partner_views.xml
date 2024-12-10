@@ -195,6 +195,20 @@
                         <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
                     </group>
                 </group>
+                <!-- <separator name="current_orders" string="Current Orders" />
+                <group invisible="is_patient or is_supplier">
+                    <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="name" string="Order"/>
+                            <field name="date_order" widget="date" string="Date"/>
+                            <field name="partner_id" string="Customer"/>
+                            <field name="state" string="Status"/>
+                            <field name="invoice_status"/>
+                            <field name="activity_ids" String="Activities" widget="list_activity" optional="show"/>
+                            <field name="amount_total"/>
+                        </tree>
+                    </field>
+                </group> -->
             </xpath>
             <!-- Add Locations Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">

@@ -15,14 +15,6 @@ _logger = logging.getLogger(__name__)
 
 class Partner(models.Model):
     _inherit = "res.partner"
-    # _rec_names_search = [
-    #     "display_name",
-    #     "email",
-    #     "ref",
-    #     "vat",
-    #     "company_registry",
-    #     "association_name",
-    # ]
 
     is_supplier = fields.Boolean(string="Vendor")
     is_partner = fields.Boolean(string="Partner", default=False)
@@ -147,12 +139,6 @@ class Partner(models.Model):
     )
     patient_text = fields.Char(compute="_compute_patient_text")
 
-    # def _compute_display_name(self):
-    #     super()._compute_display_name()
-    #     for rec in self:
-    #         if rec.association_id:
-    #             rec.display_name = "{} ({})".format(rec.name, rec.association_id.name)
-
     @api.depends("is_commercial_partner", "parent_id")
     def _compute_commercial_partner(self):
         """
@@ -163,45 +149,6 @@ class Partner(models.Model):
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
-
-    # def _compute_avatar(self, avatar_field, image_field):
-    #     partners_with_internal_user = self.filtered(
-    #         lambda partner: partner.user_ids - partner.user_ids.filtered("share")
-    #     )
-    #     super(Partner, partners_with_internal_user)._compute_avatar(
-    #         avatar_field, image_field
-    #     )
-    #     partners_without_image = (self - partners_with_internal_user).filtered(
-    #         lambda p: not p[image_field]
-    #     )
-    #     for _, group in tools.groupby(
-    #         partners_without_image, key=lambda p: p._avatar_get_placeholder_path()
-    #     ):
-    #         group_partners = self.env["res.partner"].concat(*group)
-    #         group_partners[avatar_field] = base64.b64encode(
-    #             group_partners[0]._avatar_get_placeholder()
-    #         )
-
-    #     for partner in self - partners_with_internal_user - partners_without_image:
-    #         partner[avatar_field] = partner[image_field]
-    #         return "base/static/img/truck.png"
-
-    # def _avatar_get_placeholder_path(self):
-    #     if self.type == "delivery":
-    #         return "base/static/img/truck.png"
-    #     elif self.type == "invoice":
-    #         return "base/static/img/money.png"
-    #     elif self.type == "order":
-    #         return "base/static/img/money.png"
-    #     elif (
-    #         self.is_parent_account
-    #         or self.is_company
-    #         or self.is_location
-    #         or self.is_supplier
-    #     ):
-    #         return "base/static/img/company_image.png"
-    #     else:
-    #         return super()._avatar_get_placeholder_path()
 
     def find_res_partner_by_ref_using_barcode(self, barcode):
         partner = self.search([("ref", "=", barcode)], limit=1)
@@ -552,12 +499,6 @@ class Partner(models.Model):
     def _check_contact_practitioner(self):
         return self.env.user.has_group("nwpl_odoo_master.group_contacts_configurator")
 
-    # def get_address_default_type(self):
-    #     """Add new order type."""
-    #     res = super().get_address_default_type()
-    #     res.add("membership")
-    #     return res
-
     def get_address_default_type(self):
         """Add new order type."""
         res = super().get_address_default_type()
@@ -572,17 +513,6 @@ class Partner(models.Model):
             if result.get(field) and self.env.context.get("default_parent_id"):
                 result[field] = False
         return result
-
-    # def _get_name(self):
-    #     partner = self
-    #     name = super(Partner, self)._get_name()
-    #     if partner.company_name or partner.parent_id:
-    #         if not partner.name and partner.type in ["membership"]:
-    #             name += (
-    #                 " "
-    #                 + dict(self.fields_get(["type"])["type"]["selection"])[partner.type]
-    #             )
-    #     return name
 
     def _get_name(self):
         """
@@ -634,41 +564,6 @@ class Partner(models.Model):
 
         return name
 
-    # def _get_name(self):
-    #     """Utility method to allow name_get to be overridden without re-browse the partner"""
-    #     partner = self
-    #     name = partner.name or ""
-    #     if partner.company_name or partner.parent_id:
-    #         if not name and partner.type in ["invoice", "delivery", "other"]:
-    #             name = dict(self.fields_get(["type"])["type"]["selection"])[
-    #                 partner.type
-    #             ]
-    #         if not partner.is_company:
-    #             name = self._get_contact_name(partner, name)
-    #     if self._context.get("show_address_only"):
-    #         name = partner._display_address(without_company=True)
-    #     if self._context.get("show_address"):
-    #         name = name + "\n" + partner._display_address(without_company=True)
-    #     name = name.replace("\n\n", "\n")
-    #     name = name.replace("\n\n", "\n")
-    #     if self._context.get("address_inline"):
-    #         splitted_names = name.split("\n")
-    #         name = ", ".join([n for n in splitted_names if n.strip()])
-    #     if self._context.get("show_email") and partner.email:
-    #         name = "%s <%s>" % (name, partner.email)
-    #     if self._context.get("html_format"):
-    #         name = name.replace("\n", "<br/>")
-    #     if self._context.get("show_vat") and partner.vat:
-    #         name = "%s ‒ %s" % (name, partner.vat)
-
-    #     if (
-    #         not self._context.get("show_address_only")
-    #         and not self._context.get("show_address")
-    #         and not self._context.get("address_inline")
-    #     ):
-    #         name = "%s ‒ %s" % (name, partner.id)
-    #     return name
-
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner
         views"""
@@ -683,3 +578,19 @@ class Partner(models.Model):
             "target": "new",
             "flags": {"form": {"action_buttons": True}},
         }
+
+    # current_sale_order_ids = fields.One2many(
+    #     "sale.order",
+    #     compute="_compute_current_sale_order_ids",
+    #     store=False,
+    # )
+
+    # def _compute_current_sale_order_ids(self):
+    #     """
+    #     Compute method to populate the 'current_sale_order_ids' field.
+    #     Filters to show sales orders that are current by removing completed and cancelled sales orders
+    #     """
+    #     for partner in self:
+    #         partner.current_sale_order_ids = partner.sale_order_ids.filtered(
+    #             lambda order: order.state not in ("done", "cancel")
+    #         )

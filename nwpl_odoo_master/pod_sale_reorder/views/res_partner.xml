@@ -11,7 +11,7 @@
                         <field name="reorder_count" widget="statinfo"/>
                     </button>
                 </xpath>
-                <xpath expr="//notebook/page[@name='internal_notes']" position="before">
+                <!-- <xpath expr="//notebook/page[@name='internal_notes']" position="before">
                     <page name="order_history" string="Order History">
                         <field name="sale_order_ids" readonly = "True">
                             <tree>
@@ -21,6 +21,37 @@
                                 <button string="Reorder" name="def_reorder_sale" type="object" class="oe_highlight"/>
                             </tree>
                         </field>
+                    </page>
+                </xpath> -->
+                <!-- Add a new notebook page for Orders -->
+                <xpath expr="//notebook/page[@name='internal_notes']" position="before">
+                    <page name="orders" string="Orders">
+
+                        <!-- Current Orders -->
+                        <group string="Current Orders">
+                            <field name="current_sale_order_ids" readonly="True">
+                                <tree>
+                                    <field name="name" string="Order Reference" readonly="True"/>
+                                    <field name="date_order" string="Order Date" readonly="True"/>
+                                    <field name="state" string="State" readonly="True"/>
+                                    <button string="View" name="action_open_sale_order" type="object" class="oe_highlight"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                        <!-- Historic Orders -->
+                        <group string="Historic Orders">
+                            <field name="historic_sale_order_ids" readonly="True">
+                                <tree>
+                                    <field name="name" string="Order Reference" readonly="True"/>
+                                    <field name="date_order" string="Order Date" readonly="True"/>
+                                    <field name="state" string="State" readonly="True"/>
+                                    <field name="is_reorder" string="Reorderable" widget="boolean_toggle" readonly="True"/>
+                                    <button string="Reorder" name="def_reorder_sale" type="object" class="oe_highlight"/>
+                                </tree>
+                            </field>
+                        </group>
+
                     </page>
                 </xpath>
             </field>
