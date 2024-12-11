@@ -52,12 +52,21 @@ class ResPartner(models.Model):
         groups="base.group_no_one",
     )
 
-    type = fields.Selection(default=False)
+    # type = fields.Selection(default=False)
 
     partner_type_id = fields.Many2one(
         "res.partner.type",
         "Partner Type",
         domain="[('company_type', '=', company_type)]",
+        default=None,
+    )
+
+    type = fields.Selection(
+        related="partner_type_id.type",
+        string="Address Type",
+        store=True,
+        readonly=False,
+        help="The address type as defined by the partner type.",
     )
 
     can_have_parent = fields.Boolean(compute="_compute_partner_type_infos")
@@ -187,17 +196,14 @@ class ResPartner(models.Model):
             [("code", "=", code)], limit=1
         )
 
-    # @api.onchange("partner_type_id")
-    # def _onchange_partner_type(self):
-    #     if self.partner_type_id:
-    #         inherit_values = self._get_inherit_values(self.partner_type_id)
-    #         sanitized_values = {
-    #             key: value
-    #             for key, value in inherit_values.items()
-    #             if key in self._fields
-    #         }
-    #         _logger.debug("Sanitized values to update: %s", sanitized_values)
-    #         self.update(sanitized_values)
+    # @api.onchange("company_type")
+    # def _onchange_company_type(self):
+    #     code = "CONTACT"
+    #     if self.company_type == "company":
+    #         code = "SUPPLIER" if self.supplier else "CLIENT"
+    #     self.partner_type_id = self.partner_type_id.search(
+    #         [("code", "=", code)], limit=1
+    #     )
 
     def _onchange_partner_type(self):
         if self.partner_type_id:
@@ -207,17 +213,6 @@ class ResPartner(models.Model):
             except ValueError as e:
                 _logger.error("Error updating values: %s", e)
                 raise ValidationError(_("Invalid data for partner type."))
-
-    # def _get_inherit_values(self, partner_type):
-    #     if not partner_type:
-    #         return {}
-    #     inherit_fields = getattr(
-    #         partner_type, f"_{partner_type.company_type}_inherit_fields", []
-    #     )
-
-    #     inherit_values = partner_type.read(inherit_fields)[0]
-    #     inherit_values.pop("id", None)
-    #     return inherit_values
 
     def _get_inherit_values(self, partner_type):
         """Returns inherited field values from the partner type."""

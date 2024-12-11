@@ -33,17 +33,12 @@
     <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate')])]"/>
     <field name="type">contact</field>
   </record>
-  <!-- <record id="partner_type_patient" model="res.partner.type">
-    <field name="name">Patient</field>
-    <field name="code">PATIENT</field>
-    <field name="company_type">person</field>
-    <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate'), ref('partner_type_contact')])]"/>
-    <field name="type">patient</field>
-  </record> -->
   <record id="partner_type_patient" model="res.partner.type">
     <field name="name">Patient</field>
     <field name="code">PATIENT</field>
     <field name="company_type">person</field>
+    <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate')])]"/>
+    <field name="type">patient</field>
   </record>
   <record id="partner_type_invoice" model="res.partner.type">
     <field name="name">Invoice address</field>

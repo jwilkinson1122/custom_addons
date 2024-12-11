@@ -19,7 +19,6 @@
                     <field name="is_supplier" invisible="1" />
                     <field name="is_patient" invisible="1" />
                     <field name="is_contact" invisible="1" />
-
                     <h1>
                         <field id="company" name="name" options="{'line_breaks': False}" widget="text" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" name="name" options="{'line_breaks': False}" widget="text" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company" />
@@ -46,14 +45,12 @@
                 </button>
             </div>
 
-
-            <!-- Modify the contact_addresses page attributes -->
             <xpath expr="//page[@name='contact_addresses']" position="attributes">
                 <attribute name="autofocus"></attribute>
                 <attribute name="string">Contacts</attribute>
                 <attribute name="invisible">is_patient</attribute>
             </xpath>
-
+            <!-- Affiliates Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
                 <page name="affiliate_companies" string="Affiliate Companies" invisible="company_type == 'person'" autofocus="autofocus">
                     <field name="affiliate_ids" context="{'default_is_company': True, 'default_is_affiliate': True}">
@@ -73,6 +70,7 @@
                     </field>
                 </page>
             </xpath>
+            <!-- Patients Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="after">
                 <page name="partner_patients" string="Patients" invisible="not is_company">
                     <field name="patient_ids" context="{'default_is_company': False, 'default_is_patient': True}">
@@ -162,7 +160,7 @@
         <field name="name">Contacts</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="search_view_id" ref="view_res_partner_search"/>
+        <!-- <field name="search_view_id" ref="view_res_partner_search"/> -->
         <field name="domain">[('company_type', '=', 'person'), ('is_company', '=', False), ('is_contact', '=', True), ('id', '!=', 1)]</field>
         <field name="context">{'default_company_type': 'person', 'default_type': 'contact'}</field>
     </record>
