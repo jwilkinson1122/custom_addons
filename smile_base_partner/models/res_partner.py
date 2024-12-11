@@ -15,6 +15,35 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+    is_account = fields.Boolean(
+        string="Account",
+        default=True,
+        help="Check this box if this contact is a customer account (parent account). It can be selected in sales orders.",
+    )
+
+    is_affiliate = fields.Boolean(
+        string="Affiliate",
+        help="Check this box if this contact is an account affiliate (child account). It can be selected in sales orders.",
+    )
+
+    is_supplier = fields.Boolean(
+        string="Vendor",
+        help="Check this box if this contact is a vendor. It can be selected in purchase orders.",
+    )
+
+    is_contact = fields.Boolean(
+        string="Is Contact",
+        compute="_compute_is_contact",
+        store=True,
+        help="Indicates whether this record is a contact.",
+    )
+
+    is_patient = fields.Boolean(
+        string="Patient",
+        store=True,
+        default=False,
+    )
+
     parent_id = fields.Many2one(
         "res.partner",
         index=True,
@@ -30,7 +59,9 @@ class ResPartner(models.Model):
         "Partner Type",
         domain="[('company_type', '=', company_type)]",
     )
+
     can_have_parent = fields.Boolean(compute="_compute_partner_type_infos")
+
     parent_is_required = fields.Boolean(compute="_compute_partner_type_infos")
 
     parent_type_ids = fields.Many2many(
@@ -39,11 +70,36 @@ class ResPartner(models.Model):
         compute="_compute_parent_types",
     )
 
+    parent_contact_id = fields.Many2one(
+        "res.partner",
+        string="Responsible Contact",
+        domain="[('parent_id', '=', parent_id), ('is_company', '=', False), ('is_contact', '=', True)]",
+        help="Select the contact responsible for this patient.",
+    )
+
+    # contact_ids = fields.One2many(
+    #     "res.partner",
+    #     "parent_id",
+    #     "Contacts",
+    #     domain=[("is_company", "=", False), ("is_contact", "=", True)],
+    # )
+
     contact_ids = fields.One2many(
         "res.partner",
         "parent_id",
         "Contacts",
-        domain=[("is_company", "=", False)],
+        domain=[
+            ("is_company", "=", False),
+            ("is_contact", "=", True),
+            ("is_patient", "=", False),
+        ],
+    )
+
+    patient_ids = fields.One2many(
+        "res.partner",
+        "parent_id",
+        "Patients",
+        domain=[("is_company", "=", False), ("is_patient", "=", True)],
     )
 
     affiliate_ids = fields.One2many(
@@ -65,21 +121,42 @@ class ResPartner(models.Model):
         related="partner_type_id.parent_relation_label", readonly=True
     )
 
-    is_account = fields.Boolean(
-        string="Account",
-        default=True,
-        help="Check this box if this contact is a customer account (parent account). It can be selected in sales orders.",
-    )
+    @api.depends("type", "parent_id", "is_company")
+    def _compute_is_contact(self):
+        """
+        Compute the value of `is_contact` based on certain conditions.
+        Example logic: it's a contact if it has a parent and isn't a company.
+        """
+        for partner in self:
+            partner.is_contact = bool(partner.parent_id) and not partner.is_company
 
-    is_affiliate = fields.Boolean(
-        string="Affiliate",
-        help="Check this box if this contact is an account affiliate (child account). It can be selected in sales orders.",
-    )
+    @api.constrains("is_contact", "is_company")
+    def _check_is_contact_logic(self):
+        for partner in self:
+            if partner.is_contact and partner.is_company:
+                raise ValidationError(
+                    _("A record cannot be both a contact and a company.")
+                )
 
-    is_supplier = fields.Boolean(
-        string="Vendor",
-        help="Check this box if this contact is a vendor. It can be selected in purchase orders.",
-    )
+    @api.constrains("is_patient", "parent_id", "parent_contact_id")
+    def _check_patient_contact(self):
+        for partner in self:
+            if partner.is_patient and not partner.parent_id:
+                raise ValidationError(
+                    _("A parent company must be selected for a patient.")
+                )
+            if partner.is_patient and not partner.parent_contact_id:
+                raise ValidationError(
+                    _("A responsible contact must be selected for a patient.")
+                )
+
+    @api.onchange("parent_id")
+    def _onchange_parent_id(self):
+        if self.parent_id:
+            contacts = self.env["res.partner"].search(
+                [("parent_id", "=", self.parent_id.id), ("is_company", "=", False)]
+            )
+            self.parent_contact_id = contacts[:1]
 
     @api.depends("partner_type_id")
     def _compute_parent_types(self):

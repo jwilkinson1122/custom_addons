@@ -11,9 +11,12 @@
   <record id="partner_type_affiliate" model="res.partner.type">
     <field name="name">Affiliate</field>
     <field name="code">AFFILIATE</field>
+    <field name="company_type">company</field>
     <field name="is_account" eval="False"/>
     <field name="is_affiliate" eval="True"/>
     <field name="is_supplier" eval="False"/>
+    <field name="parent_is_required" eval="True"/>
+    <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account')])]"/>
   </record>
   <record id="partner_type_supplier" model="res.partner.type">
     <field name="name">Supplier</field>
@@ -30,14 +33,13 @@
     <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate')])]"/>
     <field name="type">contact</field>
   </record>
-  <record id="partner_type_patient" model="res.partner.type">
-    <field name="name">Patient</field>
-    <field name="code">PATIENT</field>
+  <!-- <record id="partner_type_patient" model="res.partner.type">
+    <field name="name">Contact</field>
+    <field name="code">CONTACT</field>
     <field name="company_type">person</field>
     <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate')])]"/>
-    <field name="type">patient</field>
-  </record>
-
+    <field name="type">contact</field>
+  </record> -->
   <record id="partner_type_invoice" model="res.partner.type">
     <field name="name">Invoice address</field>
     <field name="code">INVOICE</field>
