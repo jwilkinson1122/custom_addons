@@ -48,6 +48,7 @@ class ResPartnerType(models.Model):
         ],
         "Company Type",
         required=True,
+        store=True,
         default="company",
     )
 
@@ -72,6 +73,7 @@ class ResPartnerType(models.Model):
     type = fields.Selection(
         [
             ("contact", "Contact address"),
+            ("patient", "Patient address"),
             ("invoice", "Invoice address"),
             ("delivery", "Shipping address"),
             ("other", "Other address"),

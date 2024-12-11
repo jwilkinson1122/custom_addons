@@ -73,16 +73,9 @@ class ResPartner(models.Model):
     parent_contact_id = fields.Many2one(
         "res.partner",
         string="Responsible Contact",
-        domain="[('parent_id', '=', parent_id), ('is_company', '=', False), ('is_contact', '=', True)]",
+        domain=[("is_contact", "=", True)],
         help="Select the contact responsible for this patient.",
     )
-
-    # contact_ids = fields.One2many(
-    #     "res.partner",
-    #     "parent_id",
-    #     "Contacts",
-    #     domain=[("is_company", "=", False), ("is_contact", "=", True)],
-    # )
 
     contact_ids = fields.One2many(
         "res.partner",
@@ -99,7 +92,11 @@ class ResPartner(models.Model):
         "res.partner",
         "parent_id",
         "Patients",
-        domain=[("is_company", "=", False), ("is_patient", "=", True)],
+        domain=[
+            ("is_company", "=", False),
+            ("is_contact", "=", False),
+            ("is_patient", "=", True),
+        ],
     )
 
     affiliate_ids = fields.One2many(
@@ -185,28 +182,50 @@ class ResPartner(models.Model):
                 else "AFFILIATE" if self.is_affiliate else "SUPPLIER"
             )
         else:
-            code = "CONTACT"
+            code = "CONTACT" if self.is_contact else "PATIENT"
         self.partner_type_id = self.partner_type_id.search(
             [("code", "=", code)], limit=1
         )
 
-    @api.onchange("partner_type_id")
-    def _onchange_partner_type(self):
-        self.update(self._get_inherit_values(self.partner_type_id))
+    # @api.onchange("partner_type_id")
+    # def _onchange_partner_type(self):
+    #     if self.partner_type_id:
+    #         inherit_values = self._get_inherit_values(self.partner_type_id)
+    #         sanitized_values = {
+    #             key: value
+    #             for key, value in inherit_values.items()
+    #             if key in self._fields
+    #         }
+    #         _logger.debug("Sanitized values to update: %s", sanitized_values)
+    #         self.update(sanitized_values)
 
-    def _get_inherit_values(self, partner_type, not_null=False):
+    def _onchange_partner_type(self):
+        if self.partner_type_id:
+            sanitized_values = self._get_inherit_values(self.partner_type_id)
+            try:
+                self.update(sanitized_values)
+            except ValueError as e:
+                _logger.error("Error updating values: %s", e)
+                raise ValidationError(_("Invalid data for partner type."))
+
+    # def _get_inherit_values(self, partner_type):
+    #     if not partner_type:
+    #         return {}
+    #     inherit_fields = getattr(
+    #         partner_type, f"_{partner_type.company_type}_inherit_fields", []
+    #     )
+
+    #     inherit_values = partner_type.read(inherit_fields)[0]
+    #     inherit_values.pop("id", None)
+    #     return inherit_values
+
+    def _get_inherit_values(self, partner_type):
+        """Returns inherited field values from the partner type."""
         if not partner_type:
             return {}
-        inherit_fields = getattr(
-            partner_type, "_%s_inherit_fields" % partner_type.company_type
-        )
-        inherit_values = partner_type.read(inherit_fields)[0]
-        if "id" in inherit_values:
-            del inherit_values["id"]
-        if not_null:
-            for fname in list(inherit_values.keys()):
-                if not inherit_values[fname]:
-                    del inherit_values[fname]
+        inherit_values = partner_type.read()[0]
+        # Remove 'id' and validate other values
+        inherit_values.pop("id", None)
         return inherit_values
 
     def _update_children(self, vals):
@@ -222,58 +241,96 @@ class ResPartner(models.Model):
 
     @api.model
     def create(self, vals):
+        """
+        Override to handle partner type inheritance logic during creation.
+        Ensures inherited values from partner type are applied.
+        """
         _logger.debug("Creating partner with vals: %s", vals)
-        if "partner_type_id" in vals:
-            partner_type = self.env["res.partner.type"].browse(vals["partner_type_id"])
+        try:
+            partner_type = self._get_partner_type(vals.get("partner_type_id"))
             if partner_type:
                 vals.update(self._get_inherit_values(partner_type))
-        new_partner = super(ResPartner, self).create(vals)
-        new_partner._update_children(vals)
-        return new_partner
+            new_partner = super().create(vals)
+            new_partner._update_children(vals)
+            return new_partner
+        except Exception as e:
+            _logger.error("Error during partner creation: %s", e)
+            raise ValidationError(_("An error occurred while creating the partner."))
 
     def write(self, vals):
+        """
+        Override to handle partner type inheritance logic during updates.
+        Ensures inherited values from partner type are applied and avoids infinite loops.
+        """
         _logger.debug("Updating partner with vals: %s", vals)
+        try:
+            # Group partners by their types to apply updates efficiently
+            partners_by_type = self._group_partners_by_type(vals.get("partner_type_id"))
+
+            for partner_type, partners in partners_by_type.items():
+                if list(vals.keys()) != ["is_company"]:  # Avoid infinite loop
+                    vals.update(self._get_inherit_values(partner_type, not_null=True))
+                super(ResPartner, partners).write(vals)
+
+            self._update_children(vals)
+            return True
+        except Exception as e:
+            _logger.error("Error during partner update: %s", e)
+            raise ValidationError(_("An error occurred while updating the partner."))
+
+    def _get_partner_type(self, partner_type_id):
+        """
+        Retrieve the partner type record based on the provided ID.
+        """
+        return (
+            self.env["res.partner.type"].browse(partner_type_id)
+            if partner_type_id
+            else None
+        )
+
+    def _group_partners_by_type(self, new_partner_type_id):
+        """
+        Group partners by their types to handle updates more efficiently.
+
+        :param new_partner_type_id: The new partner type ID being applied.
+        :return: A dictionary grouping partners by their types.
+        """
         partners_by_type = {}
-        if vals.get("partner_type_id"):
-            partner_type = self.env["res.partner.type"].browse(vals["partner_type_id"])
+        if new_partner_type_id:
+            partner_type = self.env["res.partner.type"].browse(new_partner_type_id)
             partners_by_type[partner_type] = self
         else:
             for partner in self:
-                partners_by_type.setdefault(partner.partner_type_id, self.browse())
-                partners_by_type[partner.partner_type_id] |= partner
-        for partner_type in partners_by_type:
-            if list(vals.keys()) != ["is_company"]:  # Avoid infinite loop
-                vals.update(self._get_inherit_values(partner_type, not_null=True))
-            super(ResPartner, partners_by_type[partner_type]).write(vals)
-        self._update_children(vals)
-        return True
+                partner_type = partner.partner_type_id
+                partners_by_type.setdefault(partner_type, self.browse())
+                partners_by_type[partner_type] |= partner
+        return partners_by_type
 
     @api.constrains("partner_type_id", "parent_id")
     def _check_partner_type_consistency(self):
+        """Ensure the parent partner type is allowed for the current partner type."""
         for partner in self:
             if partner.parent_id and partner.partner_type_id:
-                if (
-                    partner.parent_id.partner_type_id
-                    not in partner.partner_type_id.parent_type_ids
-                ):
+                allowed_parent_types = partner.partner_type_id.parent_type_ids
+                if partner.parent_id.partner_type_id not in allowed_parent_types:
                     raise ValidationError(
                         _("Parent partner type is not allowed for this partner type.")
                     )
 
     def view_affiliates(self):
+        """Open a view of affiliate companies."""
         return {
             "name": _("Affiliate companies"),
             "type": "ir.actions.act_window",
             "res_model": self._name,
             "view_mode": "kanban,tree,form",
-            "view_id": False,
             "domain": [("parent_id", "in", self.ids), ("is_company", "=", True)],
             "target": "current",
         }
 
     def _update_fields_view_get_result(self, result, view_type="form"):
+        """Customize the view dynamically."""
         if view_type == "form" and not self._context.get("display_original_view"):
-            # In order to inherit all views based on the field order_line
             doc = etree.XML(result["arch"])
             for node in doc.xpath("//field[@name='child_ids']"):
                 node.set("name", "contact_ids")
@@ -295,16 +352,18 @@ class ResPartner(models.Model):
         return result
 
     def get_view(self, view_id=None, view_type="form", **options):
-        result = super(ResPartner, self).get_view(view_id, view_type, **options)
-        node = etree.fromstring(result["arch"])
-        view_fields = set(
-            el.get("name") for el in node.xpath(".//field[not(ancestor::field)]")
-        )
+        """Override to inject dynamic fields into views."""
+        result = super().get_view(view_id, view_type, **options)
+        doc = etree.fromstring(result["arch"])
+        view_fields = {
+            el.get("name") for el in doc.xpath(".//field[not(ancestor::field)]")
+        }
         result["fields"] = self.fields_get(view_fields)
         return self._update_fields_view_get_result(result, view_type)
 
     @api.model
     def _format_args(self, args):
+        """Format arguments for domain processing."""
         if not args:
             return
         for cond in args:
@@ -314,63 +373,64 @@ class ResPartner(models.Model):
                 and isinstance(cond[2], list)
                 and cond[2]
             ):
-                # Ensure cond[2] is not empty before accessing its first element
                 if isinstance(cond[2][0], list):
                     for index, item in enumerate(cond[2]):
                         if isinstance(item, list) and len(item) > 1:
-                            if item[0] == 1:  # Replace tuple with ID
-                                cond[2][index] = item[1]
-                            elif item[0] == 6:  # Replace list with list of IDs
-                                cond[2] = item[2]
-                                break
+                            cond[2][index] = item[1] if item[0] == 1 else item[2]
 
     @api.model
     def name_search(self, name, args=None, operator="ilike", limit=100):
+        """Override to format arguments for domain processing."""
         args = args or []
         self._format_args(args)
-        return super(ResPartner, self).name_search(name, args, operator, limit)
+        return super().name_search(name, args, operator, limit)
 
-    @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False):
-        self._format_args(args)
-        return super(ResPartner, self)._search(args, offset, limit, order, count)
+        sanitized_args = [
+            arg for arg in args if not isinstance(arg[0], str) or arg[0] in self._fields
+        ]
+        return super()._search(sanitized_args, offset, limit, order, count)
 
     def _get_display_name_context(self):
-        contexts = {}
-        for record in self:
-            partner = record.with_context(
-                show_address=None, show_address_only=None, show_email=None
-            )
-            contexts[record.id] = {"partner": partner, "_": _}
-        return contexts
+        """Get context for display name computation."""
+        return {
+            record.id: {
+                "partner": record.with_context(
+                    show_address=None, show_address_only=None, show_email=None
+                ),
+                "_": _,
+            }
+            for record in self
+        }
 
     @api.depends("partner_type_id.partner_display_name", "name")
     def _compute_display_name(self):
+        """Compute the display name dynamically."""
         for record in self:
-            # Fallback to the partner's name or "Unnamed" if no name is set
-            display_name = record.name or "Unnamed"
-
-            # Check if a custom display name rule is defined
+            display_name = record.name or _("Unnamed")
             rule = record.partner_type_id.partner_display_name
             if rule:
                 try:
-                    # Safely evaluate the rule using the context
                     context = {
                         "partner": record.with_context(
                             show_address=None, show_address_only=None, show_email=None
                         ),
                         "_": _,
                     }
-                    _logger.info("Context for display_name: %s", context)
                     display_name = safe_eval(rule, context) or display_name
-                    _logger.info("Rule for display_name: %s", rule)
                 except Exception as e:
                     _logger.error(
-                        "Error evaluating partner display name rule '%s' for partner ID %s: %s",
+                        "Error evaluating display name rule '%s' for partner ID %s: %s",
                         rule,
                         record.id,
                         str(e),
                     )
-
-            # Assign the computed display name
             record.display_name = display_name
+
+    def _get_partner_type(self, partner_type_id):
+        """Helper to fetch partner type safely."""
+        return (
+            self.env["res.partner.type"].browse(partner_type_id)
+            if partner_type_id
+            else None
+        )
