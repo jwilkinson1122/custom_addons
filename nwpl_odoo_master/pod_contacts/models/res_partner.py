@@ -45,10 +45,21 @@ class Partner(models.Model):
     parent_id = fields.Many2one(
         "res.partner",
         index=True,
-        domain=[("is_parent_account", "=", True), ("is_company", "=", True)],
+        domain=[
+            ("is_parent_account", "=", True),
+            ("is_company", "=", True),
+            ("id", "!=", id),
+        ],
         string="Account",
         groups="base.group_no_one",
     )
+
+    # parent_id = fields.Many2one(
+    #     "res.partner",
+    #     domain=[("id", "!=", id)],
+    #     string="Parent Partner",
+    # )
+
     parent_name = fields.Char(
         related="parent_id.name", readonly=True, string="Parent name"
     )
@@ -103,6 +114,14 @@ class Partner(models.Model):
         readonly=True,
         index=True,
     )
+
+    # practitioner_id = fields.Many2one(
+    #     "res.contact",
+    #     string="Related Contact",
+    #     domain=[("is_practitioner", "=", True)],
+    #     help="Link to the related contact.",
+    # )
+
     practitioner_role_ids = fields.Many2many(
         string="Roles", comodel_name="contact.role"
     )
@@ -328,6 +347,13 @@ class Partner(models.Model):
         """
         return []
 
+    # @api.model
+    # def create(self, vals):
+    #     partner = super().create(vals)
+    #     if not partner.customer_rank:
+    #         partner.customer_rank = 1
+    #     return partner
+
     @api.model
     def create(self, vals):
         # If customer_number is not provided or set to "New", generate a new code
@@ -363,21 +389,28 @@ class Partner(models.Model):
 
         return partner
 
-    @api.model
     def write(self, vals):
-        # Check for recursion prevention flag in context
+        _logger.info(
+            f"Starting write operation for Partners: {self.ids}, Values: {vals}"
+        )
+
         if self.env.context.get("prevent_recursion", False):
+            _logger.debug("Recursion detected. Exiting early.")
             return super(Partner, self).write(vals)
 
-        # Set the recursion prevention flag and call super
         context = dict(self.env.context, prevent_recursion=True)
-        result = super(Partner, self).with_context(context).write(vals)
+        result = super(Partner, self.with_context(context)).write(vals)
 
-        # Custom logic after the write operation
-        for partner in self:
-            if partner.is_partner or partner.patient_ids:
-                partner.check_contact("write")
+        try:
+            for partner in self:
+                if partner.is_partner or partner.patient_ids:
+                    _logger.debug(f"Checking contact for Partner {partner.id}")
+                    partner.check_contact("write")
+        except Exception as e:
+            _logger.error(f"Error during post-write logic for Partner {self.ids}: {e}")
+            raise
 
+        _logger.info(f"Write operation completed successfully for Partners: {self.ids}")
         return result
 
     def unlink(self):
@@ -563,18 +596,68 @@ class Partner(models.Model):
             "flags": {"form": {"action_buttons": True}},
         }
 
-    # current_sale_order_ids = fields.One2many(
-    #     "sale.order",
-    #     compute="_compute_current_sale_order_ids",
-    #     store=False,
-    # )
+    create_users_button = fields.Boolean(
+        compute="_compute_create_users_button",
+        store=False,
+    )
 
-    # def _compute_current_sale_order_ids(self):
-    #     """
-    #     Compute method to populate the 'current_sale_order_ids' field.
-    #     Filters to show sales orders that are current by removing completed and cancelled sales orders
-    #     """
-    #     for partner in self:
-    #         partner.current_sale_order_ids = partner.sale_order_ids.filtered(
-    #             lambda order: order.state not in ("done", "cancel")
-    #         )
+    partner_id = fields.Many2one(
+        "res.partner",
+        string="Partner",
+        index=True,
+        tracking=True,
+        # required=True,
+        help="Link to the partner record.",
+    )
+
+    related_user_id = fields.Many2one(
+        related="partner_id.user_id",
+        string="Related User",
+        readonly=True,
+    )
+
+    @api.depends("partner_id.user_ids")
+    def _compute_create_users_button(self):
+        """Compute the visibility of the 'Create Portal User' button."""
+        for record in self:
+            record.create_users_button = not bool(record.partner_id.user_ids)
+
+    def create_portal_user(self):
+        """Create a portal user for the partner."""
+        self.ensure_one()
+        if self.user_ids:
+            raise UserError(_("A user for this partner already exists."))
+
+        portal_user_group = self.env.ref("base.group_portal")
+        # portal_patient_group = self.env.ref("group_portal_patient")
+        # group_ids = [portal_user_group.id, portal_patient_group.id]
+        group_ids = [portal_user_group.id]
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Create Login"),
+            "view_mode": "form",
+            "view_id": self.env.ref("nwpl_odoo_master.view_create_user_wizard_form").id,
+            "target": "new",
+            "res_model": "res.users",
+            "context": {
+                "default_partner_id": self.id,
+                "default_groups_id": [(6, 0, group_ids)],
+            },
+        }
+
+    current_sale_order_ids = fields.One2many(
+        "sale.order",
+        compute="_compute_current_sale_order_ids",
+        store=False,
+    )
+
+    def _compute_current_sale_order_ids(self):
+        """
+        Compute method to populate the 'current_sale_order_ids' field.
+        Filters to show sales orders that are current by removing completed and cancelled sales orders
+        """
+        for partner in self:
+            partner.current_sale_order_ids = partner.sale_order_ids.filtered(
+                lambda order: order.state not in ("done", "cancel")
+            )

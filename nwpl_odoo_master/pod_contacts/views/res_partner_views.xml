@@ -108,13 +108,21 @@
                     <field string="Patients" name="patient_records" widget="statinfo"/>
                 </button>
             </div> -->
+            <div name="button_box" position="inside">
+                <button name="create_portal_user" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_partner': True}" invisible="not is_partner"/>
+                <!-- <button name="create_portal_user" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/> -->
+            </div>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
+                <field name="is_partner" invisible="1" />
+
                 <field name="is_parent_account" invisible="1" />
                 <field name="is_company" invisible="1" />
                 <field name="is_location" invisible="1" />
                 <field name="is_supplier" invisible="1" />
                 <field name="is_practitioner" invisible="1" />
                 <field name="is_patient" invisible="1" />
+
+
             </xpath>
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
@@ -124,6 +132,8 @@
                     <field name="ref" readonly="1"/>
                 </h2>
                 <div class="oe_title mb24">
+                    <field name="is_partner" invisible="1" />
+
                     <field name="is_parent_account" invisible="1" />
                     <field name="is_company" invisible="1" />
                     <field name="is_location" invisible="1" />
@@ -201,6 +211,19 @@
                         </tree>
                     </field>
                 </group> -->
+                <group string="Current Orders" invisible="not is_company">
+                    <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]">
+                        <tree editable="bottom">
+                            <field name="name" string="Order"/>
+                            <field name="date_order" widget="date" string="Date"/>
+                            <field name="partner_id" string="Customer"/>
+                            <field name="state" string="Status"/>
+                            <field name="invoice_status"/>
+                            <field name="activity_ids" String="Activities" widget="list_activity" optional="show"/>
+                            <field name="amount_total"/>
+                        </tree>
+                    </field>
+                </group>
             </xpath>
             <!-- Add Locations Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
@@ -535,7 +558,7 @@
     </record>
 
     <record id="contact_practitioner_action" model="ir.actions.act_window">
-        <field name="name">Practitioners</field>
+        <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>

@@ -1,9 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
-    <data noupdate="0">
+    <data>
         <record id="knowledge_favorite" model="knowledge.article.favorite">
             <field name="article_id" ref="knowledge_article_2"/>
             <field name="user_id" ref="base.user_admin"/>
         </record>
     </data>
+    <!-- <data noupdate="0">
+        <record id="knowledge_favorite" model="knowledge.article.favorite">
+            <field name="article_id" ref="knowledge_article_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+    </data> -->
 </odoo>

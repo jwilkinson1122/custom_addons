@@ -109,7 +109,6 @@ class ResPartner(models.Model):
         help="Indicates if the partner is an affiliate company.",
     )
 
-
     is_supplier = fields.Boolean(string="Is a Supplier", default=False)
 
     is_contact = fields.Boolean(
@@ -161,7 +160,6 @@ class ResPartner(models.Model):
         string="Affiliates",
     )
 
-
     # @api.depends("parent_id", "affiliate_ids")
     # def _compute_is_company_parent(self):
     #     for rec in self:
@@ -187,7 +185,6 @@ class ResPartner(models.Model):
         for rec in self:
             rec.is_affiliate = rec.parent_id and rec.is_company
 
-
     @api.depends("parent_id")
     def _compute_highest_parent_id(self):
         """Compute the highest parent company."""
@@ -198,6 +195,18 @@ class ResPartner(models.Model):
                 res.append(partner.parent_id.id)
                 partner = partner.parent_id
             rec.highest_parent_id = res[-1] if res else None
+
+    @api.model
+    def compute_partner_parent_ids(self, rec):
+        """
+        Computes the hierarchy of parent IDs for a given partner record.
+        """
+        parent_hierarchy = []
+        partner = rec
+        while partner.parent_id:
+            parent_hierarchy.append(partner.parent_id.id)
+            partner = partner.parent_id
+        return parent_hierarchy
 
     @api.model
     def compute_all_top_parent_id(self):
@@ -217,7 +226,7 @@ class ResPartner(models.Model):
     #     inverse_name="parent_id",
     #     string="Affiliates",
     #     compute="_compute_affiliate_ids",
-    #     store=False,  
+    #     store=False,
     # )
 
     affiliate_count = fields.Integer(
@@ -370,7 +379,6 @@ class ResPartner(models.Model):
         for record in self:
             record.patient_records = record.child_ids.mapped("patient_ids")
 
-
     # @api.depends("parent_id")
     # def _compute_is_company_parent(self):
     #     for rec in self:
@@ -380,7 +388,6 @@ class ResPartner(models.Model):
     # def _compute_is_affiliate(self):
     #     for rec in self:
     #         rec.is_affiliate = rec.parent_id and rec.is_company
-
 
     # @api.constrains("ref", "is_company", "company_type")
     # def _check_ref(self):
@@ -404,7 +411,6 @@ class ResPartner(models.Model):
     #                 _("This reference is equal to partner '%s'") % other[0].display_name
     #             )
 
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -415,7 +421,9 @@ class ResPartner(models.Model):
                         sequence_code = "res.partner.affiliate"
                     vals["ref"] = self.env["ir.sequence"].next_by_code(sequence_code)
                 else:
-                    vals["ref"] = self.env["ir.sequence"].next_by_code("res.partner.contact")
+                    vals["ref"] = self.env["ir.sequence"].next_by_code(
+                        "res.partner.contact"
+                    )
         return super().create(vals_list)
 
     # @api.model_create_multi
@@ -459,7 +467,10 @@ class ResPartner(models.Model):
     @api.constrains("ref")
     def _check_unique_ref(self):
         for rec in self:
-            if rec.ref and self.search_count([("ref", "=", rec.ref), ("id", "!=", rec.id)]) > 0:
+            if (
+                rec.ref
+                and self.search_count([("ref", "=", rec.ref), ("id", "!=", rec.id)]) > 0
+            ):
                 raise ValidationError(_("The Reference ID must be unique."))
 
     # Dynamic Hierarchical Display
@@ -470,8 +481,6 @@ class ResPartner(models.Model):
             return partner.name
 
         return recursive_hierarchy(self)
-
-
 
     def copy(self, default=None):
         default = default or {}

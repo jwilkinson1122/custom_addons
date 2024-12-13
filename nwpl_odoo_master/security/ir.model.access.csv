@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_model_login_as_group_system,access_model_login_as_group_system,model_login_as,base.group_system,1,1,1,1
 access_res_partner,access_res_partner,base.model_res_partner,group_contacts_user,1,1,1,0
 access_res_partner_manager,access_res_partner_manager,base.model_res_partner,group_contacts_configurator,1,1,1,0
 access_res_partner_users,access_res_partner_users,base.model_res_users,group_contacts_user,1,1,1,0

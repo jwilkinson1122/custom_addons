@@ -1,8 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<odoo noupdate="1">
+<odoo>
     <record id="ir_attachment_313" model="ir.attachment">
         <field name="name">orthotics_1.webp</field>
         <field name="datas" type="base64" file="nwpl_odoo_master/static/ir_attachment/orthotics_1.webp"/>
         <field name="type">binary</field>
     </record>
 </odoo>
+
+
+<!-- <odoo noupdate="1">
+    
+    <record id="ir_attachment_313" model="ir.attachment">
+        <field name="name">orthotics_1.webp</field>
+        <field name="datas" type="base64" file="nwpl_odoo_master/static/ir_attachment/orthotics_1.webp"/>
+        <field name="type">binary</field>
+    </record>
+</odoo> -->

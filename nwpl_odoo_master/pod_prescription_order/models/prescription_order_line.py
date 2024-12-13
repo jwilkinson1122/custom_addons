@@ -105,7 +105,7 @@ class PrescriptionOrderLine(models.Model):
         comodel_name="product.pricelist.item", compute="_compute_pricelist_item_id"
     )
 
-    helpdesk_discription_id = fields.Many2one("helpdesk.ticket", string="Helpdesk")
+    # helpdesk_discription_id = fields.Many2one("helpdesk.ticket", string="Helpdesk")
 
     # custom_value_ids = fields.One2many(
     #     comodel_name="product.config.session.custom.value",

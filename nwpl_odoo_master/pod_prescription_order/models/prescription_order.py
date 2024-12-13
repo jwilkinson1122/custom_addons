@@ -10,12 +10,12 @@ class PrescriptionOrder(models.Model):
     _description = "Prescription Order"
     _check_company_auto = True
 
-    helpdesk_tickets_ids = fields.Many2many(
-        "helpdesk.ticket", string="Helpdesk Tickets"
-    )
-    helpdesk_tickets_count = fields.Integer(
-        string="# of Delivery Order", compute="_get_helpdesk_tickets_count"
-    )
+    # helpdesk_tickets_ids = fields.Many2many(
+    #     "helpdesk.ticket", string="Helpdesk Tickets"
+    # )
+    # helpdesk_tickets_count = fields.Integer(
+    #     string="# of Delivery Order", compute="_get_helpdesk_tickets_count"
+    # )
 
     @api.model
     def _default_note(self):
@@ -52,21 +52,21 @@ class PrescriptionOrder(models.Model):
         comodel_name="res.partner",
         domain="[('is_practitioner', '=', True)]",
         required=True,
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
     patient_id = fields.Many2one(
         string="Patient",
         comodel_name="res.partner",
         domain="[('is_patient', '=', True)]",
         required=True,
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
     location_id = fields.Many2one(
         string="Location",
         comodel_name="res.partner",
         domain="[('is_location', '=', True)]",
         required=True,
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
     user_id = fields.Many2one(
         "res.users",
@@ -410,23 +410,23 @@ class PrescriptionOrder(models.Model):
             order.write({"state": "draft", "confirmed": False})
         return True
 
-    @api.depends("helpdesk_tickets_ids")
-    def _get_helpdesk_tickets_count(self):
-        for rec in self:
-            rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
+    # @api.depends("helpdesk_tickets_ids")
+    # def _get_helpdesk_tickets_count(self):
+    #     for rec in self:
+    #         rec.helpdesk_tickets_count = len(rec.helpdesk_tickets_ids)
 
-    def helpdesk_ticket(self):
-        action = self.env.ref("helpdesk.helpdesk_ticket_action_main_tree").read()[0]
+    # def helpdesk_ticket(self):
+    #     action = self.env.ref("helpdesk.helpdesk_ticket_action_main_tree").read()[0]
 
-        tickets = self.order_line.mapped("helpdesk_discription_id")
-        if len(tickets) > 1:
-            action["domain"] = [("id", "in", tickets.ids)]
-        elif tickets:
-            action["views"] = [
-                (self.env.ref("helpdesk.helpdesk_ticket_view_form").id, "form")
-            ]
-            action["res_id"] = tickets.id
-        return action
+    #     tickets = self.order_line.mapped("helpdesk_discription_id")
+    #     if len(tickets) > 1:
+    #         action["domain"] = [("id", "in", tickets.ids)]
+    #     elif tickets:
+    #         action["views"] = [
+    #             (self.env.ref("helpdesk.helpdesk_ticket_view_form").id, "form")
+    #         ]
+    #         action["res_id"] = tickets.id
+    #     return action
 
     def action_confirm(self):
         self._validate()
@@ -437,28 +437,27 @@ class PrescriptionOrder(models.Model):
             name = sequence_obj.next_by_code("prescription.order")
             order.write({"confirmed": True, "name": name})
 
-        helpdesk_ticket_list = []
-        for line in self.mapped("order_line"):
-            if line.product_id.is_helpdesk:
-                helpdesk_ticket_dict = {
-                    "name": line.product_id.name,
-                    "team_id": line.product_id.helpdesk_team.id,
-                    "user_id": line.product_id.helpdesk_assigned_to.id,
-                    "partner_id": self.partner_id.id,
-                    "partner_name": self.partner_id.name,
-                    "partner_email": self.partner_id.email,
-                    "description": line.name,
-                }
-                helpdesk_ticket_id = self.env["helpdesk.ticket"].create(
-                    helpdesk_ticket_dict
-                )
-                if helpdesk_ticket_id:
-                    line.helpdesk_discription_id = helpdesk_ticket_id.id
-                    helpdesk_ticket_list.append(helpdesk_ticket_id.id)
+        # helpdesk_ticket_list = []
+        # for line in self.mapped("order_line"):
+        #     if line.product_id.is_helpdesk:
+        #         helpdesk_ticket_dict = {
+        #             "name": line.product_id.name,
+        #             "team_id": line.product_id.helpdesk_team.id,
+        #             "user_id": line.product_id.helpdesk_assigned_to.id,
+        #             "partner_id": self.partner_id.id,
+        #             "partner_name": self.partner_id.name,
+        #             "partner_email": self.partner_id.email,
+        #             "description": line.name,
+        #         }
+        #         helpdesk_ticket_id = self.env["helpdesk.ticket"].create(
+        #             helpdesk_ticket_dict
+        #         )
+        #         if helpdesk_ticket_id:
+        #             line.helpdesk_discription_id = helpdesk_ticket_id.id
+        #             helpdesk_ticket_list.append(helpdesk_ticket_id.id)
 
-        # Assign created Helpdesk tickets to the order
-        if helpdesk_ticket_list:
-            self.helpdesk_tickets_ids = helpdesk_ticket_list
+        # if helpdesk_ticket_list:
+        #     self.helpdesk_tickets_ids = helpdesk_ticket_list
 
         return True
 

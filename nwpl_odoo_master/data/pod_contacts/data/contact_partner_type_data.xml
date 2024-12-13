@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo noupdate="1">
+    <!-- The noupdate parameter is used to indicate if the values in 
+        the xml file must be re-imported when a module is updated.
+        For example, if we have a file with demo data and we use noupdate="1", 
+        if we delete a demo record and update the module, the
+        deleted data not will be imported again. With noupdate="0", 
+        instead, the record will be reimported again if it doesn't exist in the db. -->
+
     <record model="contact.partner.type" id="clinic">
         <field name="name">Clinic</field>
         <field name="description">Clinic</field>
