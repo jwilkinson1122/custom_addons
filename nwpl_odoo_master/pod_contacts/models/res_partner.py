@@ -38,9 +38,19 @@ class Partner(models.Model):
     is_patient = fields.Boolean(string="Patient", default=False)
 
     ref = fields.Char(string="Customer Number", index=True)
-    customer_number = fields.Char(
-        "Customer Number", readonly=True, default=lambda self: _("New")
+
+    customer_code = fields.Char(
+        "Customer ID",
+        readonly=True,
+        default=lambda self: _("New"),
+        copy=False,
     )
+
+    # customer_code = fields.Char(
+    #     string="Number",
+    #     readonly=True,
+    #     copy=False,
+    # )
 
     parent_id = fields.Many2one(
         "res.partner",
@@ -53,12 +63,6 @@ class Partner(models.Model):
         string="Account",
         groups="base.group_no_one",
     )
-
-    # parent_id = fields.Many2one(
-    #     "res.partner",
-    #     domain=[("id", "!=", id)],
-    #     string="Parent Partner",
-    # )
 
     parent_name = fields.Char(
         related="parent_id.name", readonly=True, string="Parent name"
@@ -114,13 +118,6 @@ class Partner(models.Model):
         readonly=True,
         index=True,
     )
-
-    # practitioner_id = fields.Many2one(
-    #     "res.contact",
-    #     string="Related Contact",
-    #     domain=[("is_practitioner", "=", True)],
-    #     help="Link to the related contact.",
-    # )
 
     practitioner_role_ids = fields.Many2many(
         string="Roles", comodel_name="contact.role"
@@ -347,71 +344,89 @@ class Partner(models.Model):
         """
         return []
 
-    # @api.model
-    # def create(self, vals):
-    #     partner = super().create(vals)
-    #     if not partner.customer_rank:
-    #         partner.customer_rank = 1
-    #     return partner
-
-    @api.model
-    def create(self, vals):
-        # If customer_number is not provided or set to "New", generate a new code
-        if not vals.get("customer_number") or vals.get("customer_number") == _("New"):
-            vals["customer_number"] = self.env["ir.sequence"].next_by_code(
-                "partner.internal.code"
-            ) or _("New")
-        # Call the original create method to create the partner
-        partner = super().create(vals)
-
-        # Check if the partner is a partner or has patient_ids
-        if partner.is_partner or partner.patient_ids:
-            partner.check_contact("create")
-
-        # If internal code is not provided, generate it based on the parent's internal code
-        if not partner.customer_number and partner.parent_id:
-            parent_partner = partner.parent_id
-            if parent_partner.customer_number:
-                # Append a digit to the parent's internal code
-                customer_number = (
-                    parent_partner.customer_number + "1"
-                )  # Modify this as needed
-                partner.write({"customer_number": customer_number})
-        elif not partner.customer_number:
-            # If no parent, generate a new internal code
-            partner.write(
-                {
-                    "customer_number": self.env["ir.sequence"].next_by_code(
-                        "partner.internal.code"
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Assign customer_code based on company_type and parent_id
+            if vals.get("company_type") == "company":
+                vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+                    "customer.company.code"
+                ) or _("New")
+            elif vals.get("company_type") == "person" and vals.get("parent_id"):
+                parent_id = vals.get("parent_id")
+                brw_parent = self.browse(parent_id)
+                if brw_parent.customer_code:
+                    number_custom = brw_parent.customer_code + " - CONTACT/"
+                    vals["customer_code"] = number_custom + str(
+                        len(brw_parent.child_ids.ids) + 1
                     )
-                }
-            )
+            elif vals.get("company_type") == "person" and not vals.get("parent_id"):
+                vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+                    "customer.contact.code"
+                ) or _("New")
 
-        return partner
+        # Call the super to create records
+        partners = super(Partner, self).create(vals_list)
+
+        # Ensure customer_rank is set to 1 if not already defined
+        for partner in partners:
+            if not partner.customer_rank:
+                partner.customer_rank = 1
+
+        return partners
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if vals.get("company_type") == "company":
+    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                 "customer.company.code"
+    #             ) or _("New")
+    #         elif vals.get("company_type") == "person" and vals.get("parent_id"):
+    #             parent_id = vals.get("parent_id")
+    #             brw_parent = self.browse(parent_id)
+    #             if brw_parent.customer_code:
+    #                 number_custom = brw_parent.customer_code + " - CONTACT/"
+    #                 vals["customer_code"] = number_custom + str(
+    #                     len(brw_parent.child_ids.ids) + 1
+    #                 )
+    #         elif vals.get("company_type") == "person" and not vals.get("parent_id"):
+    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                 "customer.contact.code"
+    #             ) or _("New")
+    #     partners = super(Partner, self).create(vals_list)
+    #     for partner in partners:
+    #         if not partner.customer_rank:
+    #             partner.customer_rank = 1
+
+    #     return partners
 
     def write(self, vals):
-        _logger.info(
-            f"Starting write operation for Partners: {self.ids}, Values: {vals}"
-        )
-
-        if self.env.context.get("prevent_recursion", False):
-            _logger.debug("Recursion detected. Exiting early.")
-            return super(Partner, self).write(vals)
-
-        context = dict(self.env.context, prevent_recursion=True)
-        result = super(Partner, self.with_context(context)).write(vals)
-
-        try:
-            for partner in self:
-                if partner.is_partner or partner.patient_ids:
-                    _logger.debug(f"Checking contact for Partner {partner.id}")
-                    partner.check_contact("write")
-        except Exception as e:
-            _logger.error(f"Error during post-write logic for Partner {self.ids}: {e}")
-            raise
-
-        _logger.info(f"Write operation completed successfully for Partners: {self.ids}")
-        return result
+        if vals.get("parent_id"):
+            parent_id = vals.get("parent_id")
+            brw_parent = self.browse(parent_id)
+            number_custom = str(brw_parent.customer_code) + " - CONTACT/"
+            if not brw_parent.child_ids:
+                vals["customer_code"] = number_custom + str(
+                    len(brw_parent.child_ids.ids)
+                )
+            else:
+                vals["customer_code"] = number_custom + str(
+                    len(brw_parent.child_ids.ids) + 1
+                )
+        elif vals.get("company_type") == "company":
+            vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+                "customer.company.code"
+            ) or _("New")
+        elif (
+            vals.get("company_type") == "person"
+            or "parent_id" in vals
+            and not vals.get("parent_id")
+        ):
+            vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+                "customer.contact.code"
+            ) or _("New")
+        return super(Partner, self).write(vals)
 
     def unlink(self):
         for partner in self:
