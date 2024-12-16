@@ -37,14 +37,22 @@ class Partner(models.Model):
     )
     is_patient = fields.Boolean(string="Patient", default=False)
 
-    ref = fields.Char(string="Customer Number", index=True)
+    # ref = fields.Char(string="Customer Number", index=True)
+
+    # customer_code = fields.Char(
+    #     "Customer ID", readonly=True, default=lambda self: _("New")
+    # )
 
     customer_code = fields.Char(
-        "Customer ID",
+        string="Number",
         readonly=True,
-        default=lambda self: _("New"),
         copy=False,
     )
+
+    # customer_code = fields.Char(
+    #     "Customer ID",
+    #     default=lambda self: _("New"),
+    # )
 
     # customer_code = fields.Char(
     #     string="Number",
@@ -104,7 +112,6 @@ class Partner(models.Model):
     )
 
     # type = fields.Selection(default=False)
-
     fax_number = fields.Char(string="Fax")
 
     partner_relation_label = fields.Char(
@@ -347,7 +354,6 @@ class Partner(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # Assign customer_code based on company_type and parent_id
             if vals.get("company_type") == "company":
                 vals["customer_code"] = self.env["ir.sequence"].next_by_code(
                     "customer.company.code"
@@ -365,41 +371,13 @@ class Partner(models.Model):
                     "customer.contact.code"
                 ) or _("New")
 
-        # Call the super to create records
         partners = super(Partner, self).create(vals_list)
 
-        # Ensure customer_rank is set to 1 if not already defined
         for partner in partners:
             if not partner.customer_rank:
                 partner.customer_rank = 1
 
         return partners
-
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if vals.get("company_type") == "company":
-    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-    #                 "customer.company.code"
-    #             ) or _("New")
-    #         elif vals.get("company_type") == "person" and vals.get("parent_id"):
-    #             parent_id = vals.get("parent_id")
-    #             brw_parent = self.browse(parent_id)
-    #             if brw_parent.customer_code:
-    #                 number_custom = brw_parent.customer_code + " - CONTACT/"
-    #                 vals["customer_code"] = number_custom + str(
-    #                     len(brw_parent.child_ids.ids) + 1
-    #                 )
-    #         elif vals.get("company_type") == "person" and not vals.get("parent_id"):
-    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-    #                 "customer.contact.code"
-    #             ) or _("New")
-    #     partners = super(Partner, self).create(vals_list)
-    #     for partner in partners:
-    #         if not partner.customer_rank:
-    #             partner.customer_rank = 1
-
-    #     return partners
 
     def write(self, vals):
         if vals.get("parent_id"):
@@ -426,6 +404,7 @@ class Partner(models.Model):
             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
                 "customer.contact.code"
             ) or _("New")
+
         return super(Partner, self).write(vals)
 
     def unlink(self):

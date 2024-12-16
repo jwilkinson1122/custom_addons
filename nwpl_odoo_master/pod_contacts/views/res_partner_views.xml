@@ -65,9 +65,6 @@
         </field>
     </record>
 
-
-
-
     <record id="res_partner_view_kanban" model="ir.ui.view">
         <field name="name">res.partner.kanban.view.inherit</field>
         <field name="model">res.partner</field>
@@ -75,25 +72,16 @@
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
             <field name="display_name" position="after">
-                <field name="customer_code" readonly="1" />
-
+                <field name="customer_code"/>
             </field>
             <field name="active" position="after">
                 <field name="location_count" />
             </field>
-
-            <!-- <xpath expr="//strong[hasclass('o_kanban_record_title')]//field[@name='display_name']" position="after">
-                <div class="o_kanban_record_title">
-                    <field name="ref"/>
-                </div>
-            </xpath> -->
             <xpath expr="//kanban//ul" position="inside">
                 <li t-if="record.customer_code.raw_value and record.customer_code.raw_value">
-                    <field name="customer_code" readonly="1" />
-
+                    <field name="customer_code"/>
                 </li>
             </xpath>
-
             <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
                 <span t-if="record.is_company.raw_value and record.location_count.value>0" class="badge badge-pill">
                     <i class="fa fa-fw fa-sitemap" role="img" aria-label="Locations" title="Locations" />
@@ -132,16 +120,20 @@
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+            <!-- <xpath expr="//field[@name='company_type']" position="after">
+                <h2>
+                    <label for="customer_code" string="ID" />
+                    <field name="customer_code"/>
+                </h2>
+            </xpath> -->
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <h2>
-                    <!-- <field name="ref" readonly="1"/> -->
-                    <field name="customer_code" readonly="1" />
+                    <label for="customer_code" string="ID" class="fw-bold" />
 
-
+                    <field name="customer_code"/>
                 </h2>
                 <div class="oe_title mb24">
                     <field name="is_partner" invisible="1" />
-
                     <field name="is_parent_account" invisible="1" />
                     <field name="is_company" invisible="1" />
                     <field name="is_location" invisible="1" />
@@ -171,11 +163,15 @@
                 <separator name="contact_info" string="Contact Information" />
                 <group>
                     <group>
-                        <!-- <field name='customer_code'/> -->
-                        <span class="o_form_label o_td_label" name="address_name">
-                            <b invisible="not parent_id or type != 'membership'">Membership Contact Address</b>
+                        <!-- <span class="o_form_label o_td_label" name="address_name">
+                            <b invisible="not parent_id or type != 'contact'">Contact Address</b>
                             <field name="type" placeholder="Address Type" readonly="user_ids" required="1" class="fw-bold"/>
                             <field name="partner_type" placeholder="Partner Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
+                        </span> -->
+                        <span class="o_form_label o_td_label" name="address_name">
+                            <field name="type" placeholder="Address Type" invisible="is_parent_account" readonly="user_ids" required="1" class="fw-bold"/>
+                            <field name="partner_type" placeholder="Partner Type" required="1" invisible="is_practitioner and not is_company" class="fw-bold" />
+                            <!-- <b invisible="not is_parent_account">Address</b> -->
                         </span>
                         <div class="o_address_format">
                             <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id" />
@@ -200,7 +196,6 @@
                         <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
                         <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
                         <field name="active_lang_count" placeholder="Active Language" invisible="1" />
-                        <!-- <field name="customer_code"/> -->
                         <field name="ref" invisible="1"/>
                         <field name="lang" placeholder="Language" invisible="active_lang_count &lt;= 1" />
                         <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
@@ -283,9 +278,6 @@
                                                     </strong>
                                                     <div class="o_kanban_tags_section oe_kanban_partner_categories" />
                                                     <ul>
-                                                        <!-- <li t-if="record.ref.raw_value">
-                                                ID: <field name="ref" />
-                                                        </li> -->
                                                         <li t-if="record.customer_code.raw_value">
                                                 Customer ID: <field name="customer_code" />
                                                         </li>
@@ -469,7 +461,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='display_name']" position="before">
                 <field name='customer_code'/>
-                <!-- <field name="ref"/> -->
                 <field name="parent_id" column_invisible="context.get('default_is_parent_account', False)"/>
             </xpath>
             <!-- <xpath expr="//field[@name='country_id']" position="after">
