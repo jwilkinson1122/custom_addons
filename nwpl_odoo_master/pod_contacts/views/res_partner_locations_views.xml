@@ -6,7 +6,7 @@
         <field name="name">Locations</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[("is_location", "=", True), ("patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
+        <field name="domain">[("is_affiliate_company", "=", True), ("patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new location
@@ -28,8 +28,8 @@
             </tree>
         </field>
     </record>
- 
- 
+
+
     <!-- Locations Form View -->
     <record id="res_partner_locations_form_view" model="ir.ui.view">
         <field name="name">res.partner.form.view</field>
@@ -40,8 +40,8 @@
             </form>
         </field>
     </record>
- 
- 
+
+
     <!-- Locations Kanban View -->
     <record id="res_partner_locations_kanban_view" model="ir.ui.view">
         <field name="name">res.partner.kanban.view</field>
@@ -49,23 +49,23 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban string="Locations" class="o_res_partner_kanban">
-            
+
             </kanban>
         </field>
     </record>
- 
- 
-     <!-- Locations Search View -->
+
+
+    <!-- Locations Search View -->
     <record id="res_partner_locations_search_view" model="ir.ui.view">
         <field name="name">res.partner.search.view</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <search string="Locations">
-            
+
             </search>
         </field>
     </record>
- 
+
     <!-- Locations Window Actions -->
     <record id="res_partner_locations_window_action" model="ir.actions.act_window">
         <field name="name">Locations</field>
@@ -92,6 +92,6 @@
         <field name="view_id" ref="res_partner_locations_kanban_view" />
     </record>
 
-   
+
 
 </odoo>

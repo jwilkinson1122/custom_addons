@@ -1,5 +1,3 @@
-
-
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
@@ -14,7 +12,7 @@ class TestContactLocation(TransactionCase):
     def test_practice(self):
         vals = {
             "name": "location",
-            "is_location": True,
+            "is_affiliate_company": True,
         }
         with self.assertRaises(ValidationError):
             self.partner_obj.create(vals)
@@ -27,5 +25,5 @@ class TestContactLocation(TransactionCase):
         vals["practice_id"] = practice.id
         self.assertEqual(practice.location_count, 0)
         location = self.partner_obj.create(vals)
-        self.assertTrue(location.is_location)
+        self.assertTrue(location.is_affiliate_company)
         self.assertEqual(practice.location_count, 1)

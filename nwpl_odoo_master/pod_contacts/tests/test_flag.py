@@ -13,7 +13,7 @@ class TestContactAdministrationFlag(TransactionCase):
     def test_service(self):
         category = self.FlagCategory.create({"name": "Category"})
         # practice = self.Partner.create({"name": "Practice", "is_company": True})
-        # practitioner = self.Partner.create({"name": "Practitioner", "is_practitioner": True})
+        # practitioner = self.Partner.create({"name": "Practitioner", "is_contact": True})
         patient = self.Patient.create({"name": "Patient"})
 
         # self.assertEqual(practice.practice_flag_count, 0)
@@ -31,11 +31,13 @@ class TestContactAdministrationFlag(TransactionCase):
         #     "description": "Description",
         #     "category_id": category.id
         # })
-        patient_flag = self.Flag.create({
-            "patient_id": patient.id,
-            "description": "Description",
-            "category_id": category.id
-        })
+        patient_flag = self.Flag.create(
+            {
+                "patient_id": patient.id,
+                "description": "Description",
+                "category_id": category.id,
+            }
+        )
 
         # Check contact_flag_count after creating flags
         # self.assertEqual(practice.practice_flag_count, 1)
@@ -75,4 +77,7 @@ class TestContactAdministrationFlag(TransactionCase):
         # Check display_name of flags
         # self.assertEqual(practice_flag.display_name, "[{}] {}".format(practice_flag.internal_identifier, category.name))
         # self.assertEqual(practitioner_flag.display_name, "[{}] {}".format(practitioner_flag.internal_identifier, category.name))
-        self.assertEqual(patient_flag.display_name, "[{}] {}".format(patient_flag.internal_identifier, category.name))
+        self.assertEqual(
+            patient_flag.display_name,
+            "[{}] {}".format(patient_flag.internal_identifier, category.name),
+        )

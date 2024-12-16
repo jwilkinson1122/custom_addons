@@ -7,7 +7,7 @@
         <field name="model">contact.patient</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="internal_identifier" />
+                <field name="patient_code" />
                 <field name="name" />
             </tree>
         </field>
@@ -19,7 +19,7 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="internal_identifier" />
+                <field name="patient_code" />
                 <field name="vat" />
                 <field name="name" />
                 <field name="birth_date" />
@@ -44,7 +44,7 @@
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <h2>
-                        <field name="internal_identifier"/>
+                        <field name="patient_code"/>
                     </h2>
                     <div class="oe_title mb24">
                         <field name="is_company" invisible="1"/>
@@ -73,8 +73,8 @@
                                 <b></b>
                             </span>
                             <div class="o_address_format">
-                                <field name="practitioner_id" class="o_address_street fw-bold" domain="[('is_practitioner', '=', True), ('parent_id', '=', parent_id)]" placeholder="Search Contact" required="1"/>
-                                <!-- <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_practitioner', '=', True), ('parent_id', '=', location_id)]" readonly="state in ['cancel', 'order']"/> -->
+                                <field name="practitioner_id" class="o_address_street fw-bold" domain="[('is_contact', '=', True), ('parent_id', '=', parent_id)]" placeholder="Search Contact" required="1"/>
+                                <!-- <field name="practitioner_id" class="fw-bold" placeholder="Practitioner Name" domain="[('is_contact', '=', True), ('parent_id', '=', location_id)]" readonly="state in ['cancel', 'order']"/> -->
 
                             </div>
                         </group>
@@ -215,7 +215,7 @@
             <kanban string="Patients" class="o_res_partner_kanban">
                 <field name="id"/>
                 <field name="color"/>
-                <field name="internal_identifier"/>
+                <field name="patient_code"/>
                 <field name="name"/>
                 <field name="title"/>
                 <field name="email"/>
@@ -249,8 +249,8 @@
                                         </strong>
                                         <div class="o_kanban_tags_section oe_kanban_partner_categories" />
                                         <ul>
-                                            <li t-if="record.internal_identifier.raw_value">
-                                                <field name="internal_identifier" />
+                                            <li t-if="record.patient_code.raw_value">
+                                                <field name="patient_code" />
                                             </li>
                                             <li t-if="record.practice_id.raw_value">
                                                 Practice: <field name="practice_id" />
@@ -288,7 +288,7 @@
             <search string="Patients">
                 <field name="name"/>
                 <field name="ref" operator="="/>
-                <field name="internal_identifier" operator="="/>
+                <field name="patient_code" operator="="/>
                 <separator/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>

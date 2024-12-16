@@ -25,6 +25,10 @@ class ContactPatient(models.Model):
     _inherit = ["contact.abstract", "mail.thread", "mail.activity.mixin"]
     _inherits = {"res.partner": "partner_id"}
 
+    patient_code = fields.Char(
+        "Patient ID", readonly=True, default=lambda self: _("New")
+    )
+
     partner_id = fields.Many2one(
         "res.partner",
         domain=[("is_patient", "=", True)],
@@ -41,13 +45,13 @@ class ContactPatient(models.Model):
     practitioner_id = fields.Many2one(
         string="Practitioner",
         comodel_name="res.partner",
-        domain=[("is_practitioner", "=", True)],
+        domain=[("is_contact", "=", True)],
     )
 
     other_practitioner_ids = fields.Many2many(
         string="Other Practitioners",
         comodel_name="res.partner",
-        domain=[("is_practitioner", "=", True)],
+        domain=[("is_contact", "=", True)],
     )
 
     partner_relation_label = fields.Char(
@@ -157,17 +161,40 @@ class ContactPatient(models.Model):
 
     @api.model
     def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].sudo().next_by_code("contact.patient") or "/"
+        return self.env["ir.sequence"].sudo().next_by_code("contact.patient") or _(
+            "New"
+        )
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     records = super(ContactPatient, self).create(vals_list)
+    #     for record in records:
+    #         if record.partner_id:
+    #             record.partner_id.write({"is_patient": True})
+    #         record.apply_practitioner_logic()
+    #     return records
 
     @api.model_create_multi
     def create(self, vals_list):
-        # Create the patient records as usual
+        for vals in vals_list:
+            # Generate the sequence code for the patient
+            if "patient_code" not in vals or not vals["patient_code"]:
+                vals["patient_code"] = self.env["ir.sequence"].next_by_code(
+                    "patient.code"
+                ) or _("New")
+
+            # If the partner_id exists, ensure the is_patient flag is set
+            if vals.get("partner_id"):
+                partner = self.env["res.partner"].browse(vals["partner_id"])
+                partner.write({"is_patient": True})
+
+        # Call the super method to create the records
         records = super(ContactPatient, self).create(vals_list)
+
         for record in records:
-            # Here we check if the partner_id is set and then update the is_patient flag of the related partner
-            if record.partner_id:
-                record.partner_id.write({"is_patient": True})
+            # Apply additional logic if needed
             record.apply_practitioner_logic()
+
         return records
 
     def apply_practitioner_logic(self):
@@ -175,7 +202,7 @@ class ContactPatient(models.Model):
         if self.parent_id:
             # Searching for practitioners whose parent_id matches the selected practice
             practitioners = self.env["res.partner"].search(
-                [("is_practitioner", "=", True), ("parent_id", "=", self.parent_id.id)]
+                [("is_contact", "=", True), ("parent_id", "=", self.parent_id.id)]
             )
             # If any practitioners are found, assign the first one to the patient
             if practitioners:
@@ -190,14 +217,14 @@ class ContactPatient(models.Model):
             return {
                 "domain": {
                     "practitioner_id": [
-                        ("is_practitioner", "=", True),
+                        ("is_contact", "=", True),
                         ("parent_id", "=", self.parent_id.id),
                     ]
                 }
             }
         else:
             # If no practice is selected, revert to the initial domain
-            return {"domain": {"practitioner_id": [("is_practitioner", "=", True)]}}
+            return {"domain": {"practitioner_id": [("is_contact", "=", True)]}}
 
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner

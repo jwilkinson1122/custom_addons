@@ -1,50 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <odoo>
-    <data noupdate="1">
-
-        <record id="seq_company_code" model="ir.sequence">
-            <field name="name">Company Sequence Code</field>
-            <field name="code">customer.company.code</field>
-            <field name="prefix">COMPANY/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
-        <record id="seq_contact_code" model="ir.sequence">
-            <field name="name">Contact Sequence Code</field>
-            <field name="code">customer.contact.code</field>
-            <field name="prefix">CONTACT/</field>
-            <field name="padding">5</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
-        <record id="seq_contact_flag" model="ir.sequence">
-            <field name="name">Flag Code</field>
-            <field name="code">contact.flag</field>
-            <field name="prefix">FL</field>
-            <field name="padding">6</field>
-        </record>
-
-    </data>
-    <!-- <record id="seq_company_code" model="ir.sequence">
-        <field name="name">Company Sequence Code</field>
+    <record id="seq_customer_company_code" model="ir.sequence">
+        <field name="name">Customer Company Code</field>
         <field name="code">customer.company.code</field>
-        <field name="prefix">COMPANY/</field>
+        <field name="prefix">CUST/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+        <!-- Ensure this sequence is shared globally -->
+    </record>
+    <!-- Parent Company -->
+    <record id="seq_parent_company_code" model="ir.sequence">
+        <field name="name">Parent Company Code</field>
+        <field name="code">parent.company.code</field>
+        <field name="prefix">CO/</field>
         <field name="padding">5</field>
         <field name="company_id" eval="False"/>
     </record>
+    <!-- Child Company -->
+    <record id="seq_affiliate_company_code" model="ir.sequence">
+        <field name="name">Affiliate Company Code</field>
+        <field name="code">affiliate.company.code</field>
+        <field name="prefix">AF/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+
+    </record>
+    <!-- Contact -->
     <record id="seq_contact_code" model="ir.sequence">
-        <field name="name">Contact Sequence Code</field>
-        <field name="code">customer.contact.code</field>
-        <field name="prefix">CONTACT/</field>
+        <field name="name">Contact Code</field>
+        <field name="code">contact.code</field>
+        <field name="prefix">CT/</field>
+        <field name="padding">6</field>
+        <field name="company_id" eval="False"/>
+
+    </record>
+    <!-- Patient -->
+    <record id="seq_patient_code" model="ir.sequence">
+        <field name="name">Patient Code</field>
+        <field name="code">patient.code</field>
+        <field name="prefix">PID/</field>
         <field name="padding">5</field>
         <field name="company_id" eval="False"/>
+
     </record>
+    <!-- Flag -->
     <record id="seq_contact_flag" model="ir.sequence">
-        <field name="name">Flag Code</field>
+        <field name="name">Flag sequence</field>
         <field name="code">contact.flag</field>
-        <field name="prefix">FL</field>
+        <field name="prefix">FL/</field>
         <field name="padding">6</field>
-    </record> -->
+        <field name="company_id" eval="False"/>
+
+    </record>
 </odoo>

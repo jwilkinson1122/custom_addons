@@ -23,10 +23,10 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='parent_id']" position="attributes">
-                <!-- <attribute name="domain">[('is_parent_account', '=', True)]</attribute> -->
+                <!-- <attribute name="domain">[('is_parent_company', '=', True)]</attribute> -->
             </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='is_company']" position="after">
-                <field name="is_parent_account" invisible="1" />
+                <field name="is_parent_company" invisible="1" />
             </xpath>
         </field>
     </record>
@@ -42,7 +42,7 @@
                 <field name="location_count" />
             </xpath>
             <xpath expr="//div[hasclass('oe_kanban_bottom_right')]" position="inside">
-                <span t-if="record.is_location.raw_value and record.location_count.value>0" class="badge badge-pill">
+                <span t-if="record.is_affiliate_company.raw_value and record.location_count.value>0" class="badge badge-pill">
                     <i class="fa fa-fw fa-sitemap" role="img" aria-label="Locations" title="Locations" />
                     <t t-esc="record.location_count.value" />
                 </span>
@@ -57,7 +57,7 @@
         <field name="inherit_id" ref="pod_contacts.inherit_view_res_partner_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='type_company']" position="after">
-                <filter string="Accounts" name="type_account" domain="[('is_parent_account', '=', True)]"/>
+                <filter string="Accounts" name="type_account" domain="[('is_parent_company', '=', True)]"/>
             </xpath>
             <!-- <xpath expr="//searchpanel/field[@name='parent_id']" position="before">
                 <field name="parent_id" icon="fa-building-o" enable_counters="1" />
@@ -72,11 +72,11 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="search_view_id" ref="pod_contacts.inherit_view_res_partner_filter"/>
-        <field name="domain">[('is_company', '=', True), ('is_parent_account', '=', True)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True,
-            'default_is_parent_account':True,
+            'default_is_parent_company':True,
             'default_is_partner': True,
             'default_type': '',
             'default_partner_type': '',
