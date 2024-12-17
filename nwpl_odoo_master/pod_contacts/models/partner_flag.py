@@ -2,36 +2,46 @@ from odoo import api, fields, models
 
 
 class ContactFlag(models.Model):
-    _name = "contact.flag"
+    _name = "partner.flag"
     _description = "Contact Flag"
     _inherit = "contact.abstract"
-    
+
     patient_id = fields.Many2one(
         string="Patient",
-        comodel_name="contact.patient",
+        comodel_name="res.partner",
+        domain=[("is_patient", "=", True)],
         required=True,
         readonly=True,
         ondelete="restrict",
         index=True,
-        help="Patient name",
-    ) 
-    
+    )
+
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+        required=True,
+        index=True,
+        auto_join=True,
+        delegate=True,
+        ondelete="restrict",
+    )
+
     active = fields.Boolean(store=True, compute="_compute_active")
-    category_id = fields.Many2one("contact.flag.category", required=True)
+    category_id = fields.Many2one("partner.flag.category", required=True)
     name = fields.Char(related="category_id.name", readonly=True, store=True)
     description = fields.Text(required=True)
     closure_date = fields.Datetime(readonly=True)
     closure_uid = fields.Many2one("res.users", readonly=True, string="Closure user")
 
     @api.model
-    def _get_internal_identifier(self, vals):
-        return self.env["ir.sequence"].next_by_code("contact.flag") or "/"
+    def _get_partner_identifier(self, vals):
+        return self.env["ir.sequence"].next_by_code("partner.flag") or "/"
 
-    @api.depends("name", "internal_identifier")
+    @api.depends("name", "partner_identifier")
     def name_get(self):
         result = []
         for record in self:
-            name = "[%s]" % record.internal_identifier
+            name = "[%s]" % record.partner_identifier
             if record.name:
                 name = "{} {}".format(name, record.name)
             result.append((record.id, name))

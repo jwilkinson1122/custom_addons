@@ -47,7 +47,7 @@
     <!-- Flag -->
     <record id="seq_contact_flag" model="ir.sequence">
         <field name="name">Flag sequence</field>
-        <field name="code">contact.flag</field>
+        <field name="code">partner.flag</field>
         <field name="prefix">FL/</field>
         <field name="padding">6</field>
         <field name="company_id" eval="False"/>

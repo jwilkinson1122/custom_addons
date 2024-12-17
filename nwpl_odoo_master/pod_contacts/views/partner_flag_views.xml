@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <odoo>
-    <record id="contact_flag_view_tree" model="ir.ui.view">
-        <field name="name">contact.flag.view.tree</field>
-        <field name="model">contact.flag</field>
+    <record id="partner_flag_view_tree" model="ir.ui.view">
+        <field name="name">partner.flag.view.tree</field>
+        <field name="model">partner.flag</field>
         <field name="arch" type="xml">
             <tree string="Contact Flags">
-                <field name="internal_identifier" />
+                <field name="partner_identifier" />
                 <field name="name" />
-                <!-- <field name="practice_id" />
-                <field name="practitioner_id" /> -->
-                <field name="patient_id" />
+                <field name="partner_id" />
             </tree>
         </field>
     </record>
-    <record id="contact_flag_view_form" model="ir.ui.view">
-        <field name="name">contact.flag.view.form</field>
-        <field name="model">contact.flag</field>
+    <record id="partner_flag_view_form" model="ir.ui.view">
+        <field name="name">partner.flag.view.form</field>
+        <field name="model">partner.flag</field>
         <field name="arch" type="xml">
             <form string="Contact Flags">
                 <header />
@@ -25,14 +23,12 @@
                     <field name="active" invisible="1" />
                     <div name="button_box" class="oe_button_box" />
                     <h1>
-                        <field name="internal_identifier" />
+                        <field name="partner_identifier" />
                     </h1>
                     <group>
                         <group>
                             <field name="category_id" options="{'no_create': True}" />
-                            <!-- <field name="practice_id" />
-                            <field name="practitioner_id" /> -->
-                            <field name="patient_id" />
+                            <field name="partner_id" />
                         </group>
                         <group invisible="active">
                             <field name="closure_date" />
@@ -45,25 +41,23 @@
             </form>
         </field>
     </record>
-    <record id="view_contact_flag_search" model="ir.ui.view">
-        <field name="name">contact.flag.search</field>
-        <field name="model">contact.flag</field>
+    <record id="view_partner_flag_search" model="ir.ui.view">
+        <field name="name">partner.flag.search</field>
+        <field name="model">partner.flag</field>
         <field name="arch" type="xml">
             <search string="Contact Flag">
-                <field name="internal_identifier" />
+                <field name="partner_identifier" />
                 <field name="category_id" />
-                <!-- <field name="practice_id" />
-                <field name="practitioner_id" /> -->
-                <field name="patient_id" />
+                <field name="partner_id" />
                 <newline />
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]" />
             </search>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="contact_flag_action">
+    <record model="ir.actions.act_window" id="partner_flag_action">
         <field name="name">Flags</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">contact.flag</field>
+        <field name="res_model">partner.flag</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
     </record>

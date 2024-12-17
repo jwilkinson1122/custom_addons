@@ -47,8 +47,8 @@ class PrescriptionOrder(models.Model):
         "res.partner",
         string="Partner",
     )
-    practitioner_id = fields.Many2one(
-        string="Practitioner",
+    contact_id = fields.Many2one(
+        string="Contact",
         comodel_name="res.partner",
         domain="[('is_contact', '=', True)]",
         required=True,
@@ -61,8 +61,8 @@ class PrescriptionOrder(models.Model):
         required=True,
         # track_visibility="onchange",
     )
-    location_id = fields.Many2one(
-        string="Location",
+    affiliate_id = fields.Many2one(
+        string="Affiliate",
         comodel_name="res.partner",
         domain="[('is_affiliate_company', '=', True)]",
         required=True,

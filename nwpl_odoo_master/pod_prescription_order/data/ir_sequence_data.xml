@@ -3,19 +3,19 @@
     <data noupdate="1">
 
         <!-- Sequence Type -->
-        <!-- <record id="seq_type_prescription_location" model="ir.sequence.type">
-            <field name="name">Prescription Location</field>
-            <field name="code">prescription.location</field>
+        <!-- <record id="seq_type_prescription_affiliate" model="ir.sequence.type">
+            <field name="name">Prescription Affiliate</field>
+            <field name="code">prescription.affiliate</field>
             <field name="implementation">no_gap</field>
             <field name="prefix">PL</field>
             <field name="padding">5</field>
         </record> -->
 
         <!-- Sequence -->
-        <record id="seq_prescription_location" model="ir.sequence">
-            <field name="name">Prescription Location Sequence</field>
-            <field name="code">prescription.location</field>
-            <field name="prefix">PL</field>
+        <record id="seq_prescription_affiliate" model="ir.sequence">
+            <field name="name">Prescription Affiliate Sequence</field>
+            <field name="code">prescription.affiliate</field>
+            <field name="prefix">RX</field>
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>

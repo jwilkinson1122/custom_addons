@@ -2,16 +2,16 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
-class TestContactLocation(TransactionCase):
+class TestContactAffiliate(TransactionCase):
     def setUp(self):
         super().setUp()
         self.partner_obj = self.env["res.partner"].with_context(
-            test_check_location_practice=True
+            test_check_affiliate_practice=True
         )
 
     def test_practice(self):
         vals = {
-            "name": "location",
+            "name": "affiliate",
             "is_affiliate_company": True,
         }
         with self.assertRaises(ValidationError):
@@ -22,8 +22,8 @@ class TestContactLocation(TransactionCase):
         }
         practice = self.partner_obj.create(practice_vals)
         self.assertTrue(practice.is_company)
-        vals["practice_id"] = practice.id
-        self.assertEqual(practice.location_count, 0)
-        location = self.partner_obj.create(vals)
-        self.assertTrue(location.is_affiliate_company)
-        self.assertEqual(practice.location_count, 1)
+        vals["company_id"] = practice.id
+        self.assertEqual(practice.affiliate_count, 0)
+        affiliate = self.partner_obj.create(vals)
+        self.assertTrue(affiliate.is_affiliate_company)
+        self.assertEqual(practice.affiliate_count, 1)

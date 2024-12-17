@@ -119,7 +119,7 @@ class PrescriptionPortal(portal.CustomerPortal):
         elif request.env.ref("base.group_user") in request.env.user.groups_id:
             domain = [
                 (
-                    "practitioner_id",
+                    "contact_id",
                     "=",
                     request.env.user.partner_id.id,
                 )

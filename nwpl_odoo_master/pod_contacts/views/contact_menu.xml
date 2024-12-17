@@ -5,13 +5,16 @@
 
     <!-- <menuitem id="contact_associations_menu" name="Associations" parent="contacts.menu_contacts" action="contact_association_action" sequence="0"/> -->
 
-    <menuitem id="contact_accounts_menu" name="Accounts" parent="contacts.menu_contacts" action="contact_account_action" sequence="1" />
+    <menuitem id="contact_companies_menu" name="Companies" parent="contacts.menu_contacts" action="contact_company_action" sequence="1" />
 
-    <menuitem id="contact_locations_menu" name="Locations" parent="contacts.menu_contacts" action="contact_location_action" sequence="2"/>
+    <menuitem id="contact_affiliates_menu" name="Affiliates" parent="contacts.menu_contacts" action="contact_affiliate_action" sequence="2"/>
 
-    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="contact_practitioner_action" sequence="3"/>
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="contact_contact_action" sequence="3"/>
 
-    <menuitem id="contact_patient_root_menu" name="Patients" parent="contacts.menu_contacts" sequence="4">
+    <menuitem id="contact_patients_menu" name="Patients" parent="contacts.menu_contacts" action="contact_patient_action" sequence="4"/>
+
+
+    <!-- <menuitem id="contact_patient_root_menu" name="Patients" parent="contacts.menu_contacts" sequence="4">
 
         <menuitem id="contact_patient_menu" name="Patients" action="contact_patient_window_action" sequence="10"/>
 
@@ -19,7 +22,7 @@
 
         <menuitem id="contact_patient_diagnosis_menu" name="Diagnosis" action="contact_diagnosis_action" sequence="30" />
 
-    </menuitem>
+    </menuitem> -->
 
     <menuitem id="contact_suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="contact_supplier_action" sequence="5"/>
 

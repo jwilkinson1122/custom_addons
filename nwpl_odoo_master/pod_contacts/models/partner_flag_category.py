@@ -2,7 +2,7 @@ from odoo import fields, models
 
 
 class ContactFlag(models.Model):
-    _name = "contact.flag.category"
+    _name = "partner.flag.category"
     _description = "Contact Category Flag"
 
     name = fields.Char(required=True)

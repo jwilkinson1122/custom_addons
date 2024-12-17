@@ -10,61 +10,6 @@
         <field name="target">new</field>
     </record>
 
-    <record id="act_res_partner_child" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_parent_id': active_id, 'prevent_recursion': True}</field>
-    </record>
-
-    <record id="action_locations_window" model="ir.actions.act_window">
-        <field name="name">Locations</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[("is_affiliate_company", "=", True), ("patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
-        <field name="context">{'prevent_recursion': True}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new location
-            </p>
-            <p>
-                Organize and manage locations at a glance.
-            </p>
-        </field>
-    </record>
-
-    <record id="action_contacts_window" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[("is_company", "=", False), ("patient_ids", "=", False), ('parent_id', 'child_of', active_id)]</field>
-        <field name="context">{'prevent_recursion': True}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new contact
-            </p>
-            <p>
-                Organize and manage contacts at a glance.
-            </p>
-        </field>
-    </record>
-
-    <record id="action_patients_window" model="ir.actions.act_window">
-        <field name="name">Patients</field>
-        <field name="res_model">contact.patient</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('practitioner_id', '=', active_id)]</field>
-        <field name="context">{'default_practitioner_id': active_id, 'prevent_recursion': True}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Create a new patient
-            </p>
-            <p>
-            Organize and manage patients at a glance.
-            </p>
-        </field>
-    </record>
-
     <record id="res_partner_view_kanban" model="ir.ui.view">
         <field name="name">res.partner.kanban.view.inherit</field>
         <field name="model">res.partner</field>
@@ -75,7 +20,7 @@
                 <field name="customer_code"/>
             </field>
             <field name="active" position="after">
-                <field name="location_count" />
+                <field name="affiliate_count" />
             </field>
             <xpath expr="//kanban//ul" position="inside">
                 <li t-if="record.customer_code.raw_value and record.customer_code.raw_value">
@@ -83,9 +28,9 @@
                 </li>
             </xpath>
             <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
-                <span t-if="record.is_company.raw_value and record.location_count.value>0" class="badge badge-pill">
-                    <i class="fa fa-fw fa-sitemap" role="img" aria-label="Locations" title="Locations" />
-                    <t t-esc="record.location_count.value" />
+                <span t-if="record.is_company.raw_value and record.affiliate_count.value>0" class="badge badge-pill">
+                    <i class="fa fa-fw fa-sitemap" role="img" aria-label="Affiliates" title="Affiliates" />
+                    <t t-esc="record.affiliate_count.value" />
                 </span>
             </xpath>
         </field>
@@ -96,17 +41,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-            <!-- <div class="oe_button_box" position="inside">
-                <button class="oe_stat_button" type="action" name="%(act_res_partner_child)d" icon="fa-sitemap" invisible="is_contact or child_count == 0 or child_count == ''">
-                    <field string="Contacts" name="child_count" widget="statinfo"/>
-                </button>
-                <button class="oe_stat_button" type="action" name="%(action_patients_window)d" icon="fa-users" invisible="not is_contact">
-                    <field string="Patients" name="patient_records" widget="statinfo"/>
-                </button>
-            </div> -->
             <div name="button_box" position="inside">
-                <button name="create_portal_user" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_partner': True}" invisible="not is_partner"/>
-                <!-- <button name="create_portal_user" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/> -->
+                <button name="create_portal_user" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="not is_contact"/>
+                <button name="create_portal_user" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/>
+
             </div>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_partner" invisible="1" />
@@ -120,42 +58,47 @@
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-            <!-- <xpath expr="//field[@name='company_type']" position="after">
-                <h2>
-                    <label for="customer_code" string="ID" />
-                    <field name="customer_code"/>
-                </h2>
-            </xpath> -->
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <h2>
-                    <!-- <label for="customer_code" string="ID" class="fw-bold" />
-
-                    <field name="customer_code"/> -->
-
                     <field name="ref" invisible="1"/>
                     <field name="legacy_customer_code" readonly="1"/>
                     <field name="customer_code" readonly="1"/>
                 </h2>
                 <div class="oe_title mb24">
-                    <field name="is_partner" invisible="1" />
+                    <!-- <field name="is_partner" invisible="1" />
                     <field name="is_parent_company" invisible="1" />
                     <field name="is_company" invisible="1" />
                     <field name="is_affiliate_company" invisible="1" />
                     <field name="is_supplier" invisible="1" />
                     <field name="is_contact" invisible="1" />
-                    <field name="is_patient" invisible="1" />
-                    <!-- <field name="is_commercial_partner" /> -->
+                    <field name="is_patient" invisible="1" /> -->
+                    <label for="is_partner" string="Partner"/>
+                    <field name="is_partner"/>
+                    <label for="is_company" string="Company"/>
+                    <field name="is_company"/>
+                    <label for="is_parent_company" string="Parent Co."/>
+                    <field name="is_parent_company"/>
+                    <label for="is_affiliate_company" string="Affiliate"/>
+                    <field name="is_affiliate_company"/>
+                    <label for="is_supplier" string="Supplier"/>
+                    <field name="is_supplier"/>
+                    <label for="is_contact" string="Contact"/>
+                    <field name="is_contact"/>
+                    <label for="is_patient" string="Patient"/>
+                    <field name="is_patient"/>
 
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <field name="parent_id" placeholder="Parent Account" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" class="fw-bold" />
-
+                        <field name="parent_id" placeholder="Parent Company" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" class="fw-bold" />
                         <!-- <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_company', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" class="fw-bold" /> -->
-                        <field name="parent_id" placeholder="Account / Location" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_contact" class="fw-bold" />
-                        <!-- <field name="active" invisible="1"/> -->
+                        <field name="parent_id" placeholder="Company / Affiliate" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="is_company" class="fw-bold" />
+                        <!-- <field name="contact_id" options="{'no_open': True, 'no_create': True}" invisible="not is_patient"/> -->
+                        <!-- <field name="contact_id" class="o_address_street fw-bold" domain="[('is_contact', '=', True), ('parent_id', '=', parent_id)]" placeholder="Search Contact" required="1"/> -->
+                        <field name="contact_id" class="o_address_street fw-bold" invisible="not is_patient" placeholder="Search Contact" required="1"/>
+
                         <field name="active" invisible="1"/>
                         <label for="is_commercial_partner" string="Commercial Partner"/>
                         <field name="is_commercial_partner" />
@@ -165,18 +108,16 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+            <xpath expr="//field[@name='website']" position="attributes">
+                <attribute name="invisible">is_patient</attribute>
+            </xpath>
             <xpath expr="//group" position="replace">
                 <separator name="contact_info" string="Contact Information" />
                 <group>
                     <group>
-                        <!-- <span class="o_form_label o_td_label" name="address_name">
-                            <b invisible="not parent_id or type != 'contact'">Contact Address</b>
-                            <field name="type" placeholder="Address Type" readonly="user_ids" required="1" class="fw-bold"/>
-                            <field name="partner_type" placeholder="Partner Type" required="1" invisible="is_contact and not is_company" class="fw-bold" />
-                        </span> -->
                         <span class="o_form_label o_td_label" name="address_name">
                             <field name="type" placeholder="Address Type" invisible="is_parent_company" readonly="user_ids" required="1" class="fw-bold"/>
-                            <field name="partner_type" placeholder="Partner Type" required="1" invisible="is_contact and not is_company" class="fw-bold" />
+                            <field name="partner_type" placeholder="Partner Type" required="1" invisible="not is_company" class="fw-bold" />
                             <!-- <b invisible="not is_parent_company">Address</b> -->
                         </span>
                         <div class="o_address_format">
@@ -192,8 +133,10 @@
                         <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
                     </group>
                     <group>
+                        <!-- <field name="contact_id" invisible="not is_patient"/> -->
+
                         <field name="function" placeholder="e.g. Sales Director" invisible="1" />
-                        <field name="practitioner_role_ids" placeholder='Roles' widget="many2many_tags" required="is_contact" invisible="is_company" options="{'no_create': True}" class="fw-bold" />
+                        <field name="contact_role_ids" placeholder='Roles' widget="many2many_tags" required="is_contact" invisible="not is_contact" options="{'no_create': True}" class="fw-bold" />
                         <field name="phone" placeholder='Phone' widget="phone" />
                         <field name="mobile" placeholder='Mobile' widget="phone" />
                         <field name="fax_number" placeholder='Fax' widget="phone" />
@@ -209,20 +152,7 @@
                         <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
                     </group>
                 </group>
-                <!-- <separator name="current_orders" string="Current Orders" />
-                <group invisible="is_patient or is_supplier">
-                    <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]" nolabel="1">
-                        <tree editable="bottom">
-                            <field name="name" string="Order"/>
-                            <field name="date_order" widget="date" string="Date"/>
-                            <field name="partner_id" string="Customer"/>
-                            <field name="state" string="Status"/>
-                            <field name="invoice_status"/>
-                            <field name="activity_ids" String="Activities" widget="list_activity" optional="show"/>
-                            <field name="amount_total"/>
-                        </tree>
-                    </field>
-                </group> -->
+                <!-- <separator name="current_orders" string="Current Orders" /> -->
                 <group string="Current Orders" invisible="not is_company">
                     <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]">
                         <tree editable="bottom">
@@ -237,14 +167,14 @@
                     </field>
                 </group>
             </xpath>
-            <!-- Add Locations Page -->
+            <!-- Add Affiliates Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
-                <page string="Locations" name="location_addresses" invisible="not is_company" autofocus="autofocus">
-                    <separator name="locations" string="Locations List" />
-                    <div name="alert_no_locations" class="oe_read_only alert alert-info mb8" role="alert" invisible="not location_ids">
-                        No Locations Available
+                <page string="Affiliates" name="affiliate_addresses" invisible="not is_company" autofocus="autofocus">
+                    <separator name="affiliates" string="Affiliates List" />
+                    <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
+                        No Affiliates Available
                     </div>
-                    <field name="location_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
+                    <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':''}" mode="kanban">
                         <kanban create="true" on_create="base.view_partner_form">
                             <field name="id" />
                             <field name="color" />
@@ -312,7 +242,7 @@
                                 </t>
                             </templates>
                         </kanban>
-                        <form string="Location / Address">
+                        <form string="Affiliate / Address">
                             <sheet>
                                 <field name="type" required="1" widget="radio" options="{'horizontal': true}" />
                                 <div class="text-muted oe_edit_only">
@@ -334,7 +264,7 @@
                                 <group>
                                     <field name="parent_id" string="Parent Practice" />
                                     <group>
-                                        <field name="name" string="Location Name" />
+                                        <field name="name" string="Affiliate Name" />
                                         <label for="street" string="Address" />
                                         <div>
                                             <div class="o_address_format" name="div_address">
@@ -376,7 +306,7 @@
             <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="before">
                 <separator name="contacts" string="Contacts List" />
                 <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" invisible="not child_ids">
-                    No Locations Available
+                    No Affiliates Available
                 </div>
             </xpath>
 
@@ -402,6 +332,18 @@
             <xpath expr="//page[@name='sales_purchases']//field[@name='ref']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+
+            <!-- Personal Information -->
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="personal_information_page" string="Personal Information" invisible="is_company">
+                    <group name="personal_information_group">
+                        <!-- <field name='gender' />
+                        <field name='birthdate_date' />
+                        <field name="age" invisible="not birthdate_date"/> -->
+                    </group>
+                </page>
+            </xpath>
+
 
         </field>
     </record>
@@ -516,12 +458,14 @@
                     <separator />
                     <group name="group_by" string="Group By">
                         <filter string="Accounts" name="parent_id" domain="[('is_company', '=', True), ('is_parent_company', '=', True)]" context="{'group_by': 'parent_id'}" />
-                        <filter string="Locations" name="is_affiliate_company" domain="[('is_company', '=', True), ('is_affiliate_company', '=', True)]" />
+                        <filter string="Affiliates" name="is_affiliate_company" domain="[('is_company', '=', True), ('is_affiliate_company', '=', True)]" />
                         <filter string="Country" name="country_id" context="{'group_by': 'country_id'}" />
                         <filter string="State" name="state_id" context="{'group_by': 'state_id'}" />
                     </group>
                     <searchpanel>
                         <field name="parent_id" icon="fa-building-o" enable_counters="1" />
+                        <field name="contact_id" icon="fa-user" enable_counters="1" />
+
                         <field name="customer_code" icon="fa-building-o" enable_counters="1" />
                         <field name="country_id" icon="fa-globe" enable_counters="1" />
                     </searchpanel>
@@ -530,12 +474,101 @@
         </field>
     </record>
 
-    <record id="contact_account_action" model="ir.actions.act_window">
-        <field name="name">Accounts</field>
+    <!-- <record id="contact_company_action" model="ir.actions.act_window">
+        <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True), ('is_affiliate_company', '=', False), ('id', '!=', 1)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True)]</field>
+        <field name="context">{'default_is_company': True, 'default_is_parent_company': True}</field>
+        <field name="search_view_id" ref="res_partner_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new account
+            </p>
+            <p>
+            An Account is the parent entity of affiliates and establishes the hierarchical relationship.
+            </p>
+        </field>
+    </record>
+
+    <record id="contact_affiliate_action" model="ir.actions.act_window">
+        <field name="name">Affiliates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_company', '=', True), ('is_affiliate_company', '=', True)]</field>
+        <field name="context">{'default_is_company': True, 'default_is_affiliate_company': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new account affiliate
+            </p>
+            <p>
+            An Affiliate provides details for physical locations where services are offered or resources are housed.
+            </p>
+        </field>
+    </record>
+
+    <record id="contact_supplier_action" model="ir.actions.act_window">
+        <field name="name">Suppliers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_supplier', '=', True)]</field>
+        <field name="context">{'default_is_supplier': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new supplier
+            </p>
+            <p>
+            A Supplier refers to an individual or company providing goods or services.
+            </p>
+        </field>
+    </record>
+
+    <record id="contact_contact_action" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_contact', '=', True)]</field>
+        <field name="context">{'default_is_contact': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new contact
+            </p>
+            <p>
+            A Contact represents individuals involved in healthcare processes or related services.
+            </p>
+        </field>
+    </record>
+
+    <record id="contact_patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_patient', '=', True)]</field>
+        <field name="context">{'default_is_patient': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new patient in your address book
+            </p>
+            <p>
+            A Patient is an individual registered to receive medical treatment.
+            </p>
+        </field>
+    </record> -->
+
+
+
+
+    <record id="contact_company_action" model="ir.actions.act_window">
+        <field name="name">Companies</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True,
@@ -551,17 +584,17 @@
                 Add a new account
             </p>
             <p>
-                An Account is the parent entity of locations and establishes the hierachical relationship.
+                An Account is the parent entity of affiliates and establishes the hierachical relationship.
             </p>
         </field>
     </record>
 
-    <record id="contact_location_action" model="ir.actions.act_window">
-        <field name="name">Locations</field>
+    <record id="contact_affiliate_action" model="ir.actions.act_window">
+        <field name="name">Affiliates</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', False), ('is_affiliate_company', '=', True)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', False), ('is_affiliate_company', '=', True), ('id', '!=', 1)]</field>
         <field name="context">{
             'default_company_type':'company',
             'default_is_company':True,
@@ -573,30 +606,9 @@
             }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new account location
+                Add a new account affiliate
             </p>
-            <p>A Location gives details and position information for a physical place where services are provided and resources and participants may be stored, found, contained or accommodated.</p>
-        </field>
-    </record>
-
-    <record id="contact_practitioner_action" model="ir.actions.act_window">
-        <field name="name">Contacts</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_contact', '=', True)]</field>
-        <field name="context">{
-            'default_company_type':'person',
-            'default_is_company':False,
-            'default_is_contact': True,
-            'default_is_partner': True,
-            'prevent_recursion': True,
-            }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Add a new account podiatry practitioner
-            </p>
-            <p>Practitioner covers all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
+            <p>A Affiliate gives details and position information for a physical place where services are provided and resources and participants may be stored, found, contained or accommodated.</p>
         </field>
     </record>
 
@@ -605,13 +617,12 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_supplier', '=', True)]</field>
+        <field name="domain">[('is_supplier', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
-            'default_is_company':True,
-            'default_is_supplier': True,
             'default_is_partner': True,
-            'default_type': '',
+            'default_is_supplier': True,
+            'default_type':'supplier',
             'prevent_recursion': True,
             }</field>
         <field name="help" type="html">
@@ -623,7 +634,28 @@
         </field>
     </record>
 
-    <!-- <record id="contact_patient_action" model="ir.actions.act_window">
+    <record id="contact_contact_action" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('is_contact', '=', True)]</field>
+        <field name="context">{
+            'default_company_type':'person',
+            'default_is_partner': True,
+            'default_is_contact': True,
+            'default_type':'contact',
+            'prevent_recursion': True,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new customer company contact
+            </p>
+            <p>Contact covers all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
+        </field>
+    </record>
+
+    <record id="contact_patient_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -631,17 +663,18 @@
         <field name="domain">[('is_patient', '=', True)]</field>
         <field name="context">{
             'default_company_type':'person',
-            'default_is_company':False,
-            'default_is_contact': True,
             'default_is_partner': True,
+            'default_is_patient': True,
+            'default_type':'patient',
             'prevent_recursion': True,
             }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Add a new account podiatry practitioner
+            Create a new company patient in your address book
             </p>
-            <p>Practitioner covers all individuals who are engaged in the healthcare process and healthcare-related services as part of their formal responsibilities.</p>
+            <p>A Patient is a person receiving or registered to receive medical treatment.</p>
         </field>
-    </record> -->
+    </record>
+
 
 </odoo>
