@@ -30,7 +30,7 @@
             </xpath>
 
             <xpath expr="//page[last()]" position="after">
-                <page string="Customer Statement" invisible="customer_rank == 0">
+                <page string="Customer Statement" invisible="customer_rank == 0 or is_patient">
                     <field name="supplier_rank" invisible="1" />
                     <field name="customer_rank" invisible="1" />
                     <field name="customer_compute_boolean" invisible="1" />

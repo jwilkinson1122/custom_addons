@@ -64,20 +64,32 @@
                     <field name="customer_code" readonly="1"/>
                 </h2>
                 <div class="oe_title mb24">
-                    <!-- <label for="is_partner" string="Partner"/> -->
-                    <field name="is_partner" invisible="1" />
-                    <!-- <label for="is_company" string="Company"/> -->
+
+                    <field name="is_partner" invisible="1"/>
                     <field name="is_company" invisible="1"/>
-                    <!-- <label for="is_parent_company" string="Parent Co."/> -->
                     <field name="is_parent_company" invisible="1"/>
-                    <!-- <label for="is_affiliate_company" string="Affiliate"/> -->
                     <field name="is_affiliate_company" invisible="1"/>
-                    <!-- <label for="is_supplier" string="Supplier"/> -->
                     <field name="is_supplier" invisible="1"/>
-                    <!-- <label for="is_contact" string="Contact"/> -->
                     <field name="is_contact" invisible="1"/>
-                    <!-- <label for="is_patient" string="Patient"/> -->
                     <field name="is_patient" invisible="1"/>
+
+
+                    <!-- <label for="is_partner" string="Partner"/>
+                    <field name="is_partner"/>
+                    <label for="is_company" string="Company"/>
+                    <field name="is_company"/>
+                    <label for="is_parent_company" string="Parent Co."/>
+                    <field name="is_parent_company"/>
+                    <label for="is_affiliate_company" string="Affiliate"/>
+                    <field name="is_affiliate_company"/>
+                    <label for="is_supplier" string="Supplier"/>
+                    <field name="is_supplier"/>
+                    <label for="is_contact" string="Contact"/>
+                    <field name="is_contact"/>
+                    <label for="is_patient" string="Patient"/>
+                    <field name="is_patient"/> -->
+
+
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
@@ -100,7 +112,11 @@
                 <group>
                     <group>
                         <span class="o_form_label o_td_label" name="address_name">
-                            <field name="type" placeholder="Address Type" invisible="is_parent_company" readonly="user_ids" required="1" class="fw-bold"/>
+                            <!-- <field name="type" context="{'is_company': is_company}" string="Address Type"/> -->
+
+                            <field name="type" placeholder="Address Type" readonly="not is_company" required="1" class="fw-bold"/>
+                            <!-- <field name="type" placeholder="Address Type" invisible="is_parent_company" readonly="not is_company" required="1" class="fw-bold"/> -->
+                            <!-- <field name="type" placeholder="Address Type" invisible="is_parent_company" readonly="user_ids" required="1" class="fw-bold"/> -->
                             <field name="partner_type" placeholder="Partner Type" required="1" invisible="not is_company" class="fw-bold" />
                             <!-- <b invisible="not is_parent_company">Address</b> -->
                         </span>
@@ -598,11 +614,12 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_supplier', '=', True)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_supplier', '=', True)]</field>
         <field name="context">{
             'default_company_type':'company',
-            'default_is_partner': True,
+            'default_is_company':True,
             'default_is_supplier': True,
+            'default_is_partner': True,
             'default_type':'supplier',
             'prevent_recursion': True,
             }</field>

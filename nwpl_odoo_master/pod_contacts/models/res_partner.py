@@ -22,15 +22,57 @@ class Partner(models.Model):
         help="Select the type of partner this belongs to.",
     )
 
+    # type = fields.Selection(
+    #     selection_add=[
+    #         ("supplier", "Supplier Address"),
+    #         ("patient", "Patient Address"),
+    #     ],
+    #     ondelete={"contact": "set default"},
+    # )
+
     type = fields.Selection(
-        selection_add=[
-            ("supplier", "Supplier Address"),
+        selection=[
+            ("contact", "Contact Address"),
             ("patient", "Patient Address"),
+            ("invoice", "Invoice Address"),
+            ("delivery", "Delivery Address"),
+            ("supplier", "Supplier Address"),
+            ("other", "Other Address"),
         ],
-        ondelete={"contact": "set default"},
+        string="Address Type",
+        default="contact",
+        help="- Contact Address: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+        "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+        "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+        "- Other: Other address for the company (e.g. subsidiary, ...).",
     )
 
-    # type = fields.Selection(default=False)
+    # Dynamic field for address type
+    # type = fields.Selection(
+    #     selection=lambda self: self._get_dynamic_address_type(),
+    #     string="Address Type",
+    #     default="contact",
+    #     help="Dynamic address type field based on whether the partner is a company or not.",
+    # )
+
+    # @api.model
+    # def _get_dynamic_address_type(self):
+    #     """
+    #     Dynamically return options for the 'type' field based on the context of the view.
+    #     """
+    #     if self.env.context.get("is_company", False):
+    #         return [
+    #             ("invoice", "Invoice Address"),
+    #             ("delivery", "Delivery Address"),
+    #             ("supplier", "Supplier Address"),
+    #             ("other", "Other Address"),
+    #         ]
+    #     else:
+    #         return [
+    #             ("contact", "Contact Address"),
+    #             ("patient", "Patient Address"),
+    #         ]
+
     fax_number = fields.Char(string="Fax")
 
     partner_relation_label = fields.Char(
@@ -476,6 +518,10 @@ class Partner(models.Model):
                 elif vals.get("is_affiliate_company"):
                     vals["customer_code"] = self.env["ir.sequence"].next_by_code(
                         "affiliate.company.code"
+                    ) or _("New")
+                elif vals.get("is_supplier"):
+                    vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+                        "supplier.company.code"
                     ) or _("New")
             elif vals.get("is_contact"):
                 vals["customer_code"] = self.env["ir.sequence"].next_by_code(
