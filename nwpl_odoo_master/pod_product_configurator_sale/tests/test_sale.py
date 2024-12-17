@@ -8,7 +8,7 @@ class SaleOrder(TC.ProductConfiguratorTestCases):
         super().setUp()
         self.SaleOrderId = self.env["sale.order"]
         self.productPricelist = self.env["product.pricelist"]
-        self.resPartner = self.env.ref("nwpl_odoo_master.parent_account_1")
+        self.resPartner = self.env.ref("nwpl_odoo_master.parent_company_1")
         # self.resPartner = self.env.ref("nwpl_odoo_master.partenr_sale_1")
         self.currency_id = self.env.ref("base.USD")
         self.ProductConfWizard = self.env["product.configurator.sale"]

@@ -64,27 +64,20 @@
                     <field name="customer_code" readonly="1"/>
                 </h2>
                 <div class="oe_title mb24">
-                    <!-- <field name="is_partner" invisible="1" />
-                    <field name="is_parent_company" invisible="1" />
-                    <field name="is_company" invisible="1" />
-                    <field name="is_affiliate_company" invisible="1" />
-                    <field name="is_supplier" invisible="1" />
-                    <field name="is_contact" invisible="1" />
-                    <field name="is_patient" invisible="1" /> -->
-                    <label for="is_partner" string="Partner"/>
-                    <field name="is_partner"/>
-                    <label for="is_company" string="Company"/>
-                    <field name="is_company"/>
-                    <label for="is_parent_company" string="Parent Co."/>
-                    <field name="is_parent_company"/>
-                    <label for="is_affiliate_company" string="Affiliate"/>
-                    <field name="is_affiliate_company"/>
-                    <label for="is_supplier" string="Supplier"/>
-                    <field name="is_supplier"/>
-                    <label for="is_contact" string="Contact"/>
-                    <field name="is_contact"/>
-                    <label for="is_patient" string="Patient"/>
-                    <field name="is_patient"/>
+                    <!-- <label for="is_partner" string="Partner"/> -->
+                    <field name="is_partner" invisible="1" />
+                    <!-- <label for="is_company" string="Company"/> -->
+                    <field name="is_company" invisible="1"/>
+                    <!-- <label for="is_parent_company" string="Parent Co."/> -->
+                    <field name="is_parent_company" invisible="1"/>
+                    <!-- <label for="is_affiliate_company" string="Affiliate"/> -->
+                    <field name="is_affiliate_company" invisible="1"/>
+                    <!-- <label for="is_supplier" string="Supplier"/> -->
+                    <field name="is_supplier" invisible="1"/>
+                    <!-- <label for="is_contact" string="Contact"/> -->
+                    <field name="is_contact" invisible="1"/>
+                    <!-- <label for="is_patient" string="Patient"/> -->
+                    <field name="is_patient" invisible="1"/>
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
@@ -101,9 +94,6 @@
             </xpath>
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='website']" position="attributes">
-                <attribute name="invisible">is_patient</attribute>
             </xpath>
             <xpath expr="//group" position="replace">
                 <separator name="contact_info" string="Contact Information" />
@@ -127,16 +117,14 @@
                         <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
                     </group>
                     <group>
-                        <!-- <field name="contact_id" invisible="not is_patient"/> -->
-
                         <field name="function" placeholder="e.g. Sales Director" invisible="1" />
                         <field name="contact_role_ids" placeholder='Roles' widget="many2many_tags" required="is_contact" invisible="not is_contact" options="{'no_create': True}" class="fw-bold" />
                         <field name="phone" placeholder='Phone' widget="phone" />
                         <field name="mobile" placeholder='Mobile' widget="phone" />
-                        <field name="fax_number" placeholder='Fax' widget="phone" />
+                        <field name="fax_number" placeholder='Fax' widget="phone" invisible="is_patient"/>
                         <field name="user_ids" placeholder='User' invisible="1" />
                         <field name="email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids" />
-                        <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" />
+                        <field name="website" placeholder="e.g. https://www.odoo.com" string="Website" widget="url" invisible="is_patient"/>
                         <field name="title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company" />
                         <field name="active_lang_count" placeholder="Active Language" invisible="1" />
                         <field name="ref" invisible="1"/>
@@ -147,7 +135,7 @@
                     </group>
                 </group>
                 <!-- <separator name="current_orders" string="Current Orders" /> -->
-                <group string="Current Orders" invisible="not is_company">
+                <!-- <group string="Current Orders" invisible="not is_company">
                     <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]">
                         <tree editable="bottom">
                             <field name="name" string="Order"/>
@@ -159,7 +147,7 @@
                             <field name="amount_total"/>
                         </tree>
                     </field>
-                </group>
+                </group> -->
             </xpath>
             <!-- Add Affiliates Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
@@ -215,7 +203,7 @@
                                                 Legacy ID: <field name="legacy_customer_code" />
                                                         </li>
                                                         <li t-if="record.customer_code.raw_value">
-                                                Customer ID: <field name="customer_code" />
+                                                ID: <field name="customer_code" />
                                                         </li>
                                                         <li t-if="record.phone">
                                                 Phone: <field name="phone" />
@@ -314,7 +302,7 @@
 
             <!-- Page for patients list -->
             <xpath expr='//page[@name="contact_addresses"]' position="after">
-                <page name="patients_list" string="Patients" invisible="is_supplier">
+                <page name="patients_list" string="Patients" invisible="is_supplier or is_patient">
                     <separator name="patients" string="Patients List" />
                     <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_records or patient_records == ''">
                         No Patients Available
@@ -323,6 +311,15 @@
                 </page>
             </xpath>
 
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="invisible">is_patient</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']" position="attributes">
+                <attribute name="invisible">is_patient</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting_disabled']" position="attributes">
+                <attribute name="invisible">is_patient</attribute>
+            </xpath>
             <xpath expr="//page[@name='sales_purchases']//field[@name='ref']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -434,17 +431,11 @@
                 <xpath expr="//field[@name='parent_id']" position="before">
                     <field name='legacy_customer_code'/>
                     <field name='customer_code'/>
-
                 </xpath>
-                <!-- <field name="name" position="attributes">
-                    <attribute name="filter_domain">['|', '|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self), ('association_name', 'ilike', self)]</attribute>
-                </field> -->
                 <xpath expr="//search" position="inside">
                     <field name="name" filter_domain="['|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('customer_code', '=', self), ('company_registry', 'ilike', self)]"/>
-                    <!-- <field name="association_name" filter_domain="[('association_name', 'ilike', self)]" /> -->
                     <field name="ref" filter_domain="[('ref','ilike',self)]" />
                     <field name="legacy_customer_code" filter_domain="[('legacy_customer_code','ilike',self)]" />
-
                     <field name="customer_code" filter_domain="[('customer_code','ilike',self)]" />
                     <separator />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" />
@@ -459,7 +450,6 @@
                     <searchpanel>
                         <field name="parent_id" icon="fa-building-o" enable_counters="1" />
                         <field name="contact_id" icon="fa-user" enable_counters="1" />
-
                         <field name="customer_code" icon="fa-building-o" enable_counters="1" />
                         <field name="country_id" icon="fa-globe" enable_counters="1" />
                     </searchpanel>
@@ -553,9 +543,6 @@
             </p>
         </field>
     </record> -->
-
-
-
 
     <record id="contact_company_action" model="ir.actions.act_window">
         <field name="name">Companies</field>

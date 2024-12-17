@@ -50,10 +50,8 @@ class Partner(models.Model):
     )
 
     ref = fields.Char(string="Ref", index=True)
-    legacy_customer_code = fields.Char("Legacy Customer ID", readonly=True)
-    customer_code = fields.Char(
-        "Customer ID", readonly=True, default=lambda self: _("New")
-    )
+    legacy_customer_code = fields.Char("Legacy ID", readonly=True)
+    customer_code = fields.Char("ID", readonly=True, default=lambda self: _("New"))
 
     parent_id = fields.Many2one(
         "res.partner",
@@ -765,18 +763,18 @@ class Partner(models.Model):
             },
         }
 
-    current_sale_order_ids = fields.One2many(
-        "sale.order",
-        compute="_compute_current_sale_order_ids",
-        store=False,
-    )
+    # current_sale_order_ids = fields.One2many(
+    #     "sale.order",
+    #     compute="_compute_current_sale_order_ids",
+    #     store=False,
+    # )
 
-    def _compute_current_sale_order_ids(self):
-        """
-        Compute method to populate the 'current_sale_order_ids' field.
-        Filters to show sales orders that are current by removing completed and cancelled sales orders
-        """
-        for partner in self:
-            partner.current_sale_order_ids = partner.sale_order_ids.filtered(
-                lambda order: order.state not in ("done", "cancel")
-            )
+    # def _compute_current_sale_order_ids(self):
+    #     """
+    #     Compute method to populate the 'current_sale_order_ids' field.
+    #     Filters to show sales orders that are current by removing completed and cancelled sales orders
+    #     """
+    #     for partner in self:
+    #         partner.current_sale_order_ids = partner.sale_order_ids.filtered(
+    #             lambda order: order.state not in ("done", "cancel")
+    #         )

@@ -25,6 +25,7 @@
         # "repair",
         "sale",
         "sale_management",
+        "sale_margin",
         # "sale_product_matrix",
         # "sale_stock",
         "stock",

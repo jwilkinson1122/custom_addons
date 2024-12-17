@@ -4,7 +4,7 @@
     <data>
 
         <!-- Accounts -->
-        <record id="parent_account_1" model="res.partner">
+        <record id="parent_company_1" model="res.partner">
             <field name="name">Fab Foot Clinic</field>
             <field name="is_parent_company" eval="True"/>
             <field name="is_company" eval="True"/>
@@ -27,7 +27,7 @@
             <field name="is_affiliate_company" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
-            <field name="parent_id" ref="parent_account_1"/>
+            <field name="parent_id" ref="parent_company_1"/>
             <field name="type">delivery</field>
             <field name="street">1337 N San Joaquin St</field>
             <field name="city">Stockton</field>
@@ -44,7 +44,7 @@
             <field name="is_affiliate_company" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
-            <field name="parent_id" ref="parent_account_1"/>
+            <field name="parent_id" ref="parent_company_1"/>
             <field name="type">delivery</field>
             <field name="street">1611 Peony Dr</field>
             <field name="city">Tracy</field>
@@ -110,7 +110,7 @@
             <field name="name">Doogie Howser</field>
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
-            <field name="parent_id" ref="parent_account_1"/>
+            <field name="parent_id" ref="parent_company_1"/>
             <field name="contact_role_ids" eval="[(4, ref('contact'))]"/>
             <field name="email">doogieHowser@example.com</field>
             <field name="phone">(870)-931-7483</field>
@@ -161,14 +161,14 @@
             <field name="name">Vinnie Boombotz</field>
             <field name="country_id" ref="base.us"/>
             <field name="is_patient" eval="True"/>
-            <field name="parent_id" ref="parent_account_1"/>
+            <field name="parent_id" ref="parent_company_1"/>
             <field name="email">vinnieBoombotz@example.com</field>
             <field name="phone">(870)-931-8585</field>
         </record>
 
         <record id="patient_01" model="res.partner">
             <field name="partner_id" ref="patient_01_partner"/>
-            <field name="parent_id" ref="parent_account_1"/>
+            <field name="parent_id" ref="parent_company_1"/>
             <field name="contact_id" ref="contact_01_partner"/>
         </record>
 

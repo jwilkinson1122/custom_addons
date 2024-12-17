@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <record model="contact.role" id="owner">
+        <field name="name">Owner</field>
+        <field name="description">Owner</field>
+    </record>
     <record model="contact.role" id="practitioner">
         <field name="name">Practitioner</field>
         <field name="description">Practitioner</field>
