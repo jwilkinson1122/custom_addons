@@ -86,8 +86,6 @@ class Partner(models.Model):
     affiliate_text = fields.Char(compute="_compute_affiliate_text")
 
     # Contacts
-    # is_contact = fields.Boolean(string="Contact", default=False)
-
     is_contact = fields.Boolean(
         string="Is a Contact",
         compute="_compute_is_contact",
@@ -110,19 +108,6 @@ class Partner(models.Model):
         domain=[("is_contact", "=", True)],
         help="Link to the related contact.",
     )
-
-    # responsible_contact_id = fields.Many2one(
-    #     string="Responsible",
-    #     comodel_name="res.partner",
-    #     domain=[("is_contact", "=", True)],
-    # )
-
-    # contact_id = fields.Many2one(
-    #     "res.partner",
-    #     string="Contact",
-    #     domain=[("is_contact", "=", True), ("parent_id", "=", parent_id)],
-    #     help="Select a contact related to the selected Parent Company.",
-    # )
 
     contact_role_ids = fields.Many2many(string="Roles", comodel_name="contact.role")
 
@@ -187,15 +172,19 @@ class Partner(models.Model):
             result["res_id"] = self.partner_flag_ids.id
         return result
 
-    # Computations
     def apply_contact_logic(self):
         """Automatically assign a contact based on the parent_id."""
         if self.parent_id:
             # Searching for contacts whose parent_id matches the selected practice
+            # Exclude records marked as patients
             contacts = self.env["res.partner"].search(
-                [("is_contact", "=", True), ("parent_id", "=", self.parent_id.id)]
+                [
+                    ("is_contact", "=", True),
+                    ("is_patient", "=", False),  # Exclude patients
+                    ("parent_id", "=", self.parent_id.id),
+                ]
             )
-            # If any contacts are found, assign the first one to the patient
+            # If any contacts are found, assign the first one to the contact_id
             if contacts:
                 self.contact_id = contacts[0]
 
@@ -205,17 +194,26 @@ class Partner(models.Model):
         self.apply_contact_logic()
         if self.parent_id:
             # Set the domain to include only contacts whose parent_id matches the selected practice
+            # Exclude patients
             return {
                 "domain": {
                     "contact_id": [
                         ("is_contact", "=", True),
+                        ("is_patient", "=", False),  # Exclude patients
                         ("parent_id", "=", self.parent_id.id),
                     ]
                 }
             }
         else:
-            # If no partner is selected, revert to the initial domain
-            return {"domain": {"contact_id": [("is_contact", "=", True)]}}
+            # If no parent is selected, revert to the initial domain excluding patients
+            return {
+                "domain": {
+                    "contact_id": [
+                        ("is_contact", "=", True),
+                        ("is_patient", "=", False),  # Exclude patients
+                    ]
+                }
+            }
 
     @api.depends("is_commercial_partner", "parent_id")
     def _compute_commercial_partner(self):
@@ -318,13 +316,12 @@ class Partner(models.Model):
             else:
                 record.child_ids = self.env["res.partner"]
 
-    @api.depends("contact_id")
+    @api.depends("contact_id", "type")
     def _compute_is_contact(self):
         """Determine if the partner is a contact."""
         for partner in self:
-            partner.is_contact = (
-                partner.contact_id.is_contact if partner.contact_id else False
-            )
+            # Explicitly check if the partner's type is 'contact' and ensure no unwanted propagation
+            partner.is_contact = bool(partner.type == "contact" and partner.contact_id)
 
     def _inverse_is_contact(self):
         """Update contact status."""
@@ -585,7 +582,7 @@ class Partner(models.Model):
         for record in self:
             if record.is_affiliate_company and not record.parent_id:
                 raise ValidationError(
-                    _("Parent Company must be fullfilled on affiliates")
+                    _("Parent Company must be fulfilled on affiliates")
                 )
 
     def check_contact(self, mode="write"):

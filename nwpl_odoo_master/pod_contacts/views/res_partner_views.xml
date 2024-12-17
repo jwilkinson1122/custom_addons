@@ -44,12 +44,11 @@
             <div name="button_box" position="inside">
                 <button name="create_portal_user" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="not is_contact"/>
                 <button name="create_portal_user" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/>
-
             </div>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_partner" invisible="1" />
-                <field name="is_parent_company" invisible="1" />
                 <field name="is_company" invisible="1" />
+                <field name="is_parent_company" invisible="1" />
                 <field name="is_affiliate_company" invisible="1" />
                 <field name="is_supplier" invisible="1" />
                 <field name="is_contact" invisible="1" />
@@ -86,19 +85,14 @@
                     <field name="is_contact"/>
                     <label for="is_patient" string="Patient"/>
                     <field name="is_patient"/>
-
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
                         <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
                         <field name="parent_id" placeholder="Parent Company" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" class="fw-bold" />
-                        <!-- <field name="parent_id" placeholder="Parent Account" domain="[('is_parent_company', '=', True), ('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" class="fw-bold" /> -->
                         <field name="parent_id" placeholder="Company / Affiliate" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="is_company" class="fw-bold" />
-                        <!-- <field name="contact_id" options="{'no_open': True, 'no_create': True}" invisible="not is_patient"/> -->
-                        <!-- <field name="contact_id" class="o_address_street fw-bold" domain="[('is_contact', '=', True), ('parent_id', '=', parent_id)]" placeholder="Search Contact" required="1"/> -->
                         <field name="contact_id" class="o_address_street fw-bold" invisible="not is_patient" placeholder="Search Contact" required="1"/>
-
                         <field name="active" invisible="1"/>
                         <label for="is_commercial_partner" string="Commercial Partner"/>
                         <field name="is_commercial_partner" />
