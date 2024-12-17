@@ -111,7 +111,7 @@
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="parent_company_1"/>
-            <field name="contact_role_ids" eval="[(4, ref('contact'))]"/>
+            <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">doogieHowser@example.com</field>
             <field name="phone">(870)-931-7483</field>
         </record>
@@ -121,7 +121,7 @@
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="child_affiliate_1"/>
-            <field name="contact_role_ids" eval="[(4, ref('contact'))]"/>
+            <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">willieBurke@example.com</field>
             <field name="phone">(828)-316-6456</field>
         </record>
@@ -131,7 +131,7 @@
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="child_affiliate_2"/>
-            <field name="contact_role_ids" eval="[(4, ref('contact'))]"/>
+            <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">bobRoss@example.com</field>
             <field name="phone">(334)-502-9687</field>
         </record>
@@ -141,7 +141,7 @@
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="grand_child_affiliate_1"/>
-            <field name="contact_role_ids" eval="[(4, ref('contact'))]"/>
+            <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">ronGibson@example.com</field>
             <field name="phone">(623)-853-7347</field>
         </record>
@@ -151,7 +151,7 @@
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="grand_child_affiliate_2"/>
-            <field name="contact_role_ids" eval="[(4, ref('contact'))]"/>
+            <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">michelleFord@example.com</field>
             <field name="phone">(603)-996-2584</field>
         </record>
@@ -160,46 +160,37 @@
         <record id="patient_01_partner" model="res.partner">
             <field name="name">Vinnie Boombotz</field>
             <field name="country_id" ref="base.us"/>
+            <field name="is_contact" eval="False"/>
             <field name="is_patient" eval="True"/>
-            <field name="parent_id" ref="parent_company_1"/>
-            <field name="email">vinnieBoombotz@example.com</field>
-            <field name="phone">(870)-931-8585</field>
-        </record>
-
-        <record id="patient_01" model="res.partner">
-            <field name="partner_id" ref="patient_01_partner"/>
+            <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="parent_company_1"/>
             <field name="contact_id" ref="contact_01_partner"/>
+            <field name="email">vinnieBoombotz@example.com</field>
+            <field name="phone">(870)-931-8585</field>
         </record>
 
         <record id="patient_02_partner" model="res.partner">
             <field name="name">Jane Doe</field>
             <field name="country_id" ref="base.us"/>
+            <field name="is_contact" eval="False"/>
             <field name="is_patient" eval="True"/>
-            <field name="parent_id" ref="child_affiliate_1"/>
-            <field name="email">janeDoe@example.com</field>
-            <field name="phone">(828)-316-6742</field>
-        </record>
-
-        <record id="patient_02" model="res.partner">
-            <field name="partner_id" ref="patient_02_partner"/>
+            <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="child_affiliate_1"/>
             <field name="contact_id" ref="contact_02_partner"/>
+            <field name="email">janeDoe@example.com</field>
+            <field name="phone">(828)-316-6742</field>
         </record>
 
         <record id="patient_03_partner" model="res.partner">
             <field name="name">Lucas Hood</field>
             <field name="country_id" ref="base.us"/>
+            <field name="is_contact" eval="False"/>
             <field name="is_patient" eval="True"/>
-            <field name="parent_id" ref="grand_child_affiliate_1"/>
-            <field name="email">lucasHood@example.com</field>
-            <field name="phone">(623)-853-3671</field>
-        </record>
-
-        <record id="patient_03" model="res.partner">
-            <field name="partner_id" ref="patient_03_partner"/>
+            <field name="is_partner" eval="True"/>
             <field name="parent_id" ref="grand_child_affiliate_1"/>
             <field name="contact_id" ref="contact_04_partner"/>
+            <field name="email">lucasHood@example.com</field>
+            <field name="phone">(623)-853-3671</field>
         </record>
 
     </data>
