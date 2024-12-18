@@ -40,38 +40,75 @@ class Partner(models.Model):
             ("other", "Other Address"),
         ],
         string="Address Type",
-        default="contact",
+        default="",
         help="- Contact Address: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
         "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
         "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
         "- Other: Other address for the company (e.g. subsidiary, ...).",
     )
 
-    # Dynamic field for address type
-    # type = fields.Selection(
-    #     selection=lambda self: self._get_dynamic_address_type(),
-    #     string="Address Type",
-    #     default="contact",
-    #     help="Dynamic address type field based on whether the partner is a company or not.",
-    # )
+    company_address_type = fields.Selection(
+        selection=[
+            ("invoice", "Invoice Address"),
+            ("delivery", "Delivery Address"),
+            ("supplier", "Supplier Address"),
+            ("other", "Other Address"),
+        ],
+        string="Company Address Type",
+        compute="_compute_company_address_type",
+        inverse="_inverse_company_address_type",
+        store=True,
+    )
 
-    # @api.model
-    # def _get_dynamic_address_type(self):
-    #     """
-    #     Dynamically return options for the 'type' field based on the context of the view.
-    #     """
-    #     if self.env.context.get("is_company", False):
-    #         return [
-    #             ("invoice", "Invoice Address"),
-    #             ("delivery", "Delivery Address"),
-    #             ("supplier", "Supplier Address"),
-    #             ("other", "Other Address"),
-    #         ]
-    #     else:
-    #         return [
-    #             ("contact", "Contact Address"),
-    #             ("patient", "Patient Address"),
-    #         ]
+    contact_address_type = fields.Selection(
+        selection=[
+            ("contact", "Contact Address"),
+            ("patient", "Patient Address"),
+            # ("other", "Other Address"),
+        ],
+        string="Contact Address Type",
+        compute="_compute_contact_address_type",
+        inverse="_inverse_contact_address_type",
+        store=True,
+    )
+
+    @api.depends("type")
+    def _compute_company_address_type(self):
+        """
+        Compute the company_address_type based on the type field, filtering allowed options.
+        """
+        for record in self:
+            if record.type in dict(self._fields["company_address_type"].selection):
+                record.company_address_type = record.type
+            else:
+                record.company_address_type = False
+
+    @api.depends("type")
+    def _compute_contact_address_type(self):
+        """
+        Compute the contact_address_type based on the type field, filtering allowed options.
+        """
+        for record in self:
+            if record.type in dict(self._fields["contact_address_type"].selection):
+                record.contact_address_type = record.type
+            else:
+                record.contact_address_type = False
+
+    def _inverse_company_address_type(self):
+        """
+        Set the type field based on company_address_type when it changes.
+        """
+        for record in self:
+            if record.company_address_type:
+                record.type = record.company_address_type
+
+    def _inverse_contact_address_type(self):
+        """
+        Set the type field based on contact_address_type when it changes.
+        """
+        for record in self:
+            if record.contact_address_type:
+                record.type = record.contact_address_type
 
     fax_number = fields.Char(string="Fax")
 
@@ -103,9 +140,11 @@ class Partner(models.Model):
             ("is_company", "=", True),
             ("id", "!=", id),
         ],
-        string="Account",
+        string="Parent Company",
         groups="base.group_no_one",
     )
+
+    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
 
     parent_name = fields.Char(
         related="parent_id.name", readonly=True, string="Parent name"
@@ -694,6 +733,26 @@ class Partner(models.Model):
                 result[field] = False
         return result
 
+    # @api.model
+    # def default_get(self, fields_list):
+    #     """
+    #     Override default_get to handle default values for partner fields
+    #     based on context and avoid unnecessary propagation of fields for contacts.
+    #     """
+    #     defaults = super().default_get(fields_list)
+
+    #     if self.env.context.get("default_is_company", False):
+    #         defaults["is_company"] = True
+    #     elif self.env.context.get("default_is_contact", False):
+    #         defaults["is_company"] = False
+
+    #     if self.env.context.get("default_parent_id"):
+    #         for field in self.default_contact_fields():
+    #             if defaults.get(field):
+    #                 defaults[field] = False
+
+    #     return defaults
+
     def _get_name(self):
         """
         Utility method to generate the display name for a partner, incorporating
@@ -808,19 +867,3 @@ class Partner(models.Model):
                 "default_groups_id": [(6, 0, group_ids)],
             },
         }
-
-    # current_sale_order_ids = fields.One2many(
-    #     "sale.order",
-    #     compute="_compute_current_sale_order_ids",
-    #     store=False,
-    # )
-
-    # def _compute_current_sale_order_ids(self):
-    #     """
-    #     Compute method to populate the 'current_sale_order_ids' field.
-    #     Filters to show sales orders that are current by removing completed and cancelled sales orders
-    #     """
-    #     for partner in self:
-    #         partner.current_sale_order_ids = partner.sale_order_ids.filtered(
-    #             lambda order: order.state not in ("done", "cancel")
-    #         )

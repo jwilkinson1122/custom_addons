@@ -1,0 +1,32 @@
+// Below one for blue box
+
+.o_required_modifier {
+
+    &.o_input,
+    .o_input {
+        background-color: #D2D2FF !important;
+        border-radius: 5px;
+        // border-top-left-radius: 5px;
+        // border-top-right-radius: 5px;
+        // border-bottom-left-radius: 5px;
+        // border-bottom-right-radius: 5px;
+    }
+}
+
+
+.o_input {
+    border: $input-border-width solid var(--o-input-border-color);
+    border-width: 100 100 $input-border-width 0;
+    padding: $o-input-padding-y $o-input-padding-x;
+    background-color: var(--o-input-background-color, #{$input-bg});
+
+    // -- Nested o_input(s)
+    .o_input {
+        border: 0;
+        padding: 0;
+    }
+}
+
+.o_list_renderer .o_data_row.o_selected_row>.o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+    background-color: #D2D2FF !important
+}

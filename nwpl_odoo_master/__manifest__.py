@@ -179,6 +179,8 @@
         ],
         "web.assets_backend": [
             "nwpl_odoo_master/static/pod_contacts/static/src/css/custom_theme.css",
+            "nwpl_odoo_master/static/pod_contacts/static/src/scss/fields.scss",
+            # "nwpl_odoo_master/static/pod_contacts/static/src/scss/custom_form.scss",
             "nwpl_odoo_master/static/pod_sql_integration/static/src/scss/custom.scss",
             "nwpl_odoo_master/static/amazon_s3_connector/static/src/js/amazon.js",
             "nwpl_odoo_master/static/amazon_s3_connector/static/src/xml/amazon_dashboard_template.xml",

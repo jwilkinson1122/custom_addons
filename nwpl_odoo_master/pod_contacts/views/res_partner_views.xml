@@ -92,11 +92,13 @@
 
                     <h1>
                         <field id="company" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company" />
-                        <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" />
+                        <!-- <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company" /> -->
+                        <field id="individual" options="{'line_breaks': False}" widget="text" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company" />
+
                     </h1>
                     <div class="o_row" style="margin-top:10px; margin-bottom:10px">
-                        <field name="parent_id" placeholder="Parent Company" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" class="fw-bold" />
-                        <field name="parent_id" placeholder="Company / Affiliate" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="is_company" class="fw-bold" />
+                        <field name="parent_id" placeholder="Parent Company" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="not is_affiliate_company" required="is_affiliate_company" class="fw-bold" />
+                        <field name="parent_id" placeholder="Company / Affiliate" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="is_company" required="is_contact or is_patient" class="fw-bold" />
                         <field name="contact_id" class="o_address_street fw-bold" invisible="not is_patient" placeholder="Search Contact" required="1"/>
                         <field name="active" invisible="1"/>
                         <label for="is_commercial_partner" string="Commercial Partner"/>
@@ -112,12 +114,26 @@
                 <group>
                     <group>
                         <span class="o_form_label o_td_label" name="address_name">
-                            <!-- <field name="type" context="{'is_company': is_company}" string="Address Type"/> -->
 
-                            <field name="type" placeholder="Address Type" readonly="not is_company" required="1" class="fw-bold"/>
+                            <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
+
+                            <!-- <field name="type" placeholder="Address Type" readonly="not is_company" required="1" class="fw-bold"/> -->
                             <!-- <field name="type" placeholder="Address Type" invisible="is_parent_company" readonly="not is_company" required="1" class="fw-bold"/> -->
                             <!-- <field name="type" placeholder="Address Type" invisible="is_parent_company" readonly="user_ids" required="1" class="fw-bold"/> -->
-                            <field name="partner_type" placeholder="Partner Type" required="1" invisible="not is_company" class="fw-bold" />
+
+                            <!-- Company Address Type -->
+                            <field name="company_address_type" placeholder="Address Type" invisible="not is_company" class="fw-bold o_bold_placeholder"/>
+
+                            <!-- <field name="company_address_type" placeholder="Address Type" invisible="not is_company" class="fw-bold"/> -->
+
+                            <!-- Contact Address Type -->
+                            <field name="contact_address_type" placeholder="Address Type" invisible="is_company" class="fw-bold o_bold_placeholder"/>
+
+                            <!-- <field name="contact_address_type" placeholder="Address Type" invisible="is_company" class="fw-bold"/> -->
+
+
+
+                            <field name="partner_type" placeholder="Partner Type" required="1" readonly="1" invisible="not is_company" class="fw-bold" />
                             <!-- <b invisible="not is_parent_company">Address</b> -->
                         </span>
                         <div class="o_address_format">
@@ -150,20 +166,6 @@
                         <field name="category_id" placeholder='Tags' widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
                     </group>
                 </group>
-                <!-- <separator name="current_orders" string="Current Orders" /> -->
-                <!-- <group string="Current Orders" invisible="not is_company">
-                    <field name="current_sale_order_ids" domain="[('state', 'not in', ('cancel', 'done'))]">
-                        <tree editable="bottom">
-                            <field name="name" string="Order"/>
-                            <field name="date_order" widget="date" string="Date"/>
-                            <field name="partner_id" string="Customer"/>
-                            <field name="state" string="Status"/>
-                            <field name="invoice_status"/>
-                            <field name="activity_ids" String="Activities" widget="list_activity" optional="show"/>
-                            <field name="amount_total"/>
-                        </tree>
-                    </field>
-                </group> -->
             </xpath>
             <!-- Add Affiliates Page -->
             <xpath expr='//page[@name="contact_addresses"]' position="before">
@@ -422,13 +424,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='display_name']" position="before">
                 <field name="legacy_customer_code"/>
-
                 <field name='customer_code'/>
                 <field name="parent_id" column_invisible="context.get('default_is_parent_company', False)"/>
             </xpath>
-            <!-- <xpath expr="//field[@name='country_id']" position="after">
-                <field name="customer_code"/>
-            </xpath> -->
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
@@ -474,7 +472,7 @@
         </field>
     </record>
 
-    <!-- <record id="contact_company_action" model="ir.actions.act_window">
+    <!-- <record id="partner_company_action" model="ir.actions.act_window">
         <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -492,7 +490,7 @@
         </field>
     </record>
 
-    <record id="contact_affiliate_action" model="ir.actions.act_window">
+    <record id="partner_affiliate_action" model="ir.actions.act_window">
         <field name="name">Affiliates</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -509,7 +507,7 @@
         </field>
     </record>
 
-    <record id="contact_supplier_action" model="ir.actions.act_window">
+    <record id="partner_supplier_action" model="ir.actions.act_window">
         <field name="name">Suppliers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -526,7 +524,7 @@
         </field>
     </record>
 
-    <record id="contact_contact_action" model="ir.actions.act_window">
+    <record id="partner_contact_action" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -543,7 +541,7 @@
         </field>
     </record>
 
-    <record id="contact_patient_action" model="ir.actions.act_window">
+    <record id="partner_patient_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -560,7 +558,24 @@
         </field>
     </record> -->
 
-    <record id="contact_company_action" model="ir.actions.act_window">
+    <!-- <record id="account.res_partner_action_customer" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True), ('id', '!=', 1)]</field>
+        <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new customer in your address book
+            </p>
+            <p>
+                Odoo helps you easily track all activities related to a customer.
+            </p>
+        </field>
+    </record> -->
+
+
+    <record id="partner_company_action" model="ir.actions.act_window">
         <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -581,12 +596,12 @@
                 Add a new account
             </p>
             <p>
-                An Account is the parent entity of affiliates and establishes the hierachical relationship.
+                An Account is the parent entity of affiliates and establishes the hierarchical relationship.
             </p>
         </field>
     </record>
 
-    <record id="contact_affiliate_action" model="ir.actions.act_window">
+    <record id="partner_affiliate_action" model="ir.actions.act_window">
         <field name="name">Affiliates</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -609,7 +624,7 @@
         </field>
     </record>
 
-    <record id="contact_supplier_action" model="ir.actions.act_window">
+    <record id="partner_supplier_action" model="ir.actions.act_window">
         <field name="name">Suppliers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -632,7 +647,7 @@
         </field>
     </record>
 
-    <record id="contact_contact_action" model="ir.actions.act_window">
+    <record id="partner_contact_action" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
@@ -653,7 +668,7 @@
         </field>
     </record>
 
-    <record id="contact_patient_action" model="ir.actions.act_window">
+    <record id="partner_patient_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
