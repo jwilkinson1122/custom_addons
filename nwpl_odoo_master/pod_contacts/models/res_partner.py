@@ -254,42 +254,58 @@ class Partner(models.Model):
     def apply_contact_logic(self):
         """Automatically assign a contact based on the parent_id."""
         if self.parent_id:
-            # Searching for contacts whose parent_id matches the selected practice
-            # Exclude records marked as patients
             contacts = self.env["res.partner"].search(
                 [
                     ("is_contact", "=", True),
-                    ("is_patient", "=", False),  # Exclude patients
+                    ("is_patient", "=", False),
                     ("parent_id", "=", self.parent_id.id),
                 ]
             )
-            # If any contacts are found, assign the first one to the contact_id
             if contacts:
                 self.contact_id = contacts[0]
+
+    # @api.onchange("parent_id")
+    # def _onchange_parent_id(self):
+    #     """Update the domain of contact based on the selected parent_id."""
+    #     self.apply_contact_logic()
+    #     if self.parent_id:
+    #         return {
+    #             "domain": {
+    #                 "contact_id": [
+    #                     ("is_contact", "=", True),
+    #                     ("is_patient", "=", False),
+    #                     ("parent_id", "=", self.parent_id.id),
+    #                 ]
+    #             }
+    #         }
+    #     else:
+    #         return {
+    #             "domain": {
+    #                 "contact_id": [
+    #                     ("is_contact", "=", True),
+    #                     ("is_patient", "=", False),
+    #                 ]
+    #             }
+    #         }
 
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
         """Update the domain of contact based on the selected parent_id."""
         self.apply_contact_logic()
         if self.parent_id:
-            # Set the domain to include only contacts whose parent_id matches the selected practice
-            # Exclude patients
             return {
                 "domain": {
                     "contact_id": [
                         ("is_contact", "=", True),
-                        ("is_patient", "=", False),  # Exclude patients
-                        ("parent_id", "=", self.parent_id.id),
+                        ("parent_id", "=", self.parent_id.id),  # Ensure direct match
                     ]
                 }
             }
         else:
-            # If no parent is selected, revert to the initial domain excluding patients
             return {
                 "domain": {
                     "contact_id": [
                         ("is_contact", "=", True),
-                        ("is_patient", "=", False),  # Exclude patients
                     ]
                 }
             }
@@ -501,6 +517,7 @@ class Partner(models.Model):
         Compute the patient_ids field to list all child partners who are patients.
         """
         for record in self:
+            _logger.info(f"Computing patients for {record.name}")
             if not isinstance(record.id, models.NewId):
                 # Filter child_ids to include only those marked as patients
                 patients = record.child_ids.filtered(lambda p: p.is_patient)
@@ -733,6 +750,32 @@ class Partner(models.Model):
                 result[field] = False
         return result
 
+    hide_parent = fields.Boolean(
+        default=True,
+        help="If selected, the parent's name will not be included in the "
+        "display name of self.",
+    )
+
+    def _get_contact_name(self, partner, name):
+        if partner.hide_parent:
+            return name
+        return super()._get_contact_name(partner, name)
+
+    # Just add "hide_parent" as a trigger.
+    @api.depends(
+        "is_company", "name", "parent_id.name", "type", "company_name", "hide_parent"
+    )
+    def _compute_display_name(self):
+        return super(Partner, self)._compute_display_name()
+
+    # def name_get(self):
+    #     """Customize the display name for res.partner."""
+    #     result = []
+    #     for record in self:
+    #         name = record.name
+    #         result.append((record.id, name))
+    #     return result
+
     # @api.model
     # def default_get(self, fields_list):
     #     """
@@ -753,55 +796,46 @@ class Partner(models.Model):
 
     #     return defaults
 
-    def _get_name(self):
-        """
-        Utility method to generate the display name for a partner, incorporating
-        contextual options like address formatting, email, VAT, and partner ID.
-        """
-        partner = self
-        name = partner.name or ""
+    # def _get_name(self):
+    #     """
+    #     Utility method to generate the display name for a partner, incorporating
+    #     contextual options like address formatting, email, VAT, and partner ID.
+    #     """
+    #     partner = self
+    #     name = partner.name or ""
+    #     if partner.company_name or partner.parent_id:
+    #         if not name and partner.type == "order":
+    #             type_dict = self.fields_get(["type"])["type"]["selection"]
+    #             name = type_dict.get(partner.type, name)
+    #         if not partner.is_company:
+    #             name = self._get_contact_name(partner, name)
 
-        # Append type description if no name and partner type is relevant
-        if partner.company_name or partner.parent_id:
-            if not name and partner.type == "order":
-                type_dict = self.fields_get(["type"])["type"]["selection"]
-                name = type_dict.get(partner.type, name)
-            if not partner.is_company:
-                name = self._get_contact_name(partner, name)
+    #     if self._context.get("show_address_only"):
+    #         name = partner._display_address(without_company=True)
+    #     elif self._context.get("show_address"):
+    #         name = f"{name}\n{partner._display_address(without_company=True)}".strip()
 
-        # Append address if specified in context
-        if self._context.get("show_address_only"):
-            name = partner._display_address(without_company=True)
-        elif self._context.get("show_address"):
-            name = f"{name}\n{partner._display_address(without_company=True)}".strip()
+    #     name = name.replace("\n\n", "\n")
 
-        # Remove extra new lines for clean formatting
-        name = name.replace("\n\n", "\n")
+    #     if self._context.get("address_inline"):
+    #         name = ", ".join(filter(None, name.split("\n")))
 
-        # Inline address format if specified in context
-        if self._context.get("address_inline"):
-            name = ", ".join(filter(None, name.split("\n")))
+    #     if self._context.get("show_email") and partner.email:
+    #         name = f"{name} <{partner.email}>"
 
-        # Append email if requested in context
-        if self._context.get("show_email") and partner.email:
-            name = f"{name} <{partner.email}>"
+    #     if self._context.get("html_format"):
+    #         name = name.replace("\n", "<br/>")
 
-        # Format as HTML if specified
-        if self._context.get("html_format"):
-            name = name.replace("\n", "<br/>")
+    #     if self._context.get("show_vat") and partner.vat:
+    #         name = f"{name} ‒ {partner.vat}"
 
-        # Append VAT if requested
-        if self._context.get("show_vat") and partner.vat:
-            name = f"{name} ‒ {partner.vat}"
+    #     if not any(
+    #         self._context.get(key)
+    #         for key in ["show_address_only", "show_address", "address_inline"]
+    #     ):
+    #         name = f"{name} ‒ {partner.id}"
 
-        # Append partner ID for unique identification if no specific context format is requested
-        if not any(
-            self._context.get(key)
-            for key in ["show_address_only", "show_address", "address_inline"]
-        ):
-            name = f"{name} ‒ {partner.id}"
-
-        return name
+    #     return name
 
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner

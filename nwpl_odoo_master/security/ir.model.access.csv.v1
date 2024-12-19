@@ -32,3 +32,7 @@ access_pod_mass_update_options,access_pod_mass_update_options,model_pod_mass_upd
 access_measurement_type,access_measurement_type,model_measurement_type,base.group_user,1,1,1,1
 access_measurement_measurement,access_measurement_measurement,model_measurement_measurement,base.group_user,1,1,1,1
 access_measurement_measurement_category,access_measurement_measurement_category,model_measurement_measurement_category,base.group_user,1,1,1,1
+
+
+access_supplier_type_user,access.supplier.type,model_supplier_type,,1,0,0,0
+access_supplier_type_manager,access.supplier.type.manager,model_supplier_type,nwpl_odoo_master.access_group_supplier_type,1,1,1,1

@@ -1,3 +1,8 @@
+// Styling for bold placeholder text
+.o_bold_placeholder::placeholder {
+    font-weight: bold;
+}
+
 // Below one for blue box
 
 .o_required_modifier {
@@ -5,27 +10,55 @@
     &.o_input,
     .o_input {
         background-color: #D2D2FF !important;
-        border-radius: 5px;
-        // border-top-left-radius: 5px;
-        // border-top-right-radius: 5px;
-        // border-bottom-left-radius: 5px;
-        // border-bottom-right-radius: 5px;
+        border-radius: 5px; // Rounded corners for a softer look
+        padding: 10px 12px; // Adjust padding (vertical and horizontal)
+        height: 40px; // Set a consistent height for input fields
     }
 }
 
+
+// .o_input {
+//     border: $input-border-width solid var(--o-input-border-color);
+//     border-width: 100 100 $input-border-width 0;
+//     padding: $o-input-padding-y $o-input-padding-x;
+//     background-color: var(--o-input-background-color, #{$input-bg});
+
+//     .o_input {
+//         border: 0;
+//         padding: 0;
+//     }
+// }
 
 .o_input {
     border: $input-border-width solid var(--o-input-border-color);
-    border-width: 100 100 $input-border-width 0;
-    padding: $o-input-padding-y $o-input-padding-x;
+    padding: 10px 14px; // Padding for better spacing
+    height: 40px; // Set a consistent height
     background-color: var(--o-input-background-color, #{$input-bg});
 
-    // -- Nested o_input(s)
+    // Nested input fields (e.g., compound widgets like address fields)
     .o_input {
         border: 0;
         padding: 0;
+        height: auto; // Let nested inputs adapt naturally
     }
 }
+
+// .o_input {
+//     border: none; 
+//     border-bottom: 2px solid #5353ff;
+//     padding: 8px 12px; 
+//     background-color: transparent; 
+//     transition: border-color 0.3s ease; 
+
+//     &:focus {
+//         outline: none; 
+//         border-bottom-color: #FF0000; 
+//     }
+
+//     &:hover {
+//         border-bottom-color: #007bff; 
+//     }
+// }
 
 .o_list_renderer .o_data_row.o_selected_row>.o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
     background-color: #D2D2FF !important

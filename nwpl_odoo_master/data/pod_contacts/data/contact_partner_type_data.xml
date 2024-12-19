@@ -20,6 +20,10 @@
         <field name="name">Military/VA</field>
         <field name="description">Military/VA</field>
     </record>
+    <!-- <record model="contact.partner.type" id="supplier">
+        <field name="name">Supplier</field>
+        <field name="description">Supplier</field>
+    </record> -->
     <record model="contact.partner.type" id="other">
         <field name="name">Other</field>
         <field name="description">Other</field>

@@ -10,6 +10,8 @@
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
+            <!-- <field name="type">invoice</field> -->
+            <field name="company_address_type">invoice</field>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -28,7 +30,8 @@
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="parent_company_1"/>
-            <field name="type">delivery</field>
+            <!-- <field name="type">delivery</field> -->
+            <field name="company_address_type">delivery</field>
             <field name="street">1337 N San Joaquin St</field>
             <field name="city">Stockton</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -45,7 +48,8 @@
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="parent_company_1"/>
-            <field name="type">delivery</field>
+            <!-- <field name="type">delivery</field> -->
+            <field name="company_address_type">delivery</field>
             <field name="street">1611 Peony Dr</field>
             <field name="city">Tracy</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -62,7 +66,8 @@
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="child_affiliate_1"/>
-            <field name="type">delivery</field>
+            <!-- <field name="type">delivery</field> -->
+            <field name="company_address_type">delivery</field>
             <field name="street">1839 Arbor Way</field>
             <field name="city">Turlock</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -79,7 +84,8 @@
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="child_affiliate_2"/>
-            <field name="type">delivery</field>
+            <!-- <field name="type">delivery</field> -->
+            <field name="company_address_type">delivery</field>
             <field name="street">77 Santa Barbara Rd</field>
             <field name="city">Pleasant Hill</field>
             <field name="state_id" ref="base.state_us_5"/>
@@ -95,6 +101,8 @@
             <field name="is_supplier" eval="True"/>
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">supplier</field> -->
+            <field name="company_address_type">supplier</field>
             <field name="street">1345 Sixth Avenue</field>
             <field name="city">New York</field>
             <field name="state_id" ref="base.state_us_27"/>
@@ -110,6 +118,8 @@
             <field name="name">Doogie Howser</field>
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">contact</field> -->
+            <field name="contact_address_type">contact</field>
             <field name="parent_id" ref="parent_company_1"/>
             <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">doogieHowser@example.com</field>
@@ -120,6 +130,8 @@
             <field name="name">Willie Burke</field>
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">contact</field> -->
+            <field name="contact_address_type">contact</field>
             <field name="parent_id" ref="child_affiliate_1"/>
             <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">willieBurke@example.com</field>
@@ -130,6 +142,8 @@
             <field name="name">Bob Ross</field>
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">contact</field> -->
+            <field name="contact_address_type">contact</field>
             <field name="parent_id" ref="child_affiliate_2"/>
             <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">bobRoss@example.com</field>
@@ -140,6 +154,8 @@
             <field name="name">Ron Gibson</field>
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">contact</field> -->
+            <field name="contact_address_type">contact</field>
             <field name="parent_id" ref="grand_child_affiliate_1"/>
             <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">ronGibson@example.com</field>
@@ -150,6 +166,8 @@
             <field name="name">Michelle Ford</field>
             <field name="is_contact" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">contact</field> -->
+            <field name="contact_address_type">contact</field>
             <field name="parent_id" ref="grand_child_affiliate_2"/>
             <field name="contact_role_ids" eval="[(4, ref('practitioner'))]"/>
             <field name="email">michelleFord@example.com</field>
@@ -163,6 +181,8 @@
             <field name="is_contact" eval="False"/>
             <field name="is_patient" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">patient</field> -->
+            <field name="contact_address_type">patient</field>
             <field name="parent_id" ref="parent_company_1"/>
             <field name="contact_id" ref="contact_01_partner"/>
             <field name="email">vinnieBoombotz@example.com</field>
@@ -175,6 +195,8 @@
             <field name="is_contact" eval="False"/>
             <field name="is_patient" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">patient</field> -->
+            <field name="contact_address_type">patient</field>
             <field name="parent_id" ref="child_affiliate_1"/>
             <field name="contact_id" ref="contact_02_partner"/>
             <field name="email">janeDoe@example.com</field>
@@ -187,6 +209,8 @@
             <field name="is_contact" eval="False"/>
             <field name="is_patient" eval="True"/>
             <field name="is_partner" eval="True"/>
+            <!-- <field name="type">patient</field> -->
+            <field name="contact_address_type">patient</field>
             <field name="parent_id" ref="grand_child_affiliate_1"/>
             <field name="contact_id" ref="contact_04_partner"/>
             <field name="email">lucasHood@example.com</field>

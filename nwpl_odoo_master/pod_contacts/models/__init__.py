@@ -10,6 +10,10 @@ from . import partner_flag
 from . import partner_flag_category
 from . import contact_partner_type
 from . import customer_credit
+
+# from . import supplier_type
 from . import res_partner
+
+# from . import product_supplier_info
 from . import res_users
 from . import ir_actions
