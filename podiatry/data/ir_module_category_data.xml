@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_health_care" model="ir.module.category">
+        <field name="name">Health Care</field>
+        <field name="description">Helps you manage your health care institution.</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="module_category_health_care_patients" model="ir.module.category">
+        <field name="name">Patients</field>
+        <field name="parent_id" ref="module_category_health_care"/>
+        <field name="description">Helps you centralize patient information.</field>
+        <field name="sequence">5</field>
+    </record>
+
+</odoo>

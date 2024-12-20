@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_patient,access_patient,model_optical_patient,group_optical_erp_patients,1,0,0,0
-access_admin_patient,access_admin_patient,model_optical_patient,base.group_system,1,1,1,1

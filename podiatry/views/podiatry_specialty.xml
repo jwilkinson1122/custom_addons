@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Specialty types config -->
+    <record id="action_window_specialities" model="ir.actions.act_window">
+        <field name="name">Specialities</field>
+        <field name="res_model">podiatry.speciality</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!--
+    Submenu: Settings / Other / Specialty Types
+    -->
+    <menuitem id="menu_specialty_type" name="Medical Specialties" parent="podiatry.menu_configuration_other" action="action_window_specialities" sequence="15" groups="base.group_no_one"/>
+
+</odoo>
