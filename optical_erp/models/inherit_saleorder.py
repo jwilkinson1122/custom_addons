@@ -1,62 +1,68 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 
 
 class InheritedSaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
-    prescription_id = fields.Many2one('dr.prescription')
-    doctor = fields.Char(related='prescription_id.dr.name')
-    prescription_date = fields.Date(related='prescription_id.checkup_date')
+    prescription_id = fields.Many2one("dr.prescription")
+    doctor = fields.Char(related="prescription_id.dr.name")
+    prescription_date = fields.Date(related="prescription_id.checkup_date")
     purchase_order_count = fields.Char()
-    po_ref = fields.Many2one('purchase.order', string='PO Ref')
+    po_ref = fields.Many2one("purchase.order", string="PO Ref")
 
     def print_prescription_report_ticket_size(self):
-        return self.env.ref("optical_erp.doctor_prescription_ticket_size2").report_action(self.prescription_id)
+        return self.env.ref(
+            "optical_erp.doctor_prescription_ticket_size2"
+        ).report_action(self.prescription_id)
 
-    def print_ophtalmologic_prescription_report_ticket_size(self):
-        return self.env.ref("optical_erp.doctor_prescription_ophtalmological_ticket_size2").report_action(self.prescription_id)
+    def print_opthamologic_prescription_report_ticket_size(self):
+        return self.env.ref(
+            "optical_erp.doctor_prescription_opthamological_ticket_size2"
+        ).report_action(self.prescription_id)
 
     def _compute_amount_in_word(self):
         for rec in self:
-                rec.num_word = str(rec.currency_id.amount_to_text(rec.amount_total))
+            rec.num_word = str(rec.currency_id.amount_to_text(rec.amount_total))
 
-    num_word = fields.Char(string="This sale order is approved for the sum of: ", compute='_compute_amount_in_word')
+    num_word = fields.Char(
+        string="This sale order is approved for the sum of: ",
+        compute="_compute_amount_in_word",
+    )
 
     def print_sale_order_report(self):
         return self.env.ref("optical_erp.sale_order").report_action(self)
         return {
-            'type': 'ir.actions.report',
-            'report_name': "optical_erp.sale_order_report",
-            'report_file': "optical_erp.sale_order_report",
-            'report_type': 'qweb-pdf',
+            "type": "ir.actions.report",
+            "report_name": "optical_erp.sale_order_report",
+            "report_file": "optical_erp.sale_order_report",
+            "report_type": "qweb-pdf",
         }
 
     def print_purchase_order_report(self):
         return {
-            'type': 'ir.actions.report',
-            'report_name': "optical_erp.purchase_order_report",
-            'report_file': "optical_erp.purchase_order_report",
-            'report_type': 'qweb-pdf',
+            "type": "ir.actions.report",
+            "report_name": "optical_erp.purchase_order_report",
+            "report_file": "optical_erp.purchase_order_report",
+            "report_type": "qweb-pdf",
         }
 
-    @api.onchange('prescription_id')
+    @api.onchange("prescription_id")
     def test(self):
-        product = self.env.ref('optical_erp.optical_erp_product', False)
+        product = self.env.ref("optical_erp.optical_erp_product", False)
         self.order_line = None
-        if self.prescription_id.eye_examination_chargeable==True:
-            self.order_line |= self.order_line.new({
-                'name':'',
-                'product_id':product.id,
-                'product_uom_qty':1,
-                'qty_delivered': 1,
-                'product_uom':'',
-                'price_unit':'',
-
-            })
-
-
+        if self.prescription_id.eye_examination_chargeable == True:
+            self.order_line |= self.order_line.new(
+                {
+                    "name": "",
+                    "product_id": product.id,
+                    "product_uom_qty": 1,
+                    "qty_delivered": 1,
+                    "product_uom": "",
+                    "price_unit": "",
+                }
+            )
 
     # @api.model
     # def create(self,vals):
@@ -70,27 +76,13 @@ class InheritedSaleOrder(models.Model):
     #     result = super(InheritedSaleOrder,self).create(vals)
     #     return result
 
-    def print_ophtalmologic_prescription_report(self):
+    def print_opthamologic_prescription_report(self):
         pass
-
 
     def print_prescription_report(self):
         return {
-            'type': 'ir.actions.report',
-            'report_name': "optical_erp.sale_prescription_template",
-            'report_file': "optical_erp.sale_prescription_template",
-            'report_type': 'qweb-pdf'
+            "type": "ir.actions.report",
+            "report_name": "optical_erp.sale_prescription_template",
+            "report_file": "optical_erp.sale_prescription_template",
+            "report_type": "qweb-pdf",
         }
-
-
-
-
-
-
-
-
-
-
-
-
-

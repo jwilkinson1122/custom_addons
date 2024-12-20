@@ -19,8 +19,7 @@
                             <div class="oe_title">
                                 <label class="oe_title" for="password" string="Password"/>
                                 <h1>
-                                    <field name="password" required="1" string="Password" class="oe_inline"
-                                           password="True"/>
+                                    <field name="password" required="1" string="Password" class="oe_inline" password="True"/>
                                 </h1>
                             </div>
                         </group>

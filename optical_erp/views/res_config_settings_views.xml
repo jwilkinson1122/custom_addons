@@ -7,7 +7,7 @@
         <field name="priority" eval="100"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
+            <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
                 <div class="app_settings_block" data-string="Optical Erp" string="Optical Erp" data-key="optical_erp">
                     <h2 id="web_theme_title">Optical Erp Settings</h2>
                     <div class="row mt16 o_settings_container" name="web_theme">
@@ -23,6 +23,22 @@
                     </div>
                 </div>
             </xpath>
+            <!-- <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Optical Erp" string="Optical Erp" data-key="optical_erp">
+                    <h2 id="web_theme_title">Optical Erp Settings</h2>
+                    <div class="row mt16 o_settings_container" name="web_theme">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <span class="o_form_label">Eye Examination Chargeable</span>
+                            <div class="content-group">
+                                <div>
+                                    <field name="eye_examination_chargeable" class="col-5"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </xpath> -->
         </field>
     </record>
 
@@ -37,11 +53,6 @@
         <field name="context">{'module':'optical_erp', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="menu_optical_erp_settings"
-              name="Settings"
-              parent="optical_erp_config"
-              sequence="2"
-              action="action_optical_erp_config_settings"
-              groups="base.group_system"/>
+    <menuitem id="menu_optical_erp_settings" name="Settings" parent="optical_erp_config" sequence="2" action="action_optical_erp_config_settings" groups="base.group_system"/>
 
 </odoo>
