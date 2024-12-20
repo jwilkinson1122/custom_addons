@@ -39,6 +39,7 @@
         # "views/patient.xml",
         # "views/patient_inherit.xml",
         # "views/user_creation_wizard.xml",
+        "views/menu_view.xml",
         "views/prescription.xml",
         "views/res_config_settings_views.xml",
         "views/partner.xml",

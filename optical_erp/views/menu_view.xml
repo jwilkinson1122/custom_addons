@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <menuitem id="optical_erp_root" name="Optical Erp" sequence="1" web_icon="optical_erp,static/description/icon.png"/>
+    <menuitem id="optical_erp_doctor" name="Optometrist" parent="optical_erp_root" action="action_doctor_window" groups="group_optical_erp_doctors,base.group_system" sequence="1"/>
+    <menuitem id="optical_erp_sale_order" name="Sale Order" parent="optical_erp_root" action="sale.action_orders" sequence="6"/>
+    <menuitem id="optical_erp_customer" name="Customer" parent="optical_erp_root" action="base.action_partner_customer_form" sequence="4"/>
+    <menuitem id="optical_erp_config" name="Configuration" parent="optical_erp_root" sequence="7"/>
+    <menuitem id="optical_erp_prescription_history" name="Prescriptions" parent="optical_erp_root" action="action_prescription_history_window" groups="group_optical_erp_doctors,base.group_system" sequence="3"/>
+
+    <!-- Sales partner menu -->
+    <!-- <menuitem id="sale_partners_menu" name="Customers" parent="sale.sale_menu_root" sequence="0">
+        <menuitem id="sale.res_partner_menu" name="Companies" action="partner_company_action" sequence="1"/>
+        <menuitem id="sale_partner_affiliates_menu" name="Affiliates" action="partner_affiliate_action" sequence="2" />
+        <menuitem id="sale_partner_contacts_menu" name="Contacts" action="partner_contact_action" sequence="3" />
+        <menuitem id="sale_partner_patients_menu" name="Patients" action="partner_patient_action" sequence="4" />
+        <menuitem id="sale_partner_scan_menu" name="Scan" action="res_partner_find" sequence="5" />
+    </menuitem> -->
+
+    <!-- Define root menu for contacts -->
+    <!-- <menuitem id="contacts.menu_contacts" name="Customers" web_icon="contacts,static/description/icon.png" groups="base.group_user,base.group_partner_manager" sequence="20"/>
+    <menuitem id="partner_companies_menu" name="Companies" parent="contacts.menu_contacts" action="partner_company_action" sequence="1" />
+    <menuitem id="partner_affiliates_menu" name="Affiliates" parent="contacts.menu_contacts" action="partner_affiliate_action" sequence="2"/>
+    <menuitem id="partner_suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="partner_supplier_action" sequence="3"/>
+    <menuitem id="contacts.res_partner_menu_contacts" name="Contacts" parent="contacts.menu_contacts" action="partner_contact_action" sequence="4"/>
+    <menuitem id="partner_patients_menu" name="Patients" parent="contacts.menu_contacts" action="partner_patient_action" sequence="5"/>
+    <menuitem id="partner_scan_menu" name="Scan" parent="contacts.menu_contacts" action="res_partner_find" sequence="6"/>
+    <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
+    <menuitem id="partner_types_menu" name="Partner Types" parent="contacts.res_partner_menu_config" sequence="0" action="contact_partner_type_action" />
+    <menuitem id="partner_roles_menu" name="Partner Roles" parent="contacts.res_partner_menu_config" sequence="1" action="contact_role_action" /> -->
+
+
+
+</odoo>
