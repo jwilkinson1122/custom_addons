@@ -17,7 +17,8 @@ class Practice(models.Model):
         "res.partner": "partner_id",
     }
 
-    _rec_name = "practice_id"
+    # _rec_name = "practice_id"
+    # _rec_name = "name"
     _order = "sequence,id"
 
     _parent_name = "parent_id"
@@ -34,7 +35,7 @@ class Practice(models.Model):
     )
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    # name = fields.Char(string="Practice Name", index=True, translate=True)
+
     color = fields.Integer(string="Color Index (0-15)")
 
     sequence = fields.Integer(
@@ -44,6 +45,12 @@ class Practice(models.Model):
     )
 
     code = fields.Char(string="Code", copy=False)
+
+    name = fields.Char(
+        string="Company Name", index=True, required=True
+    )  # Ensure `name` exists
+
+    # name = fields.Char(string="Practice Name", index=True, translate=True)
 
     full_name = fields.Char(
         string="Full Name",

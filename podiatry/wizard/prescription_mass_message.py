@@ -1,5 +1,6 @@
 import logging
 from odoo import api, exceptions, fields, models
+from odoo.exceptions import UserError
 
 
 _logger = logging.getLogger(__name__)
@@ -26,21 +27,18 @@ class PrescriptionMassMessage(models.TransientModel):
 
     def button_send(self):
         import pdb
+
         pdb.set_trace()
         self.ensure_one()
         if not self.prescription_ids:
-            raise exceptions.UserError(
-                "No Prescriptions were selected."
-            )
+            raise UserError("No Prescriptions were selected.")
         if not self.message_body:
-            raise exceptions.UserError(
-                "A message body is required"
-            )
+            raise UserError("A message body is required")
         for prescription in self.prescription_ids:
             prescription.message_post(
                 body=self.message_body,
                 subject=self.message_subject,
-                subtype_xmlid='mail.mt_comment',
+                subtype_xmlid="mail.mt_comment",
             )
             _logger.debug(
                 "Message on %d to followers: %s",

@@ -89,10 +89,46 @@ class Prescription(models.Model):
     # rush_order = fields.Boolean("Rush Order")
 
     rush_order = fields.Selection(
-        selection=[],
+        selection=[
+            ("free_rush", "FREE RUSH UPGRADE"),
+            ("super_rush", "SUPER RUSH-WALK THRU"),
+            # ("rush_one_day_65", "RUSH ONE DAY (65)"),
+            # ("rush_one_day_53", "RUSH ONE DAY (53)"),
+            # ("rush_26", "RUSH (26)"),
+            ("rush", "RUSH"),
+        ],
         string="Rush Order",
-        default="",
+        default="free_rush",
+        tracking=True,
     )
+
+    # Override sale order creation for rush charges
+    def add_rush_charge_to_sale_order(self, sale_order):
+        """Add rush order charge to the sale order."""
+        rush_products = {
+            "free_rush": {"name": "FREE RUSH UPGRADE", "price": 0},
+            "super_rush": {"name": "SUPER RUSH-WALK THRU", "price": 25},
+            # "rush_one_day_65": {"name": "RUSH ONE DAY", "price": 65},
+            # "rush_one_day_53": {"name": "RUSH ONE DAY", "price": 53},
+            # "rush_26": {"name": "RUSH", "price": 26},
+            "rush": {"name": "RUSH", "price": 29},
+        }
+        rush_selection = self.rush_order
+        if rush_selection in rush_products:
+            product_data = rush_products[rush_selection]
+            # Add a sale order line for the rush order charge
+            sale_order.order_line.create(
+                {
+                    "order_id": sale_order.id,
+                    "name": product_data["name"],
+                    "product_id": False,  # If there's no specific product, set to False
+                    "price_unit": product_data["price"],
+                    "product_uom_qty": 1,
+                    "product_uom": self.env.ref(
+                        "uom.product_uom_unit"
+                    ).id,  # Use default unit of measure
+                }
+            )
 
     # OD
     od_sph_distance = fields.Char()
@@ -229,7 +265,7 @@ class Prescription(models.Model):
     l_foot_only = fields.Boolean("Left Only")
     r_foot_only = fields.Boolean("Right Only")
     b_l_pair = fields.Boolean("Bilateral")
-    rush_order = fields.Boolean("3-day rush")
+    # rush_order = fields.Boolean("3-day rush")
     make_from_prior_rx = fields.Boolean("Make From Prior Rx#:")
     qty = fields.Integer("pairs to make")
     ship_to_patient = fields.Boolean("Ship to patient")
@@ -600,7 +636,7 @@ class Prescription(models.Model):
             ) or _("New")
         res = super(Prescription, self).create(vals)
         if res.stage_id.state in ("open", "close"):
-            raise exceptions.UserError("State not allowed for new prescriptions.")
+            raise UserError("State not allowed for new prescriptions.")
         return res
 
     def write(self, vals):

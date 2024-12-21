@@ -55,12 +55,12 @@
                         </div>
                         <div name="name">
                             <h1>
-                                <field name="name" required="1" placeholder="Contact Name"/>
+                                <field name="name" required="1" placeholder="Company Name"/>
                             </h1>
                         </div>
 
                         <div name="parent_practice_id">
-                            <field name="parent_id" placeholder="Parent Practice" readonly="not context.get('can_edit_parent_id', True)"/>
+                            <field name="parent_id" placeholder="Parent Company" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
                     </div>
 

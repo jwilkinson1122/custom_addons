@@ -37,6 +37,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_term_id']" position="before">
                 <field string="Prescription" name="prescription_id"/>
+                <field name="rush_order" readonly="1" />
+
             </xpath>
             <!-- <xpath expr="//field[@name='partner_id']" position="replace">
                 <field string="Practice" name="practice"/>

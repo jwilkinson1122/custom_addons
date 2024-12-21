@@ -93,7 +93,7 @@
                         <group>
                             <field name="book_in_date" />
                             <field name="user_id" />
-                            <field name="rush_order" />
+                            <!-- <field name="rush_order" /> -->
                             <field name="ship_to_patient" />
                             <field name="prescription_source" readonly="state == 'confirm'" required="1"/>
 

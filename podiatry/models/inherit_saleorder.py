@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 class InheritedSaleOrder(models.Model):
     _inherit = "sale.order"
 
-    prescription_id = fields.Many2one("podiatry.prescription")
+    prescription_id = fields.Many2one("podiatry.prescription", string="Prescription")
     practice = fields.Char(related="prescription_id.practice_id.name")
     practitioner = fields.Char(related="prescription_id.practitioner_id.name")
     patient = fields.Char(related="prescription_id.patient_id.name")
@@ -49,13 +49,6 @@ class InheritedSaleOrder(models.Model):
             "report_type": "qweb-pdf",
         }
 
-    @api.onchange("prescription_id")
-    def test(self):
-        product = self.env.ref("", False)
-        self.order_line = None
-        if self.prescription_id.rush_order_chargceable == True:
-            self.order_line |= self.order_line.new({})
-
     # @api.model
     # def create(self,vals):
     #     order_line_product = [(0, 0, {'product_id':30,'partner_invoice_id':12,'partner_id':12})]
@@ -67,6 +60,23 @@ class InheritedSaleOrder(models.Model):
     #     }
     #     result = super(InheritedSaleOrder,self).create(vals)
     #     return result
+
+    rush_order = fields.Selection(
+        related="prescription_id.rush_order",
+        string="Rush Order",
+        store=True,
+        readonly=True,
+    )
+
+    @api.model
+    def create(self, vals):
+        sale_order = super(InheritedSaleOrder, self).create(vals)
+        prescription = self.env["podiatry.prescription"].browse(
+            vals.get("prescription_id")
+        )
+        if prescription and prescription.rush_order:
+            prescription.add_rush_charge_to_sale_order(sale_order)
+        return sale_order
 
     def print_prescription_report(self):
         pass
