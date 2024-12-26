@@ -11,7 +11,7 @@
     ],
     "assets": {
         "web.assets_backend": [
-            # "multi_step_wizard/static/src/js/close_wizard_refresh_view.esm.js",
+
         ],
     },
     "installable": True,

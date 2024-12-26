@@ -70,38 +70,34 @@ class MultiStepWizard(models.AbstractModel):
     def state_exit_configure(self):
         raise NotImplementedError("Define the next state in the inheriting wizard.")
 
-    def state_exit_summary(self):
-        """
-        Finalize the wizard by saving selections to the order line and close the wizard.
-        """
+    def submit_wizard(self):
+        """Submit the wizard and redirect back to the sales order form view."""
         if self.sale_order_id:
             product_id = (
                 self.product_variant_id.id
                 if self.product_variant_id
                 else self.product_id.id
             )
-            # Build the multi-line description
-            name = "\n".join(
-                [
-                    f"{self.product_id.display_name}",
-                    f"Config1={self.field1 or 'N/A'}",
-                    f"Config2={self.field2 or 'N/A'}",
-                    f"Custom={self.field3 or 'N/A'}",
-                ]
+            
+            # Build the sale order line description with each selection on a new line
+            description = (
+                f"{self.product_id.display_name}\n"
+                f"Configuration 1: {self.field1 or 'N/A'}\n"
+                f"Configuration 2: {self.field2 or 'N/A'}\n"
+                f"Customization: {self.field3 or 'N/A'}"
             )
-
+            
             # Create the sale order line
             order_line_values = {
                 "order_id": self.sale_order_id.id,
                 "product_id": product_id,
                 "product_uom_qty": 1,
                 "price_unit": self.computed_price,
-                "name": name,
+                "name": description,
             }
             self.env["sale.order.line"].create(order_line_values)
-            _logger.debug("Order line created successfully.")
-
-        # Return action to reload the parent view (sale.order)
+        
+        # Redirect back to the sale order
         return {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
@@ -110,36 +106,28 @@ class MultiStepWizard(models.AbstractModel):
             "target": "current",
         }
 
-    # def state_exit_summary(self):
-    #     """
-    #     Finalize the wizard by saving selections to the order line and close the wizard.
-    #     """
-    #     _logger.debug("Executing state_exit_summary. Finalizing wizard.")
 
+    # def submit_wizard(self):
+    #     """Submit the wizard and redirect back to the sales order form view."""
     #     if self.sale_order_id:
     #         product_id = (
     #             self.product_variant_id.id
     #             if self.product_variant_id
     #             else self.product_id.id
     #         )
-
-    #         name = "\n".join(
-    #             [
-    #                 f"{self.product_id.display_name}",
-    #                 f"Config1={self.field1 or 'N/A'}",
-    #                 f"Config2={self.field2 or 'N/A'}",
-    #                 f"Custom={self.field3 or 'N/A'}",
-    #             ]
-    #         )
-
     #         order_line_values = {
     #             "order_id": self.sale_order_id.id,
     #             "product_id": product_id,
     #             "product_uom_qty": 1,
     #             "price_unit": self.computed_price,
-    #             "name": name,
+    #             "name": f"{self.product_id.display_name}: {self.field1}, {self.field2}, {self.field3}",
     #         }
     #         self.env["sale.order.line"].create(order_line_values)
 
-    #     _logger.debug("Order line created. Returning close action.")
-    #     return {"type": "ir.actions.act_window_close"}
+    #     return {
+    #         "type": "ir.actions.act_window",
+    #         "res_model": "sale.order",
+    #         "res_id": self.sale_order_id.id,
+    #         "view_mode": "form",
+    #         "target": "current",
+    #     }

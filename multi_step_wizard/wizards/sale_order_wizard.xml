@@ -33,6 +33,7 @@
                     <field name="summary_label" class="oe_inline"/>
                     <field name="summary" readonly="1" string="Summary of Selections" />
                 </group>
+                
             </xpath>
         </field>
     </record>
