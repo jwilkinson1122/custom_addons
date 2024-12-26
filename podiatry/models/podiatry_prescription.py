@@ -98,7 +98,7 @@ class Prescription(models.Model):
             ("rush", "RUSH"),
         ],
         string="Rush Order",
-        default="free_rush",
+        default="",
         tracking=True,
     )
 
@@ -265,7 +265,6 @@ class Prescription(models.Model):
     l_foot_only = fields.Boolean("Left Only")
     r_foot_only = fields.Boolean("Right Only")
     b_l_pair = fields.Boolean("Bilateral")
-    # rush_order = fields.Boolean("3-day rush")
     make_from_prior_rx = fields.Boolean("Make From Prior Rx#:")
     qty = fields.Integer("pairs to make")
     ship_to_patient = fields.Boolean("Ship to patient")
@@ -454,19 +453,40 @@ class Prescription(models.Model):
     notes_laboratory = fields.Text()
     podiatrist_observation = fields.Text()
     state = fields.Selection(
-        [("Draft", "Draft"), ("Confirm", "Confirm")], default="Draft"
+        [("draft", "Draft"), ("confirm", "Confirm")], default="draft"
     )
+
+    # state = fields.Selection(
+    #     selection=[
+    #         ("draft", "Draft"),
+    #         ("open", "Open"),
+    #         ("done", "Done"),
+    #         ("expired", "Expired"),
+    #     ],
+    #     compute="_compute_state",
+    #     store=True,
+    #     copy=False,
+    # )
 
     def confirm_request(self):
         for rec in self:
             rec.state = "Confirm"
 
     prescription_source = fields.Selection(
-        [("Internal", "Internal"), ("External", "External")], default="internal"
+        [("internal", "Internal"), ("external", "External")], default="internal"
     )
 
-    # left, right, bilateral options
+    # prescription_source = fields.Selection(
+    #     selection=[
+    #         ("internal", "Internal"),
+    #         ("external", "External"),
+    #     ],
+    #     compute="_compute_prescription_source",
+    #     store=True,
+    #     copy=False,
+    # )
 
+    # left, right, bilateral options
     rx_left_only = fields.Boolean()
     rx_right_only = fields.Boolean()
     rx_bilateral_copy = fields.Boolean()

@@ -1,6 +1,7 @@
 import base64
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_module_resource
 
 
@@ -13,14 +14,13 @@ class Patient(models.Model):
     }
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    # name = fields.Char(string="Patient Name", index=True)
+    name = fields.Char(string="Contact Name", index=True, required=True)
     color = fields.Integer(string="Color Index (0-15)")
-
     code = fields.Char(string="Code", copy=False)
 
-    practitioner_id = fields.Many2one(
-        comodel_name="podiatry.practitioner", string="Practitioner"
-    )
+    # practitioner_id = fields.Many2one(
+    #     comodel_name="podiatry.practitioner", string="Practitioner"
+    # )
 
     reference = fields.Char(
         string="Patient Reference",
@@ -120,14 +120,22 @@ class Patient(models.Model):
         default=lambda self: self.env.user,
     )
 
+    # practice_id = fields.Many2one(
+    #     comodel_name="podiatry.practice",
+    #     string="Practice",
+    # )
+
     practice_id = fields.Many2one(
-        comodel_name="podiatry.practice",
-        string="Practice",
+        comodel_name="podiatry.practice", string="Practice", ondelete="restrict"
     )
 
+    # practitioner_id = fields.Many2one(
+    #     comodel_name="podiatry.practitioner",
+    #     string="Practitioner",
+    # )
+
     practitioner_id = fields.Many2one(
-        comodel_name="podiatry.practitioner",
-        string="Practitioner",
+        comodel_name="podiatry.practitioner", string="Practitioner", ondelete="restrict"
     )
 
     prescription_count = fields.Integer(
@@ -284,14 +292,35 @@ class Patient(models.Model):
             ).ids
             patient.message_subscribe(partner_ids=partner_ids)
 
+    # @api.model
+    # def create(self, vals):
+    #     if not vals.get("notes"):
+    #         vals["notes"] = "New Patient"
+    #     if vals.get("reference", _("New")) == _("New"):
+    #         vals["reference"] = self.env["ir.sequence"].next_by_code(
+    #             "podiatry.patient"
+    #         ) or _("New")
+    #     patient = super(Patient, self).create(vals)
+    #     patient._add_followers()
+    #     return patient
+
     @api.model
     def create(self, vals):
-        if not vals.get("notes"):
-            vals["notes"] = "New Patient"
+        if not vals.get("name"):
+            raise ValidationError(_("The Patient Name (name) is required."))
         if vals.get("reference", _("New")) == _("New"):
             vals["reference"] = self.env["ir.sequence"].next_by_code(
                 "podiatry.patient"
             ) or _("New")
+        if not vals.get("partner_id"):
+            partner_vals = {
+                "name": vals["name"],
+                "is_company": False,
+                "is_patient": True,
+            }
+            partner = self.env["res.partner"].create(partner_vals)
+            vals["partner_id"] = partner.id
+
         patient = super(Patient, self).create(vals)
         patient._add_followers()
         return patient

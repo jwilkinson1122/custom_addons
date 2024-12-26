@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Form -->
     <record id="view_podiatry_practitioner_form" model="ir.ui.view">
         <field name="name">podiatry.practitioner.form</field>
         <field name="model">podiatry.practitioner</field>
         <field name="arch" type="xml">
-            <form string="Practitioner">
+            <form string="Contact">
                 <field name="active" invisible="1"/>
                 <header/>
                 <div name="alert_practitioner_reference_already_exists" class="alert alert-warning oe_edit_only mb16" role="alert" invisible="not same_reference_practitioner_id">
-                    A practitioner with the same reference already exists, are you sure you want to create a new one?
+                    A contact with the same reference already exists, are you sure you want to create a new one?
                     <br/>
                     •                    <field name="same_reference_practitioner_id"/>
                 </div>
@@ -26,8 +25,6 @@
                     <div name="avatar">
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': true, 'preview_image': 'image_128'}"/>
                     </div>
-                    <!-- Title -->
-
                     <div name="title" class="oe_title">
                         <div name="reference">
                             <h1>
@@ -39,21 +36,17 @@
                                 <field name="name" required="1" placeholder="Contact Name"/>
                             </h1>
                         </div>
-
                         <div name="practice_id">
-                            <!-- <label for="practice_id" string="Primary Practice"/> -->
-                            <field name="practice_id" placeholder="Practice" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
+                            <field name="practice_id" placeholder="Company" required="1" readonly="not context.get('can_edit_parent_id', True)"/>
                         </div>
                     </div>
                     <group name="practitioner_contact">
-                        <!-- Contact Information -->
                         <group name="contact_information" string="Contact Information">
                             <field name="mobile" widget="phone" help="help"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
                             <!-- <field name="position_type"/> -->
                         </group>
-                        <!-- Address Information -->
                         <group name="address_information" string="Address Information">
                             <span class="o_form_label o_td_label" name="address">Address</span>
                             <div class="o_address_format">
@@ -98,26 +91,24 @@
         </field>
     </record>
 
-    <!--
-    Tree
-    -->
     <record id="view_podiatry_practitioner_tree" model="ir.ui.view">
         <field name="name">podiatry.practitioner.tree</field>
         <field name="model">podiatry.practitioner</field>
         <field name="arch" type="xml">
             <tree string="Contacts" decoration-muted="not active">
+                <field name="reference" optional="show"/>
                 <field name="name" decoration-bf="1"/>
-                <field name="reference" optional="hide"/>
-                <field name="mobile" widget="phone" optional="show"/>
+                <!-- <field name="reference" optional="hide"/> -->
+                <field name="practice_id" optional="show"/>
+                <field name="mobile" widget="phone" optional="hide"/>
                 <field name="phone" widget="phone" optional="show"/>
                 <field name="email" widget="email" optional="show"/>
-                <field name="user_id" widget="many2one_avatar" optional="show"/>
-                <field name="active" invisible="1"/>
+                <field name="user_id" widget="many2one_avatar" optional="hide"/>
+                <field name="active" column_invisible="True"/>
             </tree>
         </field>
     </record>
 
-    <!-- Kanban -->
     <record id="view_podiatry_practitioner_kanban" model="ir.ui.view">
         <field name="name">podiatry.practitioner.kanban</field>
         <field name="model">podiatry.practitioner</field>
@@ -166,7 +157,7 @@
                                     <li>ID : 
                                         <field name="reference"/>
                                     </li>
-                                    <li>Practice : 
+                                    <li>Company : 
                                         <field name="practice_id"/>
                                     </li>
                                     <li t-if="record.city.raw_value or record.country_id.raw_value">
@@ -196,10 +187,6 @@
         </field>
     </record>
 
-
-    <!--
-    Activity
-    -->
     <record id="view_podiatry_practitioner_activity" model="ir.ui.view">
         <field name="name">podiatry.practitioner.activity</field>
         <field name="model">podiatry.practitioner</field>
@@ -218,84 +205,49 @@
         </field>
     </record>
 
-    <!--
-    Search
-    -->
     <record id="view_podiatry_practitioner_search" model="ir.ui.view">
         <field name="name">podiatry.practitioner.search</field>
         <field name="model">podiatry.practitioner</field>
         <field name="arch" type="xml">
             <search string="Contacts">
-                <!--
-                Fields
-                -->
                 <field name="name"/>
                 <field name="reference" operator="="/>
-
                 <separator/>
-
-                <!--
-                Filters
-                -->
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
-
-                <!--
-                Groups
-                -->
                 <group name="group_by" string="Group By">
-                    <filter string="Practice" name="practice_id" context="{'group_by': 'practice_id'}"/>
+                    <filter string="Company" name="practice_id" context="{'group_by': 'practice_id'}"/>
                     <filter string="Country" name="country_id" context="{'group_by': 'country_id'}"/>
                     <filter string="State" name="state_id" context="{'group_by': 'state_id'}"/>
                 </group>
-
-                <!--
-                Search panel
-                -->
-
                 <searchpanel>
                     <field name="practice_id" icon="fa-hospital-o" enable_counters="1"/>
                     <field name="country_id" icon="fa-globe" enable_counters="1"/>
                 </searchpanel>
-
             </search>
         </field>
     </record>
 
-    <!--
-    Action: Contacts
-    -->
     <record id="action_podiatry_practitioner" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">podiatry.practitioner</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <!-- <field name="domain">[('is_practitioner', '=', True)]</field> -->
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_practitioner', '=', True)]</field>
         <field name="search_view_id" ref="view_podiatry_practitioner_search"/>
+        <field name="context">{'default_company_type':'person', 'default_is_company':False, 'default_is_practitioner': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new practitioner
+                Create a new contact
             </p>
             <p>
-                Schedule and organize your practitioners efficiently.
+                Organize and manage contacts at a glance.
             </p>
         </field>
     </record>
 
-
-
-    <!--
-    Menu: Contacts
-    -->
     <menuitem id="menu_podiatry_practitioner_root" name="Contacts" action="action_podiatry_practitioner" parent="menu_root" groups="group_user" sequence="10" />
-
-
-    <!--
-        =========
-        Reporting
-        =========
-    -->
 
     <record id="view_podiatry_practitioner_pivot" model="ir.ui.view">
         <field name="name">podiatry.practitioner.pivot</field>
@@ -318,9 +270,6 @@
         </field>
     </record>
 
-    <!--
-    Action
-    -->
     <record id="action_podiatry_practitioner_report" model="ir.actions.act_window">
         <field name="name">Contacts</field>
         <field name="res_model">podiatry.practitioner</field>
@@ -336,9 +285,6 @@
         </field>
     </record>
 
-    <!--
-    Submenu: Reports / Contacts
-    -->
     <!-- <menuitem id="menu_podiatry_practitioner_dashboard" name="Contacts" parent="menu_report" action="action_podiatry_practitioner_report" sequence="35" /> -->
 
 </odoo>

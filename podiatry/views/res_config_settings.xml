@@ -8,7 +8,7 @@
             <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
                 <div class="app_settings_block" data-string="Podiatry" string="Podiatry" data-key="podiatry">
                     <!-- <div class="app_settings_block" data-string="Podiatry" string="Podiatry" data-key="podiatry" groups="podiatry.group_manager"> -->
-                    <h2 id="web_theme_title">Erp Settings</h2>
+                    <h2 id="web_theme_title">ERP Settings</h2>
                     <div class="row mt16 o_settings_container" name="web_theme">
                         <!-- <div class="row mt16 o_settings_container" name="patients_settings_container"> -->
 

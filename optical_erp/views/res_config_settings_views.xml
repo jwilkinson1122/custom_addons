@@ -53,6 +53,6 @@
         <field name="context">{'module':'optical_erp', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="menu_optical_erp_settings" name="Settings" parent="optical_erp_config" sequence="2" action="action_optical_erp_config_settings" groups="base.group_system"/>
+    <menuitem id="menu_optical_erp_settings" name="Settings" parent="optical_erp_config" sequence="0" action="action_optical_erp_config_settings" groups="base.group_system"/>
 
 </odoo>

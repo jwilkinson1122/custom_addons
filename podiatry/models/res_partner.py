@@ -9,16 +9,13 @@ class Partner(models.Model):
     _name = "res.partner"
     _inherit = "res.partner"
 
-    info_ids = fields.One2many("res.partner.info", "partner_id", string="More Info")
     is_location = fields.Boolean("Practice")
     is_practitioner = fields.Boolean("Practitioner")
+    is_patient = fields.Boolean("Patient")
     reference = fields.Char("ID Number")
 
-    # is_practitioner = fields.Boolean(
-    #     string="Practitioner", search='_search_is_practitioner',
-    # )
-    dob = fields.Date()
-    age = fields.Integer(compute="_cal_age", store=True, readonly=True)
+    info_ids = fields.One2many("res.partner.info", "partner_id", string="More Info")
+
     prescription_count = fields.Integer(compute="get_prescription_count")
 
     name = fields.Char(index=True)
@@ -41,25 +38,6 @@ class Partner(models.Model):
             partner.patient_count = partner.patient_ids
         return
 
-    is_patient = fields.Boolean(
-        string="Patient",
-        store=False,
-        search="_search_is_patient",
-    )
-
-    def _search_is_patient(self, operator, value):
-        assert operator in ("=", "!=", "<>") and value in (
-            True,
-            False,
-        ), "Operation not supported"
-        if (operator == "=" and value is True) or (
-            operator in ("<>", "!=") and value is False
-        ):
-            search_operator = "!="
-        else:
-            search_operator = "="
-        return [("patient_ids", search_operator, False)]
-
     def open_customer_prescriptions(self):
         for records in self:
             return {
@@ -79,15 +57,6 @@ class Partner(models.Model):
                 [("customer", "=", records.id)]
             )
             records.prescription_count = count
-
-    @api.depends("dob")
-    def _cal_age(self):
-        for record in self:
-            if record.dob:
-                years = relativedelta(date.today(), record.dob).years
-                record.age = str(int(years))
-            else:
-                record.age = 0
 
     practitioner_id = fields.Many2one(
         "res.partner",
@@ -113,24 +82,6 @@ class Partner(models.Model):
             partner.practitioner_count = partner.practitioner_id
         return
 
-    # is_practitioner = fields.Boolean(
-    #     string="Practitioner", store=False,
-    #     search='_search_is_practitioner',
-    # )
-
-    def _search_is_practitioner(self, operator, value):
-        assert operator in ("=", "!=", "<>") and value in (
-            True,
-            False,
-        ), "Operation not supported"
-        if (operator == "=" and value is True) or (
-            operator in ("<>", "!=") and value is False
-        ):
-            search_operator = "!="
-        else:
-            search_operator = "="
-        return [("practitioner_id", search_operator, False)]
-
     practitioner_type = fields.Selection(
         [
             ("standalone", "Standalone Practitioner"),
@@ -148,59 +99,14 @@ class Partner(models.Model):
             rec.practitioner_type = "attached" if rec.practitioner_id else "standalone"
 
     def _basepractitioner_check_context(self, mode):
-        """Remove "search_show_all_positions" for non-search mode.
-        Keeping it in context can result in unexpected behaviour (ex: reading
-        one2many might return wrong result - i.e with "attached practitioner"
-        removed even if it"s directly linked to a company).
-        Actually, is easier to override a dictionary value to indicate it
-        should be ignored...
-        """
         if mode != "search" and "search_show_all_positions" in self.env.context:
             result = self.with_context(search_show_all_positions={"is_set": False})
         else:
             result = self
         return result
 
-    # @api.model
-    # def search(self, args, offset=0, limit=None, order=None, count=False):
-    #     """Display only standalone practitioner matching ``args`` or having
-    #     attached practitioner matching ``args``"""
-    #     ctx = self.env.context
-    #     if (
-    #         ctx.get("search_show_all_positions", {}).get("is_set")
-    #         and not ctx["search_show_all_positions"]["set_value"]
-    #     ):
-    #         args = expression.normalize_domain(args)
-    #         attached_practitioner_args = expression.AND(
-    #             (args, [("practitioner_type", "=", "attached")])
-    #         )
-    #         attached_practitioners = super(
-    #             Partner, self).search(attached_practitioner_args)
-    #         args = expression.OR(
-    #             (
-    #                 expression.AND(
-    #                     ([("practitioner_type", "=", "standalone")], args)),
-    #                 [("other_practitioner_ids", "in", attached_practitioners.ids)],
-    #             )
-    #         )
-    #     return super(Partner, self).search(
-    #         args, offset=offset, limit=limit, order=order, count=count
-    #     )
-
-    # @api.model
-    # def _name_search(self, name='', args=None, offset=0, operator='ilike', limit=100, name_get_uid=None):
-    #     args = list(args or [])
-    #     if name:
-    #         args += ['|', ('name', operator, name),
-    #                  ('department_code', operator, name)]
-    #     return self._search(args, limit=limit, access_rights_uid=name_get_uid)
-
     @api.model
     def create(self, vals):
-        """When creating, use a modified self to alter the context (see
-        comment in _basepractitioner_check_context).  Also, we need to ensure
-        that the name on an attached practitioner is the same as the name on the
-        practitioner it is attached to."""
         modified_self = self._basepractitioner_check_context("create")
         if not vals.get("name") and vals.get("practitioner_id"):
             vals["name"] = modified_self.browse(vals["practitioner_id"]).name
@@ -219,9 +125,6 @@ class Partner(models.Model):
         return super(Partner, modified_self).unlink()
 
     def _compute_commercial_partner(self):
-        """Returns the partner that is considered the commercial
-        entity of this partner. The commercial entity holds the master data
-        for all commercial fields (see :py:meth:`~_commercial_fields`)"""
         result = super(Partner, self)._compute_commercial_partner()
         for partner in self:
             if partner.practitioner_type == "attached" and not partner.parent_id:
@@ -229,14 +132,9 @@ class Partner(models.Model):
         return result
 
     def _practitioner_fields(self):
-        """Returns the list of practitioner fields that are synced from the parent
-        when a partner is attached to him."""
         return ["name", "title"]
 
     def _practitioner_sync_from_parent(self):
-        """Handle sync of practitioner fields when a new parent practitioner entity
-        is set, as if they were related fields
-        """
         self.ensure_one()
         if self.practitioner_id:
             practitioner_fields = self._practitioner_fields()
@@ -254,11 +152,6 @@ class Partner(models.Model):
             self.with_context(__update_practitioner_lock=True).write(practitioner_vals)
 
     def _fields_sync(self, update_values):
-        """Sync commercial fields and address fields from company and to
-        children, practitioner fields from practitioner and to attached practitioner
-        after create/update, just as if those were all modeled as
-        fields.related to the parent
-        """
         self.ensure_one()
         super(Partner, self)._fields_sync(update_values)
         practitioner_fields = self._practitioner_fields()

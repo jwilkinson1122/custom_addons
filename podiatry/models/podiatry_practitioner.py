@@ -6,9 +6,6 @@ from odoo.modules.module import get_module_resource
 
 from . import podiatry_practice
 
-# from lxml import etree
-# added import statement in try-except because when server runs on
-# windows operating system issue arise because this library is not in Windows.
 try:
     from odoo.tools import image_colorize
 except:
@@ -18,17 +15,12 @@ except:
 class Practitioner(models.Model):
     _name = "podiatry.practitioner"
     _inherit = ["mail.thread", "mail.activity.mixin", "image.mixin"]
+    _inherits = {"res.partner": "partner_id"}
 
-    _inherits = {
-        "res.partner": "partner_id",
-    }
-
-    # _rec_name = 'practitioner_id'
-    # _rec_name = "name"
     _description = "practitioner"
 
-    speciality_id = fields.Many2one(
-        comodel_name="podiatry.speciality", string="speciality"
+    specialty_id = fields.Many2one(
+        comodel_name="podiatry.specialty", string="specialty"
     )
 
     patient_ids = fields.One2many(
@@ -37,14 +29,22 @@ class Practitioner(models.Model):
         string="Patients",
     )
 
-    practitioner_id = fields.Many2many(
-        "res.partner",
-        domain=[("is_practitioner", "=", True)],
-        string="practitioner",
-        required=True,
+    # practitioner_id = fields.Many2many(
+    #     "res.partner",
+    #     domain=[("is_practitioner", "=", True)],
+    #     string="practitioner",
+    #     required=True,
+    # )
+
+    practitioner_id = fields.Many2one(
+        comodel_name="podiatry.practitioner", string="Practitioner", ondelete="restrict"
     )
 
-    practice_id = fields.Many2one(comodel_name="podiatry.practice", string="Practice")
+    # practice_id = fields.Many2one(comodel_name="podiatry.practice", string="Practice")
+
+    practice_id = fields.Many2one(
+        comodel_name="podiatry.practice", string="Practice", ondelete="restrict"
+    )
 
     practitioner_prescription_id = fields.One2many(
         comodel_name="podiatry.prescription",
@@ -65,9 +65,7 @@ class Practitioner(models.Model):
         return base64.b64encode(open(image_path, "rb").read())
 
     active = fields.Boolean(string="Active", default=True, tracking=True)
-    # name = fields.Char(string="Name", index=True)
     name = fields.Char(string="Contact Name", index=True, required=True)
-
     color = fields.Integer(string="Color Index (0-15)")
     code = fields.Char(string="Code", copy=False)
     reference = fields.Char(
@@ -247,12 +245,21 @@ class Practitioner(models.Model):
 
     @api.model
     def create(self, vals):
-        if not vals.get("notes"):
-            vals["notes"] = "New Practitioner"
+        if not vals.get("name"):
+            raise ValidationError(_("The Practitioner Name (name) is required."))
         if vals.get("reference", _("New")) == _("New"):
             vals["reference"] = self.env["ir.sequence"].next_by_code(
                 "podiatry.practitioner"
             ) or _("New")
+        if not vals.get("partner_id"):
+            partner_vals = {
+                "name": vals["name"],
+                "is_company": False,
+                "is_practitioner": True,
+            }
+            partner = self.env["res.partner"].create(partner_vals)
+            vals["partner_id"] = partner.id
+
         practitioner = super(Practitioner, self).create(vals)
         practitioner._add_followers()
         return practitioner
@@ -264,10 +271,15 @@ class Practitioner(models.Model):
             result.append((rec.id, name))
         return result
 
-    def write(self, values):
-        result = super(Practitioner, self).write(values)
-        if "user_id" in values or "other_partner_ids" in values:
+    def write(self, vals):
+        if "name" in vals and not vals["name"]:
+            raise ValidationError(_("The Practitioner Name (name) cannot be empty."))
+
+        result = super(Practitioner, self).write(vals)
+
+        if "user_id" in vals or "other_partner_ids" in vals:
             self._add_followers()
+
         return result
 
     def copy(self, default=None):

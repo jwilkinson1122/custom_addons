@@ -3,7 +3,7 @@
     <!-- Specialty types config -->
     <record id="action_window_specialities" model="ir.actions.act_window">
         <field name="name">Specialities</field>
-        <field name="res_model">podiatry.speciality</field>
+        <field name="res_model">podiatry.specialty</field>
         <field name="view_mode">tree,form</field>
     </record>
 
