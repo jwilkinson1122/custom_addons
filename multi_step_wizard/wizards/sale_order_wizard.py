@@ -17,17 +17,46 @@ class SaleOrderWizard(models.TransientModel):
     product_id = fields.Many2one(
         comodel_name="product.product",
         string="Select Product",
-        domain=[("sale_ok", "=", True)],
+        domain=lambda self: self._get_product_domain(),
         required=True,
-        default=lambda self: self._default_product_id(),
     )
 
-    @api.model
-    def _default_product_id(self):
-        product = self.env["product.product"].search([("sale_ok", "=", True)], limit=1)
-        if not product:
-            raise ValidationError(_("No saleable product found in the system."))
-        return product.id
+    selected_attribute_value_ids = fields.Many2many(
+        comodel_name="product.attribute.value",
+        string="Selected Attributes",
+        help="Selected attribute values for the product",
+    )
+
+    available_attribute_values = fields.Many2many(
+        comodel_name="product.attribute.value",
+        compute="_compute_available_attribute_values",
+        string="Available Attribute Values",
+    )
+
+    def _get_product_domain(self):
+        """Filter products by category for specific wizard states."""
+        if self.state == "start":
+            return [
+                ("categ_id.name", "=", "Shell / Foundation"),
+                ("sale_ok", "=", True),
+            ]
+        elif self.state == "configure":
+            return [("categ_id.name", "=", "Top Cover"), ("sale_ok", "=", True)]
+        return [("sale_ok", "=", True)]
+
+    @api.onchange("state")
+    def _onchange_state(self):
+        """Update product domain dynamically when state changes."""
+        if self.state in ["start", "configure"]:
+            self.product_id = None
+        return {"domain": {"product_id": self._get_product_domain()}}
+
+    @api.onchange("product_id")
+    def _onchange_product_id(self):
+        """Reset selected attributes and recompute available values."""
+        if self.product_id:
+            self.selected_attribute_value_ids = [(5, 0, 0)]
+        self._compute_available_attribute_values()
 
     product_variant_id = fields.Many2one(
         comodel_name="product.product",
@@ -36,8 +65,8 @@ class SaleOrderWizard(models.TransientModel):
         store=True,
     )
 
-    field1 = fields.Char(string="Configuration 1", required=True)
-    field2 = fields.Char(string="Configuration 2", required=True)
+    field1 = fields.Char(string="Configuration 1")
+    field2 = fields.Char(string="Configuration 2")
     field3 = fields.Char(string="Customization")
 
     computed_price = fields.Float(
@@ -66,19 +95,41 @@ class SaleOrderWizard(models.TransientModel):
 
     summary = fields.Text(string="Summary", compute="_compute_summary")
 
-    @api.depends("product_id", "field1", "field2", "field3")
-    def _compute_summary(self):
+    @api.depends("product_id")
+    def _compute_available_attribute_values(self):
+        """Compute the available attribute values for the selected product."""
         for wizard in self:
-            product_name = wizard.product_id.name or "No product selected"
-            config1 = wizard.field1 or "N/A"
-            config2 = wizard.field2 or "N/A"
-            customization = wizard.field3 or "N/A"
-            wizard.summary = (
-                f"Product: {product_name}\n"
-                f"Configuration 1: {config1}\n"
-                f"Configuration 2: {config2}\n"
-                f"Customization: {customization}"
-            )
+            if wizard.product_id:
+                wizard.available_attribute_values = (
+                    wizard.product_id.attribute_value_ids
+                )
+            else:
+                wizard.available_attribute_values = self.env["product.attribute.value"]
+
+    @api.depends(
+        "product_id", "selected_attribute_value_ids", "field1", "field2", "field3"
+    )
+    def _compute_summary(self):
+        """Generate a summary of the selected configurations."""
+        for wizard in self:
+            summary_lines = []
+            if wizard.product_id:
+                summary_lines.append(f"Product: {wizard.product_id.name}")
+
+            if wizard.selected_attribute_value_ids:
+                attributes = ", ".join(
+                    wizard.selected_attribute_value_ids.mapped("name")
+                )
+                summary_lines.append(f"Attributes: {attributes}")
+
+            if wizard.field1:
+                summary_lines.append(f"Configuration 1: {wizard.field1}")
+            if wizard.field2:
+                summary_lines.append(f"Configuration 2: {wizard.field2}")
+            if wizard.field3:
+                summary_lines.append(f"Customization: {wizard.field3}")
+
+            wizard.summary = "\n".join(summary_lines)
 
     @api.model
     def _selection_state(self):
@@ -94,37 +145,67 @@ class SaleOrderWizard(models.TransientModel):
     def _default_sale_order_id(self):
         return self.env.context.get("active_id")
 
+    # def state_exit_start(self):
+    #     self.state = "configure"
+
     def state_exit_start(self):
+        """Move to the configure state."""
+        if not self.product_id:
+            raise ValidationError(_("Please select a product before proceeding."))
+        if not self.field1:
+            raise ValidationError(
+                _("Configuration 1 is required in the Start section.")
+            )
+        # Do not validate field2 here; it will be validated in the Configure step.
         self.state = "configure"
 
     def state_exit_configure(self):
+        """Move to the custom state."""
         if not self.product_id:
             raise ValidationError(_("Please select a product before proceeding."))
-        if not self.field1 or not self.field2:
-            raise ValidationError(_("Configuration fields cannot be empty."))
+        if not self.selected_attribute_value_ids:
+            raise ValidationError(_("Please select at least one attribute value."))
+        if not self.field2:
+            raise ValidationError(
+                _("Configuration 2 is required in the Configure section.")
+            )
         self.state = "custom"
+
+    # def state_exit_configure(self):
+    #     if not self.product_id:
+    #         raise ValidationError(_("Please select a product before proceeding."))
+    #     if not self.selected_attribute_value_ids:
+    #         raise ValidationError(_("Please select a Laterality attribute value."))
+    #     if not self.field1 or not self.field2:
+    #         raise ValidationError(_("Configuration fields cannot be empty."))
+    #     self.state = "custom"
 
     def state_exit_custom(self):
         self.state = "summary"
 
     def state_exit_final(self):
         """Save wizard selections to the sales order line."""
-        if self.sale_order_id:
-            product_id = (
-                self.product_variant_id.id
-                if self.product_variant_id
-                else self.product_id.id
-            )
-            name = (
-                f"Customized {self.product_variant_id.name}"
-                if self.product_variant_id
-                else f"{self.product_id.name}: Config1={self.field1}, Config2={self.field2}, Custom={self.field3}"
-            )
-            order_line_values = {
+        if not self.sale_order_id:
+            raise ValidationError(_("No associated sale order found."))
+
+        description = f"{self.product_id.name or 'Product'}"
+        if self.selected_attribute_value_ids:
+            attributes = ", ".join(self.selected_attribute_value_ids.mapped("name"))
+            description += f" - {attributes}"
+
+        if self.field1:
+            description += f" | Config1: {self.field1}"
+        if self.field2:
+            description += f" | Config2: {self.field2}"
+        if self.field3:
+            description += f" | Custom: {self.field3}"
+
+        self.env["sale.order.line"].create(
+            {
                 "order_id": self.sale_order_id.id,
-                "product_id": product_id,
+                "product_id": self.product_id.id,
                 "product_uom_qty": 1,
                 "price_unit": self.computed_price,
-                "name": name,
+                "name": description,
             }
-            self.env["sale.order.line"].create(order_line_values)
+        )

@@ -14,6 +14,7 @@ class MultiStepWizard(models.AbstractModel):
     state = fields.Selection(
         selection="_selection_state", default="start", required=True
     )
+
     allow_back = fields.Boolean(compute="_compute_allow_back")
 
     @api.depends("state")
@@ -78,7 +79,7 @@ class MultiStepWizard(models.AbstractModel):
                 if self.product_variant_id
                 else self.product_id.id
             )
-            
+
             # Build the sale order line description with each selection on a new line
             description = (
                 f"{self.product_id.display_name}\n"
@@ -86,7 +87,7 @@ class MultiStepWizard(models.AbstractModel):
                 f"Configuration 2: {self.field2 or 'N/A'}\n"
                 f"Customization: {self.field3 or 'N/A'}"
             )
-            
+
             # Create the sale order line
             order_line_values = {
                 "order_id": self.sale_order_id.id,
@@ -96,7 +97,7 @@ class MultiStepWizard(models.AbstractModel):
                 "name": description,
             }
             self.env["sale.order.line"].create(order_line_values)
-        
+
         # Redirect back to the sale order
         return {
             "type": "ir.actions.act_window",
@@ -105,29 +106,3 @@ class MultiStepWizard(models.AbstractModel):
             "view_mode": "form",
             "target": "current",
         }
-
-
-    # def submit_wizard(self):
-    #     """Submit the wizard and redirect back to the sales order form view."""
-    #     if self.sale_order_id:
-    #         product_id = (
-    #             self.product_variant_id.id
-    #             if self.product_variant_id
-    #             else self.product_id.id
-    #         )
-    #         order_line_values = {
-    #             "order_id": self.sale_order_id.id,
-    #             "product_id": product_id,
-    #             "product_uom_qty": 1,
-    #             "price_unit": self.computed_price,
-    #             "name": f"{self.product_id.display_name}: {self.field1}, {self.field2}, {self.field3}",
-    #         }
-    #         self.env["sale.order.line"].create(order_line_values)
-
-    #     return {
-    #         "type": "ir.actions.act_window",
-    #         "res_model": "sale.order",
-    #         "res_id": self.sale_order_id.id,
-    #         "view_mode": "form",
-    #         "target": "current",
-    #     }
