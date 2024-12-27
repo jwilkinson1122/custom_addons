@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_with_wizard" model="ir.ui.view">
+            <field name="name">sale.order.form.wizard.button</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <header position="inside">
+                    <button name="open_laterality_wizard" type="object" string="Select Products for Laterality" class="btn-primary"/>
+                </header>
+                <xpath expr="//field[@name='order_line']/tree" position="before">
+                    <field name="laterality_matrix" widget="x2many_2d_matrix">
+                        <attribute name="field_x_axis">laterality</attribute>
+                        <attribute name="field_y_axis">category_id</attribute>
+                        <attribute name="field_value">product_ids</attribute>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
