@@ -65,6 +65,9 @@ class SaleOrderWizard(models.TransientModel):
 
     start_selected_attribute_value_ids = fields.Many2many(
         comodel_name="product.attribute.value",
+        relation="sale_order_wizard_start_attribute_rel",  # Unique table name
+        column1="wizard_id",  # Column for the wizard ID
+        column2="attribute_id",  # Column for the attribute ID
         string="Start Selected Attributes",
     )
 
@@ -82,6 +85,9 @@ class SaleOrderWizard(models.TransientModel):
 
     configure_selected_attribute_value_ids = fields.Many2many(
         comodel_name="product.attribute.value",
+        relation="sale_order_wizard_configure_attribute_rel",  # Unique table name
+        column1="wizard_id",
+        column2="attribute_id",
         string="Configure Selected Attributes",
     )
 
