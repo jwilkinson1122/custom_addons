@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action Definition -->
+    <record id="action_wizard_section_configuration" model="ir.actions.act_window">
+        <field name="name">Wizard Section Configuration</field>
+        <field name="res_model">wizard.section.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu Hierarchy -->
+    <!-- <menuitem id="menu_custom" name="Custom Menu" parent="base.menu_root" sequence="100" />
+    <menuitem id="menu_wizard_section_configuration" name="Wizard Section Configuration" parent="menu_custom" sequence="10" action="action_wizard_section_configuration" /> -->
+
+    <menuitem id="menu_wizard_section_configuration" name="Wizard Section Configuration" parent="sale.prod_config_main" sequence="0" action="action_wizard_section_configuration" />
+
+    <!-- Views -->
+    <record id="view_wizard_section_configuration_tree" model="ir.ui.view">
+        <field name="name">wizard.section.configuration.tree</field>
+        <field name="model">wizard.section.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="section_name"/>
+                <field name="product_category_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_wizard_section_configuration_form" model="ir.ui.view">
+        <field name="name">wizard.section.configuration.form</field>
+        <field name="model">wizard.section.configuration</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="section_name"/>
+                        <field name="product_category_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
