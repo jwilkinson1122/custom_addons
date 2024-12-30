@@ -53,7 +53,7 @@ class SaleOrderWizard(models.TransientModel):
         comodel_name="product.product",
         string="Select Product",
         domain=lambda self: self._get_product_domain(),
-        required=True,
+        # required=True,
     )
 
     # Section-specific fields
@@ -115,8 +115,58 @@ class SaleOrderWizard(models.TransientModel):
                 configuration.product_category_id if configuration else None
             )
 
-    def _get_product_domain(self, section):
+    @api.onchange("start_product_id")
+    def _onchange_start_product_id(self):
+        """Update the domain for Start Attributes based on the selected Start Product."""
+        if self.start_product_id:
+            # Get attribute values related to the selected product
+            attribute_values = (
+                self.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
+                    "value_ids"
+                )
+            )
+            _logger.info(f"Start Product Attribute Values: {attribute_values.ids}")
+            return {
+                "domain": {
+                    "start_selected_attribute_value_ids": [
+                        ("id", "in", attribute_values.ids)
+                    ]
+                }
+            }
+        else:
+            _logger.info("No Start Product Selected, resetting attributes.")
+            return {
+                "domain": {"start_selected_attribute_value_ids": [("id", "=", False)]}
+            }
+
+    @api.onchange("configure_product_id")
+    def _onchange_configure_product_id(self):
+        """Update the domain for Configure Attributes based on the selected Configure Product."""
+        if self.configure_product_id:
+            attribute_values = (
+                self.configure_product_id.product_tmpl_id.attribute_line_ids.mapped(
+                    "value_ids"
+                )
+            )
+            _logger.info(f"Configure Product Attribute Values: {attribute_values.ids}")
+            return {
+                "domain": {
+                    "configure_selected_attribute_value_ids": [
+                        ("id", "in", attribute_values.ids)
+                    ]
+                }
+            }
+        else:
+            _logger.info("No Configure Product Selected, resetting attributes.")
+            return {
+                "domain": {
+                    "configure_selected_attribute_value_ids": [("id", "=", False)]
+                }
+            }
+
+    def _get_product_domain(self, section=None):
         """Get domain for a specific section."""
+        section = section or self.state  # Use current state if section is None
         configuration = self.env["wizard.section.configuration"].search(
             [("section_name", "=", section)], limit=1
         )
@@ -179,15 +229,27 @@ class SaleOrderWizard(models.TransientModel):
         readonly=True,
     )
 
-    summary = fields.Text(string="Summary", compute="_compute_summary")
+    # summary = fields.Text(string="Summary", compute="_compute_summary")
+    summary = fields.Text(string="Summary", compute="_compute_summary", default="")
 
-    @api.depends("product_id")
+    # @api.depends("start_product_id")
+    # def _compute_available_attribute_values(self):
+    #     for wizard in self:
+    #         if wizard.start_product_id:
+    #             wizard.available_attribute_values = (
+    #                 wizard.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
+    #                     "value_ids"
+    #                 )
+    #             )
+    #         else:
+    #             wizard.available_attribute_values = self.env["product.attribute.value"].browse([])
+
+    @api.depends("start_product_id")
     def _compute_available_attribute_values(self):
-        """Compute the available attribute values for the selected product."""
         for wizard in self:
-            if wizard.product_id:
+            if wizard.start_product_id:
                 wizard.available_attribute_values = (
-                    wizard.product_id.product_tmpl_id.attribute_line_ids.mapped(
+                    wizard.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
                         "value_ids"
                     )
                 )
@@ -195,28 +257,49 @@ class SaleOrderWizard(models.TransientModel):
                 wizard.available_attribute_values = self.env["product.attribute.value"]
 
     @api.depends(
-        "product_id", "selected_attribute_value_ids", "field1", "field2", "field3"
+        "start_product_id",
+        "start_selected_attribute_value_ids",
+        "configure_product_id",
+        "configure_selected_attribute_value_ids",
+        "field1",
+        "field2",
+        "field3",
     )
     def _compute_summary(self):
-        """Generate a summary of the selected configurations."""
+        """Generate a summary of the selected configurations across all sections."""
         for wizard in self:
             summary_lines = []
-            if wizard.product_id:
-                summary_lines.append(f"Product: {wizard.product_id.name}")
 
-            if wizard.selected_attribute_value_ids:
-                attributes = ", ".join(
-                    wizard.selected_attribute_value_ids.mapped("name")
+            # Start Section
+            if wizard.start_product_id:
+                summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
+            if wizard.start_selected_attribute_value_ids:
+                start_attributes = ", ".join(
+                    wizard.start_selected_attribute_value_ids.mapped("name")
                 )
-                summary_lines.append(f"Attributes: {attributes}")
+                summary_lines.append(f"Start Attributes: {start_attributes}")
 
+            # Configure Section
+            if wizard.configure_product_id:
+                summary_lines.append(
+                    f"Configure Product: {wizard.configure_product_id.name}"
+                )
+            if wizard.configure_selected_attribute_value_ids:
+                configure_attributes = ", ".join(
+                    wizard.configure_selected_attribute_value_ids.mapped("name")
+                )
+                summary_lines.append(f"Configure Attributes: {configure_attributes}")
+
+            # Custom Section
             if wizard.field1:
                 summary_lines.append(f"Configuration 1: {wizard.field1}")
             if wizard.field2:
                 summary_lines.append(f"Configuration 2: {wizard.field2}")
             if wizard.field3:
+                _logger.info(f"Adding Field3 to summary: {wizard.field3}")
                 summary_lines.append(f"Customization: {wizard.field3}")
 
+            # Finalize Summary
             wizard.summary = "\n".join(summary_lines)
 
     @api.model
@@ -240,19 +323,6 @@ class SaleOrderWizard(models.TransientModel):
             raise ValidationError(_("Please select a product in the Start section."))
         self.state = "configure"
 
-    # def state_exit_start(self):
-    #     """Move to the configure state."""
-    #     if not self.product_id:
-    #         raise ValidationError(
-    #             _("Please select a product before proceeding in the Start section.")
-    #         )
-    #     if not self.field1:
-    #         raise ValidationError(
-    #             _("Configuration 1 is required in the Start section.")
-    #         )
-    #     self.selected_attribute_value_ids = [(5, 0, 0)]
-    #     self.state = "configure"
-
     def state_exit_configure(self):
         """Transition from Configure section."""
         if not self.configure_product_id:
@@ -261,31 +331,24 @@ class SaleOrderWizard(models.TransientModel):
             )
         self.state = "custom"
 
-    # def state_exit_configure(self):
-    #     """Move to the custom state."""
-    #     if not self.product_id:
-    #         raise ValidationError(
-    #             _("Please select a product before proceeding in the Configure section.")
-    #         )
-    #     if not self.selected_attribute_value_ids:
-    #         raise ValidationError(
-    #             _(
-    #                 "Please select at least one attribute value in the Configure section."
-    #             )
-    #         )
-    #     if not self.field2:
-    #         raise ValidationError(
-    #             _("Configuration 2 is required in the Configure section.")
-    #         )
-    #     self.state = "custom"
+    # def state_exit_custom(self):
+    #     """Move to the summary state."""
+    #     self.field3 = None
+    #     self.state = "summary"
 
     def state_exit_custom(self):
         """Move to the summary state."""
-        self.field3 = None  # Optional: Reset customization field if needed
+        _logger.info(f"Field3 value before transition: {self.field3}")
+        if not self.field3:
+            raise ValidationError(_("Please enter customization details."))
         self.state = "summary"
 
     def state_exit_final(self):
         """Save wizard selections to the sales order line."""
+        _logger.info(
+            f"Finalizing wizard with: start_product_id={self.start_product_id}, configure_product_id={self.configure_product_id}, field3={self.field3}"
+        )
+
         if not self.sale_order_id:
             raise ValidationError(_("No associated sale order found."))
 
@@ -311,12 +374,39 @@ class SaleOrderWizard(models.TransientModel):
             }
         )
 
+    # def state_exit_final(self):
+    #     """Save wizard selections to the sales order line."""
+    #     if not self.sale_order_id:
+    #         raise ValidationError(_("No associated sale order found."))
+
+    #     description = f"{self.product_id.name or 'Product'}"
+    #     if self.selected_attribute_value_ids:
+    #         attributes = ", ".join(self.selected_attribute_value_ids.mapped("name"))
+    #         description += f" - {attributes}"
+
+    #     if self.field1:
+    #         description += f" | Config1: {self.field1}"
+    #     if self.field2:
+    #         description += f" | Config2: {self.field2}"
+    #     if self.field3:
+    #         description += f" | Custom: {self.field3}"
+
+    #     self.env["sale.order.line"].create(
+    #         {
+    #             "order_id": self.sale_order_id.id,
+    #             "product_id": self.product_id.id,
+    #             "product_uom_qty": 1,
+    #             "price_unit": self.computed_price,
+    #             "name": description,
+    #         }
+    #     )
+
     @api.model
     def create(self, vals):
         """Ensure product_id is set when the wizard is created."""
         wizard = super().create(vals)
         if not wizard.product_id:
-            domain = wizard._get_product_domain()
+            domain = wizard._get_product_domain(wizard.state)
             default_product = wizard.env["product.product"].search(domain, limit=1)
             if default_product:
                 wizard.product_id = default_product
