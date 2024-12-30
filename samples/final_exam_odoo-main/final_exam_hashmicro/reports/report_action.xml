@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--action pdf wizard-->
+        <record id="report_sale_order_booking_order_pdf" model="ir.actions.report">
+            <field name="name">Booking Order Pdf Wizard</field>
+            <field name="model">booking.report.wizardpdf</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">final_exam_hashmicro.report_booking_order_wizard_pdf</field>
+            <field name="report_file">final_exam_hashmicro.report_booking_order_wizard_pdf</field>
+            <field name="binding_model_id" ref="model_booking_report_wizardpdf"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

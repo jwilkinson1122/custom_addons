@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_booking_order_report_wizard_pdf" model="ir.ui.view">
+        <field name="name">booking.report.wizardpdf.form</field>
+        <field name="model">booking.report.wizardpdf</field>
+        <field name="arch" type="xml">
+            <form string="Booking order Report Wizard">
+                    <group>
+                        <label for="from_date" string="Periode"/>
+                        <div class="o_row">
+                            <field name="from_date" widget="daterange" options="{'related_end_date': 'to_date'}"/>
+                            <span> to </span>
+                            <field name="to_date" widget="daterange" options="{'related_end_date': 'from_date'}"/>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Print Report" type="object" name="action_print_report" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--menu action-->
+        <record id="action_booking_order_report_wizard_pdf" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">booking order Report Pdf</field>
+            <field name="res_model">booking.report.wizardpdf</field>
+             <field name="view_id" ref="view_booking_order_report_wizard_pdf"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <!--        submenu wizard -->
+        <menuitem id="submenu_booking_order_report_pdf"
+                  name="Booking Order Report Pdf"
+                  parent="sale.menu_sale_report"
+                  action="action_booking_order_report_wizard_pdf"/>
+    </data>
+</odoo>

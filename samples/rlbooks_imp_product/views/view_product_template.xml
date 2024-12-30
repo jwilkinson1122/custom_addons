@@ -1,0 +1,40 @@
+<odoo>
+
+  <data>
+   
+    <record model="ir.ui.view" id="rlbooks_imp_producy_product_template_ext_form">
+      <field name="name">rlbooks.imp_product.product_template.form</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="product.product_template_form_view"/>
+      <field name="mode">extension</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+
+        <xpath expr="//page[@name='sales']" position="inside">
+          
+          <group string="Follow products" modifiers="{}">
+           
+            <field name="followproduct_ids" context="{'default_main_product_id': id}" nolabel="1">
+
+              <tree editable="bottom" string="Follow products" default_order="follow_product_id" >
+
+                <field name="main_product_id" invisible="1"/>
+                <field name="follow_product_id"/>
+                <field name="qty"/>
+                <field name="included_in_price"/>
+                <field name="company_id"/>
+
+              </tree>
+
+            </field>  
+           
+           </group>                           
+        
+        </xpath>
+
+      </field>
+    </record>
+
+  </data>
+
+</odoo>

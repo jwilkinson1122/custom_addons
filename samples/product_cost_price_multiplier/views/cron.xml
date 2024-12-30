@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <!-- Define the cron job -->
+        <record id="ir_cron_product_price_update" model="ir.cron">
+            <field name="name">Product Price Update Cron</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="model_product_price_updater"/>
+            <field name="state">code</field>
+            <field name="code">model.update_product_prices_cron()</field>
+        </record>
+    </data>
+</odoo>

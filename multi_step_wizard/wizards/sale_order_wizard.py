@@ -40,6 +40,7 @@ class SaleOrderWizard(models.TransientModel):
     _name = "sale.order.wizard"
     _inherit = ["multi.step.wizard.mixin"]
 
+    # General fields
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sales Order",
@@ -55,10 +56,33 @@ class SaleOrderWizard(models.TransientModel):
         required=True,
     )
 
+    # Section-specific fields
+    start_product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Start Product",
+        domain=lambda self: self._get_product_domain("start"),
+    )
+
+    start_selected_attribute_value_ids = fields.Many2many(
+        comodel_name="product.attribute.value",
+        string="Start Selected Attributes",
+    )
+
+    configure_product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Configure Product",
+        domain=lambda self: self._get_product_domain("configure"),
+    )
+
     selected_attribute_value_ids = fields.Many2many(
         comodel_name="product.attribute.value",
         string="Selected Attributes",
         help="Selected attribute values for the product",
+    )
+
+    configure_selected_attribute_value_ids = fields.Many2many(
+        comodel_name="product.attribute.value",
+        string="Configure Selected Attributes",
     )
 
     available_attribute_values = fields.Many2many(
@@ -84,47 +108,28 @@ class SaleOrderWizard(models.TransientModel):
             wizard.current_category_id = (
                 configuration.product_category_id if configuration else None
             )
-            _logger.info(
-                f"Current Category for state '{wizard.state}': {wizard.current_category_id.name if wizard.current_category_id else 'None'}"
-            )
 
-    # @api.depends("state")
-    # def _compute_current_category(self):
-    #     """Fetch the product category based on the current section."""
-    #     for wizard in self:
-    #         configuration = self.env["wizard.section.configuration"].search(
-    #             [("section_name", "=", wizard.state)], limit=1
-    #         )
-    #         wizard.current_category_id = (
-    #             configuration.product_category_id if configuration else None
-    #         )
-
-    # def _get_product_domain(self):
-    #     """Filter products by the dynamically configured category."""
-    #     if self.current_category_id:
-    #         return [
-    #             ("categ_id", "child_of", self.current_category_id.id),
-    #             ("sale_ok", "=", True),
-    #         ]
-    #     return [("sale_ok", "=", True)]
-
-    def _get_product_domain(self):
-        """Filter products by the dynamically configured category."""
-        if self.current_category_id:
+    def _get_product_domain(self, section):
+        """Get domain for a specific section."""
+        configuration = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", section)], limit=1
+        )
+        if configuration and configuration.product_category_id:
             return [
-                ("categ_id", "=", self.current_category_id.id),
+                ("categ_id", "child_of", configuration.product_category_id.id),
                 ("sale_ok", "=", True),
             ]
-        return [("sale_ok", "=", True)]  # Default: Show all saleable products
+        return [("sale_ok", "=", True)]
 
     @api.onchange("state")
     def _onchange_state(self):
-        """Update product domain dynamically when state changes."""
-        if self.state:
-            self.product_id = None  # Reset product selection
-        # Force domain recomputation
-        product_domain = self._get_product_domain()
-        return {"domain": {"product_id": product_domain}}
+        """Set the correct product domain based on the current section."""
+        domain = self._get_product_domain(self.state)
+        if self.state == "start":
+            self.start_product_id = None
+        elif self.state == "configure":
+            self.configure_product_id = None
+        return {"domain": {"product_id": domain}}
 
     @api.onchange("product_id")
     def _onchange_product_id(self):
@@ -222,30 +227,55 @@ class SaleOrderWizard(models.TransientModel):
     def _default_sale_order_id(self):
         return self.env.context.get("active_id")
 
+    # Ensure state-specific validation
     def state_exit_start(self):
-        """Move to the configure state."""
-        if not self.product_id:
-            raise ValidationError(_("Please select a product before proceeding."))
-        if not self.field1:
-            raise ValidationError(
-                _("Configuration 1 is required in the Start section.")
-            )
-        # Do not validate field2 here; it will be validated in the Configure step.
+        """Transition from Start section."""
+        if not self.start_product_id:
+            raise ValidationError(_("Please select a product in the Start section."))
         self.state = "configure"
 
+    # def state_exit_start(self):
+    #     """Move to the configure state."""
+    #     if not self.product_id:
+    #         raise ValidationError(
+    #             _("Please select a product before proceeding in the Start section.")
+    #         )
+    #     if not self.field1:
+    #         raise ValidationError(
+    #             _("Configuration 1 is required in the Start section.")
+    #         )
+    #     self.selected_attribute_value_ids = [(5, 0, 0)]
+    #     self.state = "configure"
+
     def state_exit_configure(self):
-        """Move to the custom state."""
-        if not self.product_id:
-            raise ValidationError(_("Please select a product before proceeding."))
-        if not self.selected_attribute_value_ids:
-            raise ValidationError(_("Please select at least one attribute value."))
-        if not self.field2:
+        """Transition from Configure section."""
+        if not self.configure_product_id:
             raise ValidationError(
-                _("Configuration 2 is required in the Configure section.")
+                _("Please select a product in the Configure section.")
             )
         self.state = "custom"
 
+    # def state_exit_configure(self):
+    #     """Move to the custom state."""
+    #     if not self.product_id:
+    #         raise ValidationError(
+    #             _("Please select a product before proceeding in the Configure section.")
+    #         )
+    #     if not self.selected_attribute_value_ids:
+    #         raise ValidationError(
+    #             _(
+    #                 "Please select at least one attribute value in the Configure section."
+    #             )
+    #         )
+    #     if not self.field2:
+    #         raise ValidationError(
+    #             _("Configuration 2 is required in the Configure section.")
+    #         )
+    #     self.state = "custom"
+
     def state_exit_custom(self):
+        """Move to the summary state."""
+        self.field3 = None  # Optional: Reset customization field if needed
         self.state = "summary"
 
     def state_exit_final(self):
@@ -274,3 +304,18 @@ class SaleOrderWizard(models.TransientModel):
                 "name": description,
             }
         )
+
+    @api.model
+    def create(self, vals):
+        """Ensure product_id is set when the wizard is created."""
+        wizard = super().create(vals)
+        if not wizard.product_id:
+            domain = wizard._get_product_domain()
+            default_product = wizard.env["product.product"].search(domain, limit=1)
+            if default_product:
+                wizard.product_id = default_product
+            else:
+                raise ValidationError(
+                    _("No products available for the selected category.")
+                )
+        return wizard

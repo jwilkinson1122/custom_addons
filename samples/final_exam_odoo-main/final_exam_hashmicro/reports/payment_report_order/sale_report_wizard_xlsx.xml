@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_booking_order_report_wizard" model="ir.ui.view">
+            <field name="name">sale.report.wizard.form</field>
+            <field name="model">sale.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Booking order Report Wizard">
+                    <group>
+                        <label for="from_date" string="Periode"/>
+                        <div class="o_row">
+                            <field name="from_date" widget="daterange" options="{'related_end_date': 'to_date'}"/>
+                            <span> to </span>
+                            <field name="to_date" widget="daterange" options="{'related_end_date': 'from_date'}"/>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Print Report" type="object" name="print_excel" class="btn-primary" icon="fa-file-excel-o"/>
+                        <button string="Cancel" icon="fa-times" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--menu action-->
+        <record id="action_sale_report_wizard" model="ir.actions.act_window">
+            <field name="name">Sale Order Report Payment </field>
+            <field name="res_model">sale.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!--Excel report-->
+        <record id="action_sale_order_report_xlsx" model="ir.actions.report">
+            <field name="name">Sale Report</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">final_exam_hashmicro.action_sale_order_report_xlsx</field>
+        </record>
+
+        <!--        submenu wizard -->
+        <menuitem id="submenu_booking_order_report_xlsx"
+                  name="Payment Order Report Xlsx"
+                  parent="menu_payment_booking_order_report_xlsx"
+                  action="action_sale_report_wizard"/>
+    </data>
+</odoo>

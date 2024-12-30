@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_version_wizard_form" model="ir.ui.view">
+        <field name="name">version.wizard.form</field>
+        <field name="model">version.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create New Version">
+                <group>
+                    <group>
+                        <field name="order_id" readonly="1"/>
+                        <field name="version"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Order Lines">
+                        <field name="orders_ids">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="product_uom_qty"/>
+                                <field name="price_unit"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Create Version" type="object" name="create_version" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

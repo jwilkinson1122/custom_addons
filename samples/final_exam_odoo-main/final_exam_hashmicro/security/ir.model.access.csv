@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_report_wizard,sale_order_report_wizard,model_sale_report_wizard,,1,1,1,1
+access_report_booking_order_pdf,import_report_booking_report_wizardpdf,model_booking_report_wizardpdf,,1,1,1,1
+access_whatsapp_send_message_admin,access.whatsapp.send.message.user,model_whatsapp_send_message,final_exam_hashmicro.group_sale_order_inherit_admin,1,1,1,1
+access_whatsapp_send_message_manager,access.whatsapp.send.message.user,model_whatsapp_send_message,final_exam_hashmicro.group_sale_order_inherit_manager,1,1,1,1
+
+access_sale_order_customer,sale.order,sale.model_sale_order,final_exam_hashmicro.group_sale_order_inherit_customer,1,1,0,0
+access_sale_order_admin,sale.order,sale.model_sale_order,final_exam_hashmicro.group_sale_order_inherit_admin,1,1,1,1
+access_sale_order_manager,sale.order,sale.model_sale_order,final_exam_hashmicro.group_sale_order_inherit_manager,1,1,1,1
+
+access_booking_order_pivot,sale_order_booking_order_pivot,model_booking_order_pivot,,1,1,1,1
+access_configuration_booking_order,configuration.booking.order,model_booking_order_config,,1,1,1,1
+access_report_booking_order_wizard,import_report_booking_order_wizard,model_booking_order_report_wizard,,1,1,1,1
+

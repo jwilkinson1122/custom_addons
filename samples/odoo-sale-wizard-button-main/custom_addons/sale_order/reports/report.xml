@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dc_challena_new_gg_tronics" model="ir.actions.report">
+    <field name="name">Click Here</field>
+    <field name="model">sale.order</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">sale_order.report_sale</field>
+    <field name="report_file">sale_order.report_sale</field>
+    <field name="binding_model_id" ref="sale.model_sale_order"/>
+    <field name="binding_type">report</field>
+</record>
+<!--    <report id="report_id_pdf"-->
+<!--            model="sale.order"-->
+<!--            string="Click Me"-->
+<!--            report_type="qweb-pdf"-->
+<!--            name="sale_order.report_sale"-->
+<!--            file="sale_order.report_sale"/>-->
+</odoo>

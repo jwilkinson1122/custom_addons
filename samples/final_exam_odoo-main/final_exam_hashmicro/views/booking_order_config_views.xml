@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="booking_order_config_tree_view" model="ir.ui.view">
+        <field name="name">booking.order.config.tree</field>
+        <field name="model">booking.order.config</field>
+        <field name="arch" type="xml">
+            <tree string="Booking Order Configurations">
+                <field name="max_booking_order" widget="float" string="Max Booking Order"/>
+                <field name="qty_limit_percentage" widget="float" string="Quantity Limit Percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="booking_order_config_form_view" model="ir.ui.view">
+        <field name="name">booking.order.config.form</field>
+        <field name="model">booking.order.config</field>
+        <field name="arch" type="xml">
+            <form string="Booking Order Configuration">
+                <sheet>
+                    <group>
+                        <group col="2">
+                            <field name="max_booking_order" widget="float" string="Max Booking Order"/>
+                            <field name="qty_limit_percentage" widget="float" string="Quantity Limit Percentage"/>
+                        </group>
+                    </group>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    action booking order config-->
+    <record id="booking_order_config_action" model="ir.actions.act_window">
+        <field name="name">Booking Order Configuration</field>
+        <field name="res_model">booking.order.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

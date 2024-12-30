@@ -1,0 +1,438 @@
+<odoo noupdate="1">
+
+    <record id="kw_matrix_widget_demo_1" model="kw.matrix.widget.demo">
+        <field name="name">Common example</field>
+        <field name="matrix_data">
+{
+  "header": {
+    "trs": [
+      {
+        "tds": [
+          {
+            "value": "Col 1"
+          },
+          {
+            "value": "Col 2"
+          },
+          {
+            "value": "Col 3"
+          },
+          {
+            "value": "Col 4"
+          }
+        ]
+      }
+    ]
+  },
+  "body": {
+    "trs": [
+      {
+        "tds": [
+          {
+            "value": "val 11"
+          },
+          {
+            "value": "val 12"
+          },
+          {
+            "value": "val 13"
+          },
+          {
+            "value": "val 14"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "val 21"
+          },
+          {
+            "value": "val 22"
+          },
+          {
+            "value": "val 23"
+          },
+          {
+            "value": "val 24"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "val 31"
+          },
+          {
+            "value": "val 32"
+          },
+          {
+            "value": "val 33"
+          },
+          {
+            "value": "val 34"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "val 41"
+          },
+          {
+            "value": "val 42"
+          },
+          {
+            "value": "val 43"
+          },
+          {
+            "value": "val 44"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "val 51"
+          },
+          {
+            "value": "val 52"
+          },
+          {
+            "value": "val 53"
+          },
+          {
+            "value": "val 54"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "val 61"
+          },
+          {
+            "value": "val 62"
+          },
+          {
+            "value": "val 63"
+          },
+          {
+            "value": "val 64"
+          }
+        ]
+      }
+    ]
+  }
+}
+        </field>
+    </record>
+
+    <record id="kw_matrix_widget_demo_2" model="kw.matrix.widget.demo">
+        <field name="name">Finance report</field>
+        <field name="matrix_data">
+{
+  "header": {
+    "trs": [
+      {
+        "tds": [
+          {
+            "value": "2020",
+            "rowspan": 2,
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "January",
+            "colspan": 2,
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "February",
+            "colspan": 2,
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "Total",
+            "colspan": 2,
+            "class": "align-middle text-center"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "Plan",
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "Paid",
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "Plan",
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "Paid",
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "Plan",
+            "class": "align-middle text-center"
+          },
+          {
+            "value": "Paid",
+            "class": "align-middle text-center"
+          }
+        ]
+      }
+    ],
+    "class": "thead-dark"
+  },
+  "body": {
+    "trs": [
+      {
+        "tds": [
+          {
+            "value": "Azure Interior"
+          },
+          {
+            "value": "53453",
+            "class": "text-right"
+          },
+          {
+            "value": "342",
+            "class": "text-right"
+          },
+          {
+            "value": "423",
+            "class": "text-right"
+          },
+          {
+            "value": "4654",
+            "class": "text-right"
+          },
+          {
+            "value": "7876",
+            "class": "text-right"
+          },
+          {
+            "value": "2334",
+            "class": "text-right"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "Deco Addict"
+          },
+          {
+            "value": "53453",
+            "class": "text-right"
+          },
+          {
+            "value": "342",
+            "class": "text-right"
+          },
+          {
+            "value": "423",
+            "class": "text-right"
+          },
+          {
+            "value": "4654",
+            "class": "text-right"
+          },
+          {
+            "value": "7876",
+            "class": "text-right"
+          },
+          {
+            "value": "2334",
+            "class": "text-right"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "Gemini Furniture"
+          },
+          {
+            "value": "53453",
+            "class": "text-right"
+          },
+          {
+            "value": "342",
+            "class": "text-right"
+          },
+          {
+            "value": "423",
+            "class": "text-right"
+          },
+          {
+            "value": "4654",
+            "class": "text-right"
+          },
+          {
+            "value": "7876",
+            "class": "text-right"
+          },
+          {
+            "value": "2334",
+            "class": "text-right"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "Lumber Inc"
+          },
+          {
+            "value": "53453",
+            "class": "text-right"
+          },
+          {
+            "value": "342",
+            "class": "text-right"
+          },
+          {
+            "value": "423",
+            "class": "text-right"
+          },
+          {
+            "value": "4654",
+            "class": "text-right"
+          },
+          {
+            "value": "7876",
+            "class": "text-right"
+          },
+          {
+            "value": "2334",
+            "class": "text-right"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "Ready Mat"
+          },
+          {
+            "value": "53453",
+            "class": "text-right"
+          },
+          {
+            "value": "342",
+            "class": "text-right"
+          },
+          {
+            "value": "423",
+            "class": "text-right"
+          },
+          {
+            "value": "4654",
+            "class": "text-right"
+          },
+          {
+            "value": "7876",
+            "class": "text-right"
+          },
+          {
+            "value": "2334",
+            "class": "text-right"
+          }
+        ]
+      },
+      {
+        "tds": [
+          {
+            "value": "The Jackson Group"
+          },
+          {
+            "value": "53453",
+            "class": "text-right"
+          },
+          {
+            "value": "342",
+            "class": "text-right"
+          },
+          {
+            "value": "423",
+            "class": "text-right"
+          },
+          {
+            "value": "4654",
+            "class": "text-right"
+          },
+          {
+            "value": "7876",
+            "class": "text-right"
+          },
+          {
+            "value": "2334",
+            "class": "text-right"
+          }
+        ]
+      }
+    ]
+  },
+  "class": "table table-bordered table-striped table-hover table-sm"
+}
+        </field>
+    </record>
+
+    <record id="kw_matrix_widget_demo_3" model="kw.matrix.widget.demo">
+        <field name="name">Cyrillic example</field>
+        <field name="matrix_data">
+{
+  "header": {
+    "trs": [
+      {
+        "tds": [
+          {
+            "value": "Заголовок"
+          },
+          {
+            "value": "Это тоже заголовок"
+          },
+          {
+            "value": "Еще один"
+          },
+          {
+            "value": "Ладно последний"
+          }
+        ]
+      }
+    ]
+  },
+  "body": {
+    "trs": [
+      {
+        "tds": [
+          {
+            "value": "Значение"
+          },
+          {
+            "value": "Данные"
+          },
+          {
+            "value": "Еще что-то"
+          },
+          {
+            "value": "Ну хватит"
+          }
+        ]
+      }
+    ]
+  }
+}
+        </field>
+    </record>
+
+
+
+
+</odoo>

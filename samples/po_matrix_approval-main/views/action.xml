@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="action_matrix_approval" model="ir.actions.act_window">
+            <field name="name">Matrix Approval</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">matriks.approval</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Matrix Approval
+                </p>
+                <p>
+                    Create New Matrix Approval Data.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_purchase_approval_history" model="ir.actions.act_window">
+            <field name="name">Purchase Order Approval History</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.approval.history</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No PO Approval History 
+                </p>
+                <p>
+                    Create New PO Approval History.
+                </p>
+            </field>
+        </record>
+    
+    </data>
+    
+</odoo>

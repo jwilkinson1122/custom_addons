@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_sale">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="paper">
+                        <div class="header">
+                            <img src ="/web/binary/company_logo"/>
+                        </div>
+                        <h1>k</h1>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

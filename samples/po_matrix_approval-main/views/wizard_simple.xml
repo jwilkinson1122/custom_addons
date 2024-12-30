@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_simple_form" model="ir.ui.view">
+        <field name="name">wizard.simple.form</field>
+        <field name="model">ir.actions.act_window</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="context" invisible="1"/>
+                    <label for="context" string="Message" class="oe_inline"/>
+                    <div class="oe_inline oe_bold">
+                        <field name="context" widget="text" readonly="1"/>
+                    </div>
+                </group>
+                <footer>
+                    <button string="Ok" class="oe_highlight" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

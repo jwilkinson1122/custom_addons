@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="after">
+                    <br/><label for="price_locked" string="Price is Locked"/>  <field name="price_locked" string="Price Locked"/><br /><label for="price_custom_rate" string="Cost Multiplier (If Applicable)"/> <field name="price_custom_rate" string="Custom Rate" style="width:60px" />
+                </field> 
+            </field>
+        </record>
+	
+		<record id="view_res_config_sales_rate_tree" model="ir.ui.view">
+            <field name="name">res.config.sales.rate.tree</field>
+            <field name="model">res.config.sales.rate</field>
+            <field name="arch" type="xml">
+				<tree editable="bottom" default_order="maxvalue">
+                    <field name="maxvalue"/>
+                    <field name="rate"/>
+                </tree>
+            </field>
+        </record>
+
+		<record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.form.inherit.sales.rates</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+				<xpath expr="//sheet" position="inside">
+                    <group string="Sales Price Multiplier Rates" col="1">
+						<br/>
+						<div class="o_form_label" style="font-weight:bold;">Default Multipler Rate: <field name="default_rate" placeholder="Enter Default Rate" style="width:80px;" nolabel="1" /></div>
+						<br/>
+						<div class="o_form_label">Add below the product cost brackets and multiplier rates to be applied for each. <br/>The default multiplier rate (above) will apply to any costs greater than the largest max cost added below:</div>
+						<br/>
+						<div class="o_form_label" style="font-weight:bold;">Cost Brackets / Multiplier Rates:</div>
+						<br/>
+                        <field name="sales_rate_ids" nolabel="1" />
+						<br/>
+						<button name="call_update_product_prices_cron" type="object" string="Update Prices" class="oe_highlight"/>
+                    </group>
+				</xpath>
+            </field>
+        </record>	
+	
+    </data>
+</odoo>

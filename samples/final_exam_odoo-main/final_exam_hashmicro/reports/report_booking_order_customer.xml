@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--new paper format-->
+        <record model="report.paperformat" id="booking_order_paperformat">
+            <field name="name">Booking Order Format</field>
+            <field name="default" eval="True" />
+            <field name="format">A5</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">7</field>
+            <field name="margin_bottom">7</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">2</field>
+            <field name="dpi">90</field>
+        </record>
+
+    <record id="report_sale_order_booking_order_customer" model="ir.actions.report">
+        <field name="name">Print Booking Order</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">final_exam_hashmicro.report_booking_order_customer</field>
+        <field name="report_file">final_exam_hashmicro.report_booking_order_customer</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="paperformat_id" ref="final_exam_hashmicro.booking_order_paperformat"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_booking_order_customer">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div style="padding-bottom: 5px; border-bottom: 2px solid black;">
+                        <table width="100%" style="color:black;">
+                            <tr>
+                                <th width="50%">
+                                    <img t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 100px;"/>
+                                </th>
+                                <th width="50%" class="text-right" style="padding-right: 5px; vertical-align: top;">
+                                    <span style="font-size: 32px;">Booking Order Report</span><br/>
+                                    <span style="font-size: 28px;" t-field="o.name"/>
+                                    <br/>
+                                    Last Updated :<span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y/%H:%M:%S')"/>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+
+                 <div class="page">
+                     <t t-if ="o.is_booking">
+                        <div class="oe_structure"/>
+                        <table width="100%">
+                            <tr>
+                                <th style="padding-top: 10px">Customer Name</th>
+                                <th class="text-center" style="padding-top: 10px;">:</th>
+                                    <td style="padding-top: 10px">
+                                        <span t-field="o.partner_id.name"/>
+                                    </td>
+                            </tr>
+                            <tr>
+                                <th style="padding-top: 10px">Quotation Template</th>
+                                <th class="text-center" style="padding-top: 10px">:</th>
+                                    <td style="padding-top: 10px">
+                                        <span t-field="o.sale_order_template_id.name"/>
+                                    </td>
+                            </tr>
+                            <tr>
+                                <th style="padding-top: 10px">Expiration</th>
+                                <th class="text-center" style="padding-top: 10px">:</th>
+                                    <td style="padding-top: 10px">
+                                        <span t-field="o.validity_date"/>
+                                    </td>
+                            </tr>
+                            </table>
+                            <table width="100%" style="margin-top: 30px">
+                            <tr>
+                                <td style="padding-top: 10px">Quotation Date</td>
+                                <td colspan="2" style="padding-top: 10px;padding-right:120px">
+                                    : <span t-field="o.date_order"/>
+                                </td>
+                                <td style="padding-top: 10px;padding-left:10px">Payment Term</td>
+                                <td style="padding-top: 10px">
+                                    : <span t-field="o.payment_term_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px">Product</td>
+                                <td colspan ="2" style="padding-top: 10px">
+                                    : <span t-field="o.order_line.product_id.name"/>
+                                </td>
+                                <td style="padding-top: 10px; padding-left: 10px">Quantity</td>
+                                <td style="padding-top: 10px">
+                                    : <span t-field="o.order_line.product_uom_qty"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px">Quantity Booking</td>
+                                <td colspan ="2" style="padding-top: 10px">
+                                    : <span t-field="o.order_line.qty_booking"/>
+                                </td>
+                                <td style="padding-top: 10px; padding-left: 10px">Unit Price</td>
+                                <td style="padding-top: 10px">
+                                    : <span t-field="o.order_line.price_unit"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 10px">Tax Id</td>
+                                <td colspan ="2" style="padding-top: 10px">
+                                    : <span t-field="o.order_line.tax_id.name"/>
+                                </td>
+                                <td style="padding-top: 10px; padding-left: 10px">Price Subtotal</td>
+                                <td style="padding-top: 10px">
+                                    :<span t-field="o.order_line.price_subtotal"/>
+                                </td>
+                            </tr>
+                            </table>
+                     </t>
+                     <t t-else="">
+                        <p style="font-size: 32px;font-weight: bold;text-align: center;color: #FF6347;font-style: italic;margin-top: 10px;">This record is not a booking order.</p>
+                    </t>
+                    </div>
+                </t>
+            </t>
+    </template>
+</odoo>

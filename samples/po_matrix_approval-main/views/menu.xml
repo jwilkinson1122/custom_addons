@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!-- Main menu -->
+        <!-- <menuitem id="matrix_approval_root_menu" name="Matrix Wika" sequence="78" web_icon="matrix_approval/static/description/icon.png"/> -->
+        <menuitem id="matrix_approval_root_menu" name="Matrix Wika" sequence="100"/>
+
+        <!-- Submenus -->
+        <menuitem id="main_menu_approval" name="Approval" parent="matrix_approval_root_menu" action="action_matrix_approval"/>
+        <menuitem id="main_menu_history" name="History" parent="matrix_approval_root_menu" action="action_purchase_approval_history"/>
+
+    </data>
+</odoo>

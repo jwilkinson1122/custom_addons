@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_sale_order_form" model="ir.ui.view">
+            <field name="name">view.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">-->
+<!--                    <field name="product_attre"/>-->
+<!--                </xpath>-->
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                    <button name="add_button" string="Click" type="object" class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="creating_wizard_view_form" model="ir.ui.view">
+            <field name="name">creating.wizard.view.form</field>
+            <field name="model">creating.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="normal_field"/>
+                            <field name="sale_order_id"/>
+                        </group>
+                        <field name="data_ids">
+                            <tree editable="bottom">
+                                <field name="date"/>
+                                <field name="qty_id"/>
+                            </tree>
+                        </field>
+                        <footer>
+                            <button name="add_descript" type="object" string="Add Description" class="oe_highlight"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="creating_wizard_view_tree" model="ir.ui.view">
+            <field name="name">creating.wizard.view.tree</field>
+            <field name="model">creating.wizard</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="normal_field"/>
+                </tree>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

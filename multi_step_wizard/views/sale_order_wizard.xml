@@ -14,19 +14,32 @@
                 <!-- Start Step -->
                 <group name="start" invisible="state != 'start'">
                     <group>
+                        <field name="start_product_id" string="Select Product" options="{'no_create': True}" />
+                        <field name="start_selected_attribute_value_ids" widget="many2many_tags" string="Select Attributes" />
+                    </group>
+                </group>
+
+                <!-- <group name="start" invisible="state != 'start'">
+                    <group>
                         <field name="product_id" string="Select Product" options="{'no_create': True}" />
                         <field name="selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" />
                         <field name="field1" placeholder="Enter Configuration 1" string="Configuration 1" />
                     </group>
-                </group>
+                </group> -->
                 <!-- Configure Step -->
                 <group name="configure" invisible="state != 'configure'">
+                    <group>
+                        <field name="configure_product_id" string="Select Product" options="{'no_create': True}" />
+                        <field name="configure_selected_attribute_value_ids" widget="many2many_tags" string="Select Attributes" />
+                    </group>
+                </group>
+                <!-- <group name="configure" invisible="state != 'configure'">
                     <group>
                         <field name="product_id" string="Select Product" options="{'no_create': True}" />
                         <field name="selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" />
                         <field name="field2" placeholder="Enter Configuration 2" string="Configuration 2" />
                     </group>
-                </group>
+                </group> -->
                 <!-- Customize Step -->
                 <group name="custom" invisible="state != 'custom'">
                     <group>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_infrastructure_request_emulator_form" model="ir.ui.view">
+        <field name="name">infrastructure.request.emulator.form</field>
+        <field name="model">infrastructure.request.emulator</field>
+        <field name="arch" type="xml">
+            <form string="Infrastructure Request Emulator">
+                <button name="generate_requests" type="object" string="Generate Requests" />
+            </form>
+        </field>
+    </record>
+
+    <record id="action_infrastructure_request_emulator" model="ir.actions.act_window">
+        <field name="name">Infrastructure Request Emulator</field>
+        <field name="res_model">infrastructure.request.emulator</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

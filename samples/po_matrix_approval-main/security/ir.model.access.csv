@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_matrix_approval,Matrix Approval,model_matriks_approval,,1,0,0,0
+access_matrix_approval_line,Matrix Approval Line,model_matriks_approval_line,,1,0,0,0
+access_purchase_order_approval_history,Approved Purchase Orders,model_purchase_order_approval_history,,1,1,1,1
