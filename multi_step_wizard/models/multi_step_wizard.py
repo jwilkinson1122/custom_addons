@@ -56,6 +56,7 @@ class MultiStepWizard(models.AbstractModel):
         return self._reopen_self()
 
     def _reopen_self(self):
+        _logger.info(f"Reopening wizard: id={self.id}, state={self.state}")
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -64,38 +65,69 @@ class MultiStepWizard(models.AbstractModel):
             "target": "new",
         }
 
+    # def state_exit_start(self):
+    #     raise NotImplementedError("Define the next state in the inheriting wizard.")
+
+    # def state_exit_configure(self):
+    #     raise NotImplementedError("Define the next state in the inheriting wizard.")
+
     def state_exit_start(self):
-        raise NotImplementedError("Define the next state in the inheriting wizard.")
+        """Transition from Start state."""
+        if not self.start_product_id:
+            raise ValidationError(_("Please select a product in the Start section."))
+        _logger.info(f"Exiting Start state with product: {self.start_product_id}")
+        self.state = "configure"
 
     def state_exit_configure(self):
-        raise NotImplementedError("Define the next state in the inheriting wizard.")
+        """Transition from Configure state."""
+        if not self.configure_product_id:
+            raise ValidationError(
+                _("Please select a product in the Configure section.")
+            )
+        _logger.info(
+            f"Exiting Configure state with product: {self.configure_product_id}"
+        )
+        self.state = "custom"
+
+    def state_exit_custom(self):
+        """Transition from Custom state."""
+        if not self.field3:
+            raise ValidationError(_("Please provide customization details."))
+        _logger.info(f"Exiting Custom state with customization: {self.field3}")
+        self.state = "summary"
 
     def submit_wizard(self):
         """Submit the wizard and redirect back to the sales order form view."""
-        if self.sale_order_id:
-            product_id = (
-                self.product_variant_id.id
-                if self.product_variant_id
-                else self.product_id.id
-            )
+        if not self.sale_order_id:
+            raise ValidationError(_("No associated sales order found."))
+        if not self.product_id:
+            raise ValidationError(_("No product selected for this wizard."))
+        if not self.computed_price:
+            raise ValidationError(_("Price computation failed."))
 
-            # Build the sale order line description with each selection on a new line
-            description = (
-                f"{self.product_id.display_name}\n"
-                f"Configuration 1: {self.field1 or 'N/A'}\n"
-                f"Configuration 2: {self.field2 or 'N/A'}\n"
-                f"Customization: {self.field3 or 'N/A'}"
-            )
+        # Log details for debugging
+        _logger.info(
+            f"Submitting wizard: sale_order_id={self.sale_order_id.id}, product_id={self.product_id.id}, field1={self.field1}, field2={self.field2}, field3={self.field3}"
+        )
 
-            # Create the sale order line
-            order_line_values = {
+        # Build the sale order line description
+        description = (
+            f"{self.product_id.display_name}\n"
+            f"Configuration 1: {self.field1}\n"
+            f"Configuration 2: {self.field2}\n"
+            f"Customization: {self.field3}"
+        )
+
+        # Create the sale order line
+        self.env["sale.order.line"].create(
+            {
                 "order_id": self.sale_order_id.id,
-                "product_id": product_id,
+                "product_id": self.product_id.id,
                 "product_uom_qty": 1,
                 "price_unit": self.computed_price,
                 "name": description,
             }
-            self.env["sale.order.line"].create(order_line_values)
+        )
 
         # Redirect back to the sale order
         return {
@@ -105,3 +137,35 @@ class MultiStepWizard(models.AbstractModel):
             "view_mode": "form",
             "target": "current",
         }
+
+    # def submit_wizard(self):
+    #     """Submit the wizard and redirect back to the sales order form view."""
+    #     if self.sale_order_id:
+    #         product_id = (
+    #             self.product_variant_id.id
+    #             if self.product_variant_id
+    #             else self.product_id.id
+    #         )
+
+    #         description = (
+    #             f"{self.product_id.display_name}\n"
+    #             f"Configuration 1: {self.field1 or 'N/A'}\n"
+    #             f"Configuration 2: {self.field2 or 'N/A'}\n"
+    #             f"Customization: {self.field3 or 'N/A'}"
+    #         )
+    #         order_line_values = {
+    #             "order_id": self.sale_order_id.id,
+    #             "product_id": product_id,
+    #             "product_uom_qty": 1,
+    #             "price_unit": self.computed_price,
+    #             "name": description,
+    #         }
+    #         self.env["sale.order.line"].create(order_line_values)
+
+    #     return {
+    #         "type": "ir.actions.act_window",
+    #         "res_model": "sale.order",
+    #         "res_id": self.sale_order_id.id,
+    #         "view_mode": "form",
+    #         "target": "current",
+    #     }
