@@ -251,11 +251,22 @@ class SaleOrderWizard(models.TransientModel):
     #         else:
     #             wizard.available_attribute_values = self.env["product.attribute.value"].browse([])
 
-    @api.model
-    def web_read(self, specification):
-        result = super(SaleOrderWizard, self).web_read(specification)
-        _logger.info(f"web_read result: {result}")
-        return result
+    # @api.model
+    # def web_read(self, specification):
+    #     result = super(SaleOrderWizard, self).web_read(specification)
+    #     _logger.info(f"web_read result: {result}")
+    #     return result
+
+    # @api.model
+    # def web_read(self, fields=None, specification=None):
+    #     _logger.info(f"web_read called with fields={fields}, specification={specification}")
+    #     return super(SaleOrderWizard, self).web_read(fields=fields, specification=specification)
+
+    # @api.model
+    # def web_read(self, fields=None, specification=None):
+    #     result = super(SaleOrderWizard, self).web_read(fields=fields, specification=specification)
+    #     _logger.info(f"web_read result: {result}")
+    #     return result
 
     @api.depends("start_product_id")
     def _compute_available_attribute_values(self):
