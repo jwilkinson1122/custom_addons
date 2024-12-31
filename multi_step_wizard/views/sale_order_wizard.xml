@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="sale_order_wizard_form" model="ir.ui.view">
         <field name="name">sale.order.wizard.form</field>
         <field name="model">sale.order.wizard</field>
@@ -8,40 +7,61 @@
         <field name="inherit_id" ref="multi_step_wizard.multi_step_wizard_form" />
         <field name="arch" type="xml">
             <xpath expr="//footer" position="before">
-                <!-- Invisible field for domain -->
+                <!-- Invisible Fields -->
                 <field name="available_attribute_values" invisible="1" />
+                <!-- Currency Selection (optional, if needed) -->
+                <group>
+                    <field name="currency_id" string="Currency" />
+                </group>
                 <!-- Start Step -->
                 <group name="start" invisible="state != 'start'">
+                    <div class="oe_title">
+                        <h3>Select Start Product</h3>
+                    </div>
                     <group>
                         <field name="start_product_id" string="Select Product" options="{'no_create': True}" />
+                        <field name="formatted_product_price" readonly="1" class="oe_inline" />
                         <field name="start_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" />
-                        <!-- <field name="start_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" /> -->
-
-
+                        <field name="formatted_attribute_price" readonly="1" class="oe_inline" />
                     </group>
                 </group>
 
                 <!-- Configure Step -->
                 <group name="configure" invisible="state != 'configure'">
+                    <div class="oe_title">
+                        <h3>Configure Additional Product</h3>
+                    </div>
                     <group>
                         <field name="configure_product_id" string="Select Product" options="{'no_create': True}" />
+                        <field name="formatted_product_price" readonly="1" class="oe_inline" />
                         <field name="configure_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" />
-                        <!-- <field name="configure_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" /> -->
-
+                        <field name="formatted_attribute_price" readonly="1" class="oe_inline" />
                     </group>
                 </group>
+
+                <!-- Total Price -->
+                <group>
+                    <div class="oe_title">
+                        <h3>Total Price</h3>
+                    </div>
+                    <field name="formatted_total_price" readonly="1" class="oe_inline oe_highlight" />
+                </group>
+
                 <!-- Customize Step -->
                 <group name="custom" invisible="state != 'custom'">
                     <group>
                         <field name="field3" placeholder="Enter Customization" string="Customization" />
                     </group>
                 </group>
+
                 <!-- Summary Step -->
                 <group name="summary" invisible="state != 'summary'">
-                    <field name="summary_label" class="oe_inline"/>
+                    <div class="oe_title">
+                        <h3>Summary of Selections</h3>
+                    </div>
+                    <field name="summary_label" class="oe_inline" />
                     <field name="summary" readonly="1" string="Summary of Selections" />
                 </group>
-
             </xpath>
         </field>
     </record>

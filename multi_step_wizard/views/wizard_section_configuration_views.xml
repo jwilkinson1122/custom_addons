@@ -8,10 +8,6 @@
         <field name="context">{}</field>
     </record>
 
-    <!-- Menu Hierarchy -->
-    <!-- <menuitem id="menu_custom" name="Custom Menu" parent="base.menu_root" sequence="100" />
-    <menuitem id="menu_wizard_section_configuration" name="Wizard Section Configuration" parent="menu_custom" sequence="10" action="action_wizard_section_configuration" /> -->
-
     <menuitem id="menu_wizard_section_configuration" name="Wizard Section Configuration" parent="sale.prod_config_main" sequence="0" action="action_wizard_section_configuration" />
 
     <!-- Views -->
