@@ -16,11 +16,11 @@
         "views/multi_step_wizard_views.xml",
         "views/sale_order_wizard.xml",
         "views/sale_order_views.xml",
-        "report/sale_order_templates.xml",
+        # "report/sale_order_templates.xml",
     ],
     "assets": {
         "web.assets_backend": [
-            "multi_step_wizard/static/src/js/section_wise_subtotal.js",
+            # "multi_step_wizard/static/src/js/section_wise_subtotal.js",
         ],
     },
     "installable": True,

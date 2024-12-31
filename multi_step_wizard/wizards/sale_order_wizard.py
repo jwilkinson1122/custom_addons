@@ -208,12 +208,6 @@ class SaleOrderWizard(models.TransientModel):
     field2 = fields.Char(string="Configuration 2", default="N/A")
     field3 = fields.Char(string="Customization", default="N/A")
 
-    # computed_price = fields.Float(
-    #     string="Computed Price",
-    #     compute="_compute_price",
-    #     store=True,
-    # )
-
     computed_price = fields.Float(
         string="Computed Price", compute="_compute_price", store=True, default=0.0
     )
@@ -236,41 +230,12 @@ class SaleOrderWizard(models.TransientModel):
         readonly=True,
     )
 
-    # summary = fields.Text(string="Summary", compute="_compute_summary")
     summary = fields.Text(string="Summary", compute="_compute_summary", default="")
-
-    # @api.depends("start_product_id")
-    # def _compute_available_attribute_values(self):
-    #     for wizard in self:
-    #         if wizard.start_product_id:
-    #             wizard.available_attribute_values = (
-    #                 wizard.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
-    #                     "value_ids"
-    #                 )
-    #             )
-    #         else:
-    #             wizard.available_attribute_values = self.env["product.attribute.value"].browse([])
-
-    # @api.model
-    # def web_read(self, specification):
-    #     result = super(SaleOrderWizard, self).web_read(specification)
-    #     _logger.info(f"web_read result: {result}")
-    #     return result
-
-    # @api.model
-    # def web_read(self, fields=None, specification=None):
-    #     _logger.info(f"web_read called with fields={fields}, specification={specification}")
-    #     return super(SaleOrderWizard, self).web_read(fields=fields, specification=specification)
-
-    # @api.model
-    # def web_read(self, fields=None, specification=None):
-    #     result = super(SaleOrderWizard, self).web_read(fields=fields, specification=specification)
-    #     _logger.info(f"web_read result: {result}")
-    #     return result
 
     @api.depends("start_product_id")
     def _compute_available_attribute_values(self):
         for wizard in self:
+            _logger.info(f"Computing available attributes for wizard {wizard.id}")
             if wizard.start_product_id:
                 wizard.available_attribute_values = (
                     wizard.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
@@ -296,6 +261,7 @@ class SaleOrderWizard(models.TransientModel):
             )
             summary_lines = []
 
+            # Start Section
             if wizard.start_product_id:
                 summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
             if wizard.start_selected_attribute_value_ids:
@@ -304,6 +270,7 @@ class SaleOrderWizard(models.TransientModel):
                 )
                 summary_lines.append(f"Start Attributes: {start_attributes}")
 
+            # Configure Section
             if wizard.configure_product_id:
                 summary_lines.append(
                     f"Configure Product: {wizard.configure_product_id.name}"
@@ -314,6 +281,7 @@ class SaleOrderWizard(models.TransientModel):
                 )
                 summary_lines.append(f"Configure Attributes: {configure_attributes}")
 
+            # Custom Section
             if wizard.field1:
                 summary_lines.append(f"Configuration 1: {wizard.field1}")
             if wizard.field2:
@@ -323,6 +291,50 @@ class SaleOrderWizard(models.TransientModel):
 
             wizard.summary = "\n".join(summary_lines)
             _logger.info(f"Summary computed: {wizard.summary}")
+
+    # @api.depends(
+    #     "start_product_id",
+    #     "start_selected_attribute_value_ids",
+    #     "configure_product_id",
+    #     "configure_selected_attribute_value_ids",
+    #     "field1",
+    #     "field2",
+    #     "field3",
+    # )
+    # def _compute_summary(self):
+    #     for wizard in self:
+    #         _logger.info(
+    #             f"Computing summary for wizard {wizard.id} in state {wizard.state}"
+    #         )
+    #         summary_lines = []
+
+    #         if wizard.start_product_id:
+    #             summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
+    #         if wizard.start_selected_attribute_value_ids:
+    #             start_attributes = ", ".join(
+    #                 wizard.start_selected_attribute_value_ids.mapped("name")
+    #             )
+    #             summary_lines.append(f"Start Attributes: {start_attributes}")
+
+    #         if wizard.configure_product_id:
+    #             summary_lines.append(
+    #                 f"Configure Product: {wizard.configure_product_id.name}"
+    #             )
+    #         if wizard.configure_selected_attribute_value_ids:
+    #             configure_attributes = ", ".join(
+    #                 wizard.configure_selected_attribute_value_ids.mapped("name")
+    #             )
+    #             summary_lines.append(f"Configure Attributes: {configure_attributes}")
+
+    #         if wizard.field1:
+    #             summary_lines.append(f"Configuration 1: {wizard.field1}")
+    #         if wizard.field2:
+    #             summary_lines.append(f"Configuration 2: {wizard.field2}")
+    #         if wizard.field3:
+    #             summary_lines.append(f"Customization: {wizard.field3}")
+
+    #         wizard.summary = "\n".join(summary_lines)
+    #         _logger.info(f"Summary computed: {wizard.summary}")
 
     @api.model
     def _selection_state(self):
@@ -352,11 +364,6 @@ class SaleOrderWizard(models.TransientModel):
                 _("Please select a product in the Configure section.")
             )
         self.state = "custom"
-
-    # def state_exit_custom(self):
-    #     """Move to the summary state."""
-    #     self.field3 = None
-    #     self.state = "summary"
 
     def state_exit_custom(self):
         """Move to the summary state."""
@@ -395,33 +402,6 @@ class SaleOrderWizard(models.TransientModel):
                 "name": description,
             }
         )
-
-    # def state_exit_final(self):
-    #     """Save wizard selections to the sales order line."""
-    #     if not self.sale_order_id:
-    #         raise ValidationError(_("No associated sale order found."))
-
-    #     description = f"{self.product_id.name or 'Product'}"
-    #     if self.selected_attribute_value_ids:
-    #         attributes = ", ".join(self.selected_attribute_value_ids.mapped("name"))
-    #         description += f" - {attributes}"
-
-    #     if self.field1:
-    #         description += f" | Config1: {self.field1}"
-    #     if self.field2:
-    #         description += f" | Config2: {self.field2}"
-    #     if self.field3:
-    #         description += f" | Custom: {self.field3}"
-
-    #     self.env["sale.order.line"].create(
-    #         {
-    #             "order_id": self.sale_order_id.id,
-    #             "product_id": self.product_id.id,
-    #             "product_uom_qty": 1,
-    #             "price_unit": self.computed_price,
-    #             "name": description,
-    #         }
-    #     )
 
     @api.model
     def create(self, vals):

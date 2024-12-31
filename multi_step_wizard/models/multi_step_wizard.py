@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -65,12 +65,6 @@ class MultiStepWizard(models.AbstractModel):
             "target": "new",
         }
 
-    # def state_exit_start(self):
-    #     raise NotImplementedError("Define the next state in the inheriting wizard.")
-
-    # def state_exit_configure(self):
-    #     raise NotImplementedError("Define the next state in the inheriting wizard.")
-
     def state_exit_start(self):
         """Transition from Start state."""
         if not self.start_product_id:
@@ -113,9 +107,9 @@ class MultiStepWizard(models.AbstractModel):
         # Build the sale order line description
         description = (
             f"{self.product_id.display_name}\n"
-            f"Configuration 1: {self.field1}\n"
-            f"Configuration 2: {self.field2}\n"
-            f"Customization: {self.field3}"
+            f"Configuration 1: {self.field1 or 'N/A'}\n"
+            f"Configuration 2: {self.field2 or 'N/A'}\n"
+            f"Customization: {self.field3 or 'N/A'}"
         )
 
         # Create the sale order line
@@ -137,35 +131,3 @@ class MultiStepWizard(models.AbstractModel):
             "view_mode": "form",
             "target": "current",
         }
-
-    # def submit_wizard(self):
-    #     """Submit the wizard and redirect back to the sales order form view."""
-    #     if self.sale_order_id:
-    #         product_id = (
-    #             self.product_variant_id.id
-    #             if self.product_variant_id
-    #             else self.product_id.id
-    #         )
-
-    #         description = (
-    #             f"{self.product_id.display_name}\n"
-    #             f"Configuration 1: {self.field1 or 'N/A'}\n"
-    #             f"Configuration 2: {self.field2 or 'N/A'}\n"
-    #             f"Customization: {self.field3 or 'N/A'}"
-    #         )
-    #         order_line_values = {
-    #             "order_id": self.sale_order_id.id,
-    #             "product_id": product_id,
-    #             "product_uom_qty": 1,
-    #             "price_unit": self.computed_price,
-    #             "name": description,
-    #         }
-    #         self.env["sale.order.line"].create(order_line_values)
-
-    #     return {
-    #         "type": "ir.actions.act_window",
-    #         "res_model": "sale.order",
-    #         "res_id": self.sale_order_id.id,
-    #         "view_mode": "form",
-    #         "target": "current",
-    #     }
