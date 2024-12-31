@@ -291,9 +291,6 @@ class SaleOrderWizard(models.TransientModel):
             # Start Product Details
             if wizard.start_product_id:
                 summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
-                summary_lines.append(
-                    f"Start Product Template: {wizard.start_product_id.product_tmpl_id.name}"
-                )
             if wizard.start_selected_attribute_value_ids:
                 start_attributes = ", ".join(
                     wizard.start_selected_attribute_value_ids.mapped("name")
@@ -304,9 +301,6 @@ class SaleOrderWizard(models.TransientModel):
             if wizard.configure_product_id:
                 summary_lines.append(
                     f"Configure Product: {wizard.configure_product_id.name}"
-                )
-                summary_lines.append(
-                    f"Configure Product Template: {wizard.configure_product_id.product_tmpl_id.name}"
                 )
             if wizard.configure_selected_attribute_value_ids:
                 configure_attributes = ", ".join(
@@ -323,6 +317,52 @@ class SaleOrderWizard(models.TransientModel):
                 summary_lines.append(f"Customization: {wizard.field3}")
 
             wizard.summary = "\n".join(summary_lines)
+
+    # @api.depends(
+    #     "start_product_id",
+    #     "configure_product_id",
+    #     "start_selected_attribute_value_ids",
+    #     "configure_selected_attribute_value_ids",
+    #     "field1",
+    #     "field2",
+    #     "field3",
+    # )
+    # def _compute_summary(self):
+    #     for wizard in self:
+    #         summary_lines = []
+
+    #         if wizard.start_product_id:
+    #             summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
+    #             summary_lines.append(
+    #                 f"Start Product Template: {wizard.start_product_id.product_tmpl_id.name}"
+    #             )
+    #         if wizard.start_selected_attribute_value_ids:
+    #             start_attributes = ", ".join(
+    #                 wizard.start_selected_attribute_value_ids.mapped("name")
+    #             )
+    #             summary_lines.append(f"Start Attributes: {start_attributes}")
+
+    #         if wizard.configure_product_id:
+    #             summary_lines.append(
+    #                 f"Configure Product: {wizard.configure_product_id.name}"
+    #             )
+    #             summary_lines.append(
+    #                 f"Configure Product Template: {wizard.configure_product_id.product_tmpl_id.name}"
+    #             )
+    #         if wizard.configure_selected_attribute_value_ids:
+    #             configure_attributes = ", ".join(
+    #                 wizard.configure_selected_attribute_value_ids.mapped("name")
+    #             )
+    #             summary_lines.append(f"Configure Attributes: {configure_attributes}")
+
+    #         if wizard.field1:
+    #             summary_lines.append(f"Configuration 1: {wizard.field1}")
+    #         if wizard.field2:
+    #             summary_lines.append(f"Configuration 2: {wizard.field2}")
+    #         if wizard.field3:
+    #             summary_lines.append(f"Customization: {wizard.field3}")
+
+    #         wizard.summary = "\n".join(summary_lines)
 
     @api.model
     def _selection_state(self):
