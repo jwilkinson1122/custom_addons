@@ -107,6 +107,28 @@ class MultiStepWizard(models.AbstractModel):
         )
 
         # Combine descriptions for both products if available
+        # description = ""
+        # if self.start_product_id:
+        #     description += f"Start Product: {self.start_product_id.display_name}\n"
+        # if self.start_selected_attribute_value_ids:
+        #     start_attributes = ", ".join(
+        #         self.start_selected_attribute_value_ids.mapped("name")
+        #     )
+        #     description += f"Start Attributes: {start_attributes}\n"
+        # if self.configure_product_id:
+        #     description += (
+        #         f"Configure Product: {self.configure_product_id.display_name}\n"
+        #     )
+        # if self.configure_selected_attribute_value_ids:
+        #     configure_attributes = ", ".join(
+        #         self.configure_selected_attribute_value_ids.mapped("name")
+        #     )
+        #     description += f"Configure Attributes: {configure_attributes}\n"
+        # description += (
+        #     f"Configuration 1: {self.field1 or 'N/A'}\n"
+        #     f"Configuration 2: {self.field2 or 'N/A'}\n"
+        #     f"Customization: {self.field3 or 'N/A'}"
+        # )
         description = ""
         if self.start_product_id:
             description += f"Start Product: {self.start_product_id.display_name}\n"
@@ -131,10 +153,17 @@ class MultiStepWizard(models.AbstractModel):
         )
 
         # Use the product from the "Configure" step if it exists, otherwise the "Start" step
+        # product_id = (
+        #     self.configure_product_id.id
+        #     if self.configure_product_id
+        #     else self.start_product_id.id
+        # )
+
+        # Use start_product_id if available; otherwise, fallback to configure_product_id
         product_id = (
-            self.configure_product_id.id
-            if self.configure_product_id
-            else self.start_product_id.id
+            self.start_product_id.id
+            if self.start_product_id
+            else self.configure_product_id.id
         )
 
         # Create the sale order line

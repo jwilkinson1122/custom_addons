@@ -56,6 +56,13 @@ class SaleOrderWizard(models.TransientModel):
         # required=True,
     )
 
+    product_template_id = fields.Many2one(
+        comodel_name="product.template",
+        string="Product Template",
+        compute="_compute_product_template",
+        store=True,
+    )
+
     # Section-specific fields
     start_product_id = fields.Many2one(
         comodel_name="product.product",
@@ -183,9 +190,11 @@ class SaleOrderWizard(models.TransientModel):
         domain = self._get_product_domain(self.state)
         if self.state == "start":
             self.start_product_id = None
+            return {"domain": {"start_product_id": domain}}
         elif self.state == "configure":
             self.configure_product_id = None
-        return {"domain": {"product_id": domain}}
+            return {"domain": {"configure_product_id": domain}}
+        return {}
 
     @api.onchange("product_id")
     def _onchange_product_id(self):
@@ -193,6 +202,27 @@ class SaleOrderWizard(models.TransientModel):
         if self.product_id:
             self.selected_attribute_value_ids = [(5, 0, 0)]
         self._compute_available_attribute_values()
+
+    # @api.depends("start_product_id", "configure_product_id")
+    # def _compute_product_template(self):
+    #     for wizard in self:
+    #         if wizard.start_product_id:
+    #             wizard.product_template_id = wizard.start_product_id.product_tmpl_id
+    #         elif wizard.configure_product_id:
+    #             wizard.product_template_id = wizard.configure_product_id.product_tmpl_id
+    #         else:
+    #             wizard.product_template_id = False
+
+    @api.depends("start_product_id", "configure_product_id")
+    def _compute_product_template(self):
+        for wizard in self:
+            # Prioritize start_product_id if it exists
+            if wizard.start_product_id:
+                wizard.product_template_id = wizard.start_product_id.product_tmpl_id
+            elif wizard.configure_product_id:
+                wizard.product_template_id = wizard.configure_product_id.product_tmpl_id
+            else:
+                wizard.product_template_id = False
 
     product_variant_id = fields.Many2one(
         comodel_name="product.product",
@@ -247,8 +277,8 @@ class SaleOrderWizard(models.TransientModel):
 
     @api.depends(
         "start_product_id",
-        "start_selected_attribute_value_ids",
         "configure_product_id",
+        "start_selected_attribute_value_ids",
         "configure_selected_attribute_value_ids",
         "field1",
         "field2",
@@ -256,24 +286,27 @@ class SaleOrderWizard(models.TransientModel):
     )
     def _compute_summary(self):
         for wizard in self:
-            _logger.info(
-                f"Computing summary for wizard {wizard.id} in state {wizard.state}"
-            )
             summary_lines = []
 
-            # Start Section
+            # Start Product Details
             if wizard.start_product_id:
                 summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
+                summary_lines.append(
+                    f"Start Product Template: {wizard.start_product_id.product_tmpl_id.name}"
+                )
             if wizard.start_selected_attribute_value_ids:
                 start_attributes = ", ".join(
                     wizard.start_selected_attribute_value_ids.mapped("name")
                 )
                 summary_lines.append(f"Start Attributes: {start_attributes}")
 
-            # Configure Section
+            # Configure Product Details
             if wizard.configure_product_id:
                 summary_lines.append(
                     f"Configure Product: {wizard.configure_product_id.name}"
+                )
+                summary_lines.append(
+                    f"Configure Product Template: {wizard.configure_product_id.product_tmpl_id.name}"
                 )
             if wizard.configure_selected_attribute_value_ids:
                 configure_attributes = ", ".join(
@@ -281,7 +314,7 @@ class SaleOrderWizard(models.TransientModel):
                 )
                 summary_lines.append(f"Configure Attributes: {configure_attributes}")
 
-            # Custom Section
+            # Customization
             if wizard.field1:
                 summary_lines.append(f"Configuration 1: {wizard.field1}")
             if wizard.field2:
@@ -290,7 +323,6 @@ class SaleOrderWizard(models.TransientModel):
                 summary_lines.append(f"Customization: {wizard.field3}")
 
             wizard.summary = "\n".join(summary_lines)
-            _logger.info(f"Summary computed: {wizard.summary}")
 
     @api.model
     def _selection_state(self):
