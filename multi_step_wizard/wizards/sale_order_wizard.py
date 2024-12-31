@@ -292,50 +292,6 @@ class SaleOrderWizard(models.TransientModel):
             wizard.summary = "\n".join(summary_lines)
             _logger.info(f"Summary computed: {wizard.summary}")
 
-    # @api.depends(
-    #     "start_product_id",
-    #     "start_selected_attribute_value_ids",
-    #     "configure_product_id",
-    #     "configure_selected_attribute_value_ids",
-    #     "field1",
-    #     "field2",
-    #     "field3",
-    # )
-    # def _compute_summary(self):
-    #     for wizard in self:
-    #         _logger.info(
-    #             f"Computing summary for wizard {wizard.id} in state {wizard.state}"
-    #         )
-    #         summary_lines = []
-
-    #         if wizard.start_product_id:
-    #             summary_lines.append(f"Start Product: {wizard.start_product_id.name}")
-    #         if wizard.start_selected_attribute_value_ids:
-    #             start_attributes = ", ".join(
-    #                 wizard.start_selected_attribute_value_ids.mapped("name")
-    #             )
-    #             summary_lines.append(f"Start Attributes: {start_attributes}")
-
-    #         if wizard.configure_product_id:
-    #             summary_lines.append(
-    #                 f"Configure Product: {wizard.configure_product_id.name}"
-    #             )
-    #         if wizard.configure_selected_attribute_value_ids:
-    #             configure_attributes = ", ".join(
-    #                 wizard.configure_selected_attribute_value_ids.mapped("name")
-    #             )
-    #             summary_lines.append(f"Configure Attributes: {configure_attributes}")
-
-    #         if wizard.field1:
-    #             summary_lines.append(f"Configuration 1: {wizard.field1}")
-    #         if wizard.field2:
-    #             summary_lines.append(f"Configuration 2: {wizard.field2}")
-    #         if wizard.field3:
-    #             summary_lines.append(f"Customization: {wizard.field3}")
-
-    #         wizard.summary = "\n".join(summary_lines)
-    #         _logger.info(f"Summary computed: {wizard.summary}")
-
     @api.model
     def _selection_state(self):
         return [
@@ -358,11 +314,14 @@ class SaleOrderWizard(models.TransientModel):
         self.state = "configure"
 
     def state_exit_configure(self):
-        """Transition from Configure section."""
+        """Transition from Configure state."""
         if not self.configure_product_id:
             raise ValidationError(
                 _("Please select a product in the Configure section.")
             )
+        _logger.info(
+            f"Exiting Configure state with product: {self.configure_product_id.name}"
+        )
         self.state = "custom"
 
     def state_exit_custom(self):

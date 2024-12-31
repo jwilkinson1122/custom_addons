@@ -79,7 +79,7 @@ class MultiStepWizard(models.AbstractModel):
                 _("Please select a product in the Configure section.")
             )
         _logger.info(
-            f"Exiting Configure state with product: {self.configure_product_id}"
+            f"Exiting Configure state with product: {self.configure_product_id.name}"
         )
         self.state = "custom"
 
@@ -94,29 +94,54 @@ class MultiStepWizard(models.AbstractModel):
         """Submit the wizard and redirect back to the sales order form view."""
         if not self.sale_order_id:
             raise ValidationError(_("No associated sales order found."))
-        if not self.product_id:
+
+        if not self.start_product_id and not self.configure_product_id:
             raise ValidationError(_("No product selected for this wizard."))
-        if not self.computed_price:
-            raise ValidationError(_("Price computation failed."))
 
         # Log details for debugging
         _logger.info(
-            f"Submitting wizard: sale_order_id={self.sale_order_id.id}, product_id={self.product_id.id}, field1={self.field1}, field2={self.field2}, field3={self.field3}"
+            f"Submitting wizard: sale_order_id={self.sale_order_id.id}, "
+            f"start_product_id={self.start_product_id.id if self.start_product_id else 'None'}, "
+            f"configure_product_id={self.configure_product_id.id if self.configure_product_id else 'None'}, "
+            f"field1={self.field1}, field2={self.field2}, field3={self.field3}"
         )
 
-        # Build the sale order line description
-        description = (
-            f"{self.product_id.display_name}\n"
+        # Combine descriptions for both products if available
+        description = ""
+        if self.start_product_id:
+            description += f"Start Product: {self.start_product_id.display_name}\n"
+        if self.start_selected_attribute_value_ids:
+            start_attributes = ", ".join(
+                self.start_selected_attribute_value_ids.mapped("name")
+            )
+            description += f"Start Attributes: {start_attributes}\n"
+        if self.configure_product_id:
+            description += (
+                f"Configure Product: {self.configure_product_id.display_name}\n"
+            )
+        if self.configure_selected_attribute_value_ids:
+            configure_attributes = ", ".join(
+                self.configure_selected_attribute_value_ids.mapped("name")
+            )
+            description += f"Configure Attributes: {configure_attributes}\n"
+        description += (
             f"Configuration 1: {self.field1 or 'N/A'}\n"
             f"Configuration 2: {self.field2 or 'N/A'}\n"
             f"Customization: {self.field3 or 'N/A'}"
+        )
+
+        # Use the product from the "Configure" step if it exists, otherwise the "Start" step
+        product_id = (
+            self.configure_product_id.id
+            if self.configure_product_id
+            else self.start_product_id.id
         )
 
         # Create the sale order line
         self.env["sale.order.line"].create(
             {
                 "order_id": self.sale_order_id.id,
-                "product_id": self.product_id.id,
+                "product_id": product_id,
                 "product_uom_qty": 1,
                 "price_unit": self.computed_price,
                 "name": description,
