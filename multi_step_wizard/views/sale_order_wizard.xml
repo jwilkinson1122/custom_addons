@@ -6,6 +6,9 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="multi_step_wizard.multi_step_wizard_form" />
         <field name="arch" type="xml">
+            <xpath expr="//footer" position="inside">
+                <button name="reset_section" string="Reset" type="object" class="btn btn-secondary" />
+            </xpath>
             <xpath expr="//footer" position="before">
                 <!-- Invisible Fields -->
                 <field name="available_attribute_values" invisible="1" />
@@ -20,12 +23,10 @@
                     </div>
                     <group>
                         <field name="start_product_id" string="Select Product" options="{'no_create': True}" />
-                        <field name="formatted_product_price" readonly="1" class="oe_inline" />
-                        <field name="start_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" />
-                        <field name="formatted_attribute_price" readonly="1" class="oe_inline" />
+                        <field name="start_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" options="{'onchange': true}" />
+                        <field name="formatted_total_price" readonly="1" class="oe_inline oe_highlight" />
                     </group>
                 </group>
-
                 <!-- Configure Step -->
                 <group name="configure" invisible="state != 'configure'">
                     <div class="oe_title">
@@ -38,7 +39,6 @@
                         <field name="formatted_attribute_price" readonly="1" class="oe_inline" />
                     </group>
                 </group>
-
                 <!-- Total Price -->
                 <group>
                     <div class="oe_title">
@@ -46,7 +46,12 @@
                     </div>
                     <field name="formatted_total_price" readonly="1" class="oe_inline oe_highlight" />
                 </group>
-
+                <group>
+                    <div class="oe_title">
+                        <h3>Running Total</h3>
+                    </div>
+                    <field name="running_total_price" readonly="1" class="oe_inline oe_highlight"/>
+                </group>
                 <!-- Customize Step -->
                 <group name="custom" invisible="state != 'custom'">
                     <group>

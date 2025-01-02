@@ -20,6 +20,7 @@
     ],
     "assets": {
         "web.assets_backend": [
+            "multi_step_wizard/static/src/js/sale_order_wizard_form_renderer.js",
             # "multi_step_wizard/static/src/js/section_wise_subtotal.js",
         ],
     },

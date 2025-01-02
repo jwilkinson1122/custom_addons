@@ -41,6 +41,10 @@ class SaleOrderWizard(models.TransientModel):
     _inherit = ["multi.step.wizard.mixin"]
 
     # General fields
+    field1 = fields.Char(string="Configuration 1", default="N/A")
+    field2 = fields.Char(string="Configuration 2", default="N/A")
+    field3 = fields.Char(string="Customization", default="N/A")
+
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sales Order",
@@ -63,7 +67,7 @@ class SaleOrderWizard(models.TransientModel):
         store=True,
     )
 
-    # Section-specific fields
+    # start section fields
     start_product_id = fields.Many2one(
         comodel_name="product.product",
         string="Start Product",
@@ -84,6 +88,40 @@ class SaleOrderWizard(models.TransientModel):
         string="Start Selected Attributes",
     )
 
+    start_product_price = fields.Float(
+        string="Start Product Price", compute="_compute_start_price", readonly=True
+    )
+
+    start_attribute_price = fields.Float(
+        string="Start Attribute Price", compute="_compute_start_price", readonly=True
+    )
+
+    @api.depends("start_product_id", "start_selected_attribute_value_ids")
+    def _compute_start_price(self):
+        for wizard in self:
+            wizard.start_product_price = (
+                wizard.start_product_id.list_price if wizard.start_product_id else 0.0
+            )
+            wizard.start_attribute_price = sum(
+                self.env["product.template.attribute.value"]
+                .search(
+                    [
+                        (
+                            "product_tmpl_id",
+                            "=",
+                            wizard.start_product_id.product_tmpl_id.id,
+                        ),
+                        (
+                            "product_attribute_value_id",
+                            "in",
+                            wizard.start_selected_attribute_value_ids.ids,
+                        ),
+                    ]
+                )
+                .mapped("price_extra")
+            )
+
+    # configure section fields
     configure_product_id = fields.Many2one(
         comodel_name="product.product",
         string="Configure Product",
@@ -98,18 +136,114 @@ class SaleOrderWizard(models.TransientModel):
         string="Configure Selected Attributes",
     )
 
+    configure_product_price = fields.Float(
+        string="Configure Product Price",
+        compute="_compute_configure_price",
+        readonly=True,
+    )
+
+    configure_attribute_price = fields.Float(
+        string="Configure Attribute Price",
+        compute="_compute_configure_price",
+        readonly=True,
+    )
+
+    @api.depends("configure_product_id", "configure_selected_attribute_value_ids")
+    def _compute_configure_price(self):
+        for wizard in self:
+            wizard.configure_product_price = (
+                wizard.configure_product_id.list_price
+                if wizard.configure_product_id
+                else 0.0
+            )
+            wizard.configure_attribute_price = sum(
+                self.env["product.template.attribute.value"]
+                .search(
+                    [
+                        (
+                            "product_tmpl_id",
+                            "=",
+                            wizard.configure_product_id.product_tmpl_id.id,
+                        ),
+                        (
+                            "product_attribute_value_id",
+                            "in",
+                            wizard.configure_selected_attribute_value_ids.ids,
+                        ),
+                    ]
+                )
+                .mapped("price_extra")
+            )
+
     available_attribute_values = fields.Many2many(
         comodel_name="product.attribute.value",
         compute="_compute_available_attribute_values",
         string="Available Attribute Values",
     )
 
-    # Add a field to dynamically fetch the category
     current_category_id = fields.Many2one(
         "product.category",
         string="Current Product Category",
         compute="_compute_current_category",
     )
+
+    product_variant_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Product Variant",
+        compute="_compute_product_variant",
+        store=True,
+    )
+
+    computed_price = fields.Float(
+        string="Computed Price", compute="_compute_price", store=True, readonly=True
+    )
+
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        required=True,
+        default=lambda self: self.env.company.currency_id,
+    )
+
+    product_price = fields.Float(
+        string="Product Price", compute="_compute_product_price", readonly=True
+    )
+
+    attribute_price = fields.Float(
+        string="Attribute Price", compute="_compute_attribute_price", readonly=True
+    )
+
+    formatted_product_price = fields.Char(
+        string="Product Price",
+        compute="_compute_formatted_product_price",
+        readonly=True,
+    )
+
+    formatted_attribute_price = fields.Char(
+        string="Attribute Price",
+        compute="_compute_formatted_attribute_price",
+        readonly=True,
+    )
+
+    formatted_total_price = fields.Char(
+        string="Total Price", compute="_compute_formatted_total_price", readonly=True
+    )
+
+    running_total_price = fields.Float(
+        string="Running Total Price",
+        compute="_compute_running_total_price",
+        readonly=True,
+        store=True,
+    )
+
+    summary_label = fields.Char(
+        "Selection Summary Label",
+        translate=True,
+        default="Summary of Selections:",
+        readonly=True,
+    )
+
+    summary = fields.Text(string="Summary", compute="_compute_summary", default="")
 
     @api.depends("state")
     def _compute_current_category(self):
@@ -122,79 +256,27 @@ class SaleOrderWizard(models.TransientModel):
                 configuration.product_category_id if configuration else None
             )
 
-    @api.onchange("start_product_id")
-    def _onchange_start_product_id(self):
-        """Update the domain for Start Attributes based on the selected Start Product."""
-        if self.start_product_id:
-            # Get attribute values related to the selected product
-            attribute_values = (
-                self.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
-                    "value_ids"
-                )
-            )
-            _logger.info(f"Start Product Attribute Values: {attribute_values.ids}")
-            return {
-                "domain": {
-                    "start_selected_attribute_value_ids": [
-                        ("id", "in", attribute_values.ids)
-                    ]
-                }
-            }
-        else:
-            _logger.info("No Start Product Selected, resetting attributes.")
-            return {
-                "domain": {"start_selected_attribute_value_ids": [("id", "=", False)]}
-            }
-
-    @api.onchange("configure_product_id")
-    def _onchange_configure_product_id(self):
-        """Update the domain for Configure Attributes based on the selected Configure Product."""
-        if self.configure_product_id:
-            attribute_values = (
-                self.configure_product_id.product_tmpl_id.attribute_line_ids.mapped(
-                    "value_ids"
-                )
-            )
-            _logger.info(f"Configure Product Attribute Values: {attribute_values.ids}")
-            return {
-                "domain": {
-                    "configure_selected_attribute_value_ids": [
-                        ("id", "in", attribute_values.ids)
-                    ]
-                }
-            }
-        else:
-            _logger.info("No Configure Product Selected, resetting attributes.")
-            return {
-                "domain": {
-                    "configure_selected_attribute_value_ids": [("id", "=", False)]
-                }
-            }
-
-    def _get_product_domain(self, section=None):
-        """Get domain for a specific section."""
-        section = section or self.state  # Use current state if section is None
-        configuration = self.env["wizard.section.configuration"].search(
-            [("section_name", "=", section)], limit=1
-        )
-        if configuration and configuration.product_category_id:
-            return [
-                ("categ_id", "child_of", configuration.product_category_id.id),
-                ("sale_ok", "=", True),
-            ]
-        return [("sale_ok", "=", True)]
-
     @api.onchange("state")
     def _onchange_state(self):
-        """Set the correct product domain based on the current section."""
-        domain = self._get_product_domain(self.state)
+        """Handle changes in wizard state."""
+        configuration = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", self.state)], limit=1
+        )
+        self.current_category_id = (
+            configuration.product_category_id if configuration else None
+        )
+
+        # Reset fields for the current state
         if self.state == "start":
-            self.start_product_id = None
-            return {"domain": {"start_product_id": domain}}
+            self.start_product_id = False
+            self.start_selected_attribute_value_ids = [(5, 0, 0)]
+            self.start_product_price = 0.0
+            self.start_attribute_price = 0.0
         elif self.state == "configure":
-            self.configure_product_id = None
-            return {"domain": {"configure_product_id": domain}}
-        return {}
+            self.configure_product_id = False
+            self.configure_selected_attribute_value_ids = [(5, 0, 0)]
+            self.configure_product_price = 0.0
+            self.configure_attribute_price = 0.0
 
     @api.onchange("product_id")
     def _onchange_product_id(self):
@@ -213,136 +295,6 @@ class SaleOrderWizard(models.TransientModel):
                 wizard.product_template_id = wizard.configure_product_id.product_tmpl_id
             else:
                 wizard.product_template_id = False
-
-    product_variant_id = fields.Many2one(
-        comodel_name="product.product",
-        string="Product Variant",
-        compute="_compute_product_variant",
-        store=True,
-    )
-
-    field1 = fields.Char(string="Configuration 1", default="N/A")
-    field2 = fields.Char(string="Configuration 2", default="N/A")
-    field3 = fields.Char(string="Customization", default="N/A")
-
-    computed_price = fields.Float(
-        string="Computed Price", compute="_compute_price", store=True, default=0.0
-    )
-
-    @api.depends(
-        "start_product_id",
-        "start_selected_attribute_value_ids",
-        "configure_product_id",
-        "configure_selected_attribute_value_ids",
-    )
-    def _compute_price(self):
-        for wizard in self:
-            base_price = 0.0
-            extra_price = 0.0
-
-            def calculate_attribute_price(product, selected_attributes):
-                price = 0.0
-                if product:
-                    for attribute in selected_attributes:
-                        template_value = self.env[
-                            "product.template.attribute.value"
-                        ].search(
-                            [
-                                ("product_tmpl_id", "=", product.product_tmpl_id.id),
-                                ("product_attribute_value_id", "=", attribute.id),
-                            ],
-                            limit=1,
-                        )
-                        price += template_value.price_extra if template_value else 0.0
-                return price
-
-            if wizard.start_product_id:
-                base_price += wizard.start_product_id.list_price
-                extra_price += calculate_attribute_price(
-                    wizard.start_product_id, wizard.start_selected_attribute_value_ids
-                )
-
-            if wizard.configure_product_id:
-                base_price += wizard.configure_product_id.list_price
-                extra_price += calculate_attribute_price(
-                    wizard.configure_product_id,
-                    wizard.configure_selected_attribute_value_ids,
-                )
-
-            wizard.computed_price = base_price + extra_price
-
-    # @api.depends(
-    #     "start_product_id",
-    #     "start_selected_attribute_value_ids",
-    #     "configure_product_id",
-    #     "configure_selected_attribute_value_ids",
-    # )
-    # def _compute_price(self):
-    #     for wizard in self:
-    #         base_price = 0.0
-    #         extra_price = 0.0
-
-    #         def calculate_attribute_price(product, selected_attributes):
-    #             price = 0.0
-    #             if product:
-    #                 for attribute in selected_attributes:
-    #                     template_value = self.env[
-    #                         "product.template.attribute.value"
-    #                     ].search(
-    #                         [
-    #                             ("product_tmpl_id", "=", product.product_tmpl_id.id),
-    #                             ("product_attribute_value_id", "=", attribute.id),
-    #                         ],
-    #                         limit=1,
-    #                     )
-    #                     price += template_value.price_extra if template_value else 0.0
-    #             return price
-
-    #         if wizard.start_product_id:
-    #             base_price += wizard.start_product_id.list_price
-    #             extra_price += calculate_attribute_price(
-    #                 wizard.start_product_id, wizard.start_selected_attribute_value_ids
-    #             )
-
-    #         if wizard.configure_product_id:
-    #             base_price += wizard.configure_product_id.list_price
-    #             extra_price += calculate_attribute_price(
-    #                 wizard.configure_product_id,
-    #                 wizard.configure_selected_attribute_value_ids,
-    #             )
-
-    #         wizard.computed_price = base_price + extra_price
-
-    # Add fields to display prices in the wizard
-    # Currency field
-    currency_id = fields.Many2one(
-        comodel_name="res.currency",
-        string="Currency",
-        required=True,
-        # default=lambda self: self.sale_order_id.currency_id
-        # or self.env.company.currency_id,
-        default=lambda self: self.env.company.currency_id,
-    )
-
-    product_price = fields.Float(
-        string="Product Price", compute="_compute_product_price", readonly=True
-    )
-    attribute_price = fields.Float(
-        string="Attribute Price", compute="_compute_attribute_price", readonly=True
-    )
-    formatted_product_price = fields.Char(
-        string="Product Price",
-        compute="_compute_formatted_product_price",
-        readonly=True,
-    )
-    formatted_attribute_price = fields.Char(
-        string="Attribute Price",
-        compute="_compute_formatted_attribute_price",
-        readonly=True,
-    )
-    formatted_total_price = fields.Char(
-        string="Price", compute="_compute_formatted_total_price", readonly=True
-    )
 
     @api.depends("start_product_id")
     def _compute_product_price(self):
@@ -384,36 +336,6 @@ class SaleOrderWizard(models.TransientModel):
                         # )
             wizard.attribute_price = extra_price
 
-    # @api.depends("start_selected_attribute_value_ids", "start_product_id")
-    # def _compute_attribute_price(self):
-    #     for wizard in self:
-    #         extra_price = 0.0
-    #         if wizard.start_product_id:
-    #             for attribute in wizard.start_selected_attribute_value_ids:
-    #                 template_value = self.env[
-    #                     "product.template.attribute.value"
-    #                 ].search(
-    #                     [
-    #                         (
-    #                             "product_tmpl_id",
-    #                             "=",
-    #                             wizard.start_product_id.product_tmpl_id.id,
-    #                         ),
-    #                         ("product_attribute_value_id", "=", attribute.id),
-    #                     ],
-    #                     limit=1,
-    #                 )
-    #                 if template_value:
-    #                     _logger.info(
-    #                         f"Attribute {attribute.name} Price Extra: {template_value.price_extra}"
-    #                     )
-    #                     extra_price += template_value.price_extra
-    #                 else:
-    #                     _logger.warning(
-    #                         f"Attribute {attribute.name} not linked to product {wizard.start_product_id.name}"
-    #                     )
-    #         wizard.attribute_price = extra_price
-
     # Adjust computations to include the currency symbol
     @api.depends("product_price")
     def _compute_formatted_product_price(self):
@@ -434,22 +356,64 @@ class SaleOrderWizard(models.TransientModel):
             else:
                 wizard.formatted_attribute_price = ""
 
-    @api.depends("product_price", "attribute_price")
+    @api.depends(
+        "start_product_price",
+        "start_attribute_price",
+        "configure_product_price",
+        "configure_attribute_price",
+    )
+    def _compute_running_total_price(self):
+        for wizard in self:
+            wizard.running_total_price = (
+                wizard.start_product_price
+                + wizard.start_attribute_price
+                + wizard.configure_product_price
+                + wizard.configure_attribute_price
+            )
+
+    @api.onchange("start_selected_attribute_value_ids")
+    def _onchange_start_selected_attribute_value_ids(self):
+        """Recompute prices when attributes are selected."""
+        _logger.info(
+            f"Attributes selected: {self.start_selected_attribute_value_ids.ids}"
+        )
+        self._compute_price()
+        self._compute_formatted_total_price()
+        _logger.info(f"Updated computed price: {self.computed_price}")
+        _logger.info(f"Updated formatted total price: {self.formatted_total_price}")
+
+    @api.depends(
+        "start_product_price",
+        "start_attribute_price",
+        "configure_product_price",
+        "configure_attribute_price",
+    )
+    def _compute_price(self):
+        for wizard in self:
+            wizard.computed_price = (
+                wizard.start_product_price
+                + wizard.start_attribute_price
+                + wizard.configure_product_price
+                + wizard.configure_attribute_price
+            )
+
+    @api.depends(
+        "start_product_price",
+        "start_attribute_price",
+        "configure_product_price",
+        "configure_attribute_price",
+    )
     def _compute_formatted_total_price(self):
         for wizard in self:
-            total_price = wizard.product_price + wizard.attribute_price
+            total_price = (
+                wizard.start_product_price
+                + wizard.start_attribute_price
+                + wizard.configure_product_price
+                + wizard.configure_attribute_price
+            )
             wizard.formatted_total_price = (
                 f"{wizard.currency_id.symbol} {total_price:,.2f}"
             )
-
-    summary_label = fields.Char(
-        "Selection Summary Label",
-        translate=True,
-        default="Summary of Selections:",
-        readonly=True,
-    )
-
-    summary = fields.Text(string="Summary", compute="_compute_summary", default="")
 
     @api.depends("start_product_id")
     def _compute_available_attribute_values(self):
@@ -463,33 +427,89 @@ class SaleOrderWizard(models.TransientModel):
             else:
                 wizard.available_attribute_values = self.env["product.attribute.value"]
 
-    # @api.depends("start_product_id")
-    # def _compute_available_attribute_values(self):
-    #     for wizard in self:
-    #         if wizard.start_product_id:
-    #             wizard.available_attribute_values = (
-    #                 wizard.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
-    #                     "value_ids"
-    #                 )
-    #             )
-    #         else:
-    #             wizard.available_attribute_values = self.env["product.attribute.value"]
+    # Trigger price computation on attribute change
+    @api.onchange("start_selected_attribute_value_ids", "start_product_id")
+    def _onchange_attributes(self):
+        self._compute_price()
+        self._compute_formatted_total_price()
 
-    # @api.depends("start_product_id")
-    # def _compute_available_attribute_values(self):
-    #     for wizard in self:
-    #         if wizard.start_product_id:
-    #             available_values = (
-    #                 wizard.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
-    #                     "value_ids"
-    #                 )
+    def _get_product_domain(self, section=None):
+        """Get domain for product selection based on section."""
+        section = section or self.state
+        configuration = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", section)], limit=1
+        )
+        if configuration and configuration.product_category_id:
+            return [
+                ("categ_id", "child_of", configuration.product_category_id.id),
+                ("sale_ok", "=", True),
+            ]
+        return [("sale_ok", "=", True)]
+
+    @api.onchange("start_product_id")
+    def _onchange_start_product_id(self):
+        """Load attributes for the selected Start Product."""
+        if self.start_product_id:
+            attribute_values = (
+                self.start_product_id.product_tmpl_id.attribute_line_ids.mapped(
+                    "value_ids"
+                )
+            )
+            _logger.info(f"Available Start Attributes: {attribute_values.ids}")
+            return {
+                "domain": {
+                    "start_selected_attribute_value_ids": [
+                        ("id", "in", attribute_values.ids)
+                    ]
+                }
+            }
+        return {"domain": {"start_selected_attribute_value_ids": [("id", "=", False)]}}
+
+    # @api.onchange("configure_product_id")
+    # def _onchange_configure_product_id(self):
+    #     """Update the domain for Configure Attributes based on the selected Configure Product."""
+    #     if self.configure_product_id:
+    #         attribute_values = (
+    #             self.configure_product_id.product_tmpl_id.attribute_line_ids.mapped(
+    #                 "value_ids"
     #             )
-    #             _logger.info(
-    #                 f"Computed Available Attribute Values: {available_values.ids}"
-    #             )
-    #             wizard.available_attribute_values = available_values
-    #         else:
-    #             wizard.available_attribute_values = self.env["product.attribute.value"]
+    #         )
+    #         _logger.info(f"Configure Product Attribute Values: {attribute_values.ids}")
+    #         return {
+    #             "domain": {
+    #                 "configure_selected_attribute_value_ids": [
+    #                     ("id", "in", attribute_values.ids)
+    #                 ]
+    #             }
+    #         }
+    #     else:
+    #         _logger.info("No Configure Product Selected, resetting attributes.")
+    #         return {
+    #             "domain": {
+    #                 "configure_selected_attribute_value_ids": [("id", "=", False)]
+    #             }
+    #         }
+
+    @api.onchange("configure_product_id")
+    def _onchange_configure_product_id(self):
+        """Load attributes for the selected Configure Product."""
+        if self.configure_product_id:
+            attribute_values = (
+                self.configure_product_id.product_tmpl_id.attribute_line_ids.mapped(
+                    "value_ids"
+                )
+            )
+            _logger.info(f"Available Configure Attributes: {attribute_values.ids}")
+            return {
+                "domain": {
+                    "configure_selected_attribute_value_ids": [
+                        ("id", "in", attribute_values.ids)
+                    ]
+                }
+            }
+        return {
+            "domain": {"configure_selected_attribute_value_ids": [("id", "=", False)]}
+        }
 
     @api.depends(
         "start_product_id",
@@ -541,33 +561,26 @@ class SaleOrderWizard(models.TransientModel):
     def _default_sale_order_id(self):
         return self.env.context.get("active_id")
 
-    # Ensure state-specific validation
     def state_exit_start(self):
         """Transition from Start state."""
         if not self.start_product_id:
             raise ValidationError(_("Please select a product in the Start section."))
 
-        # Log the selected product for debugging
+        # Log selected product
         _logger.info(
-            f"Exiting Start state with product: {self.start_product_id.display_name} (ID: {self.start_product_id.id})"
+            f"Exiting Start state with product: {self.start_product_id.display_name}"
         )
 
-        # Validate that the product has linked attributes
-        if not self.available_attribute_values:
-            raise ValidationError(
-                _(
-                    "The selected product has no linked attributes. Please configure the product attributes before proceeding."
-                )
-            )
+        # Reset Configure section fields
+        self.configure_product_id = False
+        self.configure_selected_attribute_value_ids = [(5, 0, 0)]
+        self.configure_product_price = 0.0
+        self.configure_attribute_price = 0.0
 
-        # Transition to the 'configure' state
+        _logger.info(f"Exiting Start state with product: {self.start_product_id}")
+        self.reset_section()
+        # Move to Configure state
         self.state = "configure"
-
-    # def state_exit_start(self):
-    #     """Transition from Start section."""
-    #     if not self.start_product_id:
-    #         raise ValidationError(_("Please select a product in the Start section."))
-    #     self.state = "configure"
 
     def state_exit_configure(self):
         """Transition from Configure state."""
@@ -575,9 +588,21 @@ class SaleOrderWizard(models.TransientModel):
             raise ValidationError(
                 _("Please select a product in the Configure section.")
             )
+
+        # Log selected product
         _logger.info(
-            f"Exiting Configure state with product: {self.configure_product_id.name}"
+            f"Exiting Configure state with product: {self.configure_product_id.display_name}"
         )
+
+        # Reset Custom section fields if necessary
+        self.field3 = ""
+
+        _logger.info(
+            f"Exiting Configure state with product: {self.configure_product_id}"
+        )
+        self.reset_section()
+
+        # Move to Custom state
         self.state = "custom"
 
     def state_exit_custom(self):
@@ -617,6 +642,19 @@ class SaleOrderWizard(models.TransientModel):
                 "name": description,
             }
         )
+
+    def reset_section(self):
+        """Reset selections and prices for the current section."""
+        if self.state == "start":
+            self.start_product_id = False
+            self.start_selected_attribute_value_ids = [(5, 0, 0)]
+            self.start_product_price = 0.0
+            self.start_attribute_price = 0.0
+        elif self.state == "configure":
+            self.configure_product_id = False
+            self.configure_selected_attribute_value_ids = [(5, 0, 0)]
+            self.configure_product_price = 0.0
+            self.configure_attribute_price = 0.0
 
     @api.model
     def create(self, vals):

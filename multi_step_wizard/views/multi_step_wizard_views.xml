@@ -12,6 +12,8 @@
                     <button name="submit_wizard" string="Submit" type="object" class="btn-primary" invisible="state != 'summary'" />
                     <button name="open_previous" string="Go Back" type="object" class="btn btn-default" invisible="not allow_back" />
                     <button string="Cancel" class="btn btn-default" special="cancel" />
+                    <!-- <button name="reset_section" string="Reset" type="object" class="btn btn-secondary" /> -->
+
                 </footer>
             </form>
         </field>
