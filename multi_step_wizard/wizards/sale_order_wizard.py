@@ -465,31 +465,6 @@ class SaleOrderWizard(models.TransientModel):
             }
         return {"domain": {"start_selected_attribute_value_ids": [("id", "=", False)]}}
 
-    # @api.onchange("configure_product_id")
-    # def _onchange_configure_product_id(self):
-    #     """Update the domain for Configure Attributes based on the selected Configure Product."""
-    #     if self.configure_product_id:
-    #         attribute_values = (
-    #             self.configure_product_id.product_tmpl_id.attribute_line_ids.mapped(
-    #                 "value_ids"
-    #             )
-    #         )
-    #         _logger.info(f"Configure Product Attribute Values: {attribute_values.ids}")
-    #         return {
-    #             "domain": {
-    #                 "configure_selected_attribute_value_ids": [
-    #                     ("id", "in", attribute_values.ids)
-    #                 ]
-    #             }
-    #         }
-    #     else:
-    #         _logger.info("No Configure Product Selected, resetting attributes.")
-    #         return {
-    #             "domain": {
-    #                 "configure_selected_attribute_value_ids": [("id", "=", False)]
-    #             }
-    #         }
-
     @api.onchange("configure_product_id")
     def _onchange_configure_product_id(self):
         """Load attributes for the selected Configure Product."""
@@ -648,13 +623,9 @@ class SaleOrderWizard(models.TransientModel):
         if self.state == "start":
             self.start_product_id = False
             self.start_selected_attribute_value_ids = [(5, 0, 0)]
-            self.start_product_price = 0.0
-            self.start_attribute_price = 0.0
         elif self.state == "configure":
             self.configure_product_id = False
             self.configure_selected_attribute_value_ids = [(5, 0, 0)]
-            self.configure_product_price = 0.0
-            self.configure_attribute_price = 0.0
 
     @api.model
     def create(self, vals):
