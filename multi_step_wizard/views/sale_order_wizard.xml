@@ -3,69 +3,46 @@
     <record id="sale_order_wizard_form" model="ir.ui.view">
         <field name="name">sale.order.wizard.form</field>
         <field name="model">sale.order.wizard</field>
-        <field name="mode">primary</field>
         <field name="inherit_id" ref="multi_step_wizard.multi_step_wizard_form" />
         <field name="arch" type="xml">
             <xpath expr="//footer" position="inside">
-                <button name="reset_section" string="Reset" type="object" class="btn btn-secondary" />
+                <button name="reset_section" string="Reset Section" type="object" class="btn-secondary" />
             </xpath>
             <xpath expr="//footer" position="before">
-                <!-- Invisible Fields -->
-                <field name="available_attribute_values" invisible="1" />
-                <!-- Currency Selection (optional, if needed) -->
+                <!-- Dynamic Laterality Field -->
                 <group>
-                    <field name="currency_id" string="Currency" />
+                    <field name="laterality" widget="radio" />
                 </group>
-                <!-- Start Step -->
-                <group name="start" invisible="state != 'start'">
+
+                <!-- Section Configuration -->
+
+                <!-- <group name="dynamic_section" invisible="state not in _selection_state()"> -->
+                <group name="dynamic_section" invisible="state not in ('order_info', 'shell_foundation', 'arch_height', 'top_cover', 'bottom_cover', 'cushion', 'extension', 'options')">
+
+                    <!-- <div class="oe_title">
+                        <h3 t-esc="state.capitalize()" />
+                    </div> -->
                     <div class="oe_title">
-                        <h3>Select Start Product</h3>
+                        <h3>
+                            <field name="state_display" readonly="1" nolabel="1"/>
+                        </h3>
                     </div>
-                    <group>
-                        <field name="start_product_id" string="Select Product" options="{'no_create': True}" />
-                        <field name="start_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" options="{'onchange': true}" />
-                        <field name="formatted_total_price" readonly="1" class="oe_inline oe_highlight" />
-                    </group>
-                </group>
-                <!-- Configure Step -->
-                <group name="configure" invisible="state != 'configure'">
-                    <div class="oe_title">
-                        <h3>Configure Additional Product</h3>
-                    </div>
-                    <group>
-                        <field name="configure_product_id" string="Select Product" options="{'no_create': True}" />
-                        <field name="formatted_product_price" readonly="1" class="oe_inline" />
-                        <field name="configure_selected_attribute_value_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]" string="Select Attributes" />
-                        <field name="formatted_attribute_price" readonly="1" class="oe_inline" />
-                    </group>
-                </group>
-                <!-- Total Price -->
-                <group>
-                    <div class="oe_title">
-                        <h3>Total Price</h3>
-                    </div>
-                    <field name="formatted_total_price" readonly="1" class="oe_inline oe_highlight" />
-                </group>
-                <group>
+
+                    <field name="section_product_id" />
+                    <field name="section_attribute_ids" widget="many2many_tags" />
+                    <field name="section_price" readonly="1" />
                     <div class="oe_title">
                         <h3>Running Total</h3>
                     </div>
-                    <field name="running_total_price" readonly="1" class="oe_inline oe_highlight"/>
-                </group>
-                <!-- Customize Step -->
-                <group name="custom" invisible="state != 'custom'">
-                    <group>
-                        <field name="field3" placeholder="Enter Customization" string="Customization" />
-                    </group>
+                    <field name="formatted_total_price" readonly="1" />
                 </group>
 
-                <!-- Summary Step -->
+                <!-- Summary Section -->
                 <group name="summary" invisible="state != 'summary'">
                     <div class="oe_title">
-                        <h3>Summary of Selections</h3>
+                        <h3>Summary</h3>
                     </div>
-                    <field name="summary_label" class="oe_inline" />
-                    <field name="summary" readonly="1" string="Summary of Selections" />
+                    <field name="summary" readonly="1" />
                 </group>
             </xpath>
         </field>
