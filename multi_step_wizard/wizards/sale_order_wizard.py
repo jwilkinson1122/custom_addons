@@ -110,13 +110,6 @@ class SaleOrderWizard(models.TransientModel):
         string="State Display", compute="_compute_state_display"
     )
 
-    # Price Computations
-    # @api.constrains("section_data")
-    # def _check_section_data(self):
-    #     for record in self:
-    #         if not isinstance(record.section_data, dict):
-    #             raise ValidationError(_("Section data must be a dictionary"))
-
     @api.constrains("section_data")
     def _check_section_data(self):
         for record in self:
@@ -202,26 +195,64 @@ class SaleOrderWizard(models.TransientModel):
         for wizard in self:
             wizard.formatted_total_price = f"${wizard.running_total_price:,.2f}"
 
+
+
+
+    @api.model
+    def create(self, vals):
+        if "section_data" not in vals or not isinstance(vals["section_data"], dict):
+            vals["section_data"] = {}
+        return super().create(vals)
+
+    def write(self, vals):
+        if "section_data" in vals and not isinstance(vals["section_data"], dict):
+            vals["section_data"] = {}
+        return super().write(vals)
+
+
+    # @api.depends("section_data")
+    # def _compute_summary(self):
+    #     """Generate a summary of all section selections."""
+    #     for wizard in self:
+    #         summary_lines = []
+    #         for state, data in wizard.section_data.items():
+    #             product_name = (
+    #                 self.env["product.product"]
+    #                 .browse(data.get("product_id"))
+    #                 .display_name
+    #             )
+    #             attributes = ", ".join(
+    #                 self.env["product.attribute.value"]
+    #                 .browse(data.get("attribute_ids", []))
+    #                 .mapped("name")
+    #             )
+    #             summary_lines.append(
+    #                 f"{state.capitalize()}: {product_name} ({attributes})"
+    #             )
+    #         wizard.summary = "\n".join(summary_lines)
+
     @api.depends("section_data")
     def _compute_summary(self):
         """Generate a summary of all section selections."""
         for wizard in self:
             summary_lines = []
-            for state, data in wizard.section_data.items():
-                product_name = (
-                    self.env["product.product"]
-                    .browse(data.get("product_id"))
-                    .display_name
-                )
-                attributes = ", ".join(
-                    self.env["product.attribute.value"]
-                    .browse(data.get("attribute_ids", []))
-                    .mapped("name")
-                )
-                summary_lines.append(
-                    f"{state.capitalize()}: {product_name} ({attributes})"
-                )
+            if isinstance(wizard.section_data, dict):
+                for state, data in wizard.section_data.items():
+                    product_name = (
+                        self.env["product.product"]
+                        .browse(data.get("product_id"))
+                        .display_name
+                    )
+                    attributes = ", ".join(
+                        self.env["product.attribute.value"]
+                        .browse(data.get("attribute_ids", []))
+                        .mapped("name")
+                    )
+                    summary_lines.append(
+                        f"{state.capitalize()}: {product_name} ({attributes})"
+                    )
             wizard.summary = "\n".join(summary_lines)
+
 
     def _get_product_domain(self):
         """Limit products based on the current section and laterality."""
@@ -286,25 +317,6 @@ class SaleOrderWizard(models.TransientModel):
                 }
         except Exception as e:
             _logger.error("Error updating section data: %s", str(e))
-
-    @api.model
-    def create(self, vals):
-        if "section_data" not in vals or not vals["section_data"]:
-            vals["section_data"] = {}
-        return super().create(vals)
-
-    # def create(self, vals):
-    #     _logger.debug(f"Before sanitizing section_data: {vals.get('section_data')}")
-    #     vals["section_data"] = self._sanitize_section_data(vals.get("section_data", {}))
-    #     _logger.debug(f"After sanitizing section_data: {vals['section_data']}")
-    #     return super().create(vals)
-
-    # @api.model
-    # def default_get(self, fields_list):
-    #     defaults = super().default_get(fields_list)
-    #     if "section_data" in fields_list:
-    #         defaults["section_data"] = {}
-    #     return defaults
 
     @api.model
     def default_get(self, fields_list):

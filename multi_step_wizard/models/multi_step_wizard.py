@@ -215,20 +215,6 @@ class MultiStepWizardMixin(models.AbstractModel):
             "target": "new",
         }
 
-    # def _sanitize_section_data(self, data):
-    #     """Validate and sanitize section data."""
-    #     if not data or isinstance(data, bool):
-    #         return {}
-    #     if isinstance(data, dict):
-    #         return data
-    #     if isinstance(data, str):
-    #         try:
-    #             return json.loads(data)
-    #         except json.JSONDecodeError:
-    #             _logger.warning(f"Invalid JSON for section_data: {data}")
-    #             return {}
-    #     return {}
-
     def _sanitize_section_data(self, data):
         _logger.debug(f"Sanitizing section_data: {data} (type: {type(data)})")
         if not data or isinstance(data, bool):
