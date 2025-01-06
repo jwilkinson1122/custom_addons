@@ -6,55 +6,55 @@ class ProductConfiguratorTestCases(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.ProductConfWizard = cls.env["product.configurator"]
-        cls.config_product = cls.env.ref("product_configurator.bmw_2_series")
+        cls.config_product = cls.env.ref("pod_product_configurator.bmw_2_series")
         cls.product_category = cls.env.ref("product.product_category_5")
         # attributes
-        cls.attr_fuel = cls.env.ref("product_configurator.product_attribute_fuel")
-        cls.attr_engine = cls.env.ref("product_configurator.product_attribute_engine")
-        cls.attr_color = cls.env.ref("product_configurator.product_attribute_color")
-        cls.attr_rims = cls.env.ref("product_configurator.product_attribute_rims")
+        cls.attr_fuel = cls.env.ref("pod_product_configurator.product_attribute_fuel")
+        cls.attr_engine = cls.env.ref("pod_product_configurator.product_attribute_engine")
+        cls.attr_color = cls.env.ref("pod_product_configurator.product_attribute_color")
+        cls.attr_rims = cls.env.ref("pod_product_configurator.product_attribute_rims")
         cls.attr_model_line = cls.env.ref(
-            "product_configurator.product_attribute_model_line"
+            "pod_product_configurator.product_attribute_model_line"
         )
         cls.attr_tapistry = cls.env.ref(
-            "product_configurator.product_attribute_tapistry"
+            "pod_product_configurator.product_attribute_tapistry"
         )
         cls.attr_transmission = cls.env.ref(
-            "product_configurator.product_attribute_transmission"
+            "pod_product_configurator.product_attribute_transmission"
         )
-        cls.attr_options = cls.env.ref("product_configurator.product_attribute_options")
+        cls.attr_options = cls.env.ref("pod_product_configurator.product_attribute_options")
 
         # values
         cls.value_gasoline = cls.env.ref(
-            "product_configurator.product_attribute_value_gasoline"
+            "pod_product_configurator.product_attribute_value_gasoline"
         )
         cls.value_218i = cls.env.ref(
-            "product_configurator.product_attribute_value_218i"
+            "pod_product_configurator.product_attribute_value_218i"
         )
         cls.value_220i = cls.env.ref(
-            "product_configurator.product_attribute_value_220i"
+            "pod_product_configurator.product_attribute_value_220i"
         )
-        cls.value_red = cls.env.ref("product_configurator.product_attribute_value_red")
+        cls.value_red = cls.env.ref("pod_product_configurator.product_attribute_value_red")
         cls.value_rims_378 = cls.env.ref(
-            "product_configurator.product_attribute_value_rims_378"
+            "pod_product_configurator.product_attribute_value_rims_378"
         )
         cls.value_sport_line = cls.env.ref(
-            "product_configurator.product_attribute_value_sport_line"
+            "pod_product_configurator.product_attribute_value_sport_line"
         )
         cls.value_model_sport_line = cls.env.ref(
-            "product_configurator.product_attribute_value_model_sport_line"
+            "pod_product_configurator.product_attribute_value_model_sport_line"
         )
         cls.value_tapistry = cls.env.ref(
-            "product_configurator.product_attribute_value_tapistry" + "_oyster_black"
+            "pod_product_configurator.product_attribute_value_tapistry" + "_oyster_black"
         )
         cls.value_transmission = cls.env.ref(
-            "product_configurator.product_attribute_value_steptronic"
+            "pod_product_configurator.product_attribute_value_steptronic"
         )
         cls.value_options_1 = cls.env.ref(
-            "product_configurator.product_attribute_value_smoker_package"
+            "pod_product_configurator.product_attribute_value_smoker_package"
         )
         cls.value_options_2 = cls.env.ref(
-            "product_configurator.product_attribute_value_sunroof"
+            "pod_product_configurator.product_attribute_value_sunroof"
         )
 
     @classmethod

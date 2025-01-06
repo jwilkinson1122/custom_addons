@@ -12,7 +12,6 @@ class WizardSectionConfiguration(models.Model):
 
     section_name = fields.Selection(
         [
-            ("order_info", "Order Info"),
             ("shell_foundation", "Shell / Foundation"),
             ("arch_height", "Arch Height"),
             ("top_cover", "Top Cover"),
@@ -194,8 +193,6 @@ class SaleOrderWizard(models.TransientModel):
         """Format the running total price."""
         for wizard in self:
             wizard.formatted_total_price = f"${wizard.running_total_price:,.2f}"
-
-
 
 
     @api.model

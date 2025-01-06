@@ -1,4 +1,4 @@
-from odoo.addons.product_configurator.tests import (
+from odoo.addons.pod_product_configurator.tests import (
     common as TC,
 )
 
@@ -8,11 +8,11 @@ class SaleOrder(TC.ProductConfiguratorTestCases):
         super().setUp()
         self.SaleOrder = self.env["sale.order"]
         self.productPricelist = self.env["product.pricelist"]
-        self.resPartner = self.env.ref("product_configurator_sale.partenr_sale_1")
+        self.resPartner = self.env.ref("pod_product_configurator_sale.partenr_sale_1")
         self.currency_id = self.env.ref("base.USD")
         self.ProductConfWizard = self.env["product.configurator.sale"]
 
-        self.config_product = self.env.ref("product_configurator.bmw_2_series")
+        self.config_product = self.env.ref("pod_product_configurator.bmw_2_series")
 
     def test_00_reconfigure_product(self):
         product_id = self.env["product.product"].create(

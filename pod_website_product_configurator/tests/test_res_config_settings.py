@@ -9,14 +9,14 @@ class TestResConfigSettings(TransactionCase):
         cls.res_config = cls.ResConfigObj.create(
             {
                 "website_tmpl_id": cls.env.ref(
-                    "website_product_configurator.config_form_base"
+                    "pod_website_product_configurator.config_form_base"
                 ).id,
             }
         )
         cls.res_config_select = cls.ResConfigObj.create(
             {
                 "website_tmpl_id": cls.env.ref(
-                    "website_product_configurator.config_form_select"
+                    "pod_website_product_configurator.config_form_select"
                 ).id,
             }
         )
@@ -26,10 +26,10 @@ class TestResConfigSettings(TransactionCase):
         self.assertTrue(self.res_config)
         self.assertEqual(
             self.res_config.website_tmpl_id,
-            self.env.ref("website_product_configurator.config_form_base"),
+            self.env.ref("pod_website_product_configurator.config_form_base"),
         )
         self.assertTrue(self.res_config_select)
         self.assertEqual(
             self.res_config_select.website_tmpl_id,
-            self.env.ref("website_product_configurator.config_form_select"),
+            self.env.ref("pod_website_product_configurator.config_form_select"),
         )

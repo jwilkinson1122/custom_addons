@@ -13,7 +13,7 @@ class ProductConfigStepLine(models.Model):
             (
                 "inherit_id",
                 "=",
-                s.env.ref("website_product_configurator.config_form_base").id,
+                s.env.ref("pod_website_product_configurator.config_form_base").id,
             )
         ],
     )
@@ -47,9 +47,9 @@ class ProductConfigSession(models.Model):
     @api.model
     def get_config_form_website_template(self):
         ICPSudo = self.env["ir.config_parameter"].sudo()
-        default_tmpl_xml_id = "website_product_configurator.config_form_select"
+        default_tmpl_xml_id = "pod_website_product_configurator.config_form_select"
         xml_id = ICPSudo.get_param(
-            "product_configurator.default_configuration_step_website_view_id"
+            "pod_product_configurator.default_configuration_step_website_view_id"
         )
         if not xml_id or not xml_id.isdigit():
             return default_tmpl_xml_id

@@ -39,7 +39,7 @@
             <xpath expr="//notebook//page" position="after">
                 <page
                     string="Configurator"
-                    groups="product_configurator.group_product_configurator_manager"
+                    groups="pod_product_configurator.group_product_configurator_manager"
                     invisible="not context.get('flag_config_ok')"
                 >
                     <group>
@@ -57,7 +57,7 @@
                 <page
                     string="Custom Values"
                     invisible="not context.get('flag_config_ok') or not val_custom"
-                    groups="product_configurator.group_product_configurator_manager"
+                    groups="pod_product_configurator.group_product_configurator_manager"
                 >
 
                     <group>
@@ -116,7 +116,7 @@
             <xpath expr="//field[@name='price_extra']" position="after">
                 <field
                     name="weight_extra"
-                    groups="product_configurator.group_product_configurator_manager"
+                    groups="pod_product_configurator.group_product_configurator_manager"
                 />
             </xpath>
         </field>
@@ -139,7 +139,7 @@
             <xpath expr="//field[@name='price_extra']" position="before">
                 <field
                     name="weight_extra"
-                    groups="product_configurator.group_product_configurator_manager"
+                    groups="pod_product_configurator.group_product_configurator_manager"
                 />
             </xpath>
         </field>

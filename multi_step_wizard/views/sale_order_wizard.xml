@@ -3,41 +3,39 @@
     <record id="sale_order_wizard_form" model="ir.ui.view">
         <field name="name">sale.order.wizard.form</field>
         <field name="model">sale.order.wizard</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="multi_step_wizard.multi_step_wizard_form" />
         <field name="arch" type="xml">
             <xpath expr="//footer" position="inside">
                 <button name="reset_section" string="Reset Section" type="object" class="btn-secondary" />
             </xpath>
             <xpath expr="//footer" position="before">
-                <!-- Dynamic Laterality Field -->
-                <group>
-                    <field name="laterality" widget="radio" />
-                </group>
+                <!-- <group>
+                    <field name="laterality" widget="radio" options="{'horizontal': true}"/>
+                </group> -->
 
                 <!-- Section Configuration -->
-
                 <!-- <group name="dynamic_section" invisible="state not in _selection_state()"> -->
-                <group name="dynamic_section" invisible="state not in ('order_info', 'shell_foundation', 'arch_height', 'top_cover', 'bottom_cover', 'cushion', 'extension', 'options')">
-
-                    <!-- <div class="oe_title">
-                        <h3 t-esc="state.capitalize()" />
-                    </div> -->
+                <group name="dynamic_section" invisible="state not in ('shell_foundation', 'arch_height', 'top_cover', 'bottom_cover', 'cushion', 'extension', 'options')">
                     <div class="oe_title">
                         <h3>
                             <field name="state_display" readonly="1" nolabel="1"/>
                         </h3>
                     </div>
-
-                    <field name="section_product_id" />
+                    <group>
+                        <field name="laterality" widget="radio" options="{'horizontal': true}"/>
+                        <field name="section_product_id" domain="[('type', '=', 'service')]"/>
+                        <field name="section_attribute_ids" widget="many2many_tags"/>
+                        <field name="section_price" readonly="1"/>
+                    </group>
+                    <!-- <field name="section_product_id" />
                     <field name="section_attribute_ids" widget="many2many_tags" />
-                    <field name="section_price" readonly="1" />
+                    <field name="section_price" readonly="1" /> -->
                     <div class="oe_title">
                         <h3>Running Total</h3>
                     </div>
                     <field name="formatted_total_price" readonly="1" />
                 </group>
-
-                <!-- Summary Section -->
                 <group name="summary" invisible="state != 'summary'">
                     <div class="oe_title">
                         <h3>Summary</h3>

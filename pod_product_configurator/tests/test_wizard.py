@@ -17,25 +17,25 @@ class ConfigurationWizard(ProductConfiguratorTestCases):
         cls.productConfigSession = cls.env["product.config.session"]
         cls.product_category = cls.env.ref("product.product_category_5")
         cls.attr_line_fuel = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_fuel"
+            "pod_product_configurator.product_attribute_line_2_series_fuel"
         )
         cls.attr_line_engine = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_engine"
+            "pod_product_configurator.product_attribute_line_2_series_engine"
         )
         cls.value_diesel = cls.env.ref(
-            "product_configurator.product_attribute_value_diesel"
+            "pod_product_configurator.product_attribute_value_diesel"
         )
         cls.value_218d = cls.env.ref(
-            "product_configurator.product_attribute_value_218d"
+            "pod_product_configurator.product_attribute_value_218d"
         )
         cls.value_220d = cls.env.ref(
-            "product_configurator.product_attribute_value_220d"
+            "pod_product_configurator.product_attribute_value_220d"
         )
         cls.value_silver = cls.env.ref(
-            "product_configurator.product_attribute_value_silver"
+            "pod_product_configurator.product_attribute_value_silver"
         )
-        cls.config_step_engine = cls.env.ref("product_configurator.config_step_engine")
-        cls.config_step_body = cls.env.ref("product_configurator.config_step_body")
+        cls.config_step_engine = cls.env.ref("pod_product_configurator.config_step_engine")
+        cls.config_step_body = cls.env.ref("pod_product_configurator.config_step_body")
         cls.product_tmpl_id = cls.env["product.template"].create(
             {
                 "name": "Test Configuration",
@@ -45,7 +45,7 @@ class ConfigurationWizard(ProductConfiguratorTestCases):
             }
         )
         cls.custom_vals = cls.productConfigSession.get_custom_value_id()
-        cls.cfg_tmpl = cls.env.ref("product_configurator.bmw_2_series")
+        cls.cfg_tmpl = cls.env.ref("pod_product_configurator.bmw_2_series")
 
         attribute_vals = cls.cfg_tmpl.attribute_line_ids.mapped("value_ids")
         cls.attr_vals = attribute_vals

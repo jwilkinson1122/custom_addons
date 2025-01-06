@@ -579,7 +579,7 @@ class ProductConfigurator(models.TransientModel):
         """Generate view dynamically using attributes stored on the
         product.template"""
         if view_type == "form" and not view_id:
-            view_ext_id = "product_configurator.product_configurator_form"
+            view_ext_id = "pod_product_configurator.product_configurator_form"
             view_id = self.env.ref(view_ext_id).id
         res = super().get_view(view_id=view_id, view_type=view_type, **options)
         wizard_id = self._find_wizard_context()
@@ -1084,7 +1084,7 @@ class ProductConfigurator(models.TransientModel):
             "name": "Configure Product",
             "views": [
                 [
-                    self.env.ref("product_configurator.product_configurator_form").id,
+                    self.env.ref("pod_product_configurator.product_configurator_form").id,
                     "form",
                 ]
             ],

@@ -16,25 +16,25 @@ class TestProduct(ProductConfiguratorTestCases):
         cls.productConfigStepLine = cls.env["product.config.step.line"]
         cls.product_category = cls.env.ref("product.product_category_5")
         cls.attributelinefuel = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_fuel"
+            "pod_product_configurator.product_attribute_line_2_series_fuel"
         )
         cls.attributelineengine = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_engine"
+            "pod_product_configurator.product_attribute_line_2_series_engine"
         )
         cls.value_diesel = cls.env.ref(
-            "product_configurator.product_attribute_value_diesel"
+            "pod_product_configurator.product_attribute_value_diesel"
         )
         cls.value_218d = cls.env.ref(
-            "product_configurator.product_attribute_value_218d"
+            "pod_product_configurator.product_attribute_value_218d"
         )
         cls.value_220d = cls.env.ref(
-            "product_configurator.product_attribute_value_220d"
+            "pod_product_configurator.product_attribute_value_220d"
         )
         cls.value_silver = cls.env.ref(
-            "product_configurator.product_attribute_value_silver"
+            "pod_product_configurator.product_attribute_value_silver"
         )
-        cls.config_step_engine = cls.env.ref("product_configurator.config_step_engine")
-        cls.config_step_body = cls.env.ref("product_configurator.config_step_body")
+        cls.config_step_engine = cls.env.ref("pod_product_configurator.config_step_engine")
+        cls.config_step_body = cls.env.ref("pod_product_configurator.config_step_body")
         cls.product_tmpl_id = cls.env["product.template"].create(
             {
                 "name": "Test Configuration",
@@ -694,7 +694,7 @@ class TestProduct(ProductConfiguratorTestCases):
 
     def test_23_check_config_line_domain(self):
         product_config_line = self.env.ref(
-            "product_configurator.product_config_line_218_lines"
+            "pod_product_configurator.product_config_line_218_lines"
         )
         with self.assertRaises(ValidationError):
             self.env["product.template"].create(

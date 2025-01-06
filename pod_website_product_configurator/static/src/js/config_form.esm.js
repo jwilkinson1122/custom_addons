@@ -7,7 +7,7 @@ import {localization} from "@web/core/l10n/localization";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.ProductConfigurator = publicWidget.Widget.extend({
-    selector: ".product_configurator",
+    selector: ".pod_product_configurator",
     events: {
         "change.datetimepicker #product_config_form .input-group.date":
             "_onChangeDateTime",
@@ -50,7 +50,7 @@ publicWidget.registry.ProductConfigurator = publicWidget.Widget.extend({
 
             this.call("ui", "block");
 
-            const data = await jsonrpc("/website_product_configurator/onchange", {
+            const data = await jsonrpc("/pod_website_product_configurator/onchange", {
                 form_values: form_data,
                 field_name: attribute[0].getAttribute("name"),
             });
@@ -369,7 +369,7 @@ publicWidget.registry.ProductConfigurator = publicWidget.Widget.extend({
         }
         if (flag) {
             self.call("ui", "block");
-            return jsonrpc("/website_product_configurator/save_configuration", {
+            return jsonrpc("/pod_website_product_configurator/save_configuration", {
                 form_values: form_data,
                 next_step: next_step || false,
                 current_step: current_config_step || false,

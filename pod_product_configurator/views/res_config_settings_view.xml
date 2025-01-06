@@ -8,12 +8,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app
-                    data-string="Product Configurator"
-                    string="Product Configurator"
-                    name="product_configurator"
-                    groups="product_configurator.group_product_configurator_manager"
-                >
+                <app data-string="Product Configurator" string="Product Configurator" name="pod_product_configurator" groups="pod_product_configurator.group_product_configurator_manager">
                     <block title="">
                         <settings />
                     </block>

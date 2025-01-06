@@ -13,7 +13,7 @@ class MultiStepWizardMixin(models.AbstractModel):
     # Core Fields
     state = fields.Selection(
         selection="_selection_state",
-        default="order_info",
+        default="shell_foundation",
         required=True,
     )
 
@@ -42,7 +42,6 @@ class MultiStepWizardMixin(models.AbstractModel):
     @api.model
     def _selection_state(self):
         return [
-            ("order_info", "Order Info"),
             ("shell_foundation", "Shell / Foundation"),
             ("arch_height", "Arch Height"),
             ("top_cover", "Top Cover"),
@@ -53,6 +52,31 @@ class MultiStepWizardMixin(models.AbstractModel):
             ("summary", "Summary"),
             ("final", "Final"),
         ]
+    
+
+    # def state_previous_shell_foundation(self):
+    #     self.state = "order_info"
+    
+    # def state_previous_arch_height(self):
+    #     self.state = "shell_foundation"
+    
+    # def state_previous_top_cover(self):
+    #     self.state = "arch_height"
+    
+    # def state_previous_bottom_cover(self):
+    #     self.state = "top_cover"
+    
+    # def state_previous_cushion(self):
+    #     self.state = "bottom_cover"
+    
+    # def state_previous_extension(self):
+    #     self.state = "cushion"
+
+    # def state_previous_options(self):
+    #     self.state = "extension"
+
+    # def state_previous_summary(self):
+    #     self.state = "options"
 
     # Navigation and State Management
     @api.depends("state")
@@ -87,21 +111,11 @@ class MultiStepWizardMixin(models.AbstractModel):
             )
         getattr(self, method_name)()
 
-    # @api.model
-    # def create(self, vals):
-    #     vals["section_data"] = self._sanitize_section_data(vals.get("section_data", {}))
-    #     return super().create(vals)
-
     def create(self, vals):
         _logger.debug(f"Before sanitizing section_data: {vals.get('section_data')}")
         vals["section_data"] = self._sanitize_section_data(vals.get("section_data", {}))
         _logger.debug(f"After sanitizing section_data: {vals['section_data']}")
         return super().create(vals)
-
-    # def write(self, vals):
-    #     if "section_data" in vals:
-    #         vals["section_data"] = self._sanitize_section_data(vals["section_data"])
-    #     return super().write(vals)
 
     def write(self, vals):
         if "section_data" in vals:

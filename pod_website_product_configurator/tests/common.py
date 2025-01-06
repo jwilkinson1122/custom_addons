@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from odoo import fields
 
-from odoo.addons.product_configurator.tests import common
+from odoo.addons.pod_product_configurator.tests import common
 
 
 class TestProductConfiguratorValues(common.ProductConfiguratorTestCases):
@@ -13,15 +13,15 @@ class TestProductConfiguratorValues(common.ProductConfiguratorTestCases):
         cls.productAttributeLine = cls.env["product.template.attribute.line"]
         cls.product_category = cls.env.ref("product.product_category_5")
         cls.value_diesel = cls.env.ref(
-            "product_configurator.product_attribute_value_diesel"
+            "pod_product_configurator.product_attribute_value_diesel"
         )
         cls.value_218d = cls.env.ref(
-            "product_configurator.product_attribute_value_218d"
+            "pod_product_configurator.product_attribute_value_218d"
         )
         cls.value_220d = cls.env.ref(
-            "product_configurator.product_attribute_value_220d"
+            "pod_product_configurator.product_attribute_value_220d"
         )
-        cls.config_step_engine = cls.env.ref("product_configurator.config_step_engine")
+        cls.config_step_engine = cls.env.ref("pod_product_configurator.config_step_engine")
         cls.product_tmpl_id = cls.env["product.template"].create(
             {
                 "name": "Test Configuration",
@@ -66,9 +66,9 @@ class TestProductConfiguratorValues(common.ProductConfiguratorTestCases):
                 ],
             }
         )
-        cls.config_product = cls.env.ref("product_configurator.bmw_2_series")
+        cls.config_product = cls.env.ref("pod_product_configurator.bmw_2_series")
         cls.config_product_1 = cls.env.ref(
-            "product_configurator.product_config_line_gasoline_engines"
+            "pod_product_configurator.product_config_line_gasoline_engines"
         )
         cls.productConfigSession = cls.env["product.config.session"]
         cls.session_id = cls.productConfigSession.create(

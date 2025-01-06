@@ -11,8 +11,8 @@ class ResConfigSettings(models.TransientModel):
             (
                 "inherit_id",
                 "=",
-                s.env.ref("website_product_configurator.config_form_base").id,
+                s.env.ref("pod_website_product_configurator.config_form_base").id,
             )
         ],
-        config_parameter="product_configurator.default_configuration_step_website_view_id",
+        config_parameter="pod_product_configurator.default_configuration_step_website_view_id",
     )

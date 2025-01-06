@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <menuitem id="menu_product_configurable" name="Configurator" web_icon="product_configurator,static/description/icon.png" sequence="20" groups="product_configurator.group_product_configurator_manager" />
+    <menuitem id="menu_product_configurable" name="Configurator" web_icon="pod_product_configurator,static/description/icon.png" sequence="20" groups="pod_product_configurator.group_product_configurator_manager" />
     <menuitem id="menu_product_configurable_product_main" name="Configurable Products" parent="menu_product_configurable" sequence="10" />
     <menuitem id="menu_product_configurable_settings" name="Configuration" parent="menu_product_configurable" sequence="20" />
 
@@ -35,8 +35,8 @@
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
-        <field name="view_id" ref="product_configurator.configurator_settings_view_form" />
-        <field name="context">{'module' : 'product_configurator'}</field>
+        <field name="view_id" ref="pod_product_configurator.configurator_settings_view_form" />
+        <field name="context">{'module' : 'pod_product_configurator'}</field>
     </record>
 
     <menuitem id="menu_action_product_configurator_configuration" action="action_product_configurator_configuration" name="Settings" active="False" parent="menu_product_configurable_settings" sequence="0" />

@@ -18,63 +18,63 @@ class ProductConfig(ProductConfiguratorTestCases):
         cls.productAttributeLine = cls.env["product.template.attribute.line"]
         cls.productConfigSession = cls.env["product.config.session"]
         cls.productConfigDomain = cls.env["product.config.domain"]
-        cls.config_product = cls.env.ref("product_configurator.bmw_2_series")
-        cls.attr_engine = cls.env.ref("product_configurator.product_attribute_engine")
-        cls.config_step_engine = cls.env.ref("product_configurator.config_step_engine")
+        cls.config_product = cls.env.ref("pod_product_configurator.bmw_2_series")
+        cls.attr_engine = cls.env.ref("pod_product_configurator.product_attribute_engine")
+        cls.config_step_engine = cls.env.ref("pod_product_configurator.config_step_engine")
         cls.config_product_1 = cls.env.ref(
-            "product_configurator.product_config_line_gasoline_engines"
+            "pod_product_configurator.product_config_line_gasoline_engines"
         )
         cls.config_product_2 = cls.env.ref(
-            "product_configurator.2_series_config_step_body"
+            "pod_product_configurator.2_series_config_step_body"
         )
         # domain
         cls.domain_gasolin = cls.env.ref(
-            "product_configurator.product_config_domain_gasoline"
+            "pod_product_configurator.product_config_domain_gasoline"
         )
         cls.domain_engine = cls.env.ref(
-            "product_configurator.product_config_domain_diesel"
+            "pod_product_configurator.product_config_domain_diesel"
         )
-        cls.config_image_red = cls.env.ref("product_configurator.config_image_1")
+        cls.config_image_red = cls.env.ref("pod_product_configurator.config_image_1")
         # value
         cls.value_gasoline = cls.env.ref(
-            "product_configurator.product_attribute_value_gasoline"
+            "pod_product_configurator.product_attribute_value_gasoline"
         )
         cls.value_diesel = cls.env.ref(
-            "product_configurator.product_attribute_value_diesel"
+            "pod_product_configurator.product_attribute_value_diesel"
         )
-        cls.value_red = cls.env.ref("product_configurator.product_attribute_value_red")
+        cls.value_red = cls.env.ref("pod_product_configurator.product_attribute_value_red")
         # config_step
-        cls.config_step_engine = cls.env.ref("product_configurator.config_step_engine")
+        cls.config_step_engine = cls.env.ref("pod_product_configurator.config_step_engine")
         cls.attribute_line = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_engine"
+            "pod_product_configurator.product_attribute_line_2_series_engine"
         )
         cls.value_silver = cls.env.ref(
-            "product_configurator.product_attribute_value_silver"
+            "pod_product_configurator.product_attribute_value_silver"
         )
         cls.value_rims_387 = cls.env.ref(
-            "product_configurator.product_attribute_value_rims_387"
+            "pod_product_configurator.product_attribute_value_rims_387"
         )
         # attribute line
         cls.attribute_line_2_series_rims = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_rims"
+            "pod_product_configurator.product_attribute_line_2_series_rims"
         )
         cls.attribute_line_2_series_tapistry = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_tapistry"
+            "pod_product_configurator.product_attribute_line_2_series_tapistry"
         )
         cls.attribute_value_tapistry_oyster_black = cls.env.ref(
-            "product_configurator." + "product_attribute_value_tapistry_oyster_black"
+            "pod_product_configurator." + "product_attribute_value_tapistry_oyster_black"
         )
         cls.attribute_line_2_series_transmission = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_transmission"
+            "pod_product_configurator.product_attribute_line_2_series_transmission"
         )
 
         # attribute value
-        cls.attribute_rims = cls.env.ref("product_configurator.product_attribute_rims")
+        cls.attribute_rims = cls.env.ref("pod_product_configurator.product_attribute_rims")
         cls.attribute_tapistry = cls.env.ref(
-            "product_configurator.product_attribute_tapistry"
+            "pod_product_configurator.product_attribute_tapistry"
         )
         cls.attribute_transmission = cls.env.ref(
-            "product_configurator.product_attribute_transmission"
+            "pod_product_configurator.product_attribute_transmission"
         )
 
         # session id

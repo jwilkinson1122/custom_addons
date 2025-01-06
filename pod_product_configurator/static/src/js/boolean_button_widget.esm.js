@@ -5,7 +5,7 @@ import {registry} from "@web/core/registry";
 import {standardFieldProps} from "@web/views/fields/standard_field_props";
 
 export class BooleanButton extends BooleanField {
-    static template = "product_configurator.BooleanButtonField";
+    static template = "pod_product_configurator.BooleanButtonField";
 
     setup() {
         super.setup();

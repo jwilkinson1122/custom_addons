@@ -360,7 +360,7 @@ class ProductConfigSession(models.Model):
 
     def get_custom_value_id(self):
         """Return record set of attribute value 'custom'"""
-        custom_ext_id = "product_configurator.custom_attribute_value"
+        custom_ext_id = "pod_product_configurator.custom_attribute_value"
         custom_val_id = self.env.ref(custom_ext_id)
         return custom_val_id
 

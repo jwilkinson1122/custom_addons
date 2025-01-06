@@ -9,7 +9,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe.jpg"
         />
         <field
             name="value_ids"
@@ -25,7 +25,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-silver.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-silver.jpg"
         />
         <field
             name="value_ids"
@@ -41,7 +41,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-black.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-black.jpg"
         />
         <field
             name="value_ids"
@@ -57,7 +57,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-red-star-spoke-384.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-red-star-spoke-384.jpg"
         />
         <field
             name="value_ids"
@@ -74,7 +74,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-red-star-spoke-387.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-red-star-spoke-387.jpg"
         />
         <field
             name="value_ids"
@@ -91,7 +91,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-silver-star-spoke-384.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-silver-star-spoke-384.jpg"
         />
         <field
             name="value_ids"
@@ -108,7 +108,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-silver-star-spoke-387.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-silver-star-spoke-387.jpg"
         />
         <field
             name="value_ids"
@@ -125,7 +125,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-black-star-spoke-384.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-black-star-spoke-384.jpg"
         />
         <field
             name="value_ids"
@@ -142,7 +142,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe-black-star-spoke-387.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe-black-star-spoke-387.jpg"
         />
         <field
             name="value_ids"

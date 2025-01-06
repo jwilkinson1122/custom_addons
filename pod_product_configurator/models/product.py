@@ -290,7 +290,7 @@ class ProductTemplate(models.Model):
         :Params: return : boolean"""
         ICPSudo = self.env["ir.config_parameter"].sudo()
         manager_product_configuration_settings = ICPSudo.get_param(
-            "product_configurator.manager_product_configuration_settings"
+            "pod_product_configurator.manager_product_configuration_settings"
         )
         return manager_product_configuration_settings
 
@@ -301,7 +301,7 @@ class ProductTemplate(models.Model):
         if not self._check_config_group_rights():
             return True
         config_manager = self.env.user.has_group(
-            "product_configurator.group_product_configurator_manager"
+            "pod_product_configurator.group_product_configurator_manager"
         )
         user_root = self.env.ref("base.user_root")
         user_admin = self.env.ref("base.user_admin")
@@ -508,10 +508,10 @@ class ProductProduct(models.Model):
         if not self.env["product.template"]._check_config_group_rights():
             return True
         config_manager = self.env.user.has_group(
-            "product_configurator.group_product_configurator_manager"
+            "pod_product_configurator.group_product_configurator_manager"
         )
         config_user = self.env.user.has_group(
-            "product_configurator.group_product_configurator"
+            "pod_product_configurator.group_product_configurator"
         )
         user_root = self.env.ref("base.user_root")
         user_admin = self.env.ref("base.user_admin")

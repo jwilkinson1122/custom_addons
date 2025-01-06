@@ -44,7 +44,7 @@ def get_pricelist():
     return pricelist
 
 
-error_page = "/website_product_configurator/error_page/"
+error_page = "/pod_website_product_configurator/error_page/"
 
 
 class ProductConfigWebsiteSale(WebsiteSale):
@@ -202,7 +202,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
         values.update(product_values)
         values.update(config_vals)
         return request.render(
-            "website_product_configurator.product_configurator", values
+            "pod_website_product_configurator.pod_product_configurator", values
         )
 
     def remove_recursive_list(self, values):
@@ -341,7 +341,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
         return extra_attribute_line_ids
 
     @http.route(
-        "/website_product_configurator/onchange",
+        "/pod_website_product_configurator/onchange",
         type="json",
         methods=["POST"],
         auth="public",
@@ -456,7 +456,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
         return {"next_step": next_step}
 
     @http.route(
-        "/website_product_configurator/save_configuration",
+        "/pod_website_product_configurator/save_configuration",
         type="json",
         methods=["POST"],
         auth="public",
@@ -513,7 +513,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
             config_session_id.sudo().action_confirm()
             product = config_session_id.product_id
             if product:
-                redirect_url = "/product_configurator/product"
+                redirect_url = "/pod_product_configurator/product"
                 redirect_url += "/%s" % (slug(config_session_id))
                 return {
                     "product_id": product.id,
@@ -525,7 +525,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
         return {}
 
     @http.route(
-        "/product_configurator/product/"
+        "/pod_product_configurator/product/"
         '<model("product.config.session"):cfg_session_id>',
         type="http",
         auth="public",
@@ -558,7 +558,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
         if product_config_session and product_config_session.get(product_tmpl_id.id):
             request.session.pop("product_config_session", None)
 
-        reconfigure_product_url = "/product_configurator/reconfigure/%s" % slug(
+        reconfigure_product_url = "/pod_product_configurator/reconfigure/%s" % slug(
             product_id
         )
         values = {
@@ -570,10 +570,10 @@ class ProductConfigWebsiteSale(WebsiteSale):
             "vals": vals,
             "reconfigure_product_url": reconfigure_product_url,
         }
-        return request.render("website_product_configurator.cfg_product", values)
+        return request.render("pod_website_product_configurator.cfg_product", values)
 
     @http.route(
-        "/product_configurator/reconfigure/" '<model("product.product"):product_id>',
+        "/pod_product_configurator/reconfigure/" '<model("product.product"):product_id>',
         type="http",
         auth="public",
         website=True,
@@ -590,7 +590,7 @@ class ProductConfigWebsiteSale(WebsiteSale):
         except Exception:
             error_code = 1
             return request.redirect(
-                "/website_product_configurator/error_page/%s" % (error_code)
+                "/pod_website_product_configurator/error_page/%s" % (error_code)
             )
 
     @http.route(
@@ -611,4 +611,4 @@ class ProductConfigWebsiteSale(WebsiteSale):
                 "available. Please try again later."
             )
         vals = {"message": message, "error": error}
-        return request.render("website_product_configurator.error_page", vals)
+        return request.render("pod_website_product_configurator.error_page", vals)

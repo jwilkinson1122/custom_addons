@@ -17,7 +17,7 @@ class ConfigurationRules(TransactionCase):
         # when called with a specific context
         # that is set by this action
         configuration_attributes_action = cls.env.ref(
-            "product_configurator.action_attributes_view"
+            "pod_product_configurator.action_attributes_view"
         )
         action_eval_context = configuration_attributes_action._get_eval_context()
         configuration_attribute_context = safe_eval(
@@ -28,7 +28,7 @@ class ConfigurationRules(TransactionCase):
         )
 
         cls.generic_custom_attribute_value = cls.env.ref(
-            "product_configurator.custom_attribute_value"
+            "pod_product_configurator.custom_attribute_value"
         )
 
         custom_attribute_form = Form(configuration_attribute_model)
@@ -102,7 +102,7 @@ class ConfigurationRules(TransactionCase):
     def setUp(self):
         super().setUp()
 
-        self.cfg_tmpl = self.env.ref("product_configurator.bmw_2_series")
+        self.cfg_tmpl = self.env.ref("pod_product_configurator.bmw_2_series")
         self.cfg_session = self.env["product.config.session"].create(
             {"product_tmpl_id": self.cfg_tmpl.id, "user_id": SUPERUSER_ID}
         )
@@ -120,7 +120,7 @@ class ConfigurationRules(TransactionCase):
 
         value_ids = []
 
-        attr_val_prefix = "product_configurator.product_attribute_value_%s"
+        attr_val_prefix = "pod_product_configurator.product_attribute_value_%s"
 
         for ext_id in ext_ids:
             if ext_id in self.attr_val_ext_ids:
@@ -212,7 +212,7 @@ class ConfigurationRules(TransactionCase):
             "tow_hook",
         ]
 
-        attr_color_id = self.env.ref("product_configurator.product_attribute_color")
+        attr_color_id = self.env.ref("pod_product_configurator.product_attribute_color")
 
         custom_vals = {attr_color_id: {"value": "#fefefe"}}
 

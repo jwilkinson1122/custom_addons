@@ -3,7 +3,7 @@
     <record id="manager_product_configuration_settings" model="ir.config_parameter">
         <field
             name="key"
-        >product_configurator.manager_product_configuration_settings</field>
+        >pod_product_configurator.manager_product_configuration_settings</field>
         <field name="value">True</field>
     </record>
 </odoo>

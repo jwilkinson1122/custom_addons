@@ -25,7 +25,7 @@
                     class="oe_highlight"
                     type="object"
                     string="Configure Product"
-                    groups="product_configurator.group_product_configurator"
+                    groups="pod_product_configurator.group_product_configurator"
                     invisible="not config_ok"
                 />
             </xpath>
@@ -36,7 +36,7 @@
                     string="Configurable"
                     type="object"
                     icon="fa-wrench"
-                    groups="product_configurator.group_product_configurator_manager"
+                    groups="pod_product_configurator.group_product_configurator_manager"
                 >
                     <field
                         name="config_ok"
@@ -121,7 +121,7 @@
                     string="Configurator"
                     name="configurator"
                     invisible="not config_ok"
-                    groups="product_configurator.group_product_configurator"
+                    groups="pod_product_configurator.group_product_configurator"
                 >
                 <separator
                         colspan="4"
@@ -156,7 +156,7 @@
                             />
                         <field
                                 name="domain_id"
-                                context="{'product_tmpl_id': product_tmpl_id or id or parent.id, 'product_attribute_ids': template_attribute_ids, 'form_view_ref': 'product_configurator.product_config_domain_form_view_template'}"
+                                context="{'product_tmpl_id': product_tmpl_id or id or parent.id, 'product_attribute_ids': template_attribute_ids, 'form_view_ref': 'pod_product_configurator.product_config_domain_form_view_template'}"
                             />
                         <field name="product_tmpl_id" column_invisible="1" />
                         <field name="template_attribute_ids" column_invisible="1" />
@@ -228,11 +228,11 @@
                 <separator
                         string="Variant Name"
                         colspan="4"
-                        groups="product_configurator.group_product_configurator_manager"
+                        groups="pod_product_configurator.group_product_configurator_manager"
                     />
                     <field
                         name="mako_tmpl_name"
-                        groups="product_configurator.group_product_configurator_manager"
+                        groups="pod_product_configurator.group_product_configurator_manager"
                     />
                 </page>
             </xpath>
@@ -289,7 +289,7 @@
             <xpath expr="//field[@name='priority']" position="before">
                 <div
                     class="pull-right"
-                    groups="product_configurator.group_product_configurator"
+                    groups="pod_product_configurator.group_product_configurator"
                     invisible="not config_ok"
                 >
                     <a name="configure_product" type="object">
@@ -308,7 +308,7 @@
             <xpath expr='//header' position="inside">
                 <button
                     name="reconfigure_product"
-                    groups="product_configurator.group_product_configurator"
+                    groups="pod_product_configurator.group_product_configurator"
                     class="oe_highlight"
                     type="object"
                     string="Reconfigure Product"
@@ -352,7 +352,7 @@
             <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="after">
                 <div
                     class="pull-right"
-                    groups="product_configurator.group_product_configurator"
+                    groups="pod_product_configurator.group_product_configurator"
                     invisible="not config_ok"
                 >
                     <a

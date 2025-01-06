@@ -3,7 +3,7 @@
     <record id="default_configuration_step_website_view_id" model="ir.config_parameter">
         <field
             name="key"
-        >product_configurator.default_configuration_step_website_view_id</field>
-        <field name="value" ref="website_product_configurator.config_form_select" />
+        >pod_product_configurator.default_configuration_step_website_view_id</field>
+        <field name="value" ref="pod_website_product_configurator.config_form_select" />
     </record>
 </odoo>

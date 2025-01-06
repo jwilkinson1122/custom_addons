@@ -13,24 +13,24 @@ class ProductAttributes(BaseCommon):
         super().setUpClass()
         cls.productAttributeLine = cls.env["product.template.attribute.line"]
         cls.ProductAttributeFuel = cls.env.ref(
-            "product_configurator.product_attribute_fuel"
+            "pod_product_configurator.product_attribute_fuel"
         )
         cls.ProductAttributeLineFuel = cls.env.ref(
-            "product_configurator.product_attribute_line_2_series_fuel"
+            "pod_product_configurator.product_attribute_line_2_series_fuel"
         )
-        cls.ProductTemplate = cls.env.ref("product_configurator.bmw_2_series")
+        cls.ProductTemplate = cls.env.ref("pod_product_configurator.bmw_2_series")
         cls.product_category = cls.env.ref("product.product_category_5")
         cls.ProductAttributePrice = cls.env["product.template.attribute.value"]
-        cls.attr_fuel = cls.env.ref("product_configurator.product_attribute_fuel")
-        cls.attr_engine = cls.env.ref("product_configurator.product_attribute_engine")
+        cls.attr_fuel = cls.env.ref("pod_product_configurator.product_attribute_fuel")
+        cls.attr_engine = cls.env.ref("pod_product_configurator.product_attribute_engine")
         cls.value_diesel = cls.env.ref(
-            "product_configurator.product_attribute_value_diesel"
+            "pod_product_configurator.product_attribute_value_diesel"
         )
         cls.value_218i = cls.env.ref(
-            "product_configurator.product_attribute_value_218i"
+            "pod_product_configurator.product_attribute_value_218i"
         )
         cls.value_gasoline = cls.env.ref(
-            "product_configurator.product_attribute_value_gasoline"
+            "pod_product_configurator.product_attribute_value_gasoline"
         )
         cls.ProductAttributeValueFuel = cls.value_gasoline.attribute_id.id
 

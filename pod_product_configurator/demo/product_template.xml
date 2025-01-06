@@ -19,7 +19,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/2-series-coupe.jpg"
+            file="pod_product_configurator/static/img/2-series-coupe.jpg"
         />
     </record>
 
@@ -32,7 +32,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-sport-line.jpg"
+            file="pod_product_configurator/static/img/product-sport-line.jpg"
         />
     </record>
 
@@ -43,7 +43,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-luxury-line.jpg"
+            file="pod_product_configurator/static/img/product-luxury-line.jpg"
         />
     </record>
 
@@ -54,7 +54,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-sport-line.jpg"
+            file="pod_product_configurator/static/img/product-sport-line.jpg"
         />
     </record>
 
@@ -65,7 +65,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-luxury-line.jpg"
+            file="pod_product_configurator/static/img/product-luxury-line.jpg"
         />
     </record>
 
@@ -76,7 +76,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-m-sport.jpg"
+            file="pod_product_configurator/static/img/product-m-sport.jpg"
         />
     </record>
 
@@ -87,7 +87,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-advantage.jpg"
+            file="pod_product_configurator/static/img/product-advantage.jpg"
         />
     </record>
 
@@ -98,7 +98,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-transmission-steptronic.jpg"
+            file="pod_product_configurator/static/img/product-transmission-steptronic.jpg"
         />
     </record>
 
@@ -109,7 +109,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-transmission-steptronic-sport.jpg"
+            file="pod_product_configurator/static/img/product-transmission-steptronic-sport.jpg"
         />
     </record>
 
@@ -120,7 +120,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-sunroof.jpg"
+            file="pod_product_configurator/static/img/product-sunroof.jpg"
         />
     </record>
 
@@ -131,7 +131,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-armrest.jpg"
+            file="pod_product_configurator/static/img/product-armrest.jpg"
         />
     </record>
 
@@ -142,7 +142,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-towhook.jpg"
+            file="pod_product_configurator/static/img/product-towhook.jpg"
         />
     </record>
 
@@ -153,7 +153,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-smoker-package.jpg"
+            file="pod_product_configurator/static/img/product-smoker-package.jpg"
         />
     </record>
 
@@ -164,7 +164,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -175,7 +175,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -186,7 +186,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -197,7 +197,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -208,7 +208,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -219,7 +219,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -230,7 +230,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -241,7 +241,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -252,7 +252,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-engine.jpg"
+            file="pod_product_configurator/static/img/product-engine.jpg"
         />
     </record>
 
@@ -263,7 +263,7 @@
         <field
             name="image_1920"
             type="base64"
-            file="product_configurator/static/img/product-paint-silver.jpg"
+            file="pod_product_configurator/static/img/product-paint-silver.jpg"
         />
     </record>
 
