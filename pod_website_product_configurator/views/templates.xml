@@ -20,16 +20,23 @@
                 <div class="oe_structure oe_empty">
                     <div class="container">
                         <h1 class="mt32">ERROR!</h1>
-                        <h4><b><u
-                                >There is somthing going wrong. Please try again after some time.</u></b></h4>
+                        <h4>
+                            <b>
+                                <u
+                                >There is somthing going wrong. Please try again after some time.</u>
+                            </b>
+                        </h4>
                         <t t-if="error">
                             <ul>
                                 <li>
-                                    <h4><t t-esc="error" /></h4>
+                                    <h4>
+                                        <t t-esc="error" />
+                                    </h4>
                                 </li>
                             </ul>
                         </t>
-                        <br /><br />
+                        <br />
+                        <br />
                         <p>
                             <h4>
                                 <a t-attf-href="/shop">Go Back</a>

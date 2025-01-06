@@ -1,6 +1,3 @@
-#  Copyright 2024 Simone Rubino - Aion Tech
-#  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
 from odoo.fields import first
 from odoo.tests import Form
 
