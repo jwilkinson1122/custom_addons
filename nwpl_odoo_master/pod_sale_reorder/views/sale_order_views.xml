@@ -9,7 +9,7 @@
                 <xpath expr="//field[@name='pricelist_id']" position="after">
                     <field name="is_reorder" invisible="1"/>
                 </xpath>
-                <xpath expr="//page[@name='order_lines']" position="before">
+                <xpath expr="//page[@name='order_lines']" position="after">
                     <page string="Order History" name="order_history_name">
                         <field name="is_enable_reorder" invisible="1"/>
                         <button name="button_all_history_add_to_order" type="object" string="RE-ORDER ALL" class="oe_highlight" title="Add all products to order lines" invisible="not is_enable_reorder"/>

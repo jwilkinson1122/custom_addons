@@ -21,8 +21,9 @@ class MultiStepWizardMixin(models.AbstractModel):
 
     section_data = fields.Json(
         string="Section Data",
-        default=lambda self: {},  # Use lambda to return an empty dict
-        required=True,
+        default="{}",  # Use string default
+        required=False,  # Change to False
+        copy=False,
     )
 
     # Laterality Field
@@ -38,6 +39,70 @@ class MultiStepWizardMixin(models.AbstractModel):
         help="Determines configuration options for left, right, or both sides.",
     )
 
+    def state_next_shell_foundation(self):
+        """Transition from shell_foundation to arch_height."""
+        self.state = "arch_height"
+
+    def state_next_arch_height(self):
+        """Transition from arch_height to top_cover."""
+        self.state = "top_cover"
+
+    def state_next_top_cover(self):
+        """Transition from top_cover to bottom_cover."""
+        self.state = "bottom_cover"
+
+    def state_next_bottom_cover(self):
+        """Transition from bottom_cover to cushion."""
+        self.state = "cushion"
+
+    def state_next_cushion(self):
+        """Transition from cushion to extension."""
+        self.state = "extension"
+
+    def state_next_extension(self):
+        """Transition from extension to options."""
+        self.state = "options"
+
+    def state_next_options(self):
+        """Transition from options to summary."""
+        self.state = "summary"
+
+    def state_next_summary(self):
+        """Transition from summary to final."""
+        self.state = "final"
+
+    def state_previous_arch_height(self):
+        """Go back to shell_foundation."""
+        self.state = "shell_foundation"
+
+    def state_previous_top_cover(self):
+        """Go back to arch_height."""
+        self.state = "arch_height"
+
+    def state_previous_bottom_cover(self):
+        """Go back to top_cover."""
+        self.state = "top_cover"
+
+    def state_previous_cushion(self):
+        """Go back to bottom_cover."""
+        self.state = "bottom_cover"
+
+    def state_previous_extension(self):
+        """Go back to cushion."""
+        self.state = "cushion"
+
+    def state_previous_options(self):
+        """Go back to extension."""
+        self.state = "extension"
+
+    def state_previous_summary(self):
+        """Go back to options."""
+        self.state = "options"
+
+    def state_previous_final(self):
+        """Go back to summary."""
+        self.state = "summary"
+
     # Dynamic State Options
     @api.model
     def _selection_state(self):
@@ -52,31 +117,6 @@ class MultiStepWizardMixin(models.AbstractModel):
             ("summary", "Summary"),
             ("final", "Final"),
         ]
-    
-
-    # def state_previous_shell_foundation(self):
-    #     self.state = "order_info"
-    
-    # def state_previous_arch_height(self):
-    #     self.state = "shell_foundation"
-    
-    # def state_previous_top_cover(self):
-    #     self.state = "arch_height"
-    
-    # def state_previous_bottom_cover(self):
-    #     self.state = "top_cover"
-    
-    # def state_previous_cushion(self):
-    #     self.state = "bottom_cover"
-    
-    # def state_previous_extension(self):
-    #     self.state = "cushion"
-
-    # def state_previous_options(self):
-    #     self.state = "extension"
-
-    # def state_previous_summary(self):
-    #     self.state = "options"
 
     # Navigation and State Management
     @api.depends("state")
@@ -110,38 +150,92 @@ class MultiStepWizardMixin(models.AbstractModel):
                 f"No method defined for state transition: {method_name}"
             )
         getattr(self, method_name)()
+        _logger.info(f"State transitioned to: {self.state}")
 
+    def _init_section_data(self):
+        """Initialize section_data if it's not a valid dictionary."""
+        try:
+            _logger.debug(f"Current section_data before init: {self.section_data}")
+            if not self.section_data or not isinstance(self.section_data, dict):
+                _logger.debug("Initializing section_data to empty dict")
+                self.write({"section_data": {}})
+            _logger.debug(f"Section_data after init: {self.section_data}")
+        except Exception as e:
+            _logger.error(f"Error initializing section_data: {str(e)}")
+            self.write({"section_data": {}})
+
+    # @api.model
+    # def create(self, vals):
+    #     if "section_data" not in vals or not vals["section_data"]:
+    #         vals["section_data"] = {}
+    #     return super().create(vals)
+
+    # def write(self, vals):
+    #     if "section_data" in vals and not vals["section_data"]:
+    #         vals["section_data"] = {}
+    #     return super().write(vals)
+
+    # @api.onchange("section_data")
+    # def _onchange_section_data(self):
+    #     """Ensure section_data is always a valid dictionary."""
+    #     self._init_section_data()
+
+    @api.model
     def create(self, vals):
-        _logger.debug(f"Before sanitizing section_data: {vals.get('section_data')}")
-        vals["section_data"] = self._sanitize_section_data(vals.get("section_data", {}))
-        _logger.debug(f"After sanitizing section_data: {vals['section_data']}")
+        if "section_data" not in vals:
+            vals["section_data"] = "{}"  # Use string representation
         return super().create(vals)
 
     def write(self, vals):
-        if "section_data" in vals:
-            _logger.debug(
-                f"Before sanitizing section_data in write: {vals['section_data']}"
-            )
-            vals["section_data"] = self._sanitize_section_data(vals["section_data"])
-            _logger.debug(
-                f"After sanitizing section_data in write: {vals['section_data']}"
-            )
+        if "section_data" in vals and not vals["section_data"]:
+            vals["section_data"] = "{}"  # Use string representation
         return super().write(vals)
 
-    # Generic Data Handling
-    def _initialize_section_data(self):
-        if not isinstance(self.section_data, dict):
-            _logger.warning(
-                "Invalid section_data detected. Resetting to empty dictionary."
-            )
-            self.section_data = {}
+    @api.onchange("section_data")
+    def _onchange_section_data(self):
+        """Ensure section_data is always initialized."""
+        if not self.section_data:
+            self.section_data = "{}"  # Use string representation
+
+    def _update_section_data(self):
+        """Safely update section data for the current state."""
+        try:
+            self._init_section_data()
+            if self.state:
+                current_data = {
+                    "section_price": self.section_price,
+                    "product_id": (
+                        self.section_product_id.id if self.section_product_id else False
+                    ),
+                    "attribute_ids": (
+                        self.section_attribute_ids.ids
+                        if self.section_attribute_ids
+                        else []
+                    ),
+                }
+                self.write(
+                    {"section_data": {**self.section_data, self.state: current_data}}
+                )
+        except Exception as e:
+            _logger.error(f"Error updating section data: {str(e)}")
 
     def _save_current_state(self):
         self.ensure_one()
-        self._initialize_section_data()
+        if not isinstance(self.section_data, dict):
+            _logger.error(
+                f"Invalid section_data detected before saving: {self.section_data}"
+            )
+            self.section_data = {}
         current_data = self._get_current_state_data()
-        self.section_data[self.state] = current_data
-        _logger.info(f"Saved data for state '{self.state}': {current_data}")
+        _logger.debug(f"Current state data for '{self.state}': {current_data}")
+        if current_data:
+            try:
+                self.section_data[self.state] = current_data
+                _logger.info(
+                    f"Successfully saved data for state '{self.state}': {current_data}"
+                )
+            except Exception as e:
+                _logger.error(f"Error saving current state data: {str(e)}")
 
     def _get_current_state_data(self):
         self.ensure_one()
@@ -164,7 +258,7 @@ class MultiStepWizardMixin(models.AbstractModel):
 
     def _restore_previous_state(self):
         self.ensure_one()
-        self._initialize_section_data()
+        self._init_section_data()
         previous_state = self._get_previous_state()
         if previous_state and previous_state in self.section_data:
             previous_data = self.section_data[previous_state]
@@ -198,14 +292,29 @@ class MultiStepWizardMixin(models.AbstractModel):
                 return label
         return ""
 
+    # @api.model
+    # def default_get(self, fields_list):
+    #     res = super().default_get(fields_list)
+    #     if "section_data" in fields_list:
+    #         res["section_data"] = {}
+    #     return res
+
     @api.model
     def default_get(self, fields_list):
-        """Ensure section_data is properly initialized."""
-        defaults = super().default_get(fields_list)
+        res = super().default_get(fields_list)
         if "section_data" in fields_list:
-            _logger.debug(f"Default section_data value: {defaults.get('section_data')}")
-            defaults["section_data"] = {}
-        return defaults
+            res["section_data"] = "{}"  # Use string representation
+        return res
+
+    def _ensure_section_data(self):
+        """Ensure section_data is a valid dictionary."""
+        if not isinstance(self.section_data, dict):
+            self.section_data = {}
+
+    @api.onchange("section_product_id", "section_attribute_ids", "section_price")
+    def _onchange_section_selections(self):
+        self._init_section_data()
+        self._update_section_data()
 
     def _set_state_data(self, data):
         self.ensure_one()
@@ -231,26 +340,28 @@ class MultiStepWizardMixin(models.AbstractModel):
 
     def _sanitize_section_data(self, data):
         _logger.debug(f"Sanitizing section_data: {data} (type: {type(data)})")
-        if not data or isinstance(data, bool):
+        if data is None or isinstance(data, bool):
+            _logger.error(f"Invalid section_data received for sanitization: {data}")
             return {}
         if isinstance(data, dict):
             return data
         if isinstance(data, str):
             try:
-                return json.loads(data)
-            except json.JSONDecodeError:
-                _logger.warning(f"Invalid JSON for section_data: {data}")
+                parsed_data = json.loads(data)
+                return parsed_data if isinstance(parsed_data, dict) else {}
+            except json.JSONDecodeError as e:
+                _logger.error(
+                    f"JSON decoding error for section_data: {data} - {str(e)}"
+                )
                 return {}
         return {}
 
-    # Wizard Submission
     def submit_wizard(self):
         """Finalize the wizard and execute submission logic."""
         if not self.section_data:
             raise ValidationError(_("No section data available for submission."))
 
         _logger.info(f"Submitting wizard data: {self.section_data}")
-        # Placeholder for submission logic.
         self._finalize_submission()
 
     def _finalize_submission(self):

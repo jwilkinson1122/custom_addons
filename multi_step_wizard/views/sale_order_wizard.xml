@@ -10,12 +10,7 @@
                 <button name="reset_section" string="Reset Section" type="object" class="btn-secondary" />
             </xpath>
             <xpath expr="//footer" position="before">
-                <!-- <group>
-                    <field name="laterality" widget="radio" options="{'horizontal': true}"/>
-                </group> -->
-
-                <!-- Section Configuration -->
-                <!-- <group name="dynamic_section" invisible="state not in _selection_state()"> -->
+                <field name="available_attribute_values" invisible="1" />
                 <group name="dynamic_section" invisible="state not in ('shell_foundation', 'arch_height', 'top_cover', 'bottom_cover', 'cushion', 'extension', 'options')">
                     <div class="oe_title">
                         <h3>
@@ -24,13 +19,10 @@
                     </div>
                     <group>
                         <field name="laterality" widget="radio" options="{'horizontal': true}"/>
-                        <field name="section_product_id" domain="[('type', '=', 'service')]"/>
-                        <field name="section_attribute_ids" widget="many2many_tags"/>
+                        <field name="section_product_id"/>
+                        <field name="section_attribute_ids" widget="many2many_tags" domain="[('id', 'in', available_attribute_values)]"/>
                         <field name="section_price" readonly="1"/>
                     </group>
-                    <!-- <field name="section_product_id" />
-                    <field name="section_attribute_ids" widget="many2many_tags" />
-                    <field name="section_price" readonly="1" /> -->
                     <div class="oe_title">
                         <h3>Running Total</h3>
                     </div>

@@ -63,11 +63,19 @@ class SaleOrderWizard(models.TransientModel):
         domain=lambda self: self._get_product_domain(),
         help="Product selection for the current section.",
     )
+
     section_attribute_ids = fields.Many2many(
         "product.attribute.value",
         string="Section Attributes",
         help="Attributes belonging to the selected product.",
     )
+
+    available_attribute_values = fields.Many2many(
+        "product.attribute.value",
+        string="Available Attributes",
+        compute="_compute_available_attribute_values",
+    )
+
     section_price = fields.Float(
         string="Section Price",
         compute="_compute_section_price",
@@ -103,18 +111,50 @@ class SaleOrderWizard(models.TransientModel):
     @api.depends("state")
     def _compute_state_display(self):
         for record in self:
-            record.state_display = record.state.capitalize() if record.state else ""
+            if record.state:
+                # Replace underscores with spaces and capitalize each word
+                record.state_display = record.state.replace("_", " ").title()
+            else:
+                record.state_display = ""
 
     state_display = fields.Char(
         string="State Display", compute="_compute_state_display"
     )
 
-    @api.constrains("section_data")
-    def _check_section_data(self):
-        for record in self:
-            if not isinstance(record.section_data, dict):
-                _logger.error(f"Invalid section_data detected: {record.section_data}")
-                raise ValidationError(_("Section data must be a dictionary"))
+    # @api.onchange("state")
+    # def _onchange_state(self):
+    #     """Clear product selection when state changes."""
+    #     old_product = self.section_product_id
+    #     self.section_product_id = False
+
+    #     category_name = self._state_category_mapping.get(self.state)
+    #     category = self.env["product.category"].search(
+    #         [("name", "=", category_name)], limit=1
+    #     )
+    #     products = self.env["product.product"].search(self._get_product_domain())
+
+    #     _logger.debug(
+    #         f"""
+    #         State Change Debug:
+    #         - Old State: {self._origin.state}
+    #         - New State: {self.state}
+    #         - Category Name: {category_name}
+    #         - Category Found: {category.name if category else 'Not Found'}
+    #         - Available Products: {len(products)}
+    #         - Old Product: {old_product.name if old_product else 'None'}
+    #     """
+    #     )
+
+    # @api.constrains('state', 'section_product_id')
+    # def _check_product_category(self):
+    #     for record in self:
+    #         if record.section_product_id and record.state not in ['summary', 'final']:
+    #             category_name = record._state_category_mapping.get(record.state)
+    #             category = record.env['product.category'].search([('name', '=', category_name)], limit=1)
+    #             if category and record.section_product_id.categ_id != category:
+    #                 raise ValidationError(_(
+    #                     "Selected product must belong to the %s category in %s state."
+    #                 ) % (category_name, record.state))
 
     @api.depends("section_data")
     def _compute_total_price(self):
@@ -194,39 +234,18 @@ class SaleOrderWizard(models.TransientModel):
         for wizard in self:
             wizard.formatted_total_price = f"${wizard.running_total_price:,.2f}"
 
-
     @api.model
     def create(self, vals):
-        if "section_data" not in vals or not isinstance(vals["section_data"], dict):
+        # Initialize section_data before creation
+        if "section_data" not in vals or not vals["section_data"]:
             vals["section_data"] = {}
         return super().create(vals)
 
     def write(self, vals):
-        if "section_data" in vals and not isinstance(vals["section_data"], dict):
-            vals["section_data"] = {}
+        if "section_data" in vals:
+            if not isinstance(vals["section_data"], dict):
+                vals["section_data"] = {}
         return super().write(vals)
-
-
-    # @api.depends("section_data")
-    # def _compute_summary(self):
-    #     """Generate a summary of all section selections."""
-    #     for wizard in self:
-    #         summary_lines = []
-    #         for state, data in wizard.section_data.items():
-    #             product_name = (
-    #                 self.env["product.product"]
-    #                 .browse(data.get("product_id"))
-    #                 .display_name
-    #             )
-    #             attributes = ", ".join(
-    #                 self.env["product.attribute.value"]
-    #                 .browse(data.get("attribute_ids", []))
-    #                 .mapped("name")
-    #             )
-    #             summary_lines.append(
-    #                 f"{state.capitalize()}: {product_name} ({attributes})"
-    #             )
-    #         wizard.summary = "\n".join(summary_lines)
 
     @api.depends("section_data")
     def _compute_summary(self):
@@ -250,7 +269,6 @@ class SaleOrderWizard(models.TransientModel):
                     )
             wizard.summary = "\n".join(summary_lines)
 
-
     def _get_product_domain(self):
         """Limit products based on the current section and laterality."""
         configuration = self.env["wizard.section.configuration"].search(
@@ -269,21 +287,72 @@ class SaleOrderWizard(models.TransientModel):
         # No restrictions for bilateral
         return domain
 
-    @api.onchange("section_product_id", "section_attribute_ids", "section_price")
+    @api.depends("section_product_id")
+    def _compute_available_attribute_values(self):
+        """Compute the available attribute values for the selected product."""
+        for wizard in self:
+            if wizard.section_product_id:
+                # Get attribute values from the product template's attribute lines
+                valid_attr_values = (
+                    self.env["product.template.attribute.value"]
+                    .search(
+                        [
+                            (
+                                "product_tmpl_id",
+                                "=",
+                                wizard.section_product_id.product_tmpl_id.id,
+                            )
+                        ]
+                    )
+                    .mapped("product_attribute_value_id")
+                )
+                wizard.available_attribute_values = valid_attr_values
+            else:
+                wizard.available_attribute_values = self.env["product.attribute.value"]
+
+    @api.onchange("section_product_id", "section_attribute_ids")
     def _onchange_section_selections(self):
-        self._update_section_data()
+        self.ensure_one()
+        if not isinstance(self.section_data, dict):
+            self.section_data = {}
+
+    @api.model
+    def _init_record(self, values):
+        """Initialize a new record with proper defaults."""
+        if "section_data" not in values:
+            values["section_data"] = {}
+        if "state" not in values:
+            values["state"] = "shell_foundation"
+        if "laterality" not in values:
+            values["laterality"] = "bilateral"
+        return values
 
     @api.onchange("section_product_id")
     def _onchange_section_product_id(self):
-        """Limit attributes based on selected product and laterality."""
+        """Update section attributes when product changes"""
+        self.section_attribute_ids = False  # Clear existing attributes
         if self.section_product_id:
-            self.section_attribute_ids = False  # Clear previous selections
-            domain = [
-                ("product_tmpl_id", "=", self.section_product_id.product_tmpl_id.id)
-            ]
-            if self.laterality in ["left", "right"]:
-                domain.append(("laterality", "=", self.laterality))
-            return {"domain": {"section_attribute_ids": domain}}
+            # Get all possible attribute values for this product
+            valid_attr_values = (
+                self.env["product.template.attribute.value"]
+                .search(
+                    [
+                        (
+                            "product_tmpl_id",
+                            "=",
+                            self.section_product_id.product_tmpl_id.id,
+                        )
+                    ]
+                )
+                .mapped("product_attribute_value_id")
+            )
+
+            # Set the domain for section_attribute_ids
+            return {
+                "domain": {
+                    "section_attribute_ids": [("id", "in", valid_attr_values.ids)]
+                }
+            }
 
     def reset_section(self):
         """Reset selections for the current section."""
@@ -321,6 +390,13 @@ class SaleOrderWizard(models.TransientModel):
         defaults = super().default_get(fields_list)
         if "section_data" in fields_list:
             _logger.debug(f"Default section_data value: {defaults.get('section_data')}")
+            defaults["section_data"] = {}
+        return defaults
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if "section_data" in fields_list:
             defaults["section_data"] = {}
         return defaults
 
