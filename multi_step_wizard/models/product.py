@@ -1,4 +1,9 @@
-from odoo import models, fields, api
+import logging
+
+from odoo import fields, models, api, _
+
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -27,3 +32,16 @@ class ProductProduct(models.Model):
         string="Laterality",
         help="Specifies if the product is for left side, right side, or bilateral use",
     )
+
+    @api.model
+    def name_search(self, name="", args=None, operator="ilike", limit=100):
+        _logger.info(
+            f"""
+            Product Name Search Debug:
+            Name: {name}
+            Args: {args}
+            Operator: {operator}
+            Limit: {limit}
+        """
+        )
+        return super().name_search(name=name, args=args, operator=operator, limit=limit)

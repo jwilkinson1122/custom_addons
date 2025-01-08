@@ -67,7 +67,7 @@ class SaleOrderWizard(models.TransientModel):
     section_product_id = fields.Many2one(
         "product.product",
         string="Section Product",
-        domain="[('id', 'in', available_product_ids)]",  # Changed domain to use computed field
+        domain="[('id', 'in', available_product_ids)]",
         help="Product selection for the current section.",
     )
 
