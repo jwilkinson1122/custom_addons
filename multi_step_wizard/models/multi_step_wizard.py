@@ -10,6 +10,17 @@ class MultiStepWizardMixin(models.AbstractModel):
     _name = "multi.step.wizard.mixin"
     _description = "Multi-Step Wizard Mixin"
 
+    # Mapping Fields
+    _state_category_mapping = {
+        "shell_foundation": "Shell Foundation",
+        "arch_height": "Arch Height",
+        "top_cover": "Top Cover",
+        "bottom_cover": "X-Guard",
+        "cushion": "Cushion",
+        "extension": "Extension",
+        "options": "Options",
+    }
+
     # Core Fields
     state = fields.Selection(
         selection="_selection_state",
@@ -164,22 +175,6 @@ class MultiStepWizardMixin(models.AbstractModel):
             _logger.error(f"Error initializing section_data: {str(e)}")
             self.write({"section_data": {}})
 
-    # @api.model
-    # def create(self, vals):
-    #     if "section_data" not in vals or not vals["section_data"]:
-    #         vals["section_data"] = {}
-    #     return super().create(vals)
-
-    # def write(self, vals):
-    #     if "section_data" in vals and not vals["section_data"]:
-    #         vals["section_data"] = {}
-    #     return super().write(vals)
-
-    # @api.onchange("section_data")
-    # def _onchange_section_data(self):
-    #     """Ensure section_data is always a valid dictionary."""
-    #     self._init_section_data()
-
     @api.model
     def create(self, vals):
         if "section_data" not in vals:
@@ -291,13 +286,6 @@ class MultiStepWizardMixin(models.AbstractModel):
             if code == state_code:
                 return label
         return ""
-
-    # @api.model
-    # def default_get(self, fields_list):
-    #     res = super().default_get(fields_list)
-    #     if "section_data" in fields_list:
-    #         res["section_data"] = {}
-    #     return res
 
     @api.model
     def default_get(self, fields_list):

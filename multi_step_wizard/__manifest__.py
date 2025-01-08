@@ -12,8 +12,10 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/multi_step_wizard_sections_data.xml",
         "views/wizard_section_configuration_views.xml",
         "views/multi_step_wizard_views.xml",
+        "views/product_views.xml",
         "views/sale_order_wizard.xml",
         "views/sale_order_views.xml",
         # "report/sale_order_templates.xml",

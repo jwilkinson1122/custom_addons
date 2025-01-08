@@ -57,11 +57,24 @@ class SaleOrderWizard(models.TransientModel):
     )
 
     # Section Fields
+    # section_product_id = fields.Many2one(
+    #     "product.product",
+    #     string="Section Product",
+    #     domain=lambda self: self._get_product_domain(),
+    #     help="Product selection for the current section.",
+    # )
+
     section_product_id = fields.Many2one(
         "product.product",
         string="Section Product",
-        domain=lambda self: self._get_product_domain(),
+        domain="[('id', 'in', available_product_ids)]",  # Changed domain to use computed field
         help="Product selection for the current section.",
+    )
+
+    available_product_ids = fields.Many2many(
+        "product.product",
+        compute="_compute_available_products",
+        help="Products available for selection in current section",
     )
 
     section_attribute_ids = fields.Many2many(
@@ -120,41 +133,6 @@ class SaleOrderWizard(models.TransientModel):
     state_display = fields.Char(
         string="State Display", compute="_compute_state_display"
     )
-
-    # @api.onchange("state")
-    # def _onchange_state(self):
-    #     """Clear product selection when state changes."""
-    #     old_product = self.section_product_id
-    #     self.section_product_id = False
-
-    #     category_name = self._state_category_mapping.get(self.state)
-    #     category = self.env["product.category"].search(
-    #         [("name", "=", category_name)], limit=1
-    #     )
-    #     products = self.env["product.product"].search(self._get_product_domain())
-
-    #     _logger.debug(
-    #         f"""
-    #         State Change Debug:
-    #         - Old State: {self._origin.state}
-    #         - New State: {self.state}
-    #         - Category Name: {category_name}
-    #         - Category Found: {category.name if category else 'Not Found'}
-    #         - Available Products: {len(products)}
-    #         - Old Product: {old_product.name if old_product else 'None'}
-    #     """
-    #     )
-
-    # @api.constrains('state', 'section_product_id')
-    # def _check_product_category(self):
-    #     for record in self:
-    #         if record.section_product_id and record.state not in ['summary', 'final']:
-    #             category_name = record._state_category_mapping.get(record.state)
-    #             category = record.env['product.category'].search([('name', '=', category_name)], limit=1)
-    #             if category and record.section_product_id.categ_id != category:
-    #                 raise ValidationError(_(
-    #                     "Selected product must belong to the %s category in %s state."
-    #                 ) % (category_name, record.state))
 
     @api.depends("section_data")
     def _compute_total_price(self):
@@ -269,23 +247,206 @@ class SaleOrderWizard(models.TransientModel):
                     )
             wizard.summary = "\n".join(summary_lines)
 
-    def _get_product_domain(self):
-        """Limit products based on the current section and laterality."""
+    # def _build_product_domain(self, base_domain=None):
+    #     """Helper method to build product domain."""
+    #     domain = base_domain or [("sale_ok", "=", True)]
+
+    #     def add_category_domain(category_id):
+    #         if category_id:
+    #             domain.append(("categ_id", "child_of", category_id))
+    #         return bool(category_id)
+
+    #     def add_laterality_domain():
+    #         if self.laterality in ["left", "right"]:
+    #             domain.append(("laterality", "=", self.laterality))
+
+    #     configuration = self.env["wizard.section.configuration"].search(
+    #         [("section_name", "=", self.state)], limit=1
+    #     )
+    #     if configuration and add_category_domain(configuration.product_category_id.id):
+    #         add_laterality_domain()
+    #         return domain
+
+    #     category_name = self._state_category_mapping.get(self.state)
+    #     if category_name:
+    #         category = self.env["product.category"].search(
+    #             [("name", "=", category_name)], limit=1
+    #         )
+    #         if category and add_category_domain(category.id):
+    #             add_laterality_domain()
+    #             return domain
+
+    #     return [("id", "=", False)]
+
+    def _build_product_domain(self, base_domain=None):
+        """Helper method to build product domain."""
+        domain = base_domain or [("sale_ok", "=", True)]
+
+        def add_category_domain(category_id):
+            if category_id:
+                domain.append(("categ_id", "child_of", category_id))
+                _logger.info(f"Added category domain with ID: {category_id}")
+            return bool(category_id)
+
+        # Try configuration first
         configuration = self.env["wizard.section.configuration"].search(
             [("section_name", "=", self.state)], limit=1
         )
-        domain = [("sale_ok", "=", True)]
+        _logger.info(f"Found configuration for state '{self.state}': {configuration}")
+
         if configuration:
-            domain.append(
-                ("categ_id", "child_of", configuration.product_category_id.id)
+            _logger.info(
+                f"Configuration category: {configuration.product_category_id.name}"
             )
 
-        if self.laterality == "left":
-            domain.append(("laterality", "=", "left"))
-        elif self.laterality == "right":
-            domain.append(("laterality", "=", "right"))
-        # No restrictions for bilateral
+        if configuration and add_category_domain(configuration.product_category_id.id):
+            _logger.info(
+                f"Using configuration category: {configuration.product_category_id.name}"
+            )
+            return domain
+
+        # Fallback to category mapping
+        category_name = self._state_category_mapping.get(self.state)
+        _logger.info(f"Fallback category name: {category_name}")
+
+        if category_name:
+            category = self.env["product.category"].search(
+                [("name", "=", category_name)], limit=1
+            )
+            _logger.info(
+                f"Found fallback category: {category.name if category else 'None'}"
+            )
+
+            if category and add_category_domain(category.id):
+                return domain
+
+        _logger.info("No valid category found, returning empty domain")
+        return [("id", "=", False)]
+
+    @api.model
+    def _get_product_domain(self):
+        """Get domain for filtering products based on current state and laterality."""
+        if not self.state or self.state in ["summary", "final"]:
+            return [("id", "=", False)]
+
+        domain = self._build_product_domain()
+        _logger.debug(f"Product domain for state '{self.state}': {domain}")
         return domain
+
+    # @api.onchange("state", "laterality")
+    # def _onchange_state_laterality(self):
+    #     """Clear product selection when state or laterality changes."""
+    #     old_product = self.section_product_id
+    #     self.section_product_id = False
+
+    #     products = self.env["product.product"].search(self._get_product_domain())
+
+    #     _logger.debug(
+    #         f"""
+    #         State/Laterality Change Debug:
+    #         - Old State: {self._origin.state}
+    #         - New State: {self.state}
+    #         - Laterality: {self.laterality}
+    #         - Available Products: {len(products)}
+    #         - Product Names: {products.mapped('name')}
+    #         - Old Product: {old_product.name if old_product else 'None'}
+    #     """
+    #     )
+
+    @api.onchange("state", "laterality")
+    def _onchange_state_laterality(self):
+        """Clear product selection when state or laterality changes."""
+        old_product = self.section_product_id
+        self.section_product_id = False
+
+        # Force compute of available products
+        self._compute_available_products()
+
+        _logger.info(
+            f"""
+            State/Laterality Change:
+            - State: {self.state}
+            - Laterality: {self.laterality}
+            - Available Products: {len(self.available_product_ids)}
+            - Product Names: {self.available_product_ids.mapped('name')}
+            - Domain: {[('id', 'in', self.available_product_ids.ids)]}
+        """
+        )
+
+    def action_verify_products(self):
+        """Verify product configuration"""
+        config = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", "shell_foundation")], limit=1
+        )
+        if config and config.product_category_id:
+            products = self.env["product.product"].search(
+                [
+                    ("categ_id", "child_of", config.product_category_id.id),
+                    ("sale_ok", "=", True),
+                ]
+            )
+            _logger.info(
+                f"""
+                Product Verification:
+                Category: {config.product_category_id.name}
+                Products Found: {len(products)}
+                Product Details:
+                {[(p.name, p.categ_id.name, p.sale_ok, p.active) for p in products]}
+            """
+            )
+
+    @api.constrains("state", "section_product_id")
+    def _check_product_category(self):
+        for record in self:
+            if record.section_product_id and record.state not in ["summary", "final"]:
+                category_name = record._state_category_mapping.get(record.state)
+                category = record.env["product.category"].search(
+                    [("name", "=", category_name)], limit=1
+                )
+                if category and record.section_product_id.categ_id != category:
+                    raise ValidationError(
+                        _(
+                            "Selected product must belong to the %s category in %s state."
+                        )
+                        % (category_name, record.state)
+                    )
+
+    @api.depends("state")
+    def _compute_current_category_id(self):
+        """Compute the current category ID based on state"""
+        for record in self:
+            configuration = self.env["wizard.section.configuration"].search(
+                [("section_name", "=", record.state)], limit=1
+            )
+            record.current_category_id = (
+                configuration.product_category_id.id if configuration else False
+            )
+
+    current_category_id = fields.Many2one(
+        "product.category",
+        compute="_compute_current_category_id",
+        help="Current product category based on wizard state",
+    )
+
+    @api.depends("state", "laterality")
+    def _compute_available_products(self):
+        """Compute available products based on current state and laterality"""
+        for record in self:
+            if record.state in ["summary", "final"]:
+                record.available_product_ids = [(5, 0, 0)]
+            else:
+                domain = record._build_product_domain()
+                products = self.env["product.product"].search(domain)
+                record.available_product_ids = products.ids
+                _logger.info(
+                    f"""
+                    Available Products Computed:
+                    - State: {record.state}
+                    - Domain: {domain}
+                    - Products Found: {len(products)}
+                    - Product Names: {products.mapped('name')}
+                """
+                )
 
     @api.depends("section_product_id")
     def _compute_available_attribute_values(self):
