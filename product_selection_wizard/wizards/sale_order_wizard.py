@@ -192,16 +192,6 @@ class SaleOrderWizard(models.TransientModel):
                     """
                 )
 
-            # _logger.debug(
-            #     f"""
-            #     Price Computation:
-            #     - Product: {record.section_product_id.display_name}
-            #     - Base Price: {base_price}
-            #     - Attribute Extra: {attribute_extra_price}
-            #     - Total Price: {record.section_price}
-            #     """
-            # )
-
     @api.depends("section_selection_ids.price")
     def _compute_total_price(self):
         for record in self:
@@ -235,6 +225,13 @@ class SaleOrderWizard(models.TransientModel):
     @api.onchange("section_product_id", "section_attribute_ids")
     def _onchange_section_product_or_attributes(self):
         self._compute_section_price()
+
+    # Update total_price in Real-Time
+    @api.onchange("section_product_id", "section_attribute_ids")
+    def _onchange_section_product_or_attributes(self):
+        """Update section price and total price when product or attributes change."""
+        self._compute_section_price()
+        self._compute_total_price()
 
     # store the current selections for the active section.
     def _save_section(self):
@@ -295,11 +292,12 @@ class SaleOrderWizard(models.TransientModel):
     # Add a button to explicitly clear selections for the current section.
     def clear_section(self):
         """
-        Reset selections for the current section.
-        Includes validation to ensure the operation is appropriate.
+        Clear selections for the current section without closing the wizard.
+        Includes validation and logging to ensure the operation is robust.
         """
-        self.ensure_one()  # Ensure the method is called on a single record
+        self.ensure_one()
 
+        # Validate the current state
         if not self.state:
             raise ValidationError(
                 _("The wizard is not in a valid state to clear the section.")
@@ -307,7 +305,7 @@ class SaleOrderWizard(models.TransientModel):
 
         _logger.info(f"Resetting section '{self.state}' for wizard {self.id}.")
 
-        # Check if there are existing selections to clear
+        # Fetch existing selections for the current section
         existing_selections = self.env["product.section.selection"].search(
             [("wizard_id", "=", self.id), ("section_name", "=", self.state)]
         )
@@ -316,17 +314,13 @@ class SaleOrderWizard(models.TransientModel):
             _logger.warning(
                 f"No existing selections found to clear for section '{self.state}' in wizard {self.id}."
             )
-            return  # Exit if there's nothing to clear
-
-        # Confirm that the user wants to clear the section (optional, if supported by UI)
-        # Implement UI confirmation here if needed
 
         # Clear the current selections
         self.section_product_id = False
         self.section_attribute_ids = [(5, 0, 0)]
         self.section_price = 0.0
 
-        # Remove saved selections for the current section
+        # Remove saved selections and handle errors
         try:
             existing_selections.unlink()
             _logger.info(
@@ -339,3 +333,29 @@ class SaleOrderWizard(models.TransientModel):
             raise ValidationError(
                 _("An error occurred while clearing the section. Please try again.")
             )
+
+        # Reopen the wizard to reflect changes
+        return self._reopen_wizard()
+
+    # Add a button to the summary view that calls this method.
+    # Backend: Add the clear_all Method
+    def clear_all(self):
+        """
+        Clear all sections and restart the wizard from the first section.
+        """
+        self.ensure_one()
+
+        _logger.info(f"Clearing all sections for wizard {self.id}.")
+
+        # Remove all saved selections
+        self.env["product.section.selection"].search(
+            [("wizard_id", "=", self.id)]
+        ).unlink()
+
+        # Reset the wizard to the initial state
+        self.section_product_id = False
+        self.section_attribute_ids = [(5, 0, 0)]
+        self.section_price = 0.0
+        self.state = "shell_foundation"
+
+        return self._reopen_wizard()
