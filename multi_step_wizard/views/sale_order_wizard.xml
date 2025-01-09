@@ -77,4 +77,16 @@
     </record>
 
     <!-- Wizard Action remains the same -->
+    <!-- Wizard Action -->
+    <record id="action_open_sale_order_wizard" model="ir.actions.act_window">
+        <field name="name">Configure Sales Order</field>
+        <field name="res_model">sale.order.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_sale_order_id': active_id,
+            'form_view_initial_mode': 'edit'
+        }</field>
+    </record>
+
 </odoo>
