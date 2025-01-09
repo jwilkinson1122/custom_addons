@@ -77,7 +77,13 @@ class WizardSectionSelection(models.TransientModel):
         "product.attribute.value", string="Attributes"
     )
 
-    price = fields.Float(string="Price", digits="Product Price", default=0.0)
+    # price = fields.Float(string="Price", digits="Product Price", default=0.0)
+    price = fields.Float(string="Price", digits="Product Price")
+
+    laterality = fields.Selection(
+        [("bilateral", "Bilateral"), ("left", "Left"), ("right", "Right")],
+        string="Laterality",
+    )
 
     @api.model
     def create(self, vals):
@@ -110,7 +116,7 @@ class SaleOrderWizard(models.TransientModel):
         "sale.order",
         string="Sales Order",
         # required=True,
-        required=False,  # Change this to False
+        required=False,
         ondelete="cascade",
         default=lambda self: self.env.context.get("active_id"),
     )
@@ -119,7 +125,6 @@ class SaleOrderWizard(models.TransientModel):
         "wizard.section.selection", "wizard_id", string="Section Selections"
     )
 
-    # Products
     section_product_id = fields.Many2one(
         "product.product",
         string="Product",
@@ -163,7 +168,6 @@ class SaleOrderWizard(models.TransientModel):
         store=False,
     )
 
-    # Monetary fields definition
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
@@ -173,9 +177,9 @@ class SaleOrderWizard(models.TransientModel):
 
     section_price = fields.Float(
         string="Section Price",
+        compute="_compute_section_price",
+        store=True,
         digits="Product Price",
-        default=0.0,
-        readonly=True,
     )
 
     total_price = fields.Float(
@@ -215,6 +219,46 @@ class SaleOrderWizard(models.TransientModel):
         default=0.0,
     )
 
+    # @api.model
+    # def create(self, vals):
+    #     """Override create to handle initial wizard setup"""
+    #     record = super().create(vals)
+
+    #     try:
+    #         if record.section_product_id and record.state:
+    #             self.env["wizard.section.selection"].create(
+    #                 {
+    #                     "wizard_id": record.id,
+    #                     "product_id": record.section_product_id.id,
+    #                     "price": record.section_price or 0.0,
+    #                     "section": record.state,
+    #                     "attribute_ids": False,
+    #                     "laterality": record.laterality,
+    #                 }
+    #             )
+
+    #             _logger.debug(
+    #                 f"""
+    #                 Created Initial Section Selection:
+    #                 - Wizard: {record.id}
+    #                 - State: {record.state}
+    #                 - Product: {record.section_product_id.display_name}
+    #                 - Price: {record.section_price}
+    #                 """
+    #             )
+    #     except Exception as e:
+    #         _logger.error(
+    #             f"""
+    #             Error creating initial section selection:
+    #             - Wizard: {record.id}
+    #             - State: {record.state}
+    #             - Error: {str(e)}
+    #             - Traceback: {traceback.format_exc()}
+    #             """
+    #         )
+
+    #     return record
+
     @api.model
     def create(self, vals):
         """Override create to handle initial wizard setup"""
@@ -226,10 +270,12 @@ class SaleOrderWizard(models.TransientModel):
                 self.env["wizard.section.selection"].create(
                     {
                         "wizard_id": record.id,
-                        "product_id": record.section_product_id.id,
+                        "section_product_id": record.section_product_id.id,
                         "price": record.section_price or 0.0,
                         "section": record.state,
-                        "attribute_ids": False,
+                        "section_attribute_ids": [
+                            (6, 0, record.section_attribute_ids.ids)
+                        ],
                         "laterality": record.laterality,
                     }
                 )
@@ -974,111 +1020,6 @@ class SaleOrderWizard(models.TransientModel):
                 )
                 record.available_attribute_values = False
 
-    # @api.onchange("section_product_id", "section_attribute_ids")
-    # def _onchange_section_data(self):
-    #     """Handle changes in product or attribute selections."""
-    #     self.ensure_one()
-
-    #     if not self.state or self.state in ["summary", "final"]:
-    #         return
-
-    #     try:
-    #         current_selection = self.section_selection_ids.filtered(
-    #             lambda x: x.section == self.state
-    #         )
-
-    #         vals = {
-    #             "section_product_id": (
-    #                 self.section_product_id.id if self.section_product_id else False
-    #             ),
-    #             "section_attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
-    #             "price": self._validate_price(
-    #                 self.section_price, field_name="section_price"
-    #             ),
-    #         }
-    #         if current_selection:
-    #             current_selection.write(vals)
-    #         else:
-    #             self.env["wizard.section.selection"].create(
-    #                 {"wizard_id": self.id, "section": self.state, **vals}
-    #             )
-
-    #         _logger.info(
-    #             f"""
-    #             Section Data Updated:
-    #             - State: {self.state}
-    #             - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
-    #             - Attributes: {len(self.section_attribute_ids)}
-    #             - Price: {self.section_price}
-    #             - Selection: {'Updated' if current_selection else 'Created'}
-    #             """
-    #         )
-
-    #     except Exception as e:
-    #         _logger.error(
-    #             f"""
-    #             Error updating section data:
-    #             - State: {self.state}
-    #             - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
-    #             - Error: {str(e)}
-    #             """
-    #         )
-
-    @api.onchange("section_product_id", "section_attribute_ids")
-    def _onchange_section_data(self):
-        """Handle changes in product or attribute selections."""
-        self.ensure_one()
-
-        # Skip for summary/final states
-        if not self.state or self.state in ["summary", "final"]:
-            return
-
-        try:
-            # Find existing selection for current state
-            current_selection = self.section_selection_ids.filtered(
-                lambda x: x.section == self.state
-            )
-
-            # Prepare values
-            vals = {
-                "wizard_id": self.id,  # Ensure wizard_id is explicitly set
-                "section_product_id": (
-                    self.section_product_id.id if self.section_product_id else False
-                ),
-                "section_attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
-                "price": self._validate_price(
-                    self.section_price, field_name="section_price"
-                ),
-                "section": self.state,
-            }
-
-            # Update or create selection
-            if current_selection:
-                current_selection.write(vals)
-            else:
-                self.env["wizard.section.selection"].create(vals)
-
-            _logger.info(
-                f"""
-                Section Data Updated:
-                - State: {self.state}
-                - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
-                - Attributes: {len(self.section_attribute_ids)}
-                - Price: {self.section_price}
-                - Selection: {'Updated' if current_selection else 'Created'}
-                """
-            )
-
-        except Exception as e:
-            _logger.error(
-                f"""
-                Error updating section data:
-                - State: {self.state}
-                - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
-                - Error: {str(e)}
-                """
-            )
-
     @api.onchange("state", "laterality")
     def _onchange_state_laterality(self):
         """Handle state and laterality changes."""
@@ -1322,58 +1263,47 @@ class SaleOrderWizard(models.TransientModel):
 
     @api.depends("section_product_id", "section_attribute_ids")
     def _compute_section_price(self):
-        """Compute the price for the current section based on product and attributes."""
-        for wizard in self:
-            if wizard.state in ["summary", "final"]:
-                wizard.section_price = 0.0
-                continue
+        """Compute section price based on product and selected attributes"""
+        for record in self:
+            try:
+                if not record.section_product_id:
+                    record.section_price = 0.0
+                    continue
 
-            product_price = (
-                wizard.section_product_id.list_price
-                if wizard.section_product_id
-                else 0.0
-            )
-            attribute_price = sum(
-                self.env["product.template.attribute.value"]
-                .search(
-                    [
-                        (
-                            "product_tmpl_id",
-                            "=",
-                            wizard.section_product_id.product_tmpl_id.id,
-                        ),
-                        (
-                            "product_attribute_value_id",
-                            "in",
-                            wizard.section_attribute_ids.ids,
-                        ),
-                    ]
-                )
-                .mapped("price_extra")
-            )
-            wizard.section_price = product_price + attribute_price
+                # Get base product price
+                base_price = record.section_product_id.list_price
 
-            # Update or create section selection
-            if wizard.section_product_id:
-                current_selection = wizard.section_selection_ids.filtered(
-                    lambda x: x.section == wizard.state
+                # Calculate additional price from selected attributes
+                attribute_price = sum(
+                    attr.product_attribute_value_id.price_extra
+                    for attr in record.section_product_id.product_template_attribute_value_ids
+                    if attr.product_attribute_value_id in record.section_attribute_ids
                 )
-                if current_selection:
-                    current_selection.write(
-                        {
-                            "product_id": wizard.section_product_id.id,
-                            "attribute_ids": [(6, 0, wizard.section_attribute_ids.ids)],
-                        }
-                    )
-                else:
-                    self.env["wizard.section.selection"].create(
-                        {
-                            "wizard_id": wizard.id,
-                            "section": wizard.state,
-                            "product_id": wizard.section_product_id.id,
-                            "attribute_ids": [(6, 0, wizard.section_attribute_ids.ids)],
-                        }
-                    )
+
+                # Set total price
+                record.section_price = base_price + attribute_price
+
+                _logger.debug(
+                    f"""
+                    Price Computation:
+                    - Product: {record.section_product_id.display_name}
+                    - Base Price: {base_price}
+                    - Selected Attributes: {record.section_attribute_ids.mapped('name')}
+                    - Attribute Price Extra: {attribute_price}
+                    - Total Price: {record.section_price}
+                    """
+                )
+
+            except Exception as e:
+                _logger.error(
+                    f"""
+                    Error computing section price:
+                    - Product: {record.section_product_id.display_name if record.section_product_id else 'N/A'}
+                    - Error: {str(e)}
+                    - Traceback: {traceback.format_exc()}
+                    """
+                )
+                record.section_price = 0.0
 
     @api.depends("section_selection_ids.price")
     def _compute_running_total_price(self):
@@ -1457,52 +1387,38 @@ class SaleOrderWizard(models.TransientModel):
 
         return values
 
-    # def _update_section_price(self):
-    #     """Update the price for the current section."""
-    #     self.ensure_one()
-    #     try:
-    #         price = 0.0
-    #         if self.section_product_id:
-    #             price = float(self.section_product_id.list_price or 0.0)
-
-    #         self.section_price = price
-
-    #         current_selection = self.section_selection_ids.filtered(
-    #             lambda x: x.section == self.state
-    #         )
-    #         if current_selection:
-    #             current_selection.write({"price": price})
-
-    #     except Exception as e:
-    #         _logger.error(
-    #             f"""
-    #             Error updating section price:
-    #             - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
-    #             - Error: {str(e)}
-    #             """
-    #         )
-    #         self.section_price = 0.0
-
     def _update_section_price(self):
-        """Update section price based on product and attributes"""
+        """Update section price based on product and selected attributes"""
         self.ensure_one()
 
-        if not self.section_product_id:
-            self.section_price = 0.0
-            return
-
         try:
+            if not self.section_product_id:
+                self.section_price = 0.0
+                return
+
             # Get base product price
             base_price = self.section_product_id.list_price
 
-            # Calculate additional price from selected attributes
-            attribute_price = sum(
-                attr.price_extra
-                for attr in self.section_attribute_ids
-                if attr.price_extra
+            # Get product template attribute values for selected attributes
+            ptav_ids = self.env["product.template.attribute.value"].search(
+                [
+                    (
+                        "product_tmpl_id",
+                        "=",
+                        self.section_product_id.product_tmpl_id.id,
+                    ),
+                    (
+                        "product_attribute_value_id",
+                        "in",
+                        self.section_attribute_ids.ids,
+                    ),
+                ]
             )
 
-            # Update section price with combined total
+            # Sum up the extra prices
+            attribute_price = sum(ptav.price_extra for ptav in ptav_ids)
+
+            # Update total price
             self.section_price = base_price + attribute_price
 
             _logger.debug(
@@ -1510,9 +1426,10 @@ class SaleOrderWizard(models.TransientModel):
                 Price Update:
                 - Product: {self.section_product_id.display_name}
                 - Base Price: {base_price}
+                - Selected Attributes: {self.section_attribute_ids.mapped('name')}
+                - PTAV IDs: {ptav_ids.ids}
                 - Attribute Price Extra: {attribute_price}
                 - Total Price: {self.section_price}
-                - Attributes: {', '.join(self.section_attribute_ids.mapped('name'))}
                 """
             )
 
@@ -1521,15 +1438,16 @@ class SaleOrderWizard(models.TransientModel):
                 f"""
                 Error updating section price:
                 - Product: {self.section_product_id.display_name if self.section_product_id else 'N/A'}
+                - Selected Attributes: {self.section_attribute_ids.mapped('name') if self.section_attribute_ids else []}
                 - Error: {str(e)}
                 - Traceback: {traceback.format_exc()}
                 """
             )
             self.section_price = 0.0
 
-    @api.onchange("section_attribute_ids")
-    def _onchange_section_attributes(self):
-        """Update price when attributes change"""
+    @api.onchange("section_product_id", "section_attribute_ids")
+    def _onchange_section_data(self):
+        """Handle changes to section data"""
         if self.section_product_id:
             self._update_section_price()
 

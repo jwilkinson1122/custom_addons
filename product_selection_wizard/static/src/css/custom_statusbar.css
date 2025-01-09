@@ -1,0 +1,14 @@
+.center-statusbar {
+    display: flex;
+    justify-content: center;
+    /* Centers the status bar horizontally */
+    margin-bottom: 16px;
+    /* Adds some space below the status bar */
+}
+
+.o_statusbar {
+    width: 60%;
+    /* Adjust the width of the status bar */
+    max-width: 800px;
+    /* Optional: Add a maximum width */
+}

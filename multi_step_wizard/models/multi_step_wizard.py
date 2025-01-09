@@ -26,7 +26,6 @@ class MultiStepWizardMixin(models.AbstractModel):
         copy=False,
     )
 
-    # Laterality Field
     laterality = fields.Selection(
         [
             ("left", "Left Only"),
