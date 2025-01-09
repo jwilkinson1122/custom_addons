@@ -1,14 +1,45 @@
 import logging
-import json
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
-class ProductSelectionWizardMixin(models.AbstractModel):
-    _name = "product.selection.wizard.mixin"
-    _description = "Product Selection Wizard Mixin"
+class ProductSectionConfiguration(models.Model):
+    _name = "product.section.configuration"
+    _description = "Product Section Configuration"
+    _order = "sequence"
+
+    sequence = fields.Integer(default=10)
+    section_name = fields.Selection(
+        selection=lambda self: self.env["sale.order.wizard"]._selection_state(),
+        required=True,
+    )
+    product_category_id = fields.Many2one("product.category", required=True)
+
+
+class ProductSectionSelection(models.TransientModel):
+    _name = "product.section.selection"
+    _description = "Product Section Selection"
+
+    wizard_id = fields.Many2one(
+        "sale.order.wizard", string="Wizard", required=True, ondelete="cascade"
+    )
+    section_name = fields.Selection(
+        selection=lambda self: self.env["sale.order.wizard"]._selection_state(),
+        string="Section Name",
+        required=True,
+    )
+    product_id = fields.Many2one(
+        "product.product", string="Product", required=True, ondelete="restrict"
+    )
+    attribute_ids = fields.Many2many("product.attribute.value", string="Attributes")
+    price = fields.Float(string="Price", digits="Product Price", required=True)
+
+
+class SaleOrderWizard(models.TransientModel):
+    _name = "sale.order.wizard"
+    _description = "Sale Order Wizard"
 
     state = fields.Selection(
         selection="_selection_state", default="shell_foundation", required=True
@@ -27,6 +58,22 @@ class ProductSelectionWizardMixin(models.AbstractModel):
         default="bilateral",
         required=True,
     )
+    sale_order_id = fields.Many2one(
+        "sale.order", default=lambda self: self.env.context.get("active_id")
+    )
+    section_product_id = fields.Many2one(
+        "product.product", domain="[('id', 'in', available_product_ids)]"
+    )
+    section_selection_ids = fields.One2many(
+        "product.section.selection", "wizard_id", string="Section Selections"
+    )
+    available_product_ids = fields.Many2many(
+        "product.product", compute="_compute_available_products"
+    )
+    section_attribute_ids = fields.Many2many("product.attribute.value")
+    section_price = fields.Float(compute="_compute_section_price")
+    total_price = fields.Float(compute="_compute_total_price")
+    summary = fields.Text(compute="_compute_summary")
 
     @api.model
     def _selection_state(self):
@@ -46,107 +93,6 @@ class ProductSelectionWizardMixin(models.AbstractModel):
     def _compute_allow_back(self):
         for record in self:
             record.allow_back = record.state != "shell_foundation"
-
-    def _ensure_section_data(self):
-        if not isinstance(self.section_data, dict):
-            try:
-                self.section_data = (
-                    json.loads(self.section_data) if self.section_data else {}
-                )
-            except (ValueError, json.JSONDecodeError):
-                self.section_data = {}
-
-    def open_next(self):
-        self._ensure_section_data()
-        self._handle_state_transition("next")
-        return self._reopen_wizard()
-
-    def open_previous(self):
-        self._ensure_section_data()
-        self._handle_state_transition("previous")
-        return self._reopen_wizard()
-
-    def _handle_state_transition(self, direction):
-        states = [state[0] for state in self._selection_state()]
-        current_index = states.index(self.state)
-
-        if direction == "next" and current_index < len(states) - 1:
-            self.state = states[current_index + 1]
-        elif direction == "previous" and current_index > 0:
-            self.state = states[current_index - 1]
-        else:
-            raise ValidationError(_("No further state transitions possible."))
-
-    def submit_wizard(self):
-        if not self.section_data:
-            raise ValidationError("No section data available for submission.")
-        self._finalize_submission()
-
-    def _finalize_submission(self):
-        raise NotImplementedError("Submission logic must be implemented in subclass")
-
-    def _reopen_wizard(self):
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": self._name,
-            "res_id": self.id,
-            "view_mode": "form",
-            "target": "new",
-        }
-
-
-class ProductSectionConfiguration(models.Model):
-    _name = "product.section.configuration"
-    _description = "Product Section Configuration"
-    _order = "sequence"
-
-    sequence = fields.Integer(default=10)
-    section_name = fields.Selection(
-        selection=ProductSelectionWizardMixin._selection_state, required=True
-    )
-    product_category_id = fields.Many2one("product.category", required=True)
-
-
-class ProductSectionSelection(models.TransientModel):
-    _name = "product.section.selection"
-    _description = "Product Section Selection"
-
-    wizard_id = fields.Many2one(
-        "sale.order.wizard", string="Wizard", required=True, ondelete="cascade"
-    )
-    section_name = fields.Selection(
-        selection=ProductSelectionWizardMixin._selection_state,
-        string="Section Name",
-        required=True,
-    )
-    product_id = fields.Many2one(
-        "product.product", string="Product", required=True, ondelete="restrict"
-    )
-    attribute_ids = fields.Many2many("product.attribute.value", string="Attributes")
-    price = fields.Float(string="Price", digits="Product Price", required=True)
-
-
-class SaleOrderWizard(models.TransientModel):
-    _name = "sale.order.wizard"
-    _inherit = "product.selection.wizard.mixin"
-    _description = "Sale Order Wizard"
-
-    sale_order_id = fields.Many2one(
-        "sale.order", default=lambda self: self.env.context.get("active_id")
-    )
-    section_product_id = fields.Many2one(
-        "product.product", domain="[('id', 'in', available_product_ids)]"
-    )
-    section_selection_ids = fields.One2many(
-        "product.section.selection", "wizard_id", string="Section Selections"
-    )
-    available_product_ids = fields.Many2many(
-        "product.product", compute="_compute_available_products"
-    )
-    section_attribute_ids = fields.Many2many("product.attribute.value")
-    section_price = fields.Float(compute="_compute_section_price")
-    total_price = fields.Float(compute="_compute_total_price")
-    summary = fields.Text(compute="_compute_summary")
 
     @api.depends("section_product_id", "section_attribute_ids")
     def _compute_section_price(self):
@@ -192,25 +138,31 @@ class SaleOrderWizard(models.TransientModel):
                     """
                 )
 
-    @api.depends("section_selection_ids.price")
+    @api.depends("section_selection_ids.price", "section_price")
     def _compute_total_price(self):
+        """Compute the total price for all section selections."""
         for record in self:
-            record.total_price = sum(
-                selection.price for selection in record.section_selection_ids
+            record.total_price = (
+                sum(selection.price for selection in record.section_selection_ids)
+                + record.section_price
             )
 
     @api.depends("state", "section_selection_ids")
     def _compute_summary(self):
+        """Compute a summary of the section selections."""
         for record in self:
             summary_lines = []
             for selection in record.section_selection_ids:
+                section_name = selection.section_name.replace("_", " ").title()
+                product_name = selection.product_id.name
                 summary_lines.append(
-                    f"{selection.section_name}: {selection.product_id.name} - {selection.price}"
+                    f"{section_name}: {product_name} - {selection.price}"
                 )
             record.summary = "\n".join(summary_lines)
 
     @api.depends("state")
     def _compute_available_products(self):
+        """Compute the available products based on the current state."""
         for record in self:
             configuration = self.env["product.section.configuration"].search(
                 [("section_name", "=", record.state)], limit=1
@@ -220,30 +172,53 @@ class SaleOrderWizard(models.TransientModel):
                     [("categ_id", "child_of", configuration.product_category_id.id)]
                 )
             else:
-                record.available_product_ids = self.env["product.product"]
+                record.available_product_ids = self.env["product.product"].browse([])
+
+    @api.onchange("state")
+    def _onchange_state(self):
+        if self.state:
+            self.open_section(self.state)
 
     @api.onchange("section_product_id", "section_attribute_ids")
     def _onchange_section_product_or_attributes(self):
-        self._compute_section_price()
-
-    # Update total_price in Real-Time
-    @api.onchange("section_product_id", "section_attribute_ids")
-    def _onchange_section_product_or_attributes(self):
-        """Update section price and total price when product or attributes change."""
         self._compute_section_price()
         self._compute_total_price()
 
-    # store the current selections for the active section.
+    @api.onchange("section_price", "section_selection_ids")
+    def _onchange_section_price_or_selections(self):
+        self._compute_total_price()
+
+    def open_section(self, section_name):
+        """
+        Open the specified section by name.
+        """
+        self._save_section()
+        self.state = section_name
+        self._load_section()
+        return self._reopen_wizard()
+
     def _save_section(self):
-        if self.section_product_id or self.section_attribute_ids:
-            # Proceed only if there's valid data to save
-            existing_selection = self.env["product.section.selection"].search(
-                [("wizard_id", "=", self.id), ("section_name", "=", self.state)],
-                limit=1,
+        """
+        Save the current section's selections.
+        """
+        self.ensure_one()
+        if not self.id:
+            self = self.create(
+                {
+                    "state": self.state,
+                    "sale_order_id": self.sale_order_id.id,
+                }
             )
 
-            if existing_selection:
-                existing_selection.write(
+        # if not self.id:
+        #     raise ValidationError(_("Wizard record is not properly initialized."))
+
+        selection = self.env["product.section.selection"].search(
+            [("wizard_id", "=", self.id), ("section_name", "=", self.state)], limit=1
+        )
+        if self.section_product_id or self.section_attribute_ids:
+            if selection:
+                selection.write(
                     {
                         "product_id": self.section_product_id.id,
                         "attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
@@ -260,36 +235,118 @@ class SaleOrderWizard(models.TransientModel):
                         "price": self.section_price,
                     }
                 )
+        elif selection:
+            selection.unlink()
 
-    # restore selections for the active section.
+    # def _save_section(self):
+    #     """
+    #     Save the current section's selections.
+    #     """
+    #     self.ensure_one()
+
+    #     if not self.id:
+    #         self.flush()
+    #         self._cr.commit()
+
+    #     selection = self.env["product.section.selection"].search(
+    #         [("wizard_id", "=", self.id), ("section_name", "=", self.state)], limit=1
+    #     )
+
+    #     if self.section_product_id or self.section_attribute_ids:
+    #         if selection:
+    #             selection.write(
+    #                 {
+    #                     "product_id": self.section_product_id.id,
+    #                     "attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
+    #                     "price": self.section_price,
+    #                 }
+    #             )
+    #         else:
+    #             self.env["product.section.selection"].create(
+    #                 {
+    #                     "wizard_id": self.id,
+    #                     "section_name": self.state,
+    #                     "product_id": self.section_product_id.id,
+    #                     "attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
+    #                     "price": self.section_price,
+    #                 }
+    #             )
+    #     elif selection:
+    #         selection.unlink()
+
     def _load_section(self):
+        """
+        Load selections for the current section.
+        """
+        _logger.info(f"Loading section for state: {self.state} in wizard {self.id}.")
+        self.ensure_one()
         selection = self.env["product.section.selection"].search(
             [("wizard_id", "=", self.id), ("section_name", "=", self.state)], limit=1
         )
         if selection:
             self.section_product_id = selection.product_id
             self.section_attribute_ids = [(6, 0, selection.attribute_ids.ids)]
+            self.section_price = selection.price
         else:
             # Reset fields to clean state
             self.section_product_id = False
             self.section_attribute_ids = [(5, 0, 0)]
             self.section_price = 0.0
 
-    # Override the navigation methods (open_next, open_previous) to save and load data.
-    def open_next(self):
-        self._save_section()
-        self._handle_state_transition("next")
+    def _handle_state_transition(self, direction):
+        """
+        Handle the state transition for next and previous buttons.
+        """
+        states = self._get_states()
+        current_index = states.index(self.state)
+        if direction == "next":
+            new_index = min(current_index + 1, len(states) - 1)
+        elif direction == "previous":
+            new_index = max(current_index - 1, 0)
+        self.state = states[new_index]
         self._load_section()
         return self._reopen_wizard()
+
+    def open_next(self):
+        """
+        Open the next section.
+        """
+        return self._handle_state_transition("next")
 
     def open_previous(self):
-        self._save_section()
-        self._handle_state_transition("previous")
-        self._load_section()
-        return self._reopen_wizard()
+        """
+        Open the previous section.
+        """
+        return self._handle_state_transition("previous")
 
-    # Add a "Clear Section" Button
-    # Add a button to explicitly clear selections for the current section.
+    def _get_states(self):
+        """
+        Get the list of states for the wizard.
+        """
+        return [
+            "shell_foundation",
+            "arch_height",
+            "top_cover",
+            "bottom_cover",
+            "cushion",
+            "extension",
+            "options",
+            "summary",
+            "final",
+        ]
+
+    def _reopen_wizard(self):
+        """
+        Reopen the wizard to reflect changes.
+        """
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "view_mode": "form",
+            "res_id": self.id,
+            "target": "new",
+        }
+
     def clear_section(self):
         """
         Clear selections for the current section without closing the wizard.
@@ -337,8 +394,6 @@ class SaleOrderWizard(models.TransientModel):
         # Reopen the wizard to reflect changes
         return self._reopen_wizard()
 
-    # Add a button to the summary view that calls this method.
-    # Backend: Add the clear_all Method
     def clear_all(self):
         """
         Clear all sections and restart the wizard from the first section.
@@ -359,3 +414,15 @@ class SaleOrderWizard(models.TransientModel):
         self.state = "shell_foundation"
 
         return self._reopen_wizard()
+
+    def submit_wizard(self):
+        """
+        Submit the wizard and finalize the selections.
+        """
+        self.ensure_one()
+        self._save_section()
+        _logger.info(f"Submitting wizard {self.id} with final selections.")
+        # Implement any additional logic needed for submission
+        return {
+            "type": "ir.actions.act_window_close",
+        }
