@@ -5,6 +5,16 @@
         <field name="model">multi.step.wizard.mixin</field>
         <field name="arch" type="xml">
             <form>
+                <!-- <header>
+                    <field name="state" widget="statusbar" options="{'clickable': true}" />
+                </header> -->
+                <header>
+                    <div class="center-statusbar">
+                        <field name="state" widget="statusbar"/>
+
+                        <!-- <field name="state" widget="statusbar" options="{'clickable': true}" /> -->
+                    </div>
+                </header>
                 <field name="state" invisible="1" />
                 <field name="allow_back" invisible="1" />
                 <footer>

@@ -126,16 +126,6 @@ class SaleOrderWizard(models.TransientModel):
         domain="[('id', 'in', available_product_ids)]",
     )
 
-    # available_product_ids = fields.Many2many(
-    #     "product.product",
-    #     "wizard_available_product_rel",
-    #     "wizard_id",
-    #     "product_id",
-    #     string="Available Products",
-    #     compute="_compute_available_products",
-    #     store=True,
-    # )
-
     available_product_ids = fields.Many2many(
         "product.product",
         string="Available Products",
@@ -1467,32 +1457,81 @@ class SaleOrderWizard(models.TransientModel):
 
         return values
 
+    # def _update_section_price(self):
+    #     """Update the price for the current section."""
+    #     self.ensure_one()
+    #     try:
+    #         price = 0.0
+    #         if self.section_product_id:
+    #             price = float(self.section_product_id.list_price or 0.0)
+
+    #         self.section_price = price
+
+    #         current_selection = self.section_selection_ids.filtered(
+    #             lambda x: x.section == self.state
+    #         )
+    #         if current_selection:
+    #             current_selection.write({"price": price})
+
+    #     except Exception as e:
+    #         _logger.error(
+    #             f"""
+    #             Error updating section price:
+    #             - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
+    #             - Error: {str(e)}
+    #             """
+    #         )
+    #         self.section_price = 0.0
+
     def _update_section_price(self):
-        """Update the price for the current section."""
+        """Update section price based on product and attributes"""
         self.ensure_one()
+
+        if not self.section_product_id:
+            self.section_price = 0.0
+            return
+
         try:
-            price = 0.0
-            if self.section_product_id:
-                price = float(self.section_product_id.list_price or 0.0)
+            # Get base product price
+            base_price = self.section_product_id.list_price
 
-            self.section_price = price
-
-            # Update section selection if exists
-            current_selection = self.section_selection_ids.filtered(
-                lambda x: x.section == self.state
+            # Calculate additional price from selected attributes
+            attribute_price = sum(
+                attr.price_extra
+                for attr in self.section_attribute_ids
+                if attr.price_extra
             )
-            if current_selection:
-                current_selection.write({"price": price})
+
+            # Update section price with combined total
+            self.section_price = base_price + attribute_price
+
+            _logger.debug(
+                f"""
+                Price Update:
+                - Product: {self.section_product_id.display_name}
+                - Base Price: {base_price}
+                - Attribute Price Extra: {attribute_price}
+                - Total Price: {self.section_price}
+                - Attributes: {', '.join(self.section_attribute_ids.mapped('name'))}
+                """
+            )
 
         except Exception as e:
             _logger.error(
                 f"""
                 Error updating section price:
-                - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
+                - Product: {self.section_product_id.display_name if self.section_product_id else 'N/A'}
                 - Error: {str(e)}
+                - Traceback: {traceback.format_exc()}
                 """
             )
             self.section_price = 0.0
+
+    @api.onchange("section_attribute_ids")
+    def _onchange_section_attributes(self):
+        """Update price when attributes change"""
+        if self.section_product_id:
+            self._update_section_price()
 
     @api.depends(
         "section_selection_ids",
