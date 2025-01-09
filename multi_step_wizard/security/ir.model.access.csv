@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_sale_order_wizard,access_sale_order_wizard,model_sale_order_wizard,base.group_user,1,1,1,1
 access_multi_step_wizard_mixin,access_multi_step_wizard_mixin,model_multi_step_wizard_mixin,base.group_user,1,1,1,1
 access_wizard_section_configuration,access_wizard_section_configuration,model_wizard_section_configuration,base.group_user,1,1,1,1
+access_wizard_section_selection,access_wizard_section_selection,model_wizard_section_selection,base.group_user,1,1,1,1

@@ -2,7 +2,6 @@ import logging
 
 from odoo import fields, models, api, _
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -37,7 +36,7 @@ class ProductProduct(models.Model):
     def name_search(self, name="", args=None, operator="ilike", limit=100):
         _logger.info(
             f"""
-            Product Name Search Debug:
+            Product Name Search Called:
             Name: {name}
             Args: {args}
             Operator: {operator}

@@ -22,17 +22,6 @@
             <field name="parent_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- <record id="product_category_top_cover_length" model="product.category">
-            <field name="name">Top Cover Length</field>
-            <field name="parent_id" ref="product_category_top_cover"/>
-        </record> -->
-
-        <!-- <record id="product_category_top_cover_material" model="product.category">
-            <field name="name">Top Cover Material</field>
-            <field name="parent_id" ref="product_category_top_cover"/>
-        </record> -->
-
-
         <record id="product_category_bottom_cover" model="product.category">
             <field name="name">X-Guard</field>
             <field name="parent_id" ref="product_category_custom_device"/>
@@ -43,30 +32,10 @@
             <field name="parent_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- <record id="product_category_cushion_length" model="product.category">
-            <field name="name">Cushion Length</field>
-            <field name="parent_id" ref="product_category_cushion"/>
-        </record>
-
-        <record id="product_category_cushion_material" model="product.category">
-            <field name="name">Cushion Material</field>
-            <field name="parent_id" ref="product_category_cushion"/>
-        </record> -->
-
         <record id="product_category_extension" model="product.category">
             <field name="name">Extension</field>
             <field name="parent_id" ref="product_category_custom_device"/>
         </record>
-
-        <!-- <record id="product_category_extension_length" model="product.category">
-            <field name="name">Extension Length</field>
-            <field name="parent_id" ref="product_category_extension"/>
-        </record> -->
-
-        <!-- <record id="product_category_extension_material" model="product.category">
-            <field name="name">Extension Material</field>
-            <field name="parent_id" ref="product_category_extension"/>
-        </record> -->
 
         <record id="product_category_options" model="product.category">
             <field name="name">Options</field>

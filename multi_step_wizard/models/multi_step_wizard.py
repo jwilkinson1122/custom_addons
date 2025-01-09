@@ -10,17 +10,6 @@ class MultiStepWizardMixin(models.AbstractModel):
     _name = "multi.step.wizard.mixin"
     _description = "Multi-Step Wizard Mixin"
 
-    # Mapping Fields
-    _state_category_mapping = {
-        "shell_foundation": "Shell Foundation",
-        "arch_height": "Arch Height",
-        "top_cover": "Top Cover",
-        "bottom_cover": "X-Guard",
-        "cushion": "Cushion",
-        "extension": "Extension",
-        "options": "Options",
-    }
-
     # Core Fields
     state = fields.Selection(
         selection="_selection_state",
@@ -178,7 +167,7 @@ class MultiStepWizardMixin(models.AbstractModel):
     @api.model
     def create(self, vals):
         if "section_data" not in vals:
-            vals["section_data"] = "{}"  # Use string representation
+            vals["section_data"] = "{}"
         return super().create(vals)
 
     def write(self, vals):
@@ -327,22 +316,22 @@ class MultiStepWizardMixin(models.AbstractModel):
         }
 
     def _sanitize_section_data(self, data):
+        """Ensure section_data is a valid dictionary."""
         _logger.debug(f"Sanitizing section_data: {data} (type: {type(data)})")
-        if data is None or isinstance(data, bool):
-            _logger.error(f"Invalid section_data received for sanitization: {data}")
-            return {}
-        if isinstance(data, dict):
-            return data
-        if isinstance(data, str):
+        if not isinstance(data, dict):
             try:
-                parsed_data = json.loads(data)
-                return parsed_data if isinstance(parsed_data, dict) else {}
-            except json.JSONDecodeError as e:
+                if isinstance(data, str):
+                    data = json.loads(data)
+                    if not isinstance(data, dict):
+                        raise ValueError("Parsed JSON is not a dictionary.")
+                else:
+                    raise ValueError("Data is not a valid dictionary or JSON string.")
+            except (ValueError, json.JSONDecodeError) as e:
                 _logger.error(
-                    f"JSON decoding error for section_data: {data} - {str(e)}"
+                    f"Invalid section_data detected: {data}. Resetting to {{}}."
                 )
-                return {}
-        return {}
+                data = {}
+        return data
 
     def submit_wizard(self):
         """Finalize the wizard and execute submission logic."""

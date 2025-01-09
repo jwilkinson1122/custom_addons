@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Shell Foundation Configuration -->
+        <record id="wizard_config_shell_foundation" model="wizard.section.configuration">
+            <field name="section_name">shell_foundation</field>
+            <field name="product_category_id" ref="product_category_shell_foundation"/>
+        </record>
+
+        <!-- Arch Height Configuration -->
+        <record id="wizard_config_arch_height" model="wizard.section.configuration">
+            <field name="section_name">arch_height</field>
+            <field name="product_category_id" ref="product_category_arch_height"/>
+        </record>
+
+        <!-- Top Cover Configuration -->
+        <record id="wizard_config_top_cover" model="wizard.section.configuration">
+            <field name="section_name">top_cover</field>
+            <field name="product_category_id" ref="product_category_top_cover"/>
+        </record>
+
+        <!-- Bottom Cover Configuration -->
+        <record id="wizard_config_bottom_cover" model="wizard.section.configuration">
+            <field name="section_name">bottom_cover</field>
+            <field name="product_category_id" ref="product_category_bottom_cover"/>
+        </record>
+
+        <!-- Cushion Configuration -->
+        <record id="wizard_config_cushion" model="wizard.section.configuration">
+            <field name="section_name">cushion</field>
+            <field name="product_category_id" ref="product_category_cushion"/>
+        </record>
+
+        <!-- Extension Configuration -->
+        <record id="wizard_config_extension" model="wizard.section.configuration">
+            <field name="section_name">extension</field>
+            <field name="product_category_id" ref="product_category_extension"/>
+        </record>
+
+        <!-- Options Configuration -->
+        <record id="wizard_config_options" model="wizard.section.configuration">
+            <field name="section_name">options</field>
+            <field name="product_category_id" ref="product_category_options"/>
+        </record>
+    </data>
+</odoo>

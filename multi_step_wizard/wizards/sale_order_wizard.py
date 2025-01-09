@@ -1,7 +1,9 @@
+import traceback
 import logging
 import json
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
+from odoo.tools.misc import format_amount
 
 _logger = logging.getLogger(__name__)
 
@@ -9,6 +11,9 @@ _logger = logging.getLogger(__name__)
 class WizardSectionConfiguration(models.Model):
     _name = "wizard.section.configuration"
     _description = "Wizard Section Configuration"
+    _order = "sequence"
+
+    sequence = fields.Integer(string="Sequence", default=10)
 
     section_name = fields.Selection(
         [
@@ -33,6 +38,18 @@ class WizardSectionConfiguration(models.Model):
         help="The product category to display in this wizard section.",
     )
 
+    # Add helper method to get next section
+    def get_next_section(self, current_section):
+        sections = self.search([("section_name", "!=", "final")], order="sequence")
+        section_list = sections.mapped("section_name")
+        try:
+            current_index = section_list.index(current_section)
+            if current_index + 1 < len(section_list):
+                return section_list[current_index + 1]
+        except ValueError:
+            pass
+        return "final"
+
     _sql_constraints = [
         (
             "unique_section_name",
@@ -42,63 +59,117 @@ class WizardSectionConfiguration(models.Model):
     ]
 
 
+class WizardSectionSelection(models.TransientModel):
+    _name = "wizard.section.selection"
+    _description = "Wizard Section Selection"
+
+    wizard_id = fields.Many2one(
+        "sale.order.wizard", string="Wizard", required=True, ondelete="cascade"
+    )
+
+    section = fields.Selection(related="wizard_id.state", string="Section", store=True)
+
+    section_product_id = fields.Many2one(
+        "product.product", string="Product", domain=[("sale_ok", "=", True)]
+    )
+
+    section_attribute_ids = fields.Many2many(
+        "product.attribute.value", string="Attributes"
+    )
+
+    price = fields.Float(string="Price", digits="Product Price", default=0.0)
+
+    @api.model
+    def create(self, vals):
+        """Ensure proper initialization of values."""
+        if "price" in vals:
+            vals["price"] = float(vals.get("price", 0.0) or 0.0)
+        return super().create(vals)
+
+    def write(self, vals):
+        """Ensure proper value updates."""
+        if "price" in vals:
+            vals["price"] = float(vals.get("price", 0.0) or 0.0)
+        return super().write(vals)
+
+
 class SaleOrderWizard(models.TransientModel):
     _name = "sale.order.wizard"
     _inherit = ["multi.step.wizard.mixin"]
     _description = "Sale Order Wizard"
 
-    # General Fields
     sale_order_id = fields.Many2one(
         "sale.order",
         string="Sales Order",
-        required=True,
+        # required=True,
+        required=False,  # Change this to False
         ondelete="cascade",
         default=lambda self: self.env.context.get("active_id"),
     )
 
-    # Section Fields
-    # section_product_id = fields.Many2one(
-    #     "product.product",
-    #     string="Section Product",
-    #     domain=lambda self: self._get_product_domain(),
-    #     help="Product selection for the current section.",
-    # )
+    section_selection_ids = fields.One2many(
+        "wizard.section.selection", "wizard_id", string="Section Selections"
+    )
 
+    # Products
     section_product_id = fields.Many2one(
         "product.product",
-        string="Section Product",
+        string="Product",
         domain="[('id', 'in', available_product_ids)]",
-        help="Product selection for the current section.",
     )
+
+    # available_product_ids = fields.Many2many(
+    #     "product.product",
+    #     "wizard_available_product_rel",
+    #     "wizard_id",
+    #     "product_id",
+    #     string="Available Products",
+    #     compute="_compute_available_products",
+    #     store=True,
+    # )
 
     available_product_ids = fields.Many2many(
         "product.product",
+        string="Available Products",
         compute="_compute_available_products",
-        help="Products available for selection in current section",
-    )
-
-    section_attribute_ids = fields.Many2many(
-        "product.attribute.value",
-        string="Section Attributes",
-        help="Attributes belonging to the selected product.",
+        store=False,
     )
 
     available_attribute_values = fields.Many2many(
         "product.attribute.value",
-        string="Available Attributes",
+        string="Available Attribute Values",
         compute="_compute_available_attribute_values",
+        store=False,
+    )
+
+    section_attribute_ids = fields.Many2many(
+        "product.attribute.value",
+        "wizard_section_attribute_rel",
+        "wizard_id",
+        "attribute_id",
+        string="Selected Attributes",
+        domain="[('id', 'in', available_attribute_values)]",
+    )
+
+    # Monetary fields definition
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        readonly=True,
+        default=lambda self: self.env.company.currency_id.id,
     )
 
     section_price = fields.Float(
         string="Section Price",
-        compute="_compute_section_price",
+        digits="Product Price",
+        default=0.0,
         readonly=True,
     )
 
-    # Total Prices
     total_price = fields.Float(
         string="Total Price",
-        compute="_compute_total_price",
+        digits="Product Price",
+        default=0.0,
         readonly=True,
     )
 
@@ -114,12 +185,89 @@ class SaleOrderWizard(models.TransientModel):
         readonly=True,
     )
 
-    # Summary
     summary = fields.Text(
-        string="Summary of Selections",
+        string="Summary",
         compute="_compute_summary",
-        readonly=True,
+        store=True,
     )
+
+    summary_total = fields.Float(
+        string="Total Amount",
+        compute="_compute_summary",
+        store=True,
+        digits="Product Price",
+        default=0.0,
+    )
+
+    @api.model
+    def create(self, values):
+        """Initialize a new record with proper defaults and monetary values."""
+        try:
+            # Initialize record with defaults
+            values = self._init_record(values)
+
+            # Validate monetary fields
+            monetary_fields = ["section_price", "total_price"]
+            for field in monetary_fields:
+                if field in values:
+                    values[field] = self._validate_price(
+                        values.get(field), field_name=field
+                    )
+
+            _logger.debug(
+                f"""
+                Creating record:
+                - Values: {values}
+                """
+            )
+
+            return super().create(values)
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error creating record:
+                - Values: {values}
+                - Error: {str(e)}
+                """
+            )
+            raise
+
+    def write(self, vals):
+        """Update record with proper handling of sections and monetary values."""
+        try:
+            # Handle state changes
+            if "state" in vals:
+                self._handle_state_change(vals)
+
+            # Validate monetary fields
+            monetary_fields = ["section_price", "total_price"]
+            for field in monetary_fields:
+                if field in vals:
+                    vals[field] = self._validate_price(
+                        vals.get(field), field_name=field
+                    )
+
+            _logger.debug(
+                f"""
+                Updating record:
+                - ID: {self.id}
+                - Values: {vals}
+                """
+            )
+
+            return super().write(vals)
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error updating record:
+                - ID: {self.id}
+                - Values: {vals}
+                - Error: {str(e)}
+                """
+            )
+            raise
 
     @api.depends("state")
     def _compute_state_display(self):
@@ -134,23 +282,922 @@ class SaleOrderWizard(models.TransientModel):
         string="State Display", compute="_compute_state_display"
     )
 
-    @api.depends("section_data")
-    def _compute_total_price(self):
-        for wizard in self:
-            _logger.debug(
-                f"Computing total price for section_data: {wizard.section_data}"
+    @api.onchange("state", "laterality")
+    def _onchange_state(self):
+        """Handle state and laterality changes."""
+        self.ensure_one()
+
+        # Clear products for summary/final states
+        if self.state in ["summary", "final"]:
+            self.available_product_ids = [(5, 0, 0)]
+            self.section_product_id = False
+            return
+
+        try:
+            # Get configuration for current state
+            configuration = self.env["wizard.section.configuration"].search(
+                [("section_name", "=", self.state)], limit=1
             )
-            wizard.total_price = 0.0
-            if isinstance(wizard.section_data, dict):
-                wizard.total_price = sum(
-                    section.get("section_price", 0.0)
-                    for section in wizard.section_data.values()
+
+            # Base domain
+            domain = [("sale_ok", "=", True)]
+
+            # Add category filter if configuration exists
+            if configuration and configuration.product_category_id:
+                domain.append(
+                    ("categ_id", "child_of", configuration.product_category_id.id)
                 )
+
+            # Search for products matching domain
+            products = self.env["product.product"].search(domain)
+
+            # Apply laterality filter if specified
+            if self.laterality in ["left", "right"]:
+                products = products.filtered(
+                    lambda p: p.laterality in [self.laterality, "bilateral"]
+                )
+
+            # Update available products
+            self.available_product_ids = [(6, 0, products.ids)]
+
+            # Clear current product if it's no longer valid
+            if self.section_product_id and self.section_product_id not in products:
+                self.section_product_id = False
+
+            _logger.info(
+                f"""
+                State/Laterality Change Processed:
+                - State: {self.state}
+                - Laterality: {self.laterality}
+                - Configuration Found: {bool(configuration)}
+                - Category: {configuration.product_category_id.name if configuration and configuration.product_category_id else 'N/A'}
+                - Domain: {domain}
+                - Products Found: {len(products)}
+                - Current Product Valid: {bool(self.section_product_id in products if self.section_product_id else False)}
+                """
+            )
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error in state/laterality change:
+                - State: {self.state}
+                - Laterality: {self.laterality}
+                - Error: {str(e)}
+                """
+            )
+            # Clear products on error
+            self.available_product_ids = [(5, 0, 0)]
+            self.section_product_id = False
+
+    def _handle_state_change(self, vals):
+        """Handle state change logic."""
+        # Clear current section fields when changing state
+        vals.update(
+            {
+                "section_product_id": False,
+                "section_attribute_ids": [(5, 0, 0)],
+            }
+        )
+
+        # Load saved selection if exists
+        if vals["state"] not in ["summary", "final"]:
+            current_selection = self.section_selection_ids.filtered(
+                lambda x: x.section == vals["state"]
+            )
+            if current_selection:
+                vals.update(
+                    {
+                        "section_product_id": current_selection.product_id.id,
+                        "section_attribute_ids": [
+                            (6, 0, current_selection.attribute_ids.ids)
+                        ],
+                        "section_price": self._validate_price(
+                            current_selection.price, field_name="section_price"
+                        ),
+                    }
+                )
+
+        _logger.debug(
+            f"""
+            State change handled:
+            - New State: {vals['state']}
+            - Selection Found: {bool(current_selection if 'current_selection' in locals() else False)}
+            """
+        )
+
+    # Actions
+    def action_verify_state_product(self):
+        """Verify current state and product configuration"""
+        self.ensure_one()
+
+        # Get current selection
+        current_selection = self.section_selection_ids.filtered(
+            lambda x: x.section == self.state
+        )
+
+        # Get configuration
+        configuration = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", self.state)], limit=1
+        )
+
+        _logger.info(
+            f"""
+            State and Product Verification:
+            State: {self.state}
+            State Display: {self.state_display}
+            
+            Current Selection:
+            Product: {current_selection.product_id.name if current_selection.product_id else 'None'}
+            Attributes: {current_selection.attribute_ids.mapped('name') if current_selection.attribute_ids else []}
+            
+            Working Fields:
+            Product: {self.section_product_id.name if self.section_product_id else 'None'}
+            Attributes: {self.section_attribute_ids.mapped('name') if self.section_attribute_ids else []}
+            
+            Configuration:
+            Found: {bool(configuration)}
+            Category: {configuration.product_category_id.name if configuration else 'None'}
+        """
+        )
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Verification Complete"),
+                "message": _("Check the logs for detailed information."),
+                "type": "info",
+                "sticky": False,
+            },
+        }
+
+    def action_verify_products(self):
+        try:
+            config = self.env["wizard.section.configuration"].search(
+                [("section_name", "=", "shell_foundation")], limit=1
+            )
+            if not config:
+                _logger.warning("No configuration found for shell_foundation")
+                return
+
+            if not config.product_category_id:
+                _logger.warning("No product category configured for shell_foundation")
+                return
+
+            # Rest of the code...
+        except Exception as e:
+            _logger.error(f"Error in product verification: {str(e)}")
+
+    def action_debug_products(self):
+        """Debug product filtering and availability.
+
+        This method performs the following:
+        - Retrieves products based on current domain
+        - Logs detailed product information including laterality
+        - Tests name_search functionality
+        - Logs all results for debugging purposes
+        """
+        _logger.info("Starting product debugging session...")
+
+        try:
+            # Debug current domain and product search
+            domain = self._get_product_domain()
+            _logger.debug(f"Current product domain: {domain}")
+
+            products = self.env["product.product"].search(domain)
+            _logger.info(f"Found {len(products)} products matching domain")
+
+            # Log detailed product information
+            for product in products:
+                self._log_product_details(product)
+
+            # Test name_search functionality
+            self._debug_name_search(products)
+
+            # Debug product availability
+            self._debug_product_availability(products)
+
+            # Debug product categories
+            self._debug_product_categories()
+
+        except Exception as e:
+            _logger.error(f"Error during product debugging: {str(e)}")
+            raise
+
+    def action_debug_domain(self):
+        domain = self._get_product_domain()
+        products = self.env["product.product"].search(domain)
+
+        debug_info = {
+            "state": self.state,
+            "domain": domain,
+            "products_count": len(products),
+            "product_details": [
+                (p.id, p.name, p.categ_id.name, p.sale_ok) for p in products
+            ],
+            "available_product_ids": self.available_product_ids.ids,
+            "section_product": (
+                self.section_product_id.name if self.section_product_id else "None"
+            ),
+        }
+
+        _logger.info("Domain Debug: %s", json.dumps(debug_info, indent=2))
+
+    def _log_product_details(self, product):
+        """Log detailed information about a specific product."""
+        _logger.info(
+            f"""
+            Product Details:
+            - ID: {product.id}
+            - Name: {product.name}
+            - Internal Reference: {product.default_code or 'N/A'}
+            - Category: {product.categ_id.name}
+            - Type: {product.type}
+            - List Price: {product.list_price}
+            - Standard Price: {product.standard_price}
+            - Active: {product.active}
+            - Can be Sold: {product.sale_ok}
+            - Can be Purchased: {product.purchase_ok}
+            """
+        )
+
+    def _debug_name_search(self, products):
+        """Test and log name_search functionality."""
+        _logger.info("Testing name_search functionality...")
+
+        for product in products[:5]:  # Test first 5 products
+            name_results = self.env["product.product"].name_search(
+                name=product.name, args=self._get_product_domain(), limit=5
+            )
+            _logger.info(
+                f"""
+                Name search results for '{product.name}':
+                Found {len(name_results)} matches
+                Results: {[f"{r[1]} (ID: {r[0]})" for r in name_results]}
+                """
+            )
+
+    def _debug_product_availability(self, products):
+        """Debug product availability and inventory levels."""
+        _logger.info("Checking product availability...")
+
+        for product in products:
+            qty_available = product.qty_available
+            virtual_available = product.virtual_available
+            incoming_qty = product.incoming_qty
+            outgoing_qty = product.outgoing_qty
+
+            _logger.info(
+                f"""
+                Availability for {product.name} (ID: {product.id}):
+                - Quantity on Hand: {qty_available}
+                - Forecasted Quantity: {virtual_available}
+                - Incoming: {incoming_qty}
+                - Outgoing: {outgoing_qty}
+                """
+            )
+
+    def _debug_product_categories(self):
+        """Debug product category hierarchy and configurations."""
+        _logger.info("Analyzing product categories...")
+
+        categories = self.env["product.category"].search([])
+        for category in categories:
+            products_count = self.env["product.product"].search_count(
+                [("categ_id", "=", category.id)]
+            )
+
+            _logger.info(
+                f"""
+                Category: {category.name} (ID: {category.id})
+                - Complete Name: {category.complete_name}
+                - Parent: {category.parent_id.name if category.parent_id else 'None'}
+                - Products Count: {products_count}
+                """
+            )
+
+    def _get_product_domain(self):
+        """Get domain for filtering products based on current state and laterality."""
+        self.ensure_one()
+
+        # Return empty domain for summary/final states
+        if not self.state or self.state in ["summary", "final"]:
+            return [("id", "=", False)]
+
+        try:
+            # Start with base domain
+            domain = [
+                ("sale_ok", "=", True),
+                ("active", "=", True),  # Always filter for active products
+            ]
+
+            # Get configuration for current state
+            configuration = self.env["wizard.section.configuration"].search(
+                [("section_name", "=", self.state)], limit=1
+            )
+
+            if not configuration or not configuration.product_category_id:
+                _logger.warning(
+                    f"""
+                    No valid configuration found:
+                    - State: {self.state}
+                    - Configuration Found: {bool(configuration)}
+                    - Has Category: {bool(configuration.product_category_id if configuration else False)}
+                    """
+                )
+                return [("id", "=", False)]
+
+            # Add category domain using child_of operator
+            domain.append(
+                ("categ_id", "child_of", configuration.product_category_id.id)
+            )
+
+            # Add laterality filter if applicable
+            if hasattr(self, "laterality") and self.laterality in ["left", "right"]:
+                domain.extend(
+                    [
+                        "|",
+                        ("laterality", "=", self.laterality),
+                        ("laterality", "=", "bilateral"),
+                    ]
+                )
+
+            # Add custom active filter if different from default
+            if hasattr(self, "active_filter") and not self.active_filter:
+                domain[1] = ("active", "=", False)
+
+            _logger.info(
+                f"""
+                Product Domain Built:
+                - State: {self.state}
+                - Category: {configuration.product_category_id.display_name}
+                - Laterality: {getattr(self, 'laterality', 'N/A')}
+                - Configuration ID: {configuration.id}
+                - Domain: {domain}
+                """
+            )
+
+            return domain
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error building product domain:
+                - State: {self.state}
+                - Error: {str(e)}
+                - Traceback: {traceback.format_exc()}
+                """
+            )
+            return [("id", "=", False)]
+
+    def action_verify_current_configuration(self):
+        """Verify configuration for current state"""
+        configuration = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", self.state)], limit=1
+        )
+
+        _logger.info(
+            f"""
+            Current Section Configuration:
+            State: {self.state}
+            Configuration Found: {bool(configuration)}
+            Category: {configuration.product_category_id.name if configuration else 'None'}
+            Selected Product: {self.section_product_id.name if self.section_product_id else 'None'}
+            Product Category: {self.section_product_id.categ_id.name if self.section_product_id else 'None'}
+        """
+        )
+
+    def action_verify_all_configurations(self):
+        """Verify all section configurations"""
+        configs = self.env["wizard.section.configuration"].search([])
+        for config in configs:
+            _logger.info(
+                f"""
+                Configuration:
+                Section: {config.section_name}
+                Category: {config.product_category_id.name}
+                Category ID: {config.product_category_id.id}
+            """
+            )
+
+    @api.constrains("state", "section_product_id", "section_selection_ids")
+    def _check_product_category(self):
+        """Validate that selected product belongs to the correct category for the current state."""
+        for record in self:
+            if record.state in ["summary", "final"]:
+                continue
+
+            # Validate current selection
+            if record.section_product_id:
+                self._validate_product_category(
+                    record.state, record.section_product_id, record.state_display
+                )
+
+            # Validate all stored selections
+            for selection in record.section_selection_ids:
+                if selection.product_id:
+                    self._validate_product_category(
+                        selection.section,
+                        selection.product_id,
+                        selection.section.replace("_", " ").title(),
+                    )
+
+    def _validate_product_category(self, state, product, state_display):
+        """Helper method to validate product category against section configuration."""
+        configuration = self.env["wizard.section.configuration"].search(
+            [("section_name", "=", state)], limit=1
+        )
+
+        if not configuration:
+            _logger.error(f"No configuration found for state: {state}")
+            raise ValidationError(_("No configuration found for state %s") % state)
+
+        expected_category = configuration.product_category_id
+        actual_category = product.categ_id
+
+        _logger.info(
+            f"""
+            Category Validation Details:
+            State: {state}
+            Product: {product.name}
+            Product Category ID: {actual_category.id}
+            Expected Category ID: {expected_category.id}
+            Product Category: {actual_category.name}
+            Expected Category: {expected_category.name}
+            Product Category Path: {actual_category.parent_path}
+            Expected Category Path: {expected_category.parent_path}
+        """
+        )
+
+        if (
+            actual_category.id != expected_category.id
+            and not actual_category.parent_path.startswith(
+                expected_category.parent_path
+            )
+        ):
+            raise ValidationError(
+                _(
+                    "Selected product '%(product)s' (category: %(actual)s) must belong to "
+                    "the '%(expected)s' category in %(state)s state."
+                )
+                % {
+                    "product": product.name,
+                    "actual": actual_category.name,
+                    "expected": expected_category.name,
+                    "state": state_display,
+                }
+            )
+
+    @api.depends("state")
+    def _compute_current_category_id(self):
+        """Compute the current product category based on state."""
+        for record in self:
+            try:
+                if not record.state or record.state in ["summary", "final"]:
+                    record.current_category_id = False
+                    continue
+
+                # Search for configuration in a new environment to avoid transaction issues
+                self.env.cr.rollback()  # Roll back any failed transaction
+
+                configuration = (
+                    self.env["wizard.section.configuration"]
+                    .sudo()
+                    .search(
+                        [("section_name", "=", record.state)],
+                        limit=1,
+                    )
+                )
+
+                record.current_category_id = (
+                    configuration.product_category_id.id if configuration else False
+                )
+
+                _logger.debug(
+                    f"""
+                    Category Computed:
+                    - State: {record.state}
+                    - Configuration Found: {bool(configuration)}
+                    - Category ID: {record.current_category_id}
+                    """
+                )
+
+            except Exception as e:
+                _logger.error(
+                    f"""
+                    Error computing category:
+                    - State: {record.state}
+                    - Error: {str(e)}
+                    """
+                )
+                record.current_category_id = False
+
+    # current_category_id = fields.Many2one(
+    #     "product.category",
+    #     string="Current Category",
+    #     compute="_compute_current_category_id",
+    #     store=False,
+    #     readonly=True,
+    # )
+
+    current_category_id = fields.Many2one(
+        "product.category",
+        string="Current Category",
+        compute="_compute_current_category_id",
+        store=False,
+    )
+
+    @api.onchange("state")
+    def _onchange_current_category(self):
+        """Update domain and selections when state changes"""
+        if self.state not in ["summary", "final"]:
+            return {"domain": {"section_product_id": self._get_product_domain()}}
+
+    def action_validate_all_selections(self):
+        """Validate all selections at once"""
+        self.ensure_one()
+        for selection in self.section_selection_ids:
+            self._validate_product_category(
+                selection.section,
+                selection.product_id,
+                selection.section.replace("_", " ").title(),
+            )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Validation Success"),
+                "message": _("All selections are valid."),
+                "type": "success",
+                "sticky": False,
+            },
+        }
+
+    @api.depends("state", "laterality")
+    def _compute_available_products(self):
+        """Compute available products based on current state and laterality."""
+        for record in self:
+            try:
+                # Clear products for summary/final states
+                if not record.state or record.state in ["summary", "final"]:
+                    record.available_product_ids = False
+                    continue
+
+                # Get configuration for current state
+                configuration = self.env["wizard.section.configuration"].search(
+                    [("section_name", "=", record.state)], limit=1
+                )
+
+                if not configuration or not configuration.product_category_id:
+                    record.available_product_ids = False
+                    continue
+
+                # Build domain
+                domain = [
+                    ("sale_ok", "=", True),
+                    ("active", "=", True),
+                    ("categ_id", "child_of", configuration.product_category_id.id),
+                ]
+
+                # Add laterality filter if applicable
+                if record.laterality in ["left", "right"]:
+                    domain.extend(
+                        [
+                            "|",
+                            ("laterality", "=", record.laterality),
+                            ("laterality", "=", "bilateral"),
+                        ]
+                    )
+
+                # Search products
+                products = self.env["product.product"].search(domain)
+
+                _logger.debug(
+                    f"""
+                    Available Products Computed:
+                    - State: {record.state}
+                    - Category: {configuration.product_category_id.display_name}
+                    - Products Found: {len(products)}
+                    - Product IDs: {products.ids}
+                    """
+                )
+
+                record.available_product_ids = products
+
+            except Exception as e:
+                _logger.error(
+                    f"""
+                    Error computing available products:
+                    - State: {record.state}
+                    - Error: {str(e)}
+                    - Traceback: {traceback.format_exc()}
+                    """
+                )
+                record.available_product_ids = False
+
+    @api.depends("section_product_id")
+    def _compute_available_attribute_values(self):
+        """Compute available attribute values based on selected product."""
+        for record in self:
+            try:
+                if not record.section_product_id:
+                    record.available_attribute_values = False
+                    continue
+
+                # Search for valid attribute values
+                valid_attr_values = (
+                    self.env["product.template.attribute.value"]
+                    .search(
+                        [
+                            (
+                                "product_tmpl_id",
+                                "=",
+                                record.section_product_id.product_tmpl_id.id,
+                            ),
+                            ("ptav_active", "=", True),
+                        ]
+                    )
+                    .mapped("product_attribute_value_id")
+                )
+
+                # Assign directly to the field
+                record.available_attribute_values = valid_attr_values
+
+                _logger.debug(
+                    f"""
+                    Available Attributes Computed:
+                    - Product: {record.section_product_id.display_name}
+                    - Template: {record.section_product_id.product_tmpl_id.display_name}
+                    - Attributes Found: {len(valid_attr_values)}
+                    - Attribute Names: {', '.join(valid_attr_values.mapped('name'))}
+                    """
+                )
+
+            except Exception as e:
+                _logger.error(
+                    f"""
+                    Error computing available attributes:
+                    - Product: {record.section_product_id.display_name if record.section_product_id else 'N/A'}
+                    - Error: {str(e)}
+                    - Traceback: {traceback.format_exc()}
+                    """
+                )
+                record.available_attribute_values = False
+
+    @api.onchange("section_product_id", "section_attribute_ids")
+    def _onchange_section_data(self):
+        """Handle changes in product or attribute selections."""
+        self.ensure_one()
+
+        # Skip for summary/final states
+        if not self.state or self.state in ["summary", "final"]:
+            return
+
+        try:
+            # Find existing selection for current state
+            current_selection = self.section_selection_ids.filtered(
+                lambda x: x.section == self.state
+            )
+
+            # Prepare values
+            vals = {
+                "section_product_id": (
+                    self.section_product_id.id if self.section_product_id else False
+                ),
+                "section_attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
+                "price": self._validate_price(
+                    self.section_price, field_name="section_price"
+                ),
+            }
+
+            # Update or create selection
+            if current_selection:
+                current_selection.write(vals)
+            else:
+                self.env["wizard.section.selection"].create(
+                    {"wizard_id": self.id, "section": self.state, **vals}
+                )
+
+            _logger.info(
+                f"""
+                Section Data Updated:
+                - State: {self.state}
+                - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
+                - Attributes: {len(self.section_attribute_ids)}
+                - Price: {self.section_price}
+                - Selection: {'Updated' if current_selection else 'Created'}
+                """
+            )
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error updating section data:
+                - State: {self.state}
+                - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
+                - Error: {str(e)}
+                """
+            )
+
+    @api.onchange("state", "laterality")
+    def _onchange_state_laterality(self):
+        """Handle state and laterality changes."""
+        if self.state in ["summary", "final"]:
+            self.section_product_id = False
+            self.section_attribute_ids = [(5, 0, 0)]
+            return
+
+        # Load saved selection if exists
+        current_selection = self.section_selection_ids.filtered(
+            lambda x: x.section == self.state
+        )
+
+        if current_selection:
+            self.section_product_id = current_selection.product_id
+            self.section_attribute_ids = [(6, 0, current_selection.attribute_ids.ids)]
+        else:
+            self.section_product_id = False
+            self.section_attribute_ids = [(5, 0, 0)]
+
+        return {"domain": {"section_product_id": self._get_product_domain()}}
+
+    @api.model
+    def _init_record(self, values):
+        """Initialize a new record with proper defaults."""
+        defaults = {
+            "state": "shell_foundation",
+            "laterality": "bilateral",
+        }
+        return {**defaults, **values}
+
+    @api.onchange("section_product_id")
+    def _onchange_section_product_id(self):
+        """Update section attributes and price when product changes"""
+        self.ensure_one()
+
+        # Clear existing attributes and price
+        self.section_attribute_ids = False
+        self.section_price = 0.0
+
+        # Exit if no product or in summary/final state
+        if not self.section_product_id or self.state in ["summary", "final"]:
+            return
+
+        try:
+            # Update price first
+            self._update_section_price()
+
+            # Get valid attribute values for this product
+            valid_attr_values = (
+                self.env["product.template.attribute.value"]
+                .search(
+                    [
+                        (
+                            "product_tmpl_id",
+                            "=",
+                            self.section_product_id.product_tmpl_id.id,
+                        ),
+                        ("ptav_active", "=", True),
+                    ]
+                )
+                .mapped("product_attribute_value_id")
+            )
+
+            # Update available attributes
+            self.available_attribute_values = valid_attr_values
+
+            _logger.debug(
+                f"""
+                Product Change:
+                - Product: {self.section_product_id.display_name}
+                - Template: {self.section_product_id.product_tmpl_id.display_name}
+                - Price: {self.section_price}
+                - Valid Attributes: {len(valid_attr_values)}
+                - Attribute Names: {', '.join(valid_attr_values.mapped('name'))}
+                - State: {self.state}
+                """
+            )
+
+            # Update section selection
+            self._update_section_selection()
+
+            # Return domain for attribute selection
+            return self._get_attribute_domain(valid_attr_values)
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error in product onchange:
+                - Product: {self.section_product_id.display_name if self.section_product_id else 'N/A'}
+                - State: {self.state}
+                - Error: {str(e)}
+                - Traceback: {traceback.format_exc()}
+                """
+            )
+            return {
+                "warning": {
+                    "title": _("Error"),
+                    "message": _(
+                        "Failed to update product attributes. Please try again."
+                    ),
+                }
+            }
+
+    def _update_section_selection(self):
+        """Update the section selection record"""
+        selection_vals = {
+            "product_id": self.section_product_id.id,
+            "attribute_ids": False,  # Clear attributes
+            "price": self.section_price,
+        }
+
+        current_selection = self.section_selection_ids.filtered(
+            lambda x: x.section == self.state
+        )
+
+        if current_selection:
+            current_selection.write(selection_vals)
+        else:
+            self.env["wizard.section.selection"].create(
+                {"wizard_id": self.id, "section": self.state, **selection_vals}
+            )
+
+    def _get_attribute_domain(self, valid_attr_values):
+        """Get domain for attribute selection"""
+        return {
+            "domain": {"section_attribute_ids": [("id", "in", valid_attr_values.ids)]}
+        }
+
+    def reset_section(self):
+        """Reset selections for the current section."""
+        self.ensure_one()
+        _logger.info(f"Resetting section '{self.state}' for wizard {self.id}.")
+
+        # Clear current section fields
+        self.section_product_id = False
+        self.section_attribute_ids = [(5, 0, 0)]
+
+        # Remove section selection
+        current_selection = self.section_selection_ids.filtered(
+            lambda x: x.section == self.state
+        )
+        if current_selection:
+            current_selection.unlink()
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Section Reset"),
+                "message": _("Section has been reset successfully."),
+                "type": "success",
+                "sticky": False,
+            },
+        }
+
+    def _validate_price(self, value, field_name="price"):
+        """Validate and convert price values."""
+        try:
+            return float(value or 0.0)
+        except (ValueError, TypeError):
+            _logger.warning(
+                f"Invalid price value for {field_name}: {value}. Using 0.0 instead."
+            )
+            return 0.0
+
+    def _format_monetary(self, amount):
+        """Format monetary amount with currency."""
+        if not isinstance(amount, (int, float)):
+            amount = self._validate_price(amount)
+        return self.currency_id.symbol + " " + "{:,.2f}".format(amount)
+
+    @api.depends("section_selection_ids.price")
+    def _compute_total_price(self):
+        """Compute the total price of all sections."""
+        for record in self:
+            try:
+                total = sum(record.section_selection_ids.mapped("price") or [0.0])
+                record.total_price = float(total or 0.0)
+            except Exception as e:
+                _logger.error(
+                    f"""
+                    Error computing total price:
+                    - Wizard ID: {record.id}
+                    - Sections: {record.section_selection_ids.ids}
+                    - Error: {str(e)}
+                    """
+                )
+                record.total_price = 0.0
 
     @api.depends("section_product_id", "section_attribute_ids")
     def _compute_section_price(self):
         """Compute the price for the current section based on product and attributes."""
         for wizard in self:
+            if wizard.state in ["summary", "final"]:
+                wizard.section_price = 0.0
+                continue
+
             product_price = (
                 wizard.section_product_id.list_price
                 if wizard.section_product_id
@@ -176,35 +1223,54 @@ class SaleOrderWizard(models.TransientModel):
             )
             wizard.section_price = product_price + attribute_price
 
-    @api.depends("state", "section_data")
-    def _compute_running_total_price(self):
-        for wizard in self:
-            total = 0.0
-            try:
-                # Force section_data to be a dict if it's not
-                if not isinstance(wizard.section_data, dict):
-                    wizard.section_data = {}
-                    continue  # Skip processing this iteration
-
-                if wizard.section_data:  # Only process if we have data
-                    states = wizard._get_state_list()
-                    current_state_index = (
-                        states.index(wizard.state) if wizard.state in states else -1
+            # Update or create section selection
+            if wizard.section_product_id:
+                current_selection = wizard.section_selection_ids.filtered(
+                    lambda x: x.section == wizard.state
+                )
+                if current_selection:
+                    current_selection.write(
+                        {
+                            "product_id": wizard.section_product_id.id,
+                            "attribute_ids": [(6, 0, wizard.section_attribute_ids.ids)],
+                        }
+                    )
+                else:
+                    self.env["wizard.section.selection"].create(
+                        {
+                            "wizard_id": wizard.id,
+                            "section": wizard.state,
+                            "product_id": wizard.section_product_id.id,
+                            "attribute_ids": [(6, 0, wizard.section_attribute_ids.ids)],
+                        }
                     )
 
-                    for state in states[: current_state_index + 1]:
-                        state_data = wizard.section_data.get(state, {})
-                        if isinstance(state_data, dict):
-                            price = state_data.get("section_price", 0.0)
-                            try:
-                                total += float(price or 0.0)
-                            except (ValueError, TypeError):
-                                continue
-            except Exception as e:
-                _logger.error(f"Error computing running total: {str(e)}")
-                total = 0.0
+    @api.depends("section_selection_ids.price")
+    def _compute_running_total_price(self):
+        """Compute running total based on completed sections"""
+        for wizard in self:
+            if wizard.state in ["summary", "final"]:
+                wizard.running_total_price = sum(
+                    selection.price for selection in wizard.section_selection_ids
+                )
+            else:
+                # Get ordered list of sections
+                configs = self.env["wizard.section.configuration"].search(
+                    [], order="sequence"
+                )
+                section_order = configs.mapped("section_name")
+                current_index = (
+                    section_order.index(wizard.state)
+                    if wizard.state in section_order
+                    else -1
+                )
 
-            wizard.running_total_price = total
+                # Sum prices up to current section
+                wizard.running_total_price = sum(
+                    selection.price
+                    for selection in wizard.section_selection_ids
+                    if section_order.index(selection.section) <= current_index
+                )
 
     @api.depends("running_total_price")
     def _compute_formatted_total_price(self):
@@ -212,360 +1278,187 @@ class SaleOrderWizard(models.TransientModel):
         for wizard in self:
             wizard.formatted_total_price = f"${wizard.running_total_price:,.2f}"
 
-    @api.model
-    def create(self, vals):
-        # Initialize section_data before creation
-        if "section_data" not in vals or not vals["section_data"]:
-            vals["section_data"] = {}
-        return super().create(vals)
+    def update_section_data(self, values):
+        """Update section data with validation."""
+        try:
+            # Validate and convert price
+            if "price" in values:
+                values["price"] = self._validate_price(
+                    values.get("price"), field_name="section_price"
+                )
 
-    def write(self, vals):
-        if "section_data" in vals:
-            if not isinstance(vals["section_data"], dict):
-                vals["section_data"] = {}
-        return super().write(vals)
+            # Update section selection
+            if self.state not in ["summary", "final"]:
+                current_selection = self.section_selection_ids.filtered(
+                    lambda x: x.section == self.state
+                )
 
-    @api.depends("section_data")
+                selection_vals = {
+                    "product_id": values.get("product_id", False),
+                    "attribute_ids": values.get("attribute_ids", [(5, 0, 0)]),
+                    "price": values.get("price", 0.0),
+                }
+
+                if current_selection:
+                    current_selection.write(selection_vals)
+                else:
+                    self.env["wizard.section.selection"].create(
+                        {"wizard_id": self.id, "section": self.state, **selection_vals}
+                    )
+
+            _logger.info(
+                f"""
+                Section Data Updated:
+                - State: {self.state}
+                - Values: {values}
+                """
+            )
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error updating section data:
+                - State: {self.state}
+                - Values: {values}
+                - Error: {str(e)}
+                """
+            )
+            values["price"] = 0.0
+
+        return values
+
+    def _update_section_price(self):
+        """Update the price for the current section."""
+        self.ensure_one()
+        try:
+            price = 0.0
+            if self.section_product_id:
+                price = float(self.section_product_id.list_price or 0.0)
+
+            self.section_price = price
+
+            # Update section selection if exists
+            current_selection = self.section_selection_ids.filtered(
+                lambda x: x.section == self.state
+            )
+            if current_selection:
+                current_selection.write({"price": price})
+
+        except Exception as e:
+            _logger.error(
+                f"""
+                Error updating section price:
+                - Product: {self.section_product_id.name if self.section_product_id else 'N/A'}
+                - Error: {str(e)}
+                """
+            )
+            self.section_price = 0.0
+
+    @api.depends(
+        "section_selection_ids",
+        "section_selection_ids.section_product_id",
+        "section_selection_ids.price",
+    )
     def _compute_summary(self):
-        """Generate a summary of all section selections."""
+        """Generate a summary of all section selections with prices."""
         for wizard in self:
-            summary_lines = []
-            if isinstance(wizard.section_data, dict):
-                for state, data in wizard.section_data.items():
-                    product_name = (
-                        self.env["product.product"]
-                        .browse(data.get("product_id"))
-                        .display_name
+            try:
+                summary_lines = []
+                total_price = 0.0
+
+                # Get configurations to ensure proper ordering
+                configs = self.env["wizard.section.configuration"].search(
+                    [], order="sequence"
+                )
+                section_order = configs.mapped("section_name")
+
+                # Sort selections according to configuration sequence
+                sorted_selections = wizard.section_selection_ids.sorted(
+                    key=lambda x: (
+                        section_order.index(x.section)
+                        if x.section in section_order
+                        else float("inf")
                     )
-                    attributes = ", ".join(
-                        self.env["product.attribute.value"]
-                        .browse(data.get("attribute_ids", []))
-                        .mapped("name")
-                    )
-                    summary_lines.append(
-                        f"{state.capitalize()}: {product_name} ({attributes})"
-                    )
-            wizard.summary = "\n".join(summary_lines)
+                )
 
-    # def _build_product_domain(self, base_domain=None):
-    #     """Helper method to build product domain."""
-    #     domain = base_domain or [("sale_ok", "=", True)]
+                for selection in sorted_selections:
+                    if selection.section_product_id:
+                        # Format section name
+                        section_display = selection.section.replace("_", " ").title()
 
-    #     def add_category_domain(category_id):
-    #         if category_id:
-    #             domain.append(("categ_id", "child_of", category_id))
-    #         return bool(category_id)
+                        # Get product info
+                        product_name = selection.section_product_id.display_name
 
-    #     def add_laterality_domain():
-    #         if self.laterality in ["left", "right"]:
-    #             domain.append(("laterality", "=", self.laterality))
+                        # Get attribute info if any
+                        attribute_names = selection.section_attribute_ids.mapped("name")
+                        attribute_text = (
+                            f" ({', '.join(attribute_names)})"
+                            if attribute_names
+                            else ""
+                        )
 
-    #     configuration = self.env["wizard.section.configuration"].search(
-    #         [("section_name", "=", self.state)], limit=1
-    #     )
-    #     if configuration and add_category_domain(configuration.product_category_id.id):
-    #         add_laterality_domain()
-    #         return domain
+                        # Format price
+                        price = self._validate_price(selection.price)
+                        price_display = self._format_monetary(price)
 
-    #     category_name = self._state_category_mapping.get(self.state)
-    #     if category_name:
-    #         category = self.env["product.category"].search(
-    #             [("name", "=", category_name)], limit=1
-    #         )
-    #         if category and add_category_domain(category.id):
-    #             add_laterality_domain()
-    #             return domain
+                        # Build summary line
+                        summary_line = f"{section_display}: {product_name}{attribute_text} - {price_display}"
+                        summary_lines.append(summary_line)
 
-    #     return [("id", "=", False)]
+                        # Add to total
+                        total_price += price
 
-    def _build_product_domain(self, base_domain=None):
-        """Helper method to build product domain."""
-        domain = base_domain or [("sale_ok", "=", True)]
+                wizard.summary = (
+                    "\n".join(summary_lines)
+                    if summary_lines
+                    else _("No selections made")
+                )
+                wizard.summary_total = self._validate_price(total_price)
 
-        def add_category_domain(category_id):
-            if category_id:
-                domain.append(("categ_id", "child_of", category_id))
-                _logger.info(f"Added category domain with ID: {category_id}")
-            return bool(category_id)
-
-        # Try configuration first
-        configuration = self.env["wizard.section.configuration"].search(
-            [("section_name", "=", self.state)], limit=1
-        )
-        _logger.info(f"Found configuration for state '{self.state}': {configuration}")
-
-        if configuration:
-            _logger.info(
-                f"Configuration category: {configuration.product_category_id.name}"
-            )
-
-        if configuration and add_category_domain(configuration.product_category_id.id):
-            _logger.info(
-                f"Using configuration category: {configuration.product_category_id.name}"
-            )
-            return domain
-
-        # Fallback to category mapping
-        category_name = self._state_category_mapping.get(self.state)
-        _logger.info(f"Fallback category name: {category_name}")
-
-        if category_name:
-            category = self.env["product.category"].search(
-                [("name", "=", category_name)], limit=1
-            )
-            _logger.info(
-                f"Found fallback category: {category.name if category else 'None'}"
-            )
-
-            if category and add_category_domain(category.id):
-                return domain
-
-        _logger.info("No valid category found, returning empty domain")
-        return [("id", "=", False)]
+            except Exception as e:
+                _logger.error(
+                    f"""
+                    Error computing summary:
+                    - Wizard ID: {wizard.id}
+                    - Error: {str(e)}
+                    """
+                )
+                wizard.summary = _("Error generating summary")
+                wizard.summary_total = 0.0
 
     @api.model
-    def _get_product_domain(self):
-        """Get domain for filtering products based on current state and laterality."""
-        if not self.state or self.state in ["summary", "final"]:
-            return [("id", "=", False)]
+    def default_get(self, fields_list):
+        """Initialize default values."""
+        res = super().default_get(fields_list)
 
-        domain = self._build_product_domain()
-        _logger.debug(f"Product domain for state '{self.state}': {domain}")
-        return domain
+        defaults = {
+            "state": "shell_foundation",
+            "laterality": "bilateral",
+        }
 
-    # @api.onchange("state", "laterality")
-    # def _onchange_state_laterality(self):
-    #     """Clear product selection when state or laterality changes."""
-    #     old_product = self.section_product_id
-    #     self.section_product_id = False
-
-    #     products = self.env["product.product"].search(self._get_product_domain())
-
-    #     _logger.debug(
-    #         f"""
-    #         State/Laterality Change Debug:
-    #         - Old State: {self._origin.state}
-    #         - New State: {self.state}
-    #         - Laterality: {self.laterality}
-    #         - Available Products: {len(products)}
-    #         - Product Names: {products.mapped('name')}
-    #         - Old Product: {old_product.name if old_product else 'None'}
-    #     """
-    #     )
-
-    @api.onchange("state", "laterality")
-    def _onchange_state_laterality(self):
-        """Clear product selection when state or laterality changes."""
-        old_product = self.section_product_id
-        self.section_product_id = False
-
-        # Force compute of available products
-        self._compute_available_products()
+        for field, value in defaults.items():
+            if field in fields_list and field not in res:
+                res[field] = value
 
         _logger.info(
             f"""
-            State/Laterality Change:
-            - State: {self.state}
-            - Laterality: {self.laterality}
-            - Available Products: {len(self.available_product_ids)}
-            - Product Names: {self.available_product_ids.mapped('name')}
-            - Domain: {[('id', 'in', self.available_product_ids.ids)]}
+            Default Get:
+            Fields Requested: {fields_list}
+            Final Values: {res}
+            State: {res.get('state')}
+            Laterality: {res.get('laterality')}
         """
         )
 
-    def action_verify_products(self):
-        """Verify product configuration"""
-        config = self.env["wizard.section.configuration"].search(
-            [("section_name", "=", "shell_foundation")], limit=1
-        )
-        if config and config.product_category_id:
-            products = self.env["product.product"].search(
-                [
-                    ("categ_id", "child_of", config.product_category_id.id),
-                    ("sale_ok", "=", True),
-                ]
-            )
-            _logger.info(
-                f"""
-                Product Verification:
-                Category: {config.product_category_id.name}
-                Products Found: {len(products)}
-                Product Details:
-                {[(p.name, p.categ_id.name, p.sale_ok, p.active) for p in products]}
-            """
-            )
-
-    @api.constrains("state", "section_product_id")
-    def _check_product_category(self):
-        for record in self:
-            if record.section_product_id and record.state not in ["summary", "final"]:
-                category_name = record._state_category_mapping.get(record.state)
-                category = record.env["product.category"].search(
-                    [("name", "=", category_name)], limit=1
-                )
-                if category and record.section_product_id.categ_id != category:
-                    raise ValidationError(
-                        _(
-                            "Selected product must belong to the %s category in %s state."
-                        )
-                        % (category_name, record.state)
-                    )
-
-    @api.depends("state")
-    def _compute_current_category_id(self):
-        """Compute the current category ID based on state"""
-        for record in self:
-            configuration = self.env["wizard.section.configuration"].search(
-                [("section_name", "=", record.state)], limit=1
-            )
-            record.current_category_id = (
-                configuration.product_category_id.id if configuration else False
-            )
-
-    current_category_id = fields.Many2one(
-        "product.category",
-        compute="_compute_current_category_id",
-        help="Current product category based on wizard state",
-    )
-
-    @api.depends("state", "laterality")
-    def _compute_available_products(self):
-        """Compute available products based on current state and laterality"""
-        for record in self:
-            if record.state in ["summary", "final"]:
-                record.available_product_ids = [(5, 0, 0)]
-            else:
-                domain = record._build_product_domain()
-                products = self.env["product.product"].search(domain)
-                record.available_product_ids = products.ids
-                _logger.info(
-                    f"""
-                    Available Products Computed:
-                    - State: {record.state}
-                    - Domain: {domain}
-                    - Products Found: {len(products)}
-                    - Product Names: {products.mapped('name')}
-                """
-                )
-
-    @api.depends("section_product_id")
-    def _compute_available_attribute_values(self):
-        """Compute the available attribute values for the selected product."""
-        for wizard in self:
-            if wizard.section_product_id:
-                # Get attribute values from the product template's attribute lines
-                valid_attr_values = (
-                    self.env["product.template.attribute.value"]
-                    .search(
-                        [
-                            (
-                                "product_tmpl_id",
-                                "=",
-                                wizard.section_product_id.product_tmpl_id.id,
-                            )
-                        ]
-                    )
-                    .mapped("product_attribute_value_id")
-                )
-                wizard.available_attribute_values = valid_attr_values
-            else:
-                wizard.available_attribute_values = self.env["product.attribute.value"]
-
-    @api.onchange("section_product_id", "section_attribute_ids")
-    def _onchange_section_selections(self):
-        self.ensure_one()
-        if not isinstance(self.section_data, dict):
-            self.section_data = {}
-
-    @api.model
-    def _init_record(self, values):
-        """Initialize a new record with proper defaults."""
-        if "section_data" not in values:
-            values["section_data"] = {}
-        if "state" not in values:
-            values["state"] = "shell_foundation"
-        if "laterality" not in values:
-            values["laterality"] = "bilateral"
-        return values
-
-    @api.onchange("section_product_id")
-    def _onchange_section_product_id(self):
-        """Update section attributes when product changes"""
-        self.section_attribute_ids = False  # Clear existing attributes
-        if self.section_product_id:
-            # Get all possible attribute values for this product
-            valid_attr_values = (
-                self.env["product.template.attribute.value"]
-                .search(
-                    [
-                        (
-                            "product_tmpl_id",
-                            "=",
-                            self.section_product_id.product_tmpl_id.id,
-                        )
-                    ]
-                )
-                .mapped("product_attribute_value_id")
-            )
-
-            # Set the domain for section_attribute_ids
-            return {
-                "domain": {
-                    "section_attribute_ids": [("id", "in", valid_attr_values.ids)]
-                }
-            }
-
-    def reset_section(self):
-        """Reset selections for the current section."""
-        _logger.info(f"Resetting section '{self.state}' for wizard {self.id}.")
-        self.section_product_id = False
-        self.section_attribute_ids = [(5, 0, 0)]
-        self.section_price = 0.0
-        if self.state in self.section_data:
-            del self.section_data[self.state]  # Clear saved data for this section
-
-    def _update_section_data(self):
-        """Safely update section data for the current state."""
-        try:
-            if not self.section_data or isinstance(self.section_data, bool):
-                self.section_data = {}
-
-            if self.state:
-                self.section_data[self.state] = {
-                    "section_price": self.section_price,
-                    "product_id": (
-                        self.section_product_id.id if self.section_product_id else False
-                    ),
-                    "attribute_ids": (
-                        self.section_attribute_ids.ids
-                        if self.section_attribute_ids
-                        else []
-                    ),
-                }
-        except Exception as e:
-            _logger.error("Error updating section data: %s", str(e))
-
-    @api.model
-    def default_get(self, fields_list):
-        """Ensure section_data is properly initialized."""
-        defaults = super().default_get(fields_list)
-        if "section_data" in fields_list:
-            _logger.debug(f"Default section_data value: {defaults.get('section_data')}")
-            defaults["section_data"] = {}
-        return defaults
-
-    @api.model
-    def default_get(self, fields_list):
-        defaults = super().default_get(fields_list)
-        if "section_data" in fields_list:
-            defaults["section_data"] = {}
-        return defaults
+        return res
 
     def submit_wizard(self):
         """Submit wizard selections and create sale order lines."""
+        self.ensure_one()
+
+        # Initial validation
         if not self.sale_order_id:
             raise ValidationError(_("No associated sales order found."))
-
         if not self.section_data:
             raise ValidationError(_("The wizard contains no selections to submit."))
 
@@ -574,31 +1467,66 @@ class SaleOrderWizard(models.TransientModel):
         )
         _logger.debug(f"Section Data: {self.section_data}")
 
-        for state, data in self.section_data.items():
-            product_id = data.get("product_id")
-            laterality = data.get("laterality", "N/A")
-            section_price = data.get("section_price", 0.0)
-            description = (
-                f"{state.replace('_', ' ').title()}:\n"
-                f"- Laterality: {laterality}\n"
-                f"- Price: ${section_price:,.2f}"
-            )
+        # Process sections within a savepoint transaction
+        with self.env.cr.savepoint():
+            self._create_order_lines()
 
-            if not product_id:
-                _logger.warning(f"No product found for section {state}. Skipping.")
+        return self._get_redirect_action()
+
+    def _create_order_lines(self):
+        """Create sale order lines for each section."""
+        for state, data in self.section_data.items():
+            if not self._validate_section_data(state, data):
                 continue
 
-            product = self.env["product.product"].browse(product_id)
-            self.env["sale.order.line"].create(
-                {
-                    "order_id": self.sale_order_id.id,
-                    "product_id": product_id,
-                    "product_uom_qty": 1,
-                    "price_unit": section_price,
-                    "name": description,
-                }
-            )
+            try:
+                self._create_single_order_line(state, data)
+            except Exception as e:
+                _logger.error(
+                    f"Error creating sale order line for section {state}: {str(e)}"
+                )
 
+    def _validate_section_data(self, state, data):
+        """Validate section data before creating order line."""
+        product_id = data.get("product_id")
+        if not product_id:
+            _logger.warning(f"No product found for section {state}. Skipping.")
+            return False
+
+        product = self.env["product.product"].browse(product_id)
+        if not product.exists():
+            _logger.error(f"Product with ID {product_id} does not exist")
+            return False
+
+        return True
+
+    def _create_single_order_line(self, state, data):
+        """Create a single sale order line for a section."""
+        section_price = self._validate_price(state, data.get("section_price", 0.0))
+        laterality = data.get("laterality", "N/A")
+
+        description = self._format_line_description(state, laterality, section_price)
+
+        self.env["sale.order.line"].create(
+            {
+                "order_id": self.sale_order_id.id,
+                "product_id": data["product_id"],
+                "product_uom_qty": 1,
+                "price_unit": section_price,
+                "name": description,
+            }
+        )
+
+    def _format_line_description(self, state, laterality, price):
+        """Format the description for the sale order line."""
+        return (
+            f"{state.replace('_', ' ').title()}:\n"
+            f"- Laterality: {laterality}\n"
+            f"- Price: ${price:,.2f}"
+        )
+
+    def _get_redirect_action(self):
+        """Return the redirect action after wizard submission."""
         return {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
