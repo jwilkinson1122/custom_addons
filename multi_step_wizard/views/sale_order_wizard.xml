@@ -14,10 +14,7 @@
                 <field name="state" invisible="1"/>
                 <field name="total_price" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
-                <!-- Add temporary fields -->
-                <field name="temp_product_id" invisible="1"/>
-                <field name="temp_price" invisible="1"/>
-                <field name="temp_state" invisible="1"/>
+                <field name="current_section_selection" invisible="1"/>
             </xpath>
 
             <!-- Rest of the view remains the same -->
@@ -76,7 +73,6 @@
         </field>
     </record>
 
-    <!-- Wizard Action remains the same -->
     <!-- Wizard Action -->
     <record id="action_open_sale_order_wizard" model="ir.actions.act_window">
         <field name="name">Configure Sales Order</field>
@@ -88,5 +84,4 @@
             'form_view_initial_mode': 'edit'
         }</field>
     </record>
-
 </odoo>
