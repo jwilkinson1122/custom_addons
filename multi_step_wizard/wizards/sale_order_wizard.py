@@ -112,6 +112,10 @@ class SaleOrderWizard(models.TransientModel):
     )
 
     # Products
+    temp_product_id = fields.Integer(string="Temporary Product ID")
+    temp_price = fields.Float(string="Temporary Price")
+    temp_state = fields.Char(string="Temporary State")
+
     section_product_id = fields.Many2one(
         "product.product",
         string="Product",
@@ -199,75 +203,115 @@ class SaleOrderWizard(models.TransientModel):
         default=0.0,
     )
 
+    # @api.model
+    # def create(self, values):
+    #     """Initialize a new record with proper defaults and monetary values."""
+    #     try:
+    #         values = self._init_record(values)
+    #         monetary_fields = ["section_price", "total_price"]
+    #         for field in monetary_fields:
+    #             if field in values:
+    #                 values[field] = self._validate_price(
+    #                     values.get(field), field_name=field
+    #                 )
+
+    #         _logger.debug(
+    #             f"""
+    #             Creating record:
+    #             - Values: {values}
+    #             """
+    #         )
+
+    #         return super().create(values)
+
+    #     except Exception as e:
+    #         _logger.error(
+    #             f"""
+    #             Error creating record:
+    #             - Values: {values}
+    #             - Error: {str(e)}
+    #             """
+    #         )
+    #         raise
+
+    # def write(self, vals):
+    #     """Update record with proper handling of sections and monetary values."""
+    #     try:
+    #         if "state" in vals:
+    #             self._handle_state_change(vals)
+
+    #         monetary_fields = ["section_price", "total_price"]
+    #         for field in monetary_fields:
+    #             if field in vals:
+    #                 vals[field] = self._validate_price(
+    #                     vals.get(field), field_name=field
+    #                 )
+
+    #         _logger.debug(
+    #             f"""
+    #             Updating record:
+    #             - ID: {self.id}
+    #             - Values: {vals}
+    #             """
+    #         )
+
+    #         return super().write(vals)
+
+    #     except Exception as e:
+    #         _logger.error(
+    #             f"""
+    #             Error updating record:
+    #             - ID: {self.id}
+    #             - Values: {vals}
+    #             - Error: {str(e)}
+    #             """
+    #         )
+    #         raise
+
     @api.model
-    def create(self, values):
-        """Initialize a new record with proper defaults and monetary values."""
-        try:
-            # Initialize record with defaults
-            values = self._init_record(values)
-
-            # Validate monetary fields
-            monetary_fields = ["section_price", "total_price"]
-            for field in monetary_fields:
-                if field in values:
-                    values[field] = self._validate_price(
-                        values.get(field), field_name=field
-                    )
-
-            _logger.debug(
-                f"""
-                Creating record:
-                - Values: {values}
-                """
+    def create(self, vals):
+        """Override create to handle section selection creation"""
+        record = super().create(vals)
+        if record.temp_product_id and record.temp_state:
+            # Create section selection after wizard is created
+            self.env["wizard.section.selection"].create(
+                {
+                    "wizard_id": record.id,
+                    "product_id": record.temp_product_id,
+                    "price": record.temp_price or 0.0,
+                    "section": record.temp_state,
+                    "attribute_ids": False,
+                }
             )
-
-            return super().create(values)
-
-        except Exception as e:
-            _logger.error(
-                f"""
-                Error creating record:
-                - Values: {values}
-                - Error: {str(e)}
-                """
-            )
-            raise
+        return record
 
     def write(self, vals):
-        """Update record with proper handling of sections and monetary values."""
-        try:
-            # Handle state changes
-            if "state" in vals:
-                self._handle_state_change(vals)
-
-            # Validate monetary fields
-            monetary_fields = ["section_price", "total_price"]
-            for field in monetary_fields:
-                if field in vals:
-                    vals[field] = self._validate_price(
-                        vals.get(field), field_name=field
+        """Override write to handle section selection updates"""
+        res = super().write(vals)
+        if "section_product_id" in vals:
+            for record in self:
+                current_selection = record.section_selection_ids.filtered(
+                    lambda x: x.section == record.state
+                )
+                if current_selection:
+                    current_selection.write(
+                        {
+                            "product_id": record.section_product_id.id,
+                            "price": record.section_price,
+                            "attribute_ids": False,
+                        }
                     )
-
-            _logger.debug(
-                f"""
-                Updating record:
-                - ID: {self.id}
-                - Values: {vals}
-                """
-            )
-
-            return super().write(vals)
-
-        except Exception as e:
-            _logger.error(
-                f"""
-                Error updating record:
-                - ID: {self.id}
-                - Values: {vals}
-                - Error: {str(e)}
-                """
-            )
-            raise
+                elif record.id:  # Only create if record exists
+                    self.env["wizard.section.selection"].create(
+                        {
+                            "wizard_id": record.id,
+                            "product_id": record.section_product_id.id,
+                            "price": record.section_price,
+                            "section": record.state,
+                            "attribute_ids": False,
+                        }
+                    )
+        return res
 
     @api.depends("state")
     def _compute_state_display(self):
@@ -1079,8 +1123,10 @@ class SaleOrderWizard(models.TransientModel):
                 """
             )
 
-            # Update section selection
-            self._update_section_selection()
+            # Store values in temporary fields for later use
+            self.temp_product_id = self.section_product_id.id
+            self.temp_price = self.section_price
+            self.temp_state = self.state
 
             # Return domain for attribute selection
             return self._get_attribute_domain(valid_attr_values)
@@ -1106,10 +1152,17 @@ class SaleOrderWizard(models.TransientModel):
 
     def _update_section_selection(self):
         """Update the section selection record"""
+        self.ensure_one()
+
+        if not self.id:
+            return  # Don't create selection if wizard isn't saved yet
+
         selection_vals = {
+            "wizard_id": self.id,  # Explicitly set wizard_id
             "product_id": self.section_product_id.id,
-            "attribute_ids": False,  # Clear attributes
+            "attribute_ids": False,
             "price": self.section_price,
+            "section": self.state,
         }
 
         current_selection = self.section_selection_ids.filtered(
@@ -1119,9 +1172,7 @@ class SaleOrderWizard(models.TransientModel):
         if current_selection:
             current_selection.write(selection_vals)
         else:
-            self.env["wizard.section.selection"].create(
-                {"wizard_id": self.id, "section": self.state, **selection_vals}
-            )
+            self.env["wizard.section.selection"].create(selection_vals)
 
     def _get_attribute_domain(self, valid_attr_values):
         """Get domain for attribute selection"""
