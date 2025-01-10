@@ -102,7 +102,7 @@
             <form>
                 <header>
                     <div class="center-statusbar">
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" options="{'clickable': true}" />
                     </div>
                 </header>
                 <group>
@@ -126,6 +126,8 @@
                     <button name="open_next" string="Next" type="object" class="btn-primary" invisible="state == 'final'"/>
                     <button name="open_previous" string="Back" type="object" class="btn-secondary" invisible="not allow_back" />
                     <button name="clear_section" string="Clear Section" type="object" class="btn-secondary" invisible="state in ['summary', 'final']"/>
+                    <button name="clear_all" string="Clear All" type="object" class="btn btn-danger" invisible="state != 'summary'"/>
+
                     <button name="submit_wizard" string="Submit" type="object" class="btn-success" invisible="state != 'summary'"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>
                 </footer>
