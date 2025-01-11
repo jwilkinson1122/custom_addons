@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_wizard_form" model="ir.ui.view">
+        <field name="name">sale.order.wizard.form</field>
+        <field name="model">sale.order.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <div class="center-statusbar">
+                        <field name="state" widget="statusbar" clickable="True"/>
+                    </div>
+                </header>
+                <group>
+                    <field name="laterality" widget="radio" options="{'horizontal': true}"/>
+                </group>
+                <group string="Product Selection">
+                    <field name="available_product_ids" invisible="1"/>
+                    <field name="product_id" domain="[('id', 'in', available_product_ids)]"/>
+                    <field name="product_attribute_ids" widget="many2many_tags"/>
+                </group>
+                <group string="Pricing">
+                    <field name="section_price" readonly="1"/>
+                    <field name="total_price" readonly="1"/>
+                </group>
+                <group string="Summary" invisible="state != 'summary'">
+                    <field name="summary" nolabel="1" readonly="1"/>
+                </group>
+                <field name="allow_back" invisible="1"/>
+
+                <footer>
+                    <button name="open_next" string="Next" type="object" class="btn-primary" invisible="state == 'final'"/>
+                    <button name="open_previous" string="Back" type="object" class="btn-secondary" invisible="not allow_back"/>
+                    <button name="clear_section" string="Clear Section" type="object" class="btn-secondary" invisible="state in ['summary', 'final']"/>
+                    <button name="clear_all" string="Clear All" type="object" class="btn btn-danger" invisible="state != 'summary'"/>
+                    <button name="submit_wizard" string="Submit" type="object" class="btn-success" invisible="state != 'summary'"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_sale_order_wizard" model="ir.actions.act_window">
+        <field name="name">Configure Sales Order</field>
+        <field name="res_model">sale.order.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_sale_order_id': active_id,
+            'form_view_initial_mode': 'edit'
+        }</field>
+    </record>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_section_product_tree" model="ir.ui.view">
+        <field name="name">sale.order.section.product.tree</field>
+        <field name="model">sale.order.section.product</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="wizard_id"/>
+                <field name="section_name"/>
+                <field name="product_id"/>
+                <field name="attribute_ids" widget="many2many_tags"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sale_order_section_product_form" model="ir.ui.view">
+        <field name="name">sale.order.section.product.form</field>
+        <field name="model">sale.order.section.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="wizard_id" readonly="1"/>
+                        <field name="section_name"/>
+                        <field name="product_id" domain="[('sale_ok', '=', True)]"/>
+                        <field name="attribute_ids" widget="many2many_tags"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sale_order_section_product" model="ir.actions.act_window">
+        <field name="name">Sale Order Section Products</field>
+        <field name="res_model">sale.order.section.product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_sale_order_section_product" name="Sale Order Section Products" parent="sale.prod_config_main" action="action_sale_order_section_product"/>
+</odoo>

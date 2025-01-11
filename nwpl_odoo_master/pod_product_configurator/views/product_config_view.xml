@@ -122,7 +122,9 @@
         <field name="arch" type="xml">
             <form string="Configuration Sessions" editable="bottom" create="false">
                 <header>
+                    <!-- <field name="state" widget="statusbar" /> -->
                     <field name="state" widget="statusbar" />
+
                 </header>
                 <sheet>
                     <group>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Product Template View -->
+    <!-- Product Template View: Add Laterality -->
     <record id="product_template_form_view_inherit_laterality" model="ir.ui.view">
-        <field name="name">product.template.common.form.inherit.laterality</field>
+        <field name="name">product.template.form.inherit.laterality</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
@@ -17,7 +17,6 @@
         <field name="name">Product Section Configuration</field>
         <field name="res_model">product.section.configuration</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{}</field>
     </record>
 
     <menuitem id="menu_product_section_configuration" name="Product Section Configuration" parent="sale.prod_config_main" sequence="0" action="action_product_section_configuration"/>
@@ -49,7 +48,6 @@
     </record>
 
     <!-- Product Section Selection Views -->
-    <!-- Tree View for Product Section Selection -->
     <record id="view_product_section_selection_tree" model="ir.ui.view">
         <field name="name">product.section.selection.tree</field>
         <field name="model">product.section.selection</field>
@@ -64,7 +62,6 @@
         </field>
     </record>
 
-    <!-- Form View for Product Section Selection -->
     <record id="view_product_section_selection_form" model="ir.ui.view">
         <field name="name">product.section.selection.form</field>
         <field name="model">product.section.selection</field>
@@ -83,16 +80,13 @@
         </field>
     </record>
 
-    <!-- Action to Open Product Section Selections -->
     <record id="action_product_section_selection" model="ir.actions.act_window">
         <field name="name">Product Section Selections</field>
         <field name="res_model">product.section.selection</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- Menu Item for Product Section Selections -->
     <menuitem id="menu_product_section_selection" name="Product Section Selections" parent="base.menu_custom" action="action_product_section_selection"/>
-
 
     <!-- Sale Order Wizard Views -->
     <record id="sale_order_wizard_form" model="ir.ui.view">
@@ -102,9 +96,7 @@
             <form>
                 <header>
                     <div class="center-statusbar">
-                        <!-- <field name="state" widget="statusbar" options="{'clickable': true}" /> -->
-                        <field name="state" widget="statusbar" options="{'clickable': true}" onchange="open_section(state)" />
-
+                        <field name="state" widget="statusbar" options="{'clickable': true}" />
                     </div>
                 </header>
                 <group>
@@ -115,9 +107,6 @@
                     <field name="section_product_id" domain="[('id', 'in', available_product_ids)]"/>
                     <field name="section_attribute_ids" widget="many2many_tags"/>
                 </group>
-                <!-- <group string="Summary" invisible="state != 'summary'">
-                    <field name="summary" nolabel="1" readonly="1" widget="html"/>
-                </group> -->
                 <group string="Pricing">
                     <field name="section_price" readonly="1"/>
                     <field name="total_price" readonly="1"/>
@@ -126,11 +115,12 @@
                     <field name="summary" nolabel="1" readonly="1" widget="html"/>
                 </group>
                 <field name="allow_back" invisible="1" />
+
                 <footer>
                     <button name="open_next" string="Next" type="object" class="btn-primary" invisible="state == 'final'"/>
-                    <button name="open_previous" string="Back" type="object" class="btn-secondary" invisible="not allow_back" />
-                    <button name="clear_section" string="Clear Section" type="object" class="btn-secondary" invisible="state in ['summary', 'final']"/>
-                    <button name="clear_all" string="Clear All" type="object" class="btn btn-danger" invisible="state != 'summary'"/>
+                    <button name="open_previous" string="Back" type="object" class="btn-secondary" invisible="not allow_back"/>
+                    <button name="clear_section" string="Clear Section" type="object" class="btn-secondary" invisibl="state in ['summary', 'final']"/>
+                    <button name="clear_all" string="Clear All" type="object" class="btn-danger" invisible="state != 'summary'"/>
                     <button name="submit_wizard" string="Submit" type="object" class="btn-success" invisible="state != 'summary'"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>
                 </footer>
@@ -148,10 +138,6 @@
             'default_sale_order_id': active_id if active_model == 'sale.order' else False,
             'form_view_initial_mode': 'edit'
         }</field>
-        <!-- <field name="context">{
-            'default_sale_order_id': active_id,
-            'form_view_initial_mode': 'edit'
-        }</field> -->
     </record>
 
     <record id="view_order_form_with_wizard" model="ir.ui.view">
@@ -164,6 +150,4 @@
             </xpath>
         </field>
     </record>
-
-
 </odoo>
