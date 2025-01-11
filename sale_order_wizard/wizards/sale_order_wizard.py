@@ -23,8 +23,11 @@ class SaleOrderWizard(models.TransientModel):
         "product.product", compute="_compute_available_products"
     )
     product_attribute_ids = fields.Many2many("product.attribute.value")
-    # section_price = fields.Float(compute="_compute_section_price")
-    # total_price = fields.Float(compute="_compute_total_price")
+    section_price = fields.Float(
+        compute="_compute_section_price", string="Section Price"
+    )
+    total_price = fields.Float(compute="_compute_total_price", string="Total Price")
+
     summary = fields.Text(compute="_compute_summary")
 
     @api.depends("state")
@@ -63,15 +66,94 @@ class SaleOrderWizard(models.TransientModel):
 
     @api.depends("section_product_ids.price")
     def _compute_total_price(self):
+        """Compute the total price for the entire wizard."""
         for record in self:
             record.total_price = sum(
-                selection.price for selection in record.section_product_ids
+                section.price for section in record.section_product_ids
             )
+
+    # def _save_section(self):
+    #     """Save current section products and their attributes."""
+    #     existing_section = self.env["sale.order.section.product"].search(
+    #         [("wizard_id", "=", self.id), ("section_name", "=", self.state)], limit=1
+    #     )
+    #     if existing_section:
+    #         existing_section.write(
+    #             {
+    #                 "product_ids": [(6, 0, self.available_product_ids.ids)],
+    #                 "product_attribute_ids": [(6, 0, self.product_attribute_ids.ids)],
+    #             }
+    #         )
+    #     else:
+    #         self.env["sale.order.section.product"].create(
+    #             {
+    #                 "wizard_id": self.id,
+    #                 "section_name": self.state,
+    #                 "product_ids": [(6, 0, self.available_product_ids.ids)],
+    #                 "product_attribute_ids": [(6, 0, self.product_attribute_ids.ids)],
+    #             }
+    #         )
+
+    def _save_section(self):
+        existing_section = self.env["sale.order.section.product"].search(
+            [("wizard_id", "=", self.id), ("section_name", "=", self.state)], limit=1
+        )
+        # Update or create section product
+        if existing_section:
+            existing_section.write(
+                {
+                    "product_ids": [
+                        (6, 0, self.section_product_ids.mapped("product_ids").ids)
+                    ],
+                    "product_attribute_ids": [
+                        (
+                            6,
+                            0,
+                            self.section_product_ids.mapped(
+                                "product_attribute_ids"
+                            ).ids,
+                        )
+                    ],
+                }
+            )
+        else:
+            self.env["sale.order.section.product"].create(
+                {
+                    "wizard_id": self.id,
+                    "section_name": self.state,
+                    "product_ids": [
+                        (6, 0, self.section_product_ids.mapped("product_ids").ids)
+                    ],
+                    "product_attribute_ids": [
+                        (
+                            6,
+                            0,
+                            self.section_product_ids.mapped(
+                                "product_attribute_ids"
+                            ).ids,
+                        )
+                    ],
+                }
+            )
+
+    # @api.depends("state", "section_product_ids")
+    # def _compute_summary(self):
+    #     for record in self:
+    #         record.summary = "\n".join(
+    #             f"{selection.section_name}: {selection.product_id.name} - {selection.price}"
+    #             for selection in record.section_product_ids
+    #         )
 
     @api.depends("state", "section_product_ids")
     def _compute_summary(self):
         for record in self:
-            record.summary = "\n".join(
-                f"{selection.section_name}: {selection.product_id.name} - {selection.price}"
-                for selection in record.section_product_ids
-            )
+            summary_lines = []
+            for section in record.section_product_ids:
+                summary_lines.append(f"{section.section_name}:")
+                for product in section.product_ids:
+                    summary_lines.append(f"  - {product.display_name}")
+                for attr in section.product_attribute_ids:
+                    summary_lines.append(
+                        f"    - Attribute: {attr.attribute_id.name} (+{attr.price_extra})"
+                    )
+            record.summary = "\n".join(summary_lines)

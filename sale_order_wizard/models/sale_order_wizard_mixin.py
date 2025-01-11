@@ -13,12 +13,6 @@ class SaleOrderWizardMixin(models.AbstractModel):
     state = fields.Selection(selection="_get_dynamic_states", required=True)
     allow_back = fields.Boolean(compute="_compute_allow_back")
 
-    # state = fields.Selection(
-    #     selection=lambda self: self._get_dynamic_states(),
-    #     default=lambda self: self._get_initial_state(),
-    #     required=True,
-    # )
-    # allow_back = fields.Boolean(compute="_compute_allow_back")
     section_data = fields.Json(
         string="Section Data", default={}, required=False, copy=False
     )
@@ -33,48 +27,21 @@ class SaleOrderWizardMixin(models.AbstractModel):
         required=True,
     )
 
-    section_price = fields.Float(compute="_compute_section_price")
-    total_price = fields.Float(compute="_compute_total_price")
-
-    # @api.model
-    # def _get_dynamic_states(self):
-    #     """Fetch states dynamically from SaleOrderSection."""
-    #     sections = self.env["sale.order.section"].search([], order="sequence")
-    #     return [
-    #         (section.section_name, section.description or section.section_name)
-    #         for section in sections
-    #     ]
-
     @api.model
     def _get_dynamic_states(self):
-        """Fetch states dynamically from SaleOrderSection."""
         sections = self.env["sale.order.section"].search([], order="sequence")
         if not sections:
-            raise ValidationError(_("No sections found in SaleOrderSection."))
+            _logger.warning("No sections found in SaleOrderSection.")
         return [
             (section.section_name, section.description or section.section_name)
             for section in sections
         ]
 
-    # @api.model
-    # def _get_initial_state(self):
-    #     """Get the first state based on sequence."""
-    #     first_section = self.env["sale.order.section"].search(
-    #         [], order="sequence", limit=1
-    #     )
-    #     return first_section.section_name if first_section else None
-
-    # @api.depends("state")
-    # def _compute_allow_back(self):
-    #     """Determine if 'Back' is allowed based on the current state."""
-    #     first_state = self._get_initial_state()
-    #     for record in self:
-    #         record.allow_back = record.state != first_state
-
     @api.depends("state")
     def _compute_allow_back(self):
-        """Determine if 'Back' is allowed based on the current state."""
-        first_state = self._get_dynamic_states()[0][0]
+        first_state = (
+            self._get_dynamic_states()[0][0] if self._get_dynamic_states() else None
+        )
         for record in self:
             record.allow_back = record.state != first_state
 
