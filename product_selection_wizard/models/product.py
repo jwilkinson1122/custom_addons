@@ -17,19 +17,16 @@ class ProductTemplate(models.Model):
         help="Specifies if the product is for left side, right side, or bilateral use",
     )
 
+    section_id = fields.Many2one(
+        "product.section.configuration",
+        string="Section",
+        help="Specify the section this product belongs to.",    
+        )
+    
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
-
-    laterality = fields.Selection(
-        [
-            ("left", "Left Only"),
-            ("right", "Right Only"),
-            ("bilateral", "Bilateral"),
-        ],
-        string="Laterality",
-        help="Specifies if the product is for left side, right side, or bilateral use",
-    )
 
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):

@@ -5,18 +5,108 @@ from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
+class SaleOrderWizard(models.TransientModel):
+    _name = "sale.order.wizard"
+    _description = "Sale Order Wizard"
+
+    sale_order_id = fields.Many2one(
+        "sale.order", default=lambda self: self.env.context.get("active_id")
+    )
+    total_price = fields.Float(compute="_compute_total_price", string="Total Price")
+    section_configurations = fields.One2many(
+        "product.section.configuration", compute="_compute_section_configurations"
+    )
+    section_selection_ids = fields.One2many(
+        "product.section.selection", "wizard_id", string="Section Selections"
+    )
+
+    available_attribute_ids = fields.Many2many(
+        "product.attribute.value",
+        compute="_compute_available_attributes",
+        string="Available Attributes",
+    )
+
+    @api.depends("section_selection_ids.product_id")
+    def _compute_available_attributes(self):
+        """Compute available attributes based on the selected product."""
+        for record in self:
+            selected_products = record.section_selection_ids.mapped("product_id")
+            if selected_products:
+                attribute_values = self.env["product.template.attribute.value"].search([
+                    ("product_tmpl_id", "in", selected_products.mapped("product_tmpl_id").ids)
+                ]).mapped("product_attribute_value_id")
+                record.available_attribute_ids = attribute_values
+            else:
+                record.available_attribute_ids = [(5, 0, 0)]
+
+    @api.depends()
+    def _compute_section_configurations(self):
+        """Fetch all section configurations."""
+        for record in self:
+            record.section_configurations = self.env[
+                "product.section.configuration"
+            ].search([], order="sequence")
+
+    @api.depends("section_selection_ids.price")
+    def _compute_total_price(self):
+        """Compute total price from all sections."""
+        for record in self:
+            record.total_price = sum(
+                selection.price for selection in record.section_selection_ids
+            )
+
+    @api.model
+    def default_get(self, fields):
+        res = super(SaleOrderWizard, self).default_get(fields)
+        configurations = self.env["product.section.configuration"].search([], order="sequence")
+        section_data = [
+            {"wizard_id": self.id, "section_name": config.section_name}
+            for config in configurations
+        ]
+        res["section_selection_ids"] = [(0, 0, data) for data in section_data]
+        return res
+
+    def clear_all(self):
+        """Clear all sections."""
+        self.section_selection_ids.unlink()
+        self.total_price = 0.0
+
+    def submit_wizard(self):
+        """Validate and submit the wizard."""
+        required_sections = self.section_configurations.filtered("is_required")
+        for config in required_sections:
+            if not any(
+                selection.section_name == config.section_name
+                for selection in self.section_selection_ids
+            ):
+                raise ValidationError(
+                    _("The section '%s' is required.") % config.description
+                )
+        _logger.info(f"Wizard {self.id} submitted successfully.")
+        return {"type": "ir.actions.act_window_close"}
+
 class ProductSectionConfiguration(models.Model):
     _name = "product.section.configuration"
     _description = "Product Section Configuration"
     _order = "sequence"
 
     sequence = fields.Integer(default=10)
-    section_name = fields.Selection(
-        selection=lambda self: self.env["sale.order.wizard"]._selection_state(),
-        required=True,
+    section_name = fields.Char(string="Section Identifier", required=True)
+    description = fields.Text(string="Section Description")
+    product_category_id = fields.Many2one(
+        "product.category", string="Product Category", required=True
     )
-    product_category_id = fields.Many2one("product.category", required=True)
+    is_required = fields.Boolean(string="Is Required", default=False)
 
+    _sql_constraints = [('unique_section_name', 'unique(section_name)', 'Section name must be unique.')]
+
+    def name_get(self):
+        """Display section name and description."""
+        result = []
+        for record in self:
+            name = f"{record.description or record.section_name}"
+            result.append((record.id, name))
+        return result
 
 class ProductSectionSelection(models.TransientModel):
     _name = "product.section.selection"
@@ -25,237 +115,60 @@ class ProductSectionSelection(models.TransientModel):
     wizard_id = fields.Many2one(
         "sale.order.wizard", string="Wizard", required=True, ondelete="cascade"
     )
-    section_name = fields.Selection(
-        selection=lambda self: self.env["sale.order.wizard"]._selection_state(),
-        string="Section Name",
-        required=True,
-    )
+    section_name = fields.Char(string="Section Name", required=True)
+
     product_id = fields.Many2one(
-        "product.product", string="Product", required=True, ondelete="restrict"
-    )
-    attribute_ids = fields.Many2many("product.attribute.value", string="Attributes")
-    price = fields.Float(string="Price", digits="Product Price", required=True)
-
-
-class SaleOrderWizard(models.TransientModel):
-    _name = "sale.order.wizard"
-    _description = "Sale Order Wizard"
-
-    # Fields
-    state = fields.Selection(
-        selection="_selection_state", default="shell_foundation", required=True
-    )
-    allow_back = fields.Boolean(compute="_compute_allow_back")
-    laterality = fields.Selection(
-        [
-            ("left", "Left Only"),
-            ("right", "Right Only"),
-            ("bilateral", "Bilateral"),
-        ],
-        string="Laterality",
-        default="bilateral",
+        "product.product",
+        string="Product",
         required=True,
+        domain="[('product_tmpl_id.section_id.section_name', '=', section_name)]",
     )
-    sale_order_id = fields.Many2one(
-        "sale.order", default=lambda self: self.env.context.get("active_id")
-    )
-    section_product_id = fields.Many2one(
-        "product.product", domain="[('id', 'in', available_product_ids)]"
-    )
-    available_product_ids = fields.Many2many(
-        "product.product", compute="_compute_available_products"
-    )
-    section_attribute_ids = fields.Many2many("product.attribute.value")
-    section_price = fields.Float(compute="_compute_section_price", store=True)
-    total_price = fields.Float(compute="_compute_total_price", store=True)
-    section_selection_ids = fields.One2many(
-        "product.section.selection", "wizard_id", string="Section Selections"
-    )
-    summary = fields.Text(compute="_compute_summary")
 
-    # Selection States
-    @api.model
-    def _selection_state(self):
-        return [
-            ("shell_foundation", "Shell / Foundation"),
-            ("arch_height", "Arch Height"),
-            ("top_cover", "Top Cover"),
-            ("bottom_cover", "X-Guard"),
-            ("cushion", "Cushion"),
-            ("extension", "Extension"),
-            ("options", "Options"),
-            ("summary", "Summary"),
-            ("final", "Final"),
-        ]
+    attribute_ids = fields.Many2many(
+        "product.attribute.value",
+        string="Attributes",
+        domain="[('id', 'in', available_attribute_ids)]",
+    )
 
-    # Compute Methods
-    @api.depends("state")
-    def _compute_allow_back(self):
+    available_attribute_ids = fields.Many2many(
+        "product.attribute.value",
+        compute="_compute_available_attributes",
+        store=False,
+    )
+
+    @api.depends("product_id")
+    def _compute_available_attributes(self):
+        """Compute the available attributes for the selected product."""
         for record in self:
-            record.allow_back = record.state != "shell_foundation"
+            if record.product_id:
+                ptavs = self.env["product.template.attribute.value"].search(
+                    [("product_tmpl_id", "=", record.product_id.product_tmpl_id.id)]
+                )
+                record.available_attribute_ids = ptavs.mapped(
+                    "product_attribute_value_id"
+                )
+            else:
+                record.available_attribute_ids = self.env[
+                    "product.attribute.value"
+                ].browse([])
 
-    @api.depends("section_product_id", "section_attribute_ids")
-    def _compute_section_price(self):
-        """Calculate the section price based on the product and attributes."""
+    price = fields.Float(string="Price", compute="_compute_price", store=True)
+
+    @api.depends("product_id", "attribute_ids")
+    def _compute_price(self):
+        """Calculate the price for the selected product and attributes."""
         for record in self:
-            if not record.section_product_id:
-                record.section_price = 0.0
-                continue
+            product_price = record.product_id.list_price if record.product_id else 0.0
 
-            base_price = record.section_product_id.list_price or 0.0
-            attribute_extra_price = sum(
-                ptav.price_extra
-                for ptav in self.env["product.template.attribute.value"].search(
+            attribute_extra_price = 0.0
+            if record.product_id:
+                ptav_ids = self.env["product.template.attribute.value"].search(
                     [
-                        (
-                            "product_tmpl_id",
-                            "=",
-                            record.section_product_id.product_tmpl_id.id,
-                        ),
-                        (
-                            "product_attribute_value_id",
-                            "in",
-                            record.section_attribute_ids.ids,
-                        ),
+                        ("product_tmpl_id", "=", record.product_id.product_tmpl_id.id),
+                        ("product_attribute_value_id", "in", record.attribute_ids.ids),
                     ]
                 )
-            )
-            record.section_price = base_price + attribute_extra_price
+                attribute_extra_price = sum(ptav.price_extra for ptav in ptav_ids)
 
-            _logger.debug(
-                f"Computed section price: {record.section_price} "
-                f"(Base: {base_price}, Extra: {attribute_extra_price})"
-            )
+            record.price = product_price + attribute_extra_price
 
-    @api.depends("section_selection_ids", "section_price")
-    def _compute_total_price(self):
-        for record in self:
-            total = sum(selection.price for selection in record.section_selection_ids)
-            record.total_price = total + record.section_price
-            _logger.debug(f"Total price computed: {record.total_price}")
-
-    @api.depends("section_selection_ids")
-    def _compute_summary(self):
-        """Generate a summary of all section selections."""
-        for record in self:
-            record.summary = "\n".join(
-                f"{sel.section_name}: {sel.product_id.name} - {sel.price}"
-                for sel in record.section_selection_ids
-            )
-
-    @api.depends("state")
-    def _compute_available_products(self):
-        """Determine available products based on the current section configuration."""
-        for record in self:
-            config = self.env["product.section.configuration"].search(
-                [("section_name", "=", record.state)], limit=1
-            )
-            record.available_product_ids = (
-                self.env["product.product"].search(
-                    [("categ_id", "child_of", config.product_category_id.id)]
-                )
-                if config
-                else self.env["product.product"].browse([])
-            )
-
-    # State Transition Methods
-    def open_section(self, section_name):
-        """Save the current section and load the specified section."""
-        self._save_section()
-        self.state = section_name
-        self._load_section()
-
-    def _save_section(self):
-        """Save the current section selections."""
-        self.ensure_one()
-        if not self.id:
-            self = self.create(
-                {"state": self.state, "sale_order_id": self.sale_order_id.id}
-            )
-
-        selection = self.env["product.section.selection"].search(
-            [
-                ("wizard_id", "=", self.id),
-                ("section_name", "=", self.state),
-            ],
-            limit=1,
-        )
-
-        if self.section_product_id or self.section_attribute_ids:
-            vals = {
-                "wizard_id": self.id,
-                "section_name": self.state,
-                "product_id": self.section_product_id.id,
-                "attribute_ids": [(6, 0, self.section_attribute_ids.ids)],
-                "price": self.section_price,
-            }
-            (
-                selection.write(vals)
-                if selection
-                else self.env["product.section.selection"].create(vals)
-            )
-        elif selection:
-            selection.unlink()
-
-    def _load_section(self):
-        """Load the saved selection for the current section."""
-        selection = self.env["product.section.selection"].search(
-            [
-                ("wizard_id", "=", self.id),
-                ("section_name", "=", self.state),
-            ],
-            limit=1,
-        )
-        if selection:
-            self.section_product_id = selection.product_id
-            self.section_attribute_ids = [(6, 0, selection.attribute_ids.ids)]
-            self.section_price = selection.price
-        else:
-            self.section_product_id = False
-            self.section_attribute_ids = [(5, 0, 0)]
-            self.section_price = 0.0
-
-    def _reopen_wizard(self):
-        """Reopen the wizard to refresh the UI."""
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": self._name,
-            "view_mode": "form",
-            "res_id": self.id,
-            "target": "new",
-        }
-
-    # Wizard Actions
-    def open_next(self):
-        """Navigate to the next section."""
-        states = [state[0] for state in self._selection_state()]
-        self.open_section(states[min(states.index(self.state) + 1, len(states) - 1)])
-
-    def open_previous(self):
-        """Navigate to the previous section."""
-        states = [state[0] for state in self._selection_state()]
-        self.open_section(states[max(states.index(self.state) - 1, 0)])
-
-    def clear_section(self):
-        """Clear current section selections."""
-        self.section_product_id = False
-        self.section_attribute_ids = [(5, 0, 0)]
-        self.section_price = 0.0
-        self.env["product.section.selection"].search(
-            [
-                ("wizard_id", "=", self.id),
-                ("section_name", "=", self.state),
-            ]
-        ).unlink()
-
-    def clear_all(self):
-        """Reset all sections and restart the wizard."""
-        self.section_selection_ids.unlink()
-        self.state = "shell_foundation"
-        return self._reopen_wizard()
-
-    def submit_wizard(self):
-        """Finalize and submit the wizard."""
-        self._save_section()
-        _logger.info(f"Wizard {self.id} submitted successfully.")
-        return {"type": "ir.actions.act_window_close"}

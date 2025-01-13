@@ -12,7 +12,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        "data/product_category_data.xml",
+        # "data/product_category_data.xml",
         "data/product_section_configuration_data.xml",
         "views/product_selection_wizard.xml",
     ],

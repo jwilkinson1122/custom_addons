@@ -23,36 +23,43 @@
 
         <record id="sale_order_section_shell_foundation" model="sale.order.section">
             <field name="section_name">shell_foundation</field>
+            <field name="sequence">1</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="sale_order_section_arch_height" model="sale.order.section">
             <field name="section_name">arch_height</field>
+            <field name="sequence">2</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="sale_order_section_top_cover" model="sale.order.section">
             <field name="section_name">top_cover</field>
+            <field name="sequence">3</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="sale_order_section_bottom_cover" model="sale.order.section">
             <field name="section_name">bottom_cover</field>
+            <field name="sequence">4</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="sale_order_section_cushion" model="sale.order.section">
             <field name="section_name">cushion</field>
+            <field name="sequence">5</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="sale_order_section_extension" model="sale.order.section">
             <field name="section_name">extension</field>
+            <field name="sequence">6</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="sale_order_section_options" model="sale.order.section">
             <field name="section_name">options</field>
+            <field name="sequence">7</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 

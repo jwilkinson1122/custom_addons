@@ -1,46 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Shell Foundation Configuration -->
-        <record id="wizard_config_shell_foundation" model="product.section.configuration">
+
+        <!-- Product Categories -->
+        <record id="product_category_custom_device" model="product.category">
+            <field name="parent_id" ref="product.product_category_all" />
+            <field name="name">Custom</field>
+        </record>
+
+        <record id="product_category_otc_device" model="product.category">
+            <field name="parent_id" ref="product.product_category_all" />
+            <field name="name">OTC</field>
+        </record>
+
+        <record id="product_category_brace_device" model="product.category">
+            <field name="parent_id" ref="product.product_category_all" />
+            <field name="name">Brace</field>
+        </record>
+
+        <!-- Product Sections -->
+        <record id="product_section_shell_foundation" model="product.section.configuration">
             <field name="section_name">shell_foundation</field>
-            <field name="product_category_id" ref="product_category_shell_foundation"/>
+            <field name="description">Shell / Foundation</field>
+            <field name="sequence">1</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- Arch Height Configuration -->
-        <record id="wizard_config_arch_height" model="product.section.configuration">
+        <record id="product_section_arch_height" model="product.section.configuration">
             <field name="section_name">arch_height</field>
-            <field name="product_category_id" ref="product_category_arch_height"/>
+            <field name="description">Arch Height</field>
+            <field name="sequence">2</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- Top Cover Configuration -->
-        <record id="wizard_config_top_cover" model="product.section.configuration">
+        <record id="product_section_top_cover" model="product.section.configuration">
             <field name="section_name">top_cover</field>
-            <field name="product_category_id" ref="product_category_top_cover"/>
+            <field name="description">Top Cover</field>
+            <field name="sequence">3</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- Bottom Cover Configuration -->
-        <record id="wizard_config_bottom_cover" model="product.section.configuration">
+        <record id="product_section_bottom_cover" model="product.section.configuration">
             <field name="section_name">bottom_cover</field>
-            <field name="product_category_id" ref="product_category_bottom_cover"/>
+            <field name="description">X-Guard</field>
+            <field name="sequence">4</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- Cushion Configuration -->
-        <record id="wizard_config_cushion" model="product.section.configuration">
+        <record id="product_section_cushion" model="product.section.configuration">
             <field name="section_name">cushion</field>
-            <field name="product_category_id" ref="product_category_cushion"/>
+            <field name="description">Cushion</field>
+            <field name="sequence">5</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- Extension Configuration -->
-        <record id="wizard_config_extension" model="product.section.configuration">
+        <record id="product_section_extension" model="product.section.configuration">
             <field name="section_name">extension</field>
-            <field name="product_category_id" ref="product_category_extension"/>
+            <field name="description">Extension</field>
+            <field name="sequence">6</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
-        <!-- Options Configuration -->
-        <record id="wizard_config_options" model="product.section.configuration">
+        <record id="product_section_options" model="product.section.configuration">
             <field name="section_name">options</field>
-            <field name="product_category_id" ref="product_category_options"/>
+            <field name="description">Options</field>
+            <field name="sequence">7</field>
+            <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
+
     </data>
 </odoo>

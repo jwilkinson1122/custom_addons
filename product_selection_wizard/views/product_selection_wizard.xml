@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Product Template View: Add Laterality -->
-    <record id="product_template_form_view_inherit_laterality" model="ir.ui.view">
-        <field name="name">product.template.form.inherit.laterality</field>
+
+    <record id="product_template_form_view_inherit_section" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.section</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_general']" position="inside">
-                <field name="laterality"/>
+                <field name="section_id"/>
             </xpath>
         </field>
     </record>
@@ -47,88 +47,38 @@
         </field>
     </record>
 
-    <!-- Product Section Selection Views -->
-    <record id="view_product_section_selection_tree" model="ir.ui.view">
-        <field name="name">product.section.selection.tree</field>
-        <field name="model">product.section.selection</field>
-        <field name="arch" type="xml">
-            <tree string="Product Section Selections">
-                <field name="wizard_id"/>
-                <field name="section_name"/>
-                <field name="product_id"/>
-                <field name="attribute_ids" widget="many2many_tags"/>
-                <field name="price"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_product_section_selection_form" model="ir.ui.view">
-        <field name="name">product.section.selection.form</field>
-        <field name="model">product.section.selection</field>
-        <field name="arch" type="xml">
-            <form string="Product Section Selection">
-                <sheet>
-                    <group>
-                        <field name="wizard_id" readonly="1"/>
-                        <field name="section_name" readonly="1"/>
-                        <field name="product_id" domain="[('sale_ok', '=', True)]"/>
-                        <field name="attribute_ids" widget="many2many_tags"/>
-                        <field name="price"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="action_product_section_selection" model="ir.actions.act_window">
-        <field name="name">Product Section Selections</field>
-        <field name="res_model">product.section.selection</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <menuitem id="menu_product_section_selection" name="Product Section Selections" parent="base.menu_custom" action="action_product_section_selection"/>
-
-    <!-- Sale Order Wizard Views -->
+    <!-- Sale Order Wizard View -->
     <record id="sale_order_wizard_form" model="ir.ui.view">
         <field name="name">sale.order.wizard.form</field>
         <field name="model">sale.order.wizard</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <div class="center-statusbar">
-                        <field name="state" widget="statusbar" options="{'clickable': true}" />
-                    </div>
-                </header>
                 <group>
-                    <field name="laterality" widget="radio" options="{'horizontal': true}"/>
+                    <field name="sale_order_id" readonly="1"/>
+                    <!-- <field name="available_attribute_ids" column_invisible="True"/> -->
                 </group>
-                <group string="Product Selection" invisible="state == 'summary'">
-                    <field name="available_product_ids" invisible="1"/>
-                    <field name="section_product_id" domain="[('id', 'in', available_product_ids)]"/>
-                    <field name="section_attribute_ids" widget="many2many_tags"/>
-                </group>
-                <group string="Pricing">
-                    <field name="section_price" readonly="1"/>
-                    <field name="total_price" readonly="1"/>
-                </group>
-                <group string="Summary" invisible="state != 'summary'">
-                    <field name="summary" nolabel="1" readonly="1" widget="html"/>
-                </group>
-                <field name="allow_back" invisible="1" />
-
+                <notebook>
+                    <page string="Sections">
+                        <field name="section_selection_ids">
+                            <tree editable="bottom" string="Sections">
+                                <field name="section_name" readonly="1"/>
+                                <field name="product_id"/>
+                                <field name="available_attribute_ids" column_invisible="True"/>
+                                <field name="attribute_ids" domain="[('id', 'in', available_attribute_ids)]" widget="many2many_tags"/>
+                                <field name="price" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
                 <footer>
-                    <button name="open_next" string="Next" type="object" class="btn-primary" invisible="state == 'final'"/>
-                    <button name="open_previous" string="Back" type="object" class="btn-secondary" invisible="not allow_back"/>
-                    <button name="clear_section" string="Clear Section" type="object" class="btn-secondary" invisibl="state in ['summary', 'final']"/>
-                    <button name="clear_all" string="Clear All" type="object" class="btn-danger" invisible="state != 'summary'"/>
-                    <button name="submit_wizard" string="Submit" type="object" class="btn-success" invisible="state != 'summary'"/>
+                    <button name="clear_all" string="Clear All" type="object" class="btn-danger"/>
+                    <button name="submit_wizard" string="Submit" type="object" class="btn-success"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>
                 </footer>
             </form>
         </field>
     </record>
 
-    <!-- Sale Order Form with Wizard Button -->
     <record id="action_open_sale_order_wizard" model="ir.actions.act_window">
         <field name="name">Configure Sales Order</field>
         <field name="res_model">sale.order.wizard</field>
@@ -140,6 +90,7 @@
         }</field>
     </record>
 
+    <!-- Button to Open Wizard in Sale Order -->
     <record id="view_order_form_with_wizard" model="ir.ui.view">
         <field name="name">sale.order.form.wizard.button</field>
         <field name="model">sale.order</field>
@@ -150,4 +101,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

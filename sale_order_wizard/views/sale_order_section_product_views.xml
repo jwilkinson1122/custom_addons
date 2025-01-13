@@ -20,7 +20,8 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="wizard_id" readonly="1"/>
+                        <!-- <field name="wizard_id" readonly="1"/> -->
+                        <field name="wizard_id"/>
                         <field name="section_name"/>
                         <field name="product_ids" widget="many2many_tags" domain="[('sale_ok', '=', True)]"/>
                         <field name="product_attribute_ids" widget="one2many" context="{'default_section_product_id': active_id}"/>
