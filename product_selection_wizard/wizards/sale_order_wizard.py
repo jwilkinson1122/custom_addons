@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
+
 class SaleOrderWizard(models.TransientModel):
     _name = "sale.order.wizard"
     _description = "Sale Order Wizard"
@@ -35,9 +36,19 @@ class SaleOrderWizard(models.TransientModel):
         for record in self:
             product_ids = record.section_selection_ids.mapped("product_id")
             if product_ids:
-                attribute_values = self.env["product.template.attribute.value"].search([
-                    ("product_tmpl_id", "in", product_ids.mapped("product_tmpl_id").ids)
-                ]).mapped("product_attribute_value_id")
+                attribute_values = (
+                    self.env["product.template.attribute.value"]
+                    .search(
+                        [
+                            (
+                                "product_tmpl_id",
+                                "in",
+                                product_ids.mapped("product_tmpl_id").ids,
+                            )
+                        ]
+                    )
+                    .mapped("product_attribute_value_id")
+                )
                 record.available_attribute_ids = attribute_values
             else:
                 record.available_attribute_ids = [(5, 0, 0)]
@@ -46,21 +57,26 @@ class SaleOrderWizard(models.TransientModel):
     def _compute_section_configurations(self):
         """Fetch all section configurations."""
         for record in self:
-            record.section_configurations = self.env["product.section.configuration"].search([], order="sequence")
+            record.section_configurations = self.env[
+                "product.section.configuration"
+            ].search([], order="sequence")
 
     @api.depends("section_selection_ids.price")
     def _compute_total_price(self):
         """Compute the total price from all sections."""
         for record in self:
-            record.total_price = sum(selection.price for selection in record.section_selection_ids)
+            record.total_price = sum(
+                selection.price for selection in record.section_selection_ids
+            )
 
     @api.model
     def default_get(self, fields):
         res = super(SaleOrderWizard, self).default_get(fields)
-        configurations = self.env["product.section.configuration"].search([], order="sequence")
+        configurations = self.env["product.section.configuration"].search(
+            [], order="sequence"
+        )
         section_data = [
-            {"wizard_id": self.id, "section_id": config.id}
-            for config in configurations
+            {"wizard_id": self.id, "section_id": config.id} for config in configurations
         ]
         res["section_selection_ids"] = [(0, 0, data) for data in section_data]
         return res
@@ -74,47 +90,53 @@ class SaleOrderWizard(models.TransientModel):
         """Validate and submit the wizard."""
         required_sections = self.section_configurations.filtered("is_required")
         for config in required_sections:
-            if not any(selection.section_id == config for selection in self.section_selection_ids):
-                raise ValidationError(_("The section '%s' is required.") % config.description)
+            if not any(
+                selection.section_id == config
+                for selection in self.section_selection_ids
+            ):
+                raise ValidationError(
+                    _("The section '%s' is required.") % config.description
+                )
         _logger.info(f"Wizard {self.id} submitted successfully.")
         return {"type": "ir.actions.act_window_close"}
+
 
 class ProductSectionConfiguration(models.Model):
     _name = "product.section.configuration"
     _description = "Product Section Configuration"
     _order = "sequence"
+    _rec_name = "description"
 
     sequence = fields.Integer(default=10)
     section_id = fields.Char(string="Section Identifier", required=True)
+    section_name = fields.Char(string="Section Name", required=False)
     description = fields.Text(string="Section Description")
     product_category_id = fields.Many2one(
         "product.category", string="Product Category", required=True
     )
     is_required = fields.Boolean(string="Is Required", default=False)
     product_ids = fields.One2many(
-        "product.template", "section_id", string="Products", help="Products in this section."
+        "product.template",
+        "section_id",
+        string="Products",
+        help="Products in this section.",
     )
 
     _sql_constraints = [
-        ("unique_section_id", "unique(section_id)", "Section identifier must be unique.")
+        (
+            "unique_section_id",
+            "unique(section_id)",
+            "Section identifier must be unique.",
+        )
     ]
 
-    # def name_get(self):
-    #     """Customize how the section name is displayed."""
-    #     result = []
-    #     for record in self:
-    #         name = f"{record.description or 'No Description'}"
-    #         result.append((record.id, name))
-    #     return result
-    
     def name_get(self):
-        """Customize how the section name is displayed."""
+        """Override name_get to provide a custom display."""
         result = []
         for record in self:
-            name = f"[{record.section_id}] {record.description or 'No Description'}"
+            name = record.description or record.section_name or f"[{record.section_id}]"
             result.append((record.id, name))
         return result
-
 
 
 class ProductSectionSelection(models.TransientModel):
@@ -146,9 +168,10 @@ class ProductSectionSelection(models.TransientModel):
         store=False,  # This is a computed field; no need to store it
     )
 
-
     attribute_ids = fields.Many2many(
-        "product.attribute.value", string="Attributes", domain="[('id', 'in', available_attribute_ids)]"
+        "product.attribute.value",
+        string="Attributes",
+        domain="[('id', 'in', available_attribute_ids)]",
     )
     available_attribute_ids = fields.Many2many(
         "product.attribute.value", compute="_compute_available_attributes", store=False
@@ -165,19 +188,25 @@ class ProductSectionSelection(models.TransientModel):
     def _compute_section_product_ids(self):
         """Compute the products related to the selected section."""
         for record in self:
-            record.section_product_ids = record.section_id.product_ids.ids if record.section_id else []
+            record.section_product_ids = (
+                record.section_id.product_ids.ids if record.section_id else []
+            )
 
     @api.depends("product_id")
     def _compute_available_attributes(self):
         """Compute available attributes for the selected product."""
         for record in self:
             if record.product_id:
-                ptavs = self.env["product.template.attribute.value"].search([
-                    ("product_tmpl_id", "=", record.product_id.product_tmpl_id.id)
-                ])
-                record.available_attribute_ids = ptavs.mapped("product_attribute_value_id")
+                ptavs = self.env["product.template.attribute.value"].search(
+                    [("product_tmpl_id", "=", record.product_id.product_tmpl_id.id)]
+                )
+                record.available_attribute_ids = ptavs.mapped(
+                    "product_attribute_value_id"
+                )
             else:
-                record.available_attribute_ids = self.env["product.attribute.value"].browse([])
+                record.available_attribute_ids = self.env[
+                    "product.attribute.value"
+                ].browse([])
 
     @api.depends("product_id", "attribute_ids")
     def _compute_price(self):
@@ -185,9 +214,12 @@ class ProductSectionSelection(models.TransientModel):
         for record in self:
             product_price = record.product_id.list_price if record.product_id else 0.0
             attribute_extra_price = sum(
-                ptav.price_extra for ptav in self.env["product.template.attribute.value"].search([
-                    ("product_tmpl_id", "=", record.product_id.product_tmpl_id.id),
-                    ("product_attribute_value_id", "in", record.attribute_ids.ids),
-                ])
+                ptav.price_extra
+                for ptav in self.env["product.template.attribute.value"].search(
+                    [
+                        ("product_tmpl_id", "=", record.product_id.product_tmpl_id.id),
+                        ("product_attribute_value_id", "in", record.attribute_ids.ids),
+                    ]
+                )
             )
             record.price = product_price + attribute_extra_price

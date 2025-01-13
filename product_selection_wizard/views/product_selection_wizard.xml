@@ -5,8 +5,11 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_general']" position="inside">
-                <field name="section_id"/>
+                <field name="section_id" options="{'no_create': True}"/>
             </xpath>
+            <!-- <xpath expr="//group[@name='group_general']" position="inside">
+                <field name="section_id"/>
+            </xpath> -->
         </field>
     </record>
 
@@ -16,16 +19,19 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_product_section_configuration" name="Product Section Configuration"
-              parent="sale.prod_config_main" sequence="0" action="action_product_section_configuration"/>
+    <menuitem id="menu_product_section_configuration" name="Product Section Configuration" parent="sale.prod_config_main" sequence="0" action="action_product_section_configuration"/>
 
     <record id="view_product_section_configuration_tree" model="ir.ui.view">
         <field name="name">product.section.configuration.tree</field>
         <field name="model">product.section.configuration</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence"/>
                 <field name="section_id"/>
+                <field name="section_name"/>
+                <field name="description"/>
                 <field name="product_category_id"/>
+                <field name="is_required"/>
             </tree>
         </field>
     </record>
@@ -38,7 +44,10 @@
                 <sheet>
                     <group>
                         <field name="section_id"/>
+                        <field name="section_name"/>
+                        <field name="description"/>
                         <field name="product_category_id"/>
+                        <field name="is_required"/>
                     </group>
                 </sheet>
             </form>

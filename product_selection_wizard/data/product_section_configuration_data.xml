@@ -26,6 +26,11 @@
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
+        <!-- <record id="product_category_superglass" model="product.category">
+            <field name="parent_id" ref="product_section_shell_foundation" />
+            <field name="name">Superglass</field>
+        </record> -->
+
         <record id="product_section_arch_height" model="product.section.configuration">
             <field name="section_id">arch_height</field>
             <field name="description">Arch Height</field>
