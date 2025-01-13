@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="product_template_form_view_inherit_section" model="ir.ui.view">
         <field name="name">product.template.form.inherit.section</field>
         <field name="model">product.template</field>
@@ -12,21 +10,21 @@
         </field>
     </record>
 
-    <!-- Product Section Configuration Views -->
     <record id="action_product_section_configuration" model="ir.actions.act_window">
         <field name="name">Product Section Configuration</field>
         <field name="res_model">product.section.configuration</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_product_section_configuration" name="Product Section Configuration" parent="sale.prod_config_main" sequence="0" action="action_product_section_configuration"/>
+    <menuitem id="menu_product_section_configuration" name="Product Section Configuration"
+              parent="sale.prod_config_main" sequence="0" action="action_product_section_configuration"/>
 
     <record id="view_product_section_configuration_tree" model="ir.ui.view">
         <field name="name">product.section.configuration.tree</field>
         <field name="model">product.section.configuration</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="section_name"/>
+                <field name="section_id"/>
                 <field name="product_category_id"/>
             </tree>
         </field>
@@ -39,7 +37,7 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="section_name"/>
+                        <field name="section_id"/>
                         <field name="product_category_id"/>
                     </group>
                 </sheet>
@@ -47,7 +45,6 @@
         </field>
     </record>
 
-    <!-- Sale Order Wizard View -->
     <record id="sale_order_wizard_form" model="ir.ui.view">
         <field name="name">sale.order.wizard.form</field>
         <field name="model">sale.order.wizard</field>
@@ -55,16 +52,18 @@
             <form>
                 <group>
                     <field name="sale_order_id" readonly="1"/>
-                    <!-- <field name="available_attribute_ids" column_invisible="True"/> -->
                 </group>
                 <notebook>
                     <page string="Sections">
                         <field name="section_selection_ids">
-                            <tree editable="bottom" string="Sections">
+                            <tree editable="bottom">
+                                <field name="section_id" column_invisible="True"/>
+                                <field name="section_product_ids" column_invisible="True"/>
                                 <field name="section_name" readonly="1"/>
-                                <field name="product_id"/>
+                                <!-- <field name="product_id"/> -->
+                                <field name="product_id" domain="[('product_tmpl_id', 'in', section_product_ids)]"/>
                                 <field name="available_attribute_ids" column_invisible="True"/>
-                                <field name="attribute_ids" domain="[('id', 'in', available_attribute_ids)]" widget="many2many_tags"/>
+                                <field name="attribute_ids" widget="many2many_tags"/>
                                 <field name="price" readonly="1"/>
                             </tree>
                         </field>
@@ -90,7 +89,6 @@
         }</field>
     </record>
 
-    <!-- Button to Open Wizard in Sale Order -->
     <record id="view_order_form_with_wizard" model="ir.ui.view">
         <field name="name">sale.order.form.wizard.button</field>
         <field name="model">sale.order</field>
@@ -101,5 +99,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>

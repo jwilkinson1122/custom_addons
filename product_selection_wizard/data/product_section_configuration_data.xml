@@ -20,49 +20,49 @@
 
         <!-- Product Sections -->
         <record id="product_section_shell_foundation" model="product.section.configuration">
-            <field name="section_name">shell_foundation</field>
+            <field name="section_id">shell_foundation</field>
             <field name="description">Shell / Foundation</field>
             <field name="sequence">1</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="product_section_arch_height" model="product.section.configuration">
-            <field name="section_name">arch_height</field>
+            <field name="section_id">arch_height</field>
             <field name="description">Arch Height</field>
             <field name="sequence">2</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="product_section_top_cover" model="product.section.configuration">
-            <field name="section_name">top_cover</field>
+            <field name="section_id">top_cover</field>
             <field name="description">Top Cover</field>
             <field name="sequence">3</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="product_section_bottom_cover" model="product.section.configuration">
-            <field name="section_name">bottom_cover</field>
+            <field name="section_id">bottom_cover</field>
             <field name="description">X-Guard</field>
             <field name="sequence">4</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="product_section_cushion" model="product.section.configuration">
-            <field name="section_name">cushion</field>
+            <field name="section_id">cushion</field>
             <field name="description">Cushion</field>
             <field name="sequence">5</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="product_section_extension" model="product.section.configuration">
-            <field name="section_name">extension</field>
+            <field name="section_id">extension</field>
             <field name="description">Extension</field>
             <field name="sequence">6</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
         </record>
 
         <record id="product_section_options" model="product.section.configuration">
-            <field name="section_name">options</field>
+            <field name="section_id">options</field>
             <field name="description">Options</field>
             <field name="sequence">7</field>
             <field name="product_category_id" ref="product_category_custom_device"/>
