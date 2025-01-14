@@ -7,9 +7,6 @@
             <xpath expr="//group[@name='group_general']" position="inside">
                 <field name="section_id" options="{'no_create': True}"/>
             </xpath>
-            <!-- <xpath expr="//group[@name='group_general']" position="inside">
-                <field name="section_id"/>
-            </xpath> -->
         </field>
     </record>
 
@@ -64,24 +61,28 @@
                 </group>
                 <notebook>
                     <page string="Sections">
-                        <field name="section_selection_ids">
+                        <field name="section_selection_ids" widget="grouped_list" context="{'group_by': 'section_name'}">
                             <tree editable="bottom">
-                                <field name="section_id" column_invisible="True"/>
+                                <field name="section_name" string="Section" optional="show"/>
                                 <field name="section_product_ids" column_invisible="True"/>
-                                <field name="section_name" readonly="1"/>
-                                <!-- <field name="product_id"/> -->
                                 <field name="product_id" domain="[('product_tmpl_id', 'in', section_product_ids)]"/>
                                 <field name="available_attribute_ids" column_invisible="True"/>
                                 <field name="attribute_ids" widget="many2many_tags"/>
                                 <field name="price" readonly="1"/>
+                                <field name="quantity"/>
                             </tree>
                         </field>
                     </page>
                 </notebook>
                 <footer>
-                    <button name="clear_all" string="Clear All" type="object" class="btn-danger"/>
-                    <button name="submit_wizard" string="Submit" type="object" class="btn-success"/>
-                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    <div class="footer-buttons">
+                        <button name="clear_all" string="Clear All" type="object" class="btn-danger"/>
+                        <button name="submit_wizard" string="Submit" type="object" class="btn-success"/>
+                        <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    </div>
+                    <div class="footer-right">
+                        <field name="total_price" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </div>
                 </footer>
             </form>
         </field>

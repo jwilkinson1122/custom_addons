@@ -12,7 +12,19 @@ class SaleOrderWizard(models.TransientModel):
     sale_order_id = fields.Many2one(
         "sale.order", default=lambda self: self.env.context.get("active_id")
     )
-    total_price = fields.Float(compute="_compute_total_price", string="Total Price")
+    # total_price = fields.Float(compute="_compute_total_price", string="Total Price")
+    total_price = fields.Float(
+        string="Total Price",
+        compute="_compute_total_price",
+        store=True,
+    )
+
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        related="sale_order_id.currency_id",
+        readonly=True,
+    )
     section_configurations = fields.One2many(
         "product.section.configuration", compute="_compute_section_configurations"
     )
@@ -21,6 +33,12 @@ class SaleOrderWizard(models.TransientModel):
         string="Section",
         required=True,
     )
+    display_type = fields.Selection(
+        [("line_section", "Section"), ("line_note", "Note")],
+        default=False,
+        help="Technical field for UX purpose.",
+    )
+
     section_selection_ids = fields.One2many(
         "product.section.selection", "wizard_id", string="Section Selections"
     )
@@ -61,12 +79,27 @@ class SaleOrderWizard(models.TransientModel):
                 "product.section.configuration"
             ].search([], order="sequence")
 
-    @api.depends("section_selection_ids.price")
+    # @api.depends("section_selection_ids.price")
+    # def _compute_total_price(self):
+    #     """Compute the total price from all sections."""
+    #     for record in self:
+    #         record.total_price = sum(
+    #             selection.price for selection in record.section_selection_ids
+    #         )
+
+    # @api.depends("section_selection_ids.price")
+    # def _compute_total_price(self):
+    #     """Compute the total price from all sections."""
+    #     for record in self:
+    #         record.total_price = sum(
+    #             selection.price for selection in record.section_selection_ids
+    #         )
+
+    @api.depends("section_selection_ids.price", "section_selection_ids.laterality")
     def _compute_total_price(self):
-        """Compute the total price from all sections."""
-        for record in self:
-            record.total_price = sum(
-                selection.price for selection in record.section_selection_ids
+        for wizard in self:
+            wizard.total_price = sum(
+                line.price for line in wizard.section_selection_ids
             )
 
     @api.model
@@ -91,11 +124,12 @@ class SaleOrderWizard(models.TransientModel):
         required_sections = self.section_configurations.filtered("is_required")
         for config in required_sections:
             if not any(
-                selection.section_id == config
+                selection.section_id == config and selection.product_id
                 for selection in self.section_selection_ids
             ):
                 raise ValidationError(
-                    _("The section '%s' is required.") % config.description
+                    _("The section '%s' must have at least one product selected.")
+                    % config.description
                 )
         _logger.info(f"Wizard {self.id} submitted successfully.")
         return {"type": "ir.actions.act_window_close"}
@@ -131,10 +165,9 @@ class ProductSectionConfiguration(models.Model):
     ]
 
     def name_get(self):
-        """Override name_get to provide a custom display."""
         result = []
         for record in self:
-            name = record.description or record.section_name or f"[{record.section_id}]"
+            name = record.description or f"[{record.section_id}]"
             result.append((record.id, name))
         return result
 
@@ -151,7 +184,21 @@ class ProductSectionSelection(models.TransientModel):
     )
 
     section_name = fields.Char(
-        string="Section Name", compute="_compute_section_name", store=False
+        string="Section Name",
+        compute="_compute_section_name",
+        store=True,
+    )
+
+    display_type = fields.Selection(
+        [("line_section", "Section"), ("line_note", "Note")],
+        default=False,
+        help="Technical field for UX purpose.",
+    )
+
+    laterality = fields.Selection(
+        [("left", "Left Only"), ("right", "Right Only"), ("bilateral", "Bilateral")],
+        string="Laterality",
+        default="bilateral",
     )
 
     product_id = fields.Many2one(
@@ -165,7 +212,6 @@ class ProductSectionSelection(models.TransientModel):
         "product.template",
         string="Section Products",
         compute="_compute_section_product_ids",
-        store=False,  # This is a computed field; no need to store it
     )
 
     attribute_ids = fields.Many2many(
@@ -177,10 +223,13 @@ class ProductSectionSelection(models.TransientModel):
         "product.attribute.value", compute="_compute_available_attributes", store=False
     )
     price = fields.Float(string="Price", compute="_compute_price", store=True)
+    quantity = fields.Integer(
+        string="Quantity", compute="_compute_quantity", store=True
+    )
 
     @api.depends("section_id")
     def _compute_section_name(self):
-        """Compute the section name from the section_id."""
+        """Compute section name based on section_id."""
         for record in self:
             record.section_name = record.section_id.description or "Unnamed Section"
 
@@ -208,11 +257,13 @@ class ProductSectionSelection(models.TransientModel):
                     "product.attribute.value"
                 ].browse([])
 
-    @api.depends("product_id", "attribute_ids")
+    @api.depends("product_id", "attribute_ids", "laterality", "quantity")
     def _compute_price(self):
-        """Calculate the price for the selected product and attributes."""
+        """Calculate the price based on product, attributes, laterality, and quantity."""
         for record in self:
             product_price = record.product_id.list_price if record.product_id else 0.0
+
+            # Calculate attribute-based extra price
             attribute_extra_price = sum(
                 ptav.price_extra
                 for ptav in self.env["product.template.attribute.value"].search(
@@ -222,4 +273,20 @@ class ProductSectionSelection(models.TransientModel):
                     ]
                 )
             )
-            record.price = product_price + attribute_extra_price
+
+            # Adjust for laterality
+            if record.laterality == "bilateral":
+                base_price = (product_price + attribute_extra_price) * 2
+            else:
+                base_price = product_price + attribute_extra_price
+
+            # Apply quantity multiplier
+            record.price = base_price * record.quantity
+
+    @api.depends("laterality")
+    def _compute_quantity(self):
+        for record in self:
+            if record.laterality == "bilateral":
+                record.quantity = 2
+            else:
+                record.quantity = 1

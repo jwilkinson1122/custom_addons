@@ -527,6 +527,29 @@ class Partner(models.Model):
                 record.patient_ids = self.env["res.partner"]
 
     # Roles
+    # is_role_required = fields.Boolean(
+    #     compute="_compute_is_role_required",
+    #     inverse="_inverse_is_role_required",
+    #     string="Is Role Required",
+    #     store=False,
+    # )
+
+    # @api.depends("is_contact", "contact_role_ids")
+    # def _compute_is_role_required(self):
+    #     for record in self:
+    #         record.is_role_required = record.is_contact and not record.contact_role_ids
+
+    # def _inverse_is_role_required(self):
+    #     for record in self:
+    #         if record.is_role_required and not record.contact_role_ids:
+    #             raise ValidationError("Roles are required for contacts.")
+
+    # @api.constrains("is_contact", "contact_role_ids")
+    # def _check_contact_roles(self):
+    #     for record in self:
+    #         if record.is_contact and not record.contact_role_ids:
+    #             raise ValidationError(_("Roles are required for contacts."))
+
     is_role_required = fields.Boolean(
         compute="_compute_is_role_required",
         inverse="_inverse_is_role_required",
@@ -534,10 +557,14 @@ class Partner(models.Model):
         store=False,
     )
 
-    @api.depends("is_contact", "contact_role_ids")
+    @api.depends("is_contact", "is_patient", "contact_role_ids")
     def _compute_is_role_required(self):
         for record in self:
-            record.is_role_required = record.is_contact and not record.contact_role_ids
+            record.is_role_required = (
+                record.is_contact
+                and not record.is_patient
+                and not record.contact_role_ids
+            )
 
     def _inverse_is_role_required(self):
         for record in self:
@@ -547,7 +574,11 @@ class Partner(models.Model):
     @api.constrains("is_contact", "contact_role_ids")
     def _check_contact_roles(self):
         for record in self:
-            if record.is_contact and not record.contact_role_ids:
+            if (
+                record.is_contact
+                and not record.is_patient
+                and not record.contact_role_ids
+            ):
                 raise ValidationError(_("Roles are required for contacts."))
 
     @api.model

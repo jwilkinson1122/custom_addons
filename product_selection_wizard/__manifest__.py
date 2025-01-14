@@ -19,6 +19,7 @@
     "assets": {
         "web.assets_backend": [
             "product_selection_wizard/static/src/css/custom_statusbar.css",
+            "product_selection_wizard/static/src/css/custom_tree_view.css",
         ],
     },
     "installable": True,
