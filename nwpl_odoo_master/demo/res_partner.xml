@@ -3,14 +3,13 @@
 <odoo>
     <data>
 
-        <!-- Accounts -->
+        <!-- Parent Company -->
         <record id="parent_company_1" model="res.partner">
             <field name="name">Fab Foot Clinic</field>
             <field name="is_parent_company" eval="True"/>
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
-            <!-- <field name="type">invoice</field> -->
             <field name="company_address_type">invoice</field>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>

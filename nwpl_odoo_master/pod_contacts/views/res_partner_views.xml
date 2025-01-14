@@ -137,7 +137,7 @@
                     <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
                         No Affiliates Available
                     </div>
-                    <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':'', 'default_company_address_type':''}" mode="kanban">
+                    <field name="affiliate_ids" context="{'default_parent_id': active_id, 'default_is_company': True, 'default_type':'', 'default_company_address_type':'invoice'}" mode="kanban">
                         <kanban create="true" on_create="base.view_partner_form">
                             <field name="id" />
                             <field name="color" />

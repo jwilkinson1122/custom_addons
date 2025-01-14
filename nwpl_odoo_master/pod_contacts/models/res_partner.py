@@ -31,7 +31,7 @@ class Partner(models.Model):
     # )
 
     type = fields.Selection(
-        selection=[
+        selection_add=[
             ("contact", "Contact Address"),
             ("patient", "Patient Address"),
             ("invoice", "Invoice Address"),
@@ -40,7 +40,6 @@ class Partner(models.Model):
             ("other", "Other Address"),
         ],
         string="Address Type",
-        default="",
         help="- Contact Address: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
         "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
         "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
@@ -64,7 +63,6 @@ class Partner(models.Model):
         selection=[
             ("contact", "Contact Address"),
             ("patient", "Patient Address"),
-            # ("other", "Other Address"),
         ],
         string="Contact Address Type",
         compute="_compute_contact_address_type",
@@ -213,7 +211,10 @@ class Partner(models.Model):
     )
 
     patient_ids = fields.One2many(
-        "res.partner", compute="_compute_patients", string="Patients", readonly=True
+        "res.partner",
+        compute="_compute_patients",
+        string="Patients",
+        readonly=True,
     )
 
     patient_count = fields.Integer(
@@ -226,6 +227,8 @@ class Partner(models.Model):
         string="Patients",
         index=True,
     )
+
+    # patient_records = fields.One2many('res.partner', 'parent_id', string='Patients', domain=[('is_patient', '=', True)], store=True)
 
     patient_text = fields.Char(compute="_compute_patient_text")
 
@@ -470,7 +473,7 @@ class Partner(models.Model):
     def _compute_patient_counts(self):
         for record in self:
             if isinstance(record.id, models.NewId):
-                record.patient_count = 0  # Assigning a default value for new records
+                record.patient_count = 0
                 continue
             if record.is_contact or record.is_company:
                 all_partners = self.env["res.partner"].search(
@@ -482,24 +485,42 @@ class Partner(models.Model):
             else:
                 record.patient_count = 0
 
-    @api.depends("is_contact", "child_ids.patient_ids")
+    @api.depends("is_contact", "child_ids.is_patient", "parent_id")
     def _compute_patient_records(self):
         for record in self:
-            record.patient_records = self.env["res.partner"]
             if record.is_contact:
                 record.patient_records = self.env["res.partner"].search(
                     [("contact_id", "=", record.id)]
                 )
+            elif record.is_company:
+                all_descendants = self.env["res.partner"].search(
+                    [("parent_id", "child_of", record.id)]
+                )
+                record.patient_records = all_descendants.filtered(
+                    lambda p: p.is_patient
+                )
             else:
-                if not isinstance(record.id, models.NewId) and record.is_company:
-                    all_partners = self.env["res.partner"].search(
-                        [("parent_id", "child_of", record.id)]
-                    )
-                    all_partners -= record
-                    record.patient_records = all_partners.mapped("patient_ids")
-            _logger.debug(
-                f"Computed patient records for {record.id}: {record.patient_records.ids}"
-            )
+                record.patient_records = self.env["res.partner"]
+
+    # @api.depends("is_contact", "child_ids.patient_ids")
+    # def _compute_patient_records(self):
+    #     for record in self:
+    #         if record.is_contact:
+    #             record.patient_records = self.env["res.partner"].search(
+    #                 [("contact_id", "=", record.id)]
+    #             )
+    #         elif not isinstance(record.id, models.NewId) and record.is_company:
+    #             all_partners = self.env["res.partner"].search(
+    #                 [("parent_id", "child_of", record.id)]
+    #             )
+    #             all_partners -= record
+    #             record.patient_records = all_partners.mapped("patient_ids")
+    #         else:
+    #             record.patient_records = self.env["res.partner"]
+
+    #             _logger.debug(
+    #                 f"Computed patient records for {record.id}: {record.patient_records.ids}"
+    #             )
 
     @api.depends("patient_count")
     def _compute_patient_text(self):
@@ -511,45 +532,30 @@ class Partner(models.Model):
             else:
                 record.patient_text = _("(%s Patients)" % record.patient_count)
 
-    @api.depends("child_ids", "child_ids.is_patient")
+    # @api.depends("child_ids", "child_ids.is_patient")
+    # def _compute_patients(self):
+    #     """
+    #     Compute the patient_ids field to list all child partners who are patients.
+    #     """
+    #     for record in self:
+    #         _logger.info(f"Computing patients for {record.name}")
+    #         if not isinstance(record.id, models.NewId):
+    #             patients = record.child_ids.filtered(lambda p: p.is_patient)
+    #             record.patient_ids = patients
+    #         else:
+    #             record.patient_ids = self.env["res.partner"]
+
+    @api.depends("is_contact", "child_ids.is_patient")
     def _compute_patients(self):
-        """
-        Compute the patient_ids field to list all child partners who are patients.
-        """
         for record in self:
-            _logger.info(f"Computing patients for {record.name}")
-            if not isinstance(record.id, models.NewId):
-                # Filter child_ids to include only those marked as patients
-                patients = record.child_ids.filtered(lambda p: p.is_patient)
-                record.patient_ids = patients
+            if record.is_contact:
+                record.patient_ids = self.env["res.partner"].search(
+                    [("contact_id", "=", record.id)]
+                )
             else:
-                # If the record is a new ID, set an empty recordset
                 record.patient_ids = self.env["res.partner"]
 
     # Roles
-    # is_role_required = fields.Boolean(
-    #     compute="_compute_is_role_required",
-    #     inverse="_inverse_is_role_required",
-    #     string="Is Role Required",
-    #     store=False,
-    # )
-
-    # @api.depends("is_contact", "contact_role_ids")
-    # def _compute_is_role_required(self):
-    #     for record in self:
-    #         record.is_role_required = record.is_contact and not record.contact_role_ids
-
-    # def _inverse_is_role_required(self):
-    #     for record in self:
-    #         if record.is_role_required and not record.contact_role_ids:
-    #             raise ValidationError("Roles are required for contacts.")
-
-    # @api.constrains("is_contact", "contact_role_ids")
-    # def _check_contact_roles(self):
-    #     for record in self:
-    #         if record.is_contact and not record.contact_role_ids:
-    #             raise ValidationError(_("Roles are required for contacts."))
-
     is_role_required = fields.Boolean(
         compute="_compute_is_role_required",
         inverse="_inverse_is_role_required",
@@ -798,75 +804,6 @@ class Partner(models.Model):
     )
     def _compute_display_name(self):
         return super(Partner, self)._compute_display_name()
-
-    # def name_get(self):
-    #     """Customize the display name for res.partner."""
-    #     result = []
-    #     for record in self:
-    #         name = record.name
-    #         result.append((record.id, name))
-    #     return result
-
-    # @api.model
-    # def default_get(self, fields_list):
-    #     """
-    #     Override default_get to handle default values for partner fields
-    #     based on context and avoid unnecessary propagation of fields for contacts.
-    #     """
-    #     defaults = super().default_get(fields_list)
-
-    #     if self.env.context.get("default_is_company", False):
-    #         defaults["is_company"] = True
-    #     elif self.env.context.get("default_is_contact", False):
-    #         defaults["is_company"] = False
-
-    #     if self.env.context.get("default_parent_id"):
-    #         for field in self.default_contact_fields():
-    #             if defaults.get(field):
-    #                 defaults[field] = False
-
-    #     return defaults
-
-    # def _get_name(self):
-    #     """
-    #     Utility method to generate the display name for a partner, incorporating
-    #     contextual options like address formatting, email, VAT, and partner ID.
-    #     """
-    #     partner = self
-    #     name = partner.name or ""
-    #     if partner.company_name or partner.parent_id:
-    #         if not name and partner.type == "order":
-    #             type_dict = self.fields_get(["type"])["type"]["selection"]
-    #             name = type_dict.get(partner.type, name)
-    #         if not partner.is_company:
-    #             name = self._get_contact_name(partner, name)
-
-    #     if self._context.get("show_address_only"):
-    #         name = partner._display_address(without_company=True)
-    #     elif self._context.get("show_address"):
-    #         name = f"{name}\n{partner._display_address(without_company=True)}".strip()
-
-    #     name = name.replace("\n\n", "\n")
-
-    #     if self._context.get("address_inline"):
-    #         name = ", ".join(filter(None, name.split("\n")))
-
-    #     if self._context.get("show_email") and partner.email:
-    #         name = f"{name} <{partner.email}>"
-
-    #     if self._context.get("html_format"):
-    #         name = name.replace("\n", "<br/>")
-
-    #     if self._context.get("show_vat") and partner.vat:
-    #         name = f"{name} ‒ {partner.vat}"
-
-    #     if not any(
-    #         self._context.get(key)
-    #         for key in ["show_address_only", "show_address", "address_inline"]
-    #     ):
-    #         name = f"{name} ‒ {partner.id}"
-
-    #     return name
 
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner
