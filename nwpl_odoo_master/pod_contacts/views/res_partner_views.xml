@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Action Definitions -->
     <record id="res_partner_find" model="ir.actions.act_window">
         <field name="name">Find Partner</field>
         <field name="type">ir.actions.act_window</field>
@@ -14,7 +13,6 @@
         <field name="target">new</field>
     </record>
 
-    <!-- Kanban View Enhancements -->
     <record id="res_partner_view_kanban" model="ir.ui.view">
         <field name="name">res.partner.kanban.view.inherit</field>
         <field name="model">res.partner</field>
@@ -41,7 +39,6 @@
         </field>
     </record>
 
-    <!-- Form View Enhancements -->
     <record id="res_partner_view_form" model="ir.ui.view">
         <field name="name">res.partner.view.form</field>
         <field name="model">res.partner</field>
@@ -51,6 +48,11 @@
                 <button name="create_portal_user" type="object" string="Create Portal User" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_contact': True}" invisible="not is_contact"/>
                 <button name="create_portal_user" type="object" string="Create Portal Patient" class="oe_highlight" icon="fa-address-card-o" context="{'default_is_patient': True}" invisible="not is_patient"/>
             </div>
+            <xpath expr="//button[@name='action_view_sale_order']" position="before">
+                <button class="oe_stat_button" type="object" name="open_sale_from_view_action" icon="fa-pencil-square-o" invisible="reorder_count == 0">
+                    <field name="reorder_count" widget="statinfo"/>
+                </button>
+            </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_partner" invisible="1"/>
                 <field name="is_company" invisible="1"/>
@@ -136,32 +138,264 @@
                     </group>
                 </group>
             </xpath>
+            <xpath expr='//page[@name="contact_addresses"]' position="before">
+                <!-- <page name="affiliates" string="Affiliates">
+                    <field name="affiliate_ids" mode="kanban,tree">
+                        <tree>
+                            <field name="name"/>
+                            <field name="customer_code"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page> -->
+                    <page string="Affiliates" name="affiliates" invisible="not is_company" autofocus="autofocus">
+                        <separator name="affiliates" string="Affiliates List" />
+                        <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
+                            No Affiliates Available
+                        </div>
+                        <!-- <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}"> -->
 
-            <!-- Additional Pages -->
+                        <field name="affiliate_ids" context="{'default_parent_id': id, 'default_is_affiliate_company': True, 'default_type':''}" mode="kanban"/>
+                    </page>
+            </xpath>
+            <!-- Modify the contact_addresses page attributes -->
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="autofocus"></attribute>
+                <attribute name="string">Contacts</attribute>
+                <attribute name="invisible">is_patient</attribute>
+            </xpath>
+            <!-- Add an alert to the contact_addresses page -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="before">
+                <separator name="contacts" string="Contacts List" />
+                <div name="alert_no_contacts" class="oe_read_only alert alert-info mb8" role="alert" invisible="not child_ids">
+                    No Locations Available
+                </div>
+            </xpath>
+            <!-- Modify the child_ids field context -->
+            <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="attributes">
+                <attribute name="context">{'default_parent_id': id, 'default_is_contact': True, 'default_type':'contact', 'search_default_parent_id': id}</attribute>
+                <attribute name="options">{'kanban_view': {'create': True}}</attribute>
+            </xpath>
+
             <xpath expr='//page[@name="contact_addresses"]' position="after">
+                <!-- <page name="affiliates" string="Affiliates">
+                    <field name="affiliate_ids" mode="kanban,tree">
+                        <tree>
+                            <field name="name"/>
+                            <field name="customer_code"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page> -->
+                <!-- <page name="contacts" string="Contacts">
+                    <field name="child_ids" mode="kanban,tree">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page> -->
+                <!-- <page name="patients" string="Patients">
+                    <field name="patient_ids" mode="kanban,tree">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page> -->
                 <page name="patients_list" string="Patients" invisible="is_supplier or is_patient">
                     <separator name="patients" string="Patients List"/>
                     <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_ids">
                         No Patients Available
                     </div>
-                    <field name="patient_ids" domain="[('is_patient', '=', True), ('parent_id', '=', active_id)]" context="{'default_parent_id': id, 'default_is_patient': True}" mode="kanban"/>
+                    <field name="patient_ids" domain="[('is_patient', '=', True), ('parent_id', '=', id)]" context="{'default_parent_id': id, 'default_is_patient': True}" mode="kanban"/>
+                </page>
+            </xpath>
+            <xpath expr="//notebook/page[@name='internal_notes']" position="before">
+                <page name="orders" string="Orders">
+                    <group string="Current Orders">
+                        <field name="current_sale_order_ids" readonly="True" domain="[('state', 'not in', ('cancel', 'done'))]">
+                            <tree editable="bottom">
+                                <field name="name" string="Order Reference" readonly="True"/>
+                                <field name="date_order" widget="date" string="Date"/>
+                                <field name="partner_id" string="Customer"/>
+                                <field name="state" string="Status" readonly="True"/>
+                                <field name="invoice_status"/>
+                                <field name="activity_ids" String="Activities" widget="list_activity" optional="show"/>
+                                <field name="amount_total"/>
+                                <button string="View" name="action_open_sale_order" type="object" class="oe_highlight"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Historic Orders">
+                        <field name="historic_sale_order_ids" readonly="True">
+                            <tree>
+                                <field name="name" string="Order Reference" readonly="True"/>
+                                <field name="date_order" string="Order Date" readonly="True"/>
+                                <field name="state" string="State" readonly="True"/>
+                                <field name="is_reorder" string="Re-orderable" widget="boolean_toggle" readonly="True"/>
+                                <button name="action_reorder" type="object" string="Reorder" title="Reorder" class="oe_highlight"/>
+                            </tree>
+                        </field>
+                    </group>
                 </page>
             </xpath>
         </field>
     </record>
 
-    <!-- Action Definitions for Companies, Affiliates, Suppliers, Contacts, Patients -->
+    <record id="res_partner_form" model="ir.ui.view">
+        <field name="name">customer_credits_box_res_partner_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_payments_in_favor" groups="sales_team.group_sale_salesman" icon="fa-usd">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="credit_amount" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{&quot;readonly&quot;: true}"/>
+                        </span>
+                        <span class="o_stat_text">Credits</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- <record id="res_partner_form_company" model="ir.ui.view">
+        <field name="name">res.partner.form.company</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="nwpl_odoo_master.res_partner_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Affiliates" name="affiliates">
+                    <field name="affiliate_ids" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="customer_code"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Contacts" name="contacts">
+                    <field name="child_ids" domain="[('is_contact', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="customer_code"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Patients" name="patients">
+                    <field name="patient_ids" domain="[('is_patient', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="customer_code"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_form_affiliate" model="ir.ui.view">
+        <field name="name">res.partner.form.affiliate</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="nwpl_odoo_master.res_partner_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Affiliates" name="affiliates">
+                    <field name="affiliate_ids" domain="[('is_affiliate_company', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="customer_code"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Contacts" name="contacts">
+                    <field name="child_ids" domain="[('is_contact', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Patients" name="patients">
+                    <field name="patient_ids" domain="[('is_patient', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_form_contact" model="ir.ui.view">
+        <field name="name">res.partner.form.contact</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="nwpl_odoo_master.res_partner_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Contacts" name="contacts">
+                    <field name="child_ids" domain="[('is_contact', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Patients" name="patients">
+                    <field name="patient_ids" domain="[('is_patient', '=', True)]" mode="tree,kanban">
+                        <tree>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_form_patient" model="ir.ui.view">
+        <field name="name">res.partner.form.patient</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="nwpl_odoo_master.res_partner_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+
+            </xpath>
+        </field>
+    </record> -->
+
+
     <record id="partner_company_action" model="ir.actions.act_window">
         <field name="name">Companies</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True), ('id', '!=', 1)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_parent_company', '=', True)]</field>
         <field name="context">{
             'default_is_company': True,
             'default_is_parent_company': True,
             'default_type': ''
         }</field>
+        <field name="view_id" ref="res_partner_form_company"/>
     </record>
 
     <record id="partner_affiliate_action" model="ir.actions.act_window">
@@ -169,13 +403,15 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="domain">[('is_company', '=', True), ('is_affiliate_company', '=', True), ('id', '!=', 1)]</field>
+        <field name="domain">[('is_company', '=', True), ('is_affiliate_company', '=', True)]</field>
         <field name="context">{
             'default_is_company': True,
             'default_is_affiliate_company': True,
             'default_type': ''
         }</field>
+        <field name="view_id" ref="res_partner_form_affiliate"/>
     </record>
+
 
     <record id="partner_supplier_action" model="ir.actions.act_window">
         <field name="name">Suppliers</field>
@@ -200,7 +436,9 @@
             'default_is_contact': True,
             'default_type': 'contact'
         }</field>
+        <field name="view_id" ref="res_partner_form_contact"/>
     </record>
+
 
     <record id="partner_patient_action" model="ir.actions.act_window">
         <field name="name">Patients</field>
@@ -213,5 +451,6 @@
             'default_type': 'patient'
         }</field>
     </record>
+
 
 </odoo>

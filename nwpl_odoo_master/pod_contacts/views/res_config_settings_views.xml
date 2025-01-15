@@ -24,4 +24,29 @@
     <menuitem id="contact_root_settings" name="Settings" parent="contacts.menu_contacts" action="action_contact_config" sequence="100" groups="base.group_system"/>
 
     <!-- <menuitem id="menu_order_config" name="Settings" parent="contact_root_settings" sequence="0" action="action_contact_config" groups="base.group_system" /> -->
+
+    <!-- <record id="res_config_settings_view_form_inherit_order_history" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.order.history</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='catalog_setting_container']" position="after">
+                <block title="Sale Order History Configuration" name="sale_order_history_configuration">
+                    <setting id="last_no_of_orders_setting" string="Last No. of Orders" help="Set the number of last orders to display">
+                        <field name="last_no_of_orders"/>
+                    </setting>
+                    <setting id="last_no_of_days_orders_setting" string="Last No. of Day's Orders" help="Set the number of days for which to display orders">
+                        <field name="last_no_of_days_orders"/>
+                    </setting>
+                    <setting id="stages_setting" string="Stages" help="Select the stages to display">
+                        <field name="stages" widget="selection"/>
+                    </setting>
+                    <setting id="enable_reorder_setting" string="Enable Reorder" help="Enable reorder functionality">
+                        <field name="enable_reorder"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record> -->
+
 </odoo>

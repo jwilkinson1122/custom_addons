@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_sale_form_view" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pricelist_id']" position="after">
+                    <field name="is_reorder" invisible="1"/>
+                </xpath>
+                <xpath expr="//page[@name='order_lines']" position="after">
+                    <page string="Order History" name="order_history_name">
+                        <field name="is_enable_reorder" invisible="1"/>
+                        <button name="button_all_history_add_to_order" type="object" string="RE-ORDER ALL" class="oe_highlight" title="Add all products to order lines" invisible="not is_enable_reorder"/>
+                        <field name="limited_order_history_ids" widget="one2many_list">
+                            <tree editable="bottom">
+                                <field name="order_number"/>
+                                <field name="order_date"/>
+
+                                <field name="order_product"/>
+                                <field name="order_price"/>
+
+                                <field name="order_quantity"/>
+                                <field name="order_discount"/>
+                                <field name="order_sub_total"/>
+                                <field name="order_status" widget="badge"/>
+                                <button name="add_option_to_order" type="object" string="Add to Order" class="oe_highlight"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

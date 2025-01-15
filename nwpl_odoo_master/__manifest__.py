@@ -10,6 +10,7 @@
     "description": """ Full Custom Orthotics Manufacturing System """,
     "depends": [
         "account",
+        "account_avatax",
         "base",
         "base_automation",
         "base_setup",
@@ -65,6 +66,7 @@
         "data/pod_contacts/data/ir_sequence_data.xml",
         "data/pod_contacts/data/contact_partner_type_data.xml",
         "data/pod_contacts/data/contact_role_data.xml",
+        # "pod_contacts/views/res_config_settings_views.xml",
         "pod_contacts/views/barcode_action_view.xml",
         "pod_contacts/views/contact_role_views.xml",
         "pod_contacts/views/contact_diagnosis_views.xml",
@@ -77,8 +79,19 @@
         "pod_contacts/views/address_type_tabs.xml",
         "pod_contacts/views/contact_portal_templates.xml",
         "pod_contacts/views/create_portal_user_view.xml",
+        "pod_contacts/wizard/res_config_settings_views.xml",
         "pod_contacts/views/res_partner_views.xml",
         "pod_contacts/views/contact_menu.xml",
+        "pod_contacts/views/sale_order_views.xml",
+        # "pod_contacts/views/sale_order_views.xml",
+
+        # reorder
+        # "pod_sale_reorder/security/ir.model.access.csv",
+        # "pod_sale_reorder/wizard/res_config_settings_views.xml",
+        # "pod_sale_reorder/views/res_partner_views.xml",
+        # "pod_sale_reorder/views/sale_order_views.xml",
+
+
         "amazon_s3_connector/security/ir.model.access.csv",
         "amazon_s3_connector/views/amazon_dashboard_views.xml",
         "amazon_s3_connector/views/res_config_settings_views.xml",
@@ -89,10 +102,10 @@
         "pod_login_as/views/login_as_templates.xml",
         "pod_login_as/views/login_as_action.xml",
         # reorder
-        "pod_sale_reorder/security/ir.model.access.csv",
-        "pod_sale_reorder/wizard/res_config_settings_views.xml",
-        "pod_sale_reorder/views/res_partner_views.xml",
-        "pod_sale_reorder/views/sale_order_views.xml",
+        # "pod_sale_reorder/security/ir.model.access.csv",
+        # "pod_sale_reorder/wizard/res_config_settings_views.xml",
+        # "pod_sale_reorder/views/res_partner_views.xml",
+        # "pod_sale_reorder/views/sale_order_views.xml",
         # product configurator
         "pod_product_configurator/security/configurator_security.xml",
         "pod_product_configurator/security/ir.model.access.csv",
