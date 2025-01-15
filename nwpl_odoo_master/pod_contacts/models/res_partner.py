@@ -16,6 +16,10 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = "res.partner"
 
+    # company_type = fields.Selection(string='Company Type',
+    #     selection=[('person', 'Individual'), ('company', 'Company')],
+    #     compute='_compute_company_type', inverse='_write_company_type')
+
     partner_type = fields.Many2one(
         string="Partner Type",
         comodel_name="contact.partner.type",
@@ -23,12 +27,17 @@ class Partner(models.Model):
     )
 
     # type = fields.Selection(
-    #     selection_add=[
-    #         ("supplier", "Supplier Address"),
-    #         ("patient", "Patient Address"),
-    #     ],
-    #     ondelete={"contact": "set default"},
-    # )
+    #     [('contact', 'Contact'),
+    #      ('invoice', 'Invoice Address'),
+    #      ('delivery', 'Delivery Address'),
+    #      ('other', 'Other Address'),
+    #     ], string='Address Type',
+    #     default='contact',
+    #     help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+    #          "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+    #          "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+    #          "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
+    #          "- Other: Other address for the company (e.g. subsidiary, ...)")
 
     type = fields.Selection(
         selection_add=[
@@ -133,22 +142,19 @@ class Partner(models.Model):
     parent_id = fields.Many2one(
         "res.partner",
         index=True,
-        domain=[
+        domain=lambda self: [
             ("is_parent_company", "=", True),
             ("is_company", "=", True),
-            ("id", "!=", id),
+            ("id", "!=", self.id or 0),
         ],
         string="Parent Company",
         groups="base.group_no_one",
     )
 
-    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
-
     parent_name = fields.Char(
         related="parent_id.name", readonly=True, string="Parent name"
     )
 
-    # Affiliates / Child Companies
     affiliate_ids = fields.One2many(
         "res.partner",
         compute="_compute_affiliate_ids",
@@ -162,7 +168,6 @@ class Partner(models.Model):
 
     affiliate_text = fields.Char(compute="_compute_affiliate_text")
 
-    # Contacts
     is_contact = fields.Boolean(
         string="Is a Contact",
         compute="_compute_is_contact",
@@ -186,6 +191,14 @@ class Partner(models.Model):
         help="Link to the related contact.",
     )
 
+    shared_contact_ids = fields.Many2many(
+        "res.partner",
+        "partner_contact_rel",
+        "partner_id",
+        "contact_id",
+        string="Shared Contacts",
+    )
+
     contact_role_ids = fields.Many2many(string="Roles", comodel_name="contact.role")
 
     contact_count = fields.Integer(
@@ -204,7 +217,7 @@ class Partner(models.Model):
     )
 
     patient_id = fields.Many2one(
-        "res.contact",
+        "res.partner",
         string="Related Contact",
         domain=[("is_patient", "=", True)],
         help="Link to the related patient.",
@@ -212,23 +225,23 @@ class Partner(models.Model):
 
     patient_ids = fields.One2many(
         "res.partner",
-        compute="_compute_patients",
+        "parent_id",
         string="Patients",
-        readonly=True,
+        compute="_compute_patients",
+        store=True,
+    )
+
+    shared_patient_ids = fields.Many2many(
+        "res.partner",
+        "partner_patient_rel",
+        "partner_id",
+        "patient_id",
+        string="Shared Patients",
     )
 
     patient_count = fields.Integer(
         string="Patient Count", compute="_compute_patient_counts"
     )
-
-    patient_records = fields.One2many(
-        "res.partner",
-        compute="_compute_patient_records",
-        string="Patients",
-        index=True,
-    )
-
-    # patient_records = fields.One2many('res.partner', 'parent_id', string='Patients', domain=[('is_patient', '=', True)], store=True)
 
     patient_text = fields.Char(compute="_compute_patient_text")
 
@@ -267,40 +280,17 @@ class Partner(models.Model):
             if contacts:
                 self.contact_id = contacts[0]
 
-    # @api.onchange("parent_id")
-    # def _onchange_parent_id(self):
-    #     """Update the domain of contact based on the selected parent_id."""
-    #     self.apply_contact_logic()
-    #     if self.parent_id:
-    #         return {
-    #             "domain": {
-    #                 "contact_id": [
-    #                     ("is_contact", "=", True),
-    #                     ("is_patient", "=", False),
-    #                     ("parent_id", "=", self.parent_id.id),
-    #                 ]
-    #             }
-    #         }
-    #     else:
-    #         return {
-    #             "domain": {
-    #                 "contact_id": [
-    #                     ("is_contact", "=", True),
-    #                     ("is_patient", "=", False),
-    #                 ]
-    #             }
-    #         }
-
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
         """Update the domain of contact based on the selected parent_id."""
+        _logger.debug(f"Onchange triggered, parent_id: {self.parent_id}")
         self.apply_contact_logic()
         if self.parent_id:
             return {
                 "domain": {
                     "contact_id": [
                         ("is_contact", "=", True),
-                        ("parent_id", "=", self.parent_id.id),  # Ensure direct match
+                        ("parent_id", "=", self.parent_id.id),
                     ]
                 }
             }
@@ -367,25 +357,37 @@ class Partner(models.Model):
         for partner in self:
             partner.child_count = len(partner.child_ids)
 
-    @api.depends(
-        "parent_id", "is_parent_company", "is_company", "is_affiliate_company", "active"
-    )
+    # @api.depends(
+    #     "parent_id", "is_parent_company", "is_company", "is_affiliate_company", "active"
+    # )
+    # def _compute_affiliate_ids(self):
+    #     for record in self:
+    #         if not isinstance(record.id, models.NewId):
+    #             all_affiliates = self.env["res.partner"].search(
+    #                 [
+    #                     ("id", "child_of", record.id),
+    #                     ("is_parent_company", "=", False),
+    #                     ("is_company", "=", True),
+    #                     ("is_affiliate_company", "=", True),
+    #                     ("patient_ids", "=", False),
+    #                     ("active", "=", True),
+    #                 ]
+    #             )
+    #             record.affiliate_ids = all_affiliates - record
+    #         else:
+    #             record.affiliate_ids = self.env["res.partner"]
+
+    @api.depends("parent_id", "is_company", "is_affiliate_company")
     def _compute_affiliate_ids(self):
         for record in self:
-            if not isinstance(record.id, models.NewId):
-                all_affiliates = self.env["res.partner"].search(
-                    [
-                        ("id", "child_of", record.id),
-                        ("is_parent_company", "=", False),
-                        ("is_company", "=", True),
-                        ("is_affiliate_company", "=", True),
-                        ("patient_ids", "=", False),
-                        ("active", "=", True),
-                    ]
-                )
-                record.affiliate_ids = all_affiliates - record
-            else:
-                record.affiliate_ids = self.env["res.partner"]
+            record.affiliate_ids = self.env["res.partner"].search(
+                [
+                    ("parent_id", "=", record.id),
+                    ("is_company", "=", True),
+                    ("is_affiliate_company", "=", True),
+                    ("is_patient", "=", False),
+                ]
+            )
 
     @api.depends("affiliate_count")
     def _compute_affiliate_text(self):
@@ -397,22 +399,33 @@ class Partner(models.Model):
             else:
                 record.affiliate_text = _("(%s Affiliates)" % record.affiliate_count)
 
-    @api.depends("parent_id", "is_company", "is_contact", "active")
+    # @api.depends("parent_id", "is_company", "is_contact", "active")
+    # def _compute_contacts(self):
+    #     for record in self:
+    #         if not isinstance(record.id, models.NewId):
+    #             all_contacts = self.env["res.partner"].search(
+    #                 [
+    #                     ("id", "child_of", record.id),
+    #                     ("is_company", "=", False),
+    #                     ("is_contact", "=", True),
+    #                     ("patient_ids", "=", False),
+    #                     ("active", "=", True),
+    #                 ]
+    #             )
+    #             record.child_ids = all_contacts
+    #         else:
+    #             record.child_ids = self.env["res.partner"]
+
+    @api.depends("parent_id", "is_company", "is_contact")
     def _compute_contacts(self):
         for record in self:
-            if not isinstance(record.id, models.NewId):
-                all_contacts = self.env["res.partner"].search(
-                    [
-                        ("id", "child_of", record.id),
-                        ("is_company", "=", False),
-                        ("is_contact", "=", True),
-                        ("patient_ids", "=", False),
-                        ("active", "=", True),
-                    ]
-                )
-                record.child_ids = all_contacts
-            else:
-                record.child_ids = self.env["res.partner"]
+            record.child_ids = self.env["res.partner"].search(
+                [
+                    ("parent_id", "=", record.id),
+                    ("is_contact", "=", True),
+                    ("is_patient", "=", False),
+                ]
+            )
 
     @api.depends("contact_id", "type")
     def _compute_is_contact(self):
@@ -455,6 +468,42 @@ class Partner(models.Model):
                 record.affiliate_count = 0
                 record.contact_count = 0
 
+    # @api.depends("is_contact", "child_ids.is_patient")
+    # def _compute_patients(self):
+    #     for record in self:
+    #         if record.is_contact:
+    #             record.patient_ids = self.env["res.partner"].search(
+    #                 [("contact_id", "=", record.id)]
+    #             )
+    #         else:
+    #             record.patient_ids = self.env["res.partner"].search(
+    #                 [("parent_id", "=", record.id), ("is_patient", "=", True)]
+    #             )
+
+    @api.depends("is_contact", "child_ids.is_patient")
+    def _compute_patients(self):
+        for record in self:
+            if record.is_contact:
+                # Include patients linked to this contact
+                record.patient_ids = self.env["res.partner"].search(
+                    [("contact_id", "=", record.id), ("is_patient", "=", True)]
+                )
+            else:
+                # Include only direct children who are patients
+                record.patient_ids = self.env["res.partner"].search(
+                    [("parent_id", "=", record.id), ("is_patient", "=", True)]
+                )
+
+    @api.depends("patient_count")
+    def _compute_patient_text(self):
+        for record in self:
+            if not record.patient_count:
+                record.patient_text = False
+            elif record.patient_count == 1:
+                record.patient_text = _("(1 Patient)")
+            else:
+                record.patient_text = _("(%s Patients)" % record.patient_count)
+
     @api.depends("patient_id")
     def _compute_is_patient(self):
         """Determine if the partner is a patient."""
@@ -466,8 +515,17 @@ class Partner(models.Model):
     def _inverse_is_patient(self):
         """Update patient status."""
         for partner in self:
+            _logger.debug(
+                f"Processing _inverse_is_patient for partner ID {partner.id}:"
+            )
+            _logger.debug(
+                f"Current is_patient: {partner.is_patient}, Related patient_id: {partner.patient_id}"
+            )
             if partner.patient_id:
                 partner.patient_id.is_patient = partner.is_patient
+                _logger.debug(
+                    f"Updated patient_id {partner.patient_id.id}'s is_patient to: {partner.patient_id.is_patient}"
+                )
 
     @api.depends("child_ids", "child_ids.patient_ids")
     def _compute_patient_counts(self):
@@ -484,76 +542,6 @@ class Partner(models.Model):
                 record.patient_count = len(patients)
             else:
                 record.patient_count = 0
-
-    @api.depends("is_contact", "child_ids.is_patient", "parent_id")
-    def _compute_patient_records(self):
-        for record in self:
-            if record.is_contact:
-                record.patient_records = self.env["res.partner"].search(
-                    [("contact_id", "=", record.id)]
-                )
-            elif record.is_company:
-                all_descendants = self.env["res.partner"].search(
-                    [("parent_id", "child_of", record.id)]
-                )
-                record.patient_records = all_descendants.filtered(
-                    lambda p: p.is_patient
-                )
-            else:
-                record.patient_records = self.env["res.partner"]
-
-    # @api.depends("is_contact", "child_ids.patient_ids")
-    # def _compute_patient_records(self):
-    #     for record in self:
-    #         if record.is_contact:
-    #             record.patient_records = self.env["res.partner"].search(
-    #                 [("contact_id", "=", record.id)]
-    #             )
-    #         elif not isinstance(record.id, models.NewId) and record.is_company:
-    #             all_partners = self.env["res.partner"].search(
-    #                 [("parent_id", "child_of", record.id)]
-    #             )
-    #             all_partners -= record
-    #             record.patient_records = all_partners.mapped("patient_ids")
-    #         else:
-    #             record.patient_records = self.env["res.partner"]
-
-    #             _logger.debug(
-    #                 f"Computed patient records for {record.id}: {record.patient_records.ids}"
-    #             )
-
-    @api.depends("patient_count")
-    def _compute_patient_text(self):
-        for record in self:
-            if not record.patient_count:
-                record.patient_text = False
-            elif record.patient_count == 1:
-                record.patient_text = _("(1 Patient)")
-            else:
-                record.patient_text = _("(%s Patients)" % record.patient_count)
-
-    # @api.depends("child_ids", "child_ids.is_patient")
-    # def _compute_patients(self):
-    #     """
-    #     Compute the patient_ids field to list all child partners who are patients.
-    #     """
-    #     for record in self:
-    #         _logger.info(f"Computing patients for {record.name}")
-    #         if not isinstance(record.id, models.NewId):
-    #             patients = record.child_ids.filtered(lambda p: p.is_patient)
-    #             record.patient_ids = patients
-    #         else:
-    #             record.patient_ids = self.env["res.partner"]
-
-    @api.depends("is_contact", "child_ids.is_patient")
-    def _compute_patients(self):
-        for record in self:
-            if record.is_contact:
-                record.patient_ids = self.env["res.partner"].search(
-                    [("contact_id", "=", record.id)]
-                )
-            else:
-                record.patient_ids = self.env["res.partner"]
 
     # Roles
     is_role_required = fields.Boolean(
@@ -573,8 +561,18 @@ class Partner(models.Model):
             )
 
     def _inverse_is_role_required(self):
+        """
+        Ensure that roles are set as required when applicable.
+        """
         for record in self:
+            _logger.debug(
+                f"Processing _inverse_is_role_required for record ID {record.id}:"
+            )
+            _logger.debug(
+                f"Current is_role_required: {record.is_role_required}, Contact roles: {record.contact_role_ids}"
+            )
             if record.is_role_required and not record.contact_role_ids:
+                _logger.error("ValidationError: Roles are required for contacts.")
                 raise ValidationError("Roles are required for contacts.")
 
     @api.constrains("is_contact", "contact_role_ids")
@@ -658,20 +656,49 @@ class Partner(models.Model):
 
     @api.model
     def write(self, vals):
+        _logger.debug(
+            f"Write called with vals: {vals}, existing parent_id: {self.parent_id}"
+        )
+
+        # Ensure parent_id is not incorrectly set to False
+        if "parent_id" in vals and vals["parent_id"] is False:
+            _logger.warning("Attempt to set parent_id to False detected and prevented.")
+            vals.pop("parent_id")
+
+        # Check and set recursion prevention context
         if self.env.context.get("prevent_recursion", False):
             return super(Partner, self).write(vals)
-        context = dict(self.env.context, prevent_recursion=True)
-        result = super(Partner, self).with_context(context).write(vals)
+
+        context_with_prevention = dict(self.env.context, prevent_recursion=True)
+        result = super(Partner, self).with_context(context_with_prevention).write(vals)
+
+        _logger.debug(f"After write, parent_id: {self.parent_id}")
+
+        # Perform additional validation for partners
         for partner in self:
-            if partner.is_partner or partner.patient_ids:
+            if partner._requires_contact_check():
                 partner.check_contact("write")
+
         return result
 
     def unlink(self):
+        """
+        Override the unlink method to enforce additional checks
+        before deleting partner records.
+        """
         for partner in self:
-            if partner.is_partner or partner.sudo().patient_ids:
+            if partner._requires_contact_check():
                 partner.check_contact("unlink")
-        return super().unlink()
+        return super(Partner, self).unlink()
+
+    def _requires_contact_check(self):
+        """
+        Determine if the partner requires additional contact checks.
+
+        Returns:
+            bool: True if the partner requires contact checks, False otherwise.
+        """
+        return self.is_partner or bool(self.sudo().patient_ids)
 
     def _commercial_sync_to_children(self, visited=None):
         """Handle sync of commercial fields to descendants"""
@@ -708,19 +735,6 @@ class Partner(models.Model):
         ]
         # If there's a need to add more fields from parent or other inheriting models, add here.
         return fields
-
-    @api.constrains("is_affiliate_company", "parent_id")
-    def check_affiliate_practice(self):
-        test_condition = not config["test_enable"] or self.env.context.get(
-            "test_check_affiliate_practice"
-        )
-        if not test_condition:
-            return
-        for record in self:
-            if record.is_affiliate_company and not record.parent_id:
-                raise ValidationError(
-                    _("Parent Company must be fulfilled on affiliates")
-                )
 
     def check_contact(self, mode="write"):
         if self.env.su:
@@ -818,6 +832,16 @@ class Partner(models.Model):
             "res_id": self.parent_id.id,
             "target": "new",
             "flags": {"form": {"action_buttons": True}},
+        }
+
+    def open_partner_form(self):
+        """Open contact form from the parent partner form view"""
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "res.partner",
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "current",
         }
 
     create_users_button = fields.Boolean(

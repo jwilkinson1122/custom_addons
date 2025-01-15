@@ -14,7 +14,7 @@ class MassActionWizard(models.TransientModel):
         default="add",
     )
     update_customers_ids = fields.Many2many(
-        "res.partner", string="Customers", required="1"
+        "res.partner", string="Customers", required=True
     )
     statement_ids = fields.Many2many(
         "customer.statement.config", string="Statement Mass Update"

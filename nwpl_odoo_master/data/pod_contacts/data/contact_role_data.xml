@@ -60,8 +60,4 @@
         <field name="name">General Staff</field>
         <field name="description">General Staff</field>
     </record>
-    <!-- <record model="contact.role" id="patient">
-        <field name="name">Patient</field>
-        <field name="description">Patient</field>
-    </record> -->
 </odoo>
