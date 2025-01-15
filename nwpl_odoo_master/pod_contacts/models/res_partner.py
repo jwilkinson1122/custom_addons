@@ -128,7 +128,7 @@ class Partner(models.Model):
     is_parent_company = fields.Boolean(string="Parent Company", default=False)
     is_company = fields.Boolean(string="Company", default=False)
     is_affiliate_company = fields.Boolean(string="Affiliate", default=False)
-
+  
     is_commercial_partner = fields.Boolean(
         string="Trading Company",
         help="Set this to True if this contact should be treated as its own trading company, "

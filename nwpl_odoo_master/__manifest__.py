@@ -205,7 +205,7 @@
         "point_of_sale._assets_pos": [],
     },
     "images": ["static/description/icon.png"],
-    "external_dependencies": {"python": ["fsspec", "python_slugify", "boto3", "mako"]},
+    "external_dependencies": {"python": ["fsspec", "pyodbc", "python_slugify", "boto3", "mako"]},
     "pre_init_hook": "pre_init_hook",
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
