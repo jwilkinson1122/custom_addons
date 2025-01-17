@@ -64,7 +64,7 @@ class PrescriptionOrder(models.Model):
     affiliate_id = fields.Many2one(
         string="Affiliate",
         comodel_name="res.partner",
-        domain="[('is_affiliate_company', '=', True)]",
+        domain="[('is_affiliate', '=', True)]",
         required=True,
         # track_visibility="onchange",
     )

@@ -12,7 +12,7 @@ class TestContactAffiliate(TransactionCase):
     def test_practice(self):
         vals = {
             "name": "affiliate",
-            "is_affiliate_company": True,
+            "is_affiliate": True,
         }
         with self.assertRaises(ValidationError):
             self.partner_obj.create(vals)
@@ -25,5 +25,5 @@ class TestContactAffiliate(TransactionCase):
         vals["company_id"] = practice.id
         self.assertEqual(practice.affiliate_count, 0)
         affiliate = self.partner_obj.create(vals)
-        self.assertTrue(affiliate.is_affiliate_company)
+        self.assertTrue(affiliate.is_affiliate)
         self.assertEqual(practice.affiliate_count, 1)

@@ -1,0 +1,2 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_sql_to_csv,access_sql_to_csv,nalios_sql_to_csv.model_sql_to_csv,base.group_user,1,1,1,1

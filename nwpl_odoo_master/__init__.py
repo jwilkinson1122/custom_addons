@@ -10,6 +10,7 @@ from . import amazon_s3_connector
 from . import pod_contacts
 from . import pod_login_as
 
+from . import pod_hierarchy
 # from . import pod_brand
 from . import pod_product_brand
 from . import pod_product_options

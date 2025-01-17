@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="phone" position="after">
-                <field name="customer_compute_boolean" invisible="1"/>
+                <!-- <field name="customer_compute_boolean" invisible="1"/> -->
+                <field name="customer_compute_boolean" column_invisible="1"/>
             </field>
         </field>
     </record>

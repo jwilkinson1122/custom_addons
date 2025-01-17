@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sql_to_csv_form_view" model="ir.ui.view">
+        <field name="name">sql.to.csv.form.view</field>
+        <field name="model">sql.to.csv</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="sql"/>
+                    </group>
+                    <group>
+                        <field name="csv_filename" attrs="{'invisible': True}"/>
+                        <field name="csv_file" filename="csv_filename" attrs="{'readonly': True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button type="object" name="do_sql_to_csv" string="Generate CSV" class="oe_highlight"/>
+                    <button special="cancel" name="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sql_to_csv_action" model="ir.actions.act_window">
+        <field name="name">SQL to CSV</field>
+        <field name="res_model">sql.to.csv</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="sql_to_csv_menu" name="SQL to CSV" action="sql_to_csv_action" parent="base.next_id_9" groups="base.group_no_one"/>
+</odoo>

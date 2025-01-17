@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+<record id="inherit_view_partner_form" model="ir.ui.view">
+        <field name="name">inherit.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet//div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <!-- Affiliates Notebook Page -->
+            <xpath expr="//page[@name='contact_addresses']" position="before">
+                <page name="affiliates_page" string="Affiliates" invisible="not is_company">
+                    <group>
+                        <!-- Direct Affiliates -->
+                        <label for="affiliate_ids" string="Affiliates" class="fw-bolder mb-3 mt-4 small text-uppercase" />
+                        <field name="affiliate_ids" context="{'default_parent_id': id, 'default_is_company': True, 'default_company_type': 'company', 'default_type': ''}" mode="kanban" />
+
+                        <!-- Sub-Affiliates -->
+                        <label for="sub_affiliate_ids" string="Sub-Affiliates" class="fw-bolder mb-3 mt-4 small text-uppercase" />
+                        <field name="sub_affiliate_ids" context="{'default_is_company': True, 'default_company_type': 'company', 'default_type': ''}" mode="kanban" />
+                    </group>
+                </page>
+            </xpath>
+            <!-- Contacts Notebook Page -->
+            <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="string">Contacts</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']" position="before">
+                <group>
+                    <!-- Direct Contacts -->
+                    <label for="child_ids" string="Direct Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']" position="after">
+                <group>
+                    <!-- Sub-Contacts -->
+                    <label for="sub_contact_ids" string="Sub-Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
+                    <field name="sub_contact_ids" context="{'default_is_company': False, 'default_company_type': 'person'}" mode="kanban">
+                        <kanban>
+                            <field name="id" />
+                            <field name="name" />
+                            <field name="email" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div>
+                                            <field name="name" />
+                                            <field name="email" widget="email" />
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+ 
+
+</odoo>

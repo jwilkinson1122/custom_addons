@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# from . import hierarchy_mixin
 from . import barcode_action
 from . import base_partner_merge
 from . import contact_abstract

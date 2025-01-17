@@ -16,28 +16,11 @@ _logger = logging.getLogger(__name__)
 class Partner(models.Model):
     _inherit = "res.partner"
 
-    # company_type = fields.Selection(string='Company Type',
-    #     selection=[('person', 'Individual'), ('company', 'Company')],
-    #     compute='_compute_company_type', inverse='_write_company_type')
-
     partner_type = fields.Many2one(
         string="Partner Type",
         comodel_name="contact.partner.type",
         help="Select the type of partner this belongs to.",
     )
-
-    # type = fields.Selection(
-    #     [('contact', 'Contact'),
-    #      ('invoice', 'Invoice Address'),
-    #      ('delivery', 'Delivery Address'),
-    #      ('other', 'Other Address'),
-    #     ], string='Address Type',
-    #     default='contact',
-    #     help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
-    #          "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
-    #          "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
-    #          "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
-    #          "- Other: Other address for the company (e.g. subsidiary, ...)")
 
     type = fields.Selection(
         selection_add=[
@@ -227,8 +210,7 @@ class Partner(models.Model):
         "res.partner",
         "parent_id",
         string="Patients",
-        compute="_compute_patients",
-        store=True,
+        domain=[("active", "=", True), ("is_patient", "=", True)],
     )
 
     shared_patient_ids = fields.Many2many(
@@ -357,26 +339,6 @@ class Partner(models.Model):
         for partner in self:
             partner.child_count = len(partner.child_ids)
 
-    # @api.depends(
-    #     "parent_id", "is_parent_company", "is_company", "is_affiliate_company", "active"
-    # )
-    # def _compute_affiliate_ids(self):
-    #     for record in self:
-    #         if not isinstance(record.id, models.NewId):
-    #             all_affiliates = self.env["res.partner"].search(
-    #                 [
-    #                     ("id", "child_of", record.id),
-    #                     ("is_parent_company", "=", False),
-    #                     ("is_company", "=", True),
-    #                     ("is_affiliate_company", "=", True),
-    #                     ("patient_ids", "=", False),
-    #                     ("active", "=", True),
-    #                 ]
-    #             )
-    #             record.affiliate_ids = all_affiliates - record
-    #         else:
-    #             record.affiliate_ids = self.env["res.partner"]
-
     @api.depends("parent_id", "is_company", "is_affiliate_company")
     def _compute_affiliate_ids(self):
         for record in self:
@@ -399,23 +361,6 @@ class Partner(models.Model):
             else:
                 record.affiliate_text = _("(%s Affiliates)" % record.affiliate_count)
 
-    # @api.depends("parent_id", "is_company", "is_contact", "active")
-    # def _compute_contacts(self):
-    #     for record in self:
-    #         if not isinstance(record.id, models.NewId):
-    #             all_contacts = self.env["res.partner"].search(
-    #                 [
-    #                     ("id", "child_of", record.id),
-    #                     ("is_company", "=", False),
-    #                     ("is_contact", "=", True),
-    #                     ("patient_ids", "=", False),
-    #                     ("active", "=", True),
-    #                 ]
-    #             )
-    #             record.child_ids = all_contacts
-    #         else:
-    #             record.child_ids = self.env["res.partner"]
-
     @api.depends("parent_id", "is_company", "is_contact")
     def _compute_contacts(self):
         for record in self:
@@ -423,7 +368,7 @@ class Partner(models.Model):
                 [
                     ("parent_id", "=", record.id),
                     ("is_contact", "=", True),
-                    ("is_patient", "=", False),
+                    ("is_patient", "=", False),  
                 ]
             )
 
@@ -468,28 +413,16 @@ class Partner(models.Model):
                 record.affiliate_count = 0
                 record.contact_count = 0
 
-    # @api.depends("is_contact", "child_ids.is_patient")
-    # def _compute_patients(self):
-    #     for record in self:
-    #         if record.is_contact:
-    #             record.patient_ids = self.env["res.partner"].search(
-    #                 [("contact_id", "=", record.id)]
-    #             )
-    #         else:
-    #             record.patient_ids = self.env["res.partner"].search(
-    #                 [("parent_id", "=", record.id), ("is_patient", "=", True)]
-    #             )
-
-    @api.depends("is_contact", "child_ids.is_patient")
+    @api.depends("parent_id", "is_contact", "is_patient")
     def _compute_patients(self):
         for record in self:
             if record.is_contact:
-                # Include patients linked to this contact
+                _logger.debug(f"Computing patients for contact: {record.name}")
                 record.patient_ids = self.env["res.partner"].search(
                     [("contact_id", "=", record.id), ("is_patient", "=", True)]
                 )
             else:
-                # Include only direct children who are patients
+                _logger.debug(f"Computing patients for parent: {record.name}")
                 record.patient_ids = self.env["res.partner"].search(
                     [("parent_id", "=", record.id), ("is_patient", "=", True)]
                 )
