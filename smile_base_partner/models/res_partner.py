@@ -165,13 +165,28 @@ class ResPartner(models.Model):
         res['partner_type_id'] = self.env['res.partner.type'].search([('code', '=', 'CUSTOMER')], limit=1).id
         return res
     
+    # @api.onchange('company_type')
+    # def _onchange_company_type(self):
+    #     code = 'CONTACT'
+    #     if self.company_type == 'company':
+    #         code = 'SUPPLIER' if self.supplier else 'CUSTOMER'
+    #     self.partner_type_id = self.partner_type_id.search(
+    #         [('code', '=', code)], limit=1)
+
     @api.onchange('company_type')
     def _onchange_company_type(self):
-        code = 'CONTACT'
         if self.company_type == 'company':
-            code = 'SUPPLIER' if self.supplier else 'CLIENT'
-        self.partner_type_id = self.partner_type_id.search(
-            [('code', '=', code)], limit=1)
+            # For companies, check if they are suppliers or customers
+            code = 'SUPPLIER' if self.supplier else 'CUSTOMER'
+        elif self.company_type == 'person':
+            # For individuals, differentiate between CONTACT and PATIENT
+            code = 'PATIENT' if self.partner_type_id.code == 'PATIENT' else 'CONTACT'
+        else:
+            # Default fallback
+            code = 'CONTACT'
+        
+        self.partner_type_id = self.env['res.partner.type'].search([('code', '=', code)], limit=1)
+
 
     @api.onchange('partner_type_id')
     def _onchange_partner_type(self):

@@ -3,7 +3,7 @@
 
     <record id="partner_type_customer" model="res.partner.type">
       <field name="name">Customer</field>
-      <field name="code">CLIENT</field>
+      <field name="code">CUSTOMER</field>
       <field name="customer" eval="True"/>
       <field name="supplier" eval="False"/>
     </record>
@@ -18,6 +18,13 @@
       <field name="code">CONTACT</field>
       <field name="company_type">person</field>
       <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_customer'), ref('partner_type_supplier')])]"/>
+      <field name="type">contact</field>
+    </record>
+    <record id="partner_type_patient" model="res.partner.type">
+      <field name="name">Patient</field>
+      <field name="code">PATIENT</field>
+      <field name="company_type">person</field>
+      <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_customer')])]"/>
       <field name="type">contact</field>
     </record>
     <record id="partner_type_invoice" model="res.partner.type">
