@@ -13,13 +13,6 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     parent_id = fields.Many2one(ondelete='restrict')
-    # parent_id = fields.Many2one(
-    #     'res.partner', string='Parent Company',
-    #     domain="[('is_company', '=', True), '|', ('partner_type_id', '=', False), ('partner_type_id', 'in', parent_type_ids)]",
-    #     ondelete='restrict',
-    #     help="Select a parent company for this partner."
-    # )
-
     type = fields.Selection(default=False)
     partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')
     can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
@@ -30,6 +23,7 @@ class ResPartner(models.Model):
         compute='_compute_parent_types'
     )
     
+    # Affiliates
     affiliate_ids = fields.One2many(
         'res.partner', 
         'parent_id', 
@@ -42,6 +36,7 @@ class ResPartner(models.Model):
     affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count')
     affiliates_label = fields.Char(related='partner_type_id.affiliates_label', readonly=True)
     
+    # Sub Affiliates
     sub_affiliate_ids = fields.One2many(
         comodel_name="res.partner",
         string="Sub-Affiliates",
@@ -68,12 +63,12 @@ class ResPartner(models.Model):
             all_sub_affiliates = partner._get_all_sub_affiliates()
             partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids  # Exclude direct affiliates
 
-
+    # Contacts
     contact_ids = fields.One2many('res.partner', 'parent_id', 'Contacts', domain=[('is_company', '=', False)])
-
     contacts_count = fields.Integer('Number of Contacts', compute='_compute_contacts_count')
     contacts_label = fields.Char(related='partner_type_id.contacts_label', readonly=True)
     
+    # Sub Contacts
     sub_contact_ids = fields.One2many(
         comodel_name="res.partner",
         string="Sub-Contacts",
@@ -112,32 +107,9 @@ class ResPartner(models.Model):
             else:
                 partner.sub_contact_ids = self.env["res.partner"]  # Empty for non-companies
 
+    # Patients
 
-    # def _get_all_sub_contacts(self):
-    #     """
-    #     Recursively fetch all sub-contacts for the current partner, excluding direct contacts.
-    #     """
-    #     sub_contacts = self.env["res.partner"]
-    #     for contact in self.contact_ids:  
-    #         _logger.debug("Processing contact: %s (ID: %s)", contact.name, contact.id)
-    #         sub_contacts |= contact.contact_ids   
-    #         _logger.debug("Direct sub-contacts for %s: %s", contact.name, contact.contact_ids)
-    #         sub_contacts |= contact._get_all_sub_contacts()  
-    #         _logger.debug("Recursive sub-contacts for %s: %s", contact.name, sub_contacts)
-    #     _logger.debug("All sub-contacts for partner %s (ID: %s): %s", self.name, self.id, sub_contacts)
-    #     return sub_contacts
 
-    # @api.depends("contact_ids", "contact_ids.contact_ids")
-    # def _compute_sub_contact_ids(self):
-    #     """
-    #     Compute sub-contacts for each partner.
-    #     """
-    #     for partner in self:
-    #         _logger.debug("Computing sub-contacts for partner: %s (ID: %s)", partner.name, partner.id)
-    #         all_sub_contacts = partner._get_all_sub_contacts()
-    #         _logger.debug("All sub-contacts before exclusion for %s: %s", partner.name, all_sub_contacts)
-    #         partner.sub_contact_ids = all_sub_contacts - partner.contact_ids   
-    #         _logger.debug("Final sub-contacts for partner %s: %s", partner.name, partner.sub_contact_ids)
 
     parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
     customer = fields.Boolean(string='Is a Customer', default=True,
@@ -221,7 +193,6 @@ class ResPartner(models.Model):
                 if children_vals:
                     partner.child_ids.write(children_vals)
 
-
     @api.model
     def create(self, vals):
         # Safely retrieve the partner_type_id from vals
@@ -235,7 +206,6 @@ class ResPartner(models.Model):
         new_partner = super(ResPartner, self).create(vals)
         new_partner._update_children(vals)
         return new_partner
-
 
     def write(self, vals):
         partners_by_type = {}
