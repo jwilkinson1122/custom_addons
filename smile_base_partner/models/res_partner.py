@@ -36,6 +36,18 @@ class ResPartner(models.Model):
     affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count')
     affiliates_label = fields.Char(related='partner_type_id.affiliates_label', readonly=True)
     
+    @api.depends('child_ids')
+    def _compute_affiliate_ids(self):
+        for partner in self:
+            partner.affiliate_ids = partner.child_ids.filtered(lambda c: c.is_company)
+
+    @api.depends('child_ids')
+    def _compute_affiliates_count(self):
+        affiliates = self.mapped('child_ids').filtered(
+            lambda child: child.is_company)
+        self.affiliates_count = len(affiliates)
+
+
     # Sub Affiliates
     sub_affiliate_ids = fields.One2many(
         comodel_name="res.partner",
@@ -125,16 +137,16 @@ class ResPartner(models.Model):
             else:
                 partner.parent_type_ids = self.env['res.partner.type'].browse()
 
-    @api.depends('child_ids')
-    def _compute_affiliate_ids(self):
-        for partner in self:
-            partner.affiliate_ids = partner.child_ids.filtered(lambda c: c.is_company)
+    # @api.depends('child_ids')
+    # def _compute_affiliate_ids(self):
+    #     for partner in self:
+    #         partner.affiliate_ids = partner.child_ids.filtered(lambda c: c.is_company)
 
-    @api.depends('child_ids')
-    def _compute_affiliates_count(self):
-        affiliates = self.mapped('child_ids').filtered(
-            lambda child: child.is_company)
-        self.affiliates_count = len(affiliates)
+    # @api.depends('child_ids')
+    # def _compute_affiliates_count(self):
+    #     affiliates = self.mapped('child_ids').filtered(
+    #         lambda child: child.is_company)
+    #     self.affiliates_count = len(affiliates)
 
     @api.depends('partner_type_id')
     def _compute_partner_type_infos(self):

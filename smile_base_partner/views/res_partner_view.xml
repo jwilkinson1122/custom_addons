@@ -40,7 +40,7 @@
             </xpath>
 
             <xpath expr="//page[@name='contact_addresses']" position="before">
-                <page string="Affiliates" name="affiliates_page">
+                <page string="Affiliates" name="affiliates_page" autofocus="True">
                     <group>
                         <label for="affiliate_ids" string="Affiliates" class="fw-bolder mb-3 mt-4 small text-uppercase" />
                     </group>
