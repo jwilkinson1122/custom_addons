@@ -12,6 +12,12 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
+    customer = fields.Boolean(string='Is a Customer', default=True,
+                              help="Check this box if this contact is a customer. It can be selected in sales orders.")
+    supplier = fields.Boolean(string='Is a Vendor',
+                              help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
+
     parent_id = fields.Many2one(ondelete='restrict')
     type = fields.Selection(default=False)
     partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')
@@ -30,7 +36,7 @@ class ResPartner(models.Model):
         string='Affiliates',
         compute='_compute_affiliate_ids',
         store=False,  # Avoid saving to the database
-        domain=[('is_company', '=', True)]
+        domain=[('active', '=', True), ('is_company', '=', True)]
     )
     
     affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count')
@@ -76,10 +82,28 @@ class ResPartner(models.Model):
             partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids  # Exclude direct affiliates
 
     # Contacts
-    contact_ids = fields.One2many('res.partner', 'parent_id', 'Contacts', domain=[('is_company', '=', False)])
+    # child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
+    # contact_ids = fields.One2many('res.partner', 'parent_id', 'Contacts', domain=[('active', '=', True), ('is_company', '=', False)])
+    
+    contact_ids = fields.One2many(
+        'res.partner', 'parent_id',
+        string='Contacts',
+        compute='_compute_contact_ids',
+        store=False,
+        help="Filtered children that are contacts."
+    )
+
+    
     contacts_count = fields.Integer('Number of Contacts', compute='_compute_contacts_count')
     contacts_label = fields.Char(related='partner_type_id.contacts_label', readonly=True)
     
+    @api.depends('child_ids')
+    def _compute_contact_ids(self):
+        for partner in self:
+            partner.contact_ids = partner.child_ids.filtered(
+                lambda c: not c.is_company and c.partner_type_id.code != 'PATIENT'
+            )
+
     # Sub Contacts
     sub_contact_ids = fields.One2many(
         comodel_name="res.partner",
@@ -91,43 +115,164 @@ class ResPartner(models.Model):
     def _get_all_sub_contacts(self):
         """
         Recursively fetch all sub-contacts for the current company,
-        excluding direct child contacts.
+        excluding direct child contacts and patients.
         """
         sub_contacts = self.env["res.partner"]
         if self.is_company:
             for child in self.child_ids:
-                if not child.is_company:  # Ensure only non-company contacts are processed
+                if not child.is_company and child.partner_type_id.code != 'PATIENT':  # Exclude patients and include only non-companies
                     _logger.debug("Adding direct child contact: %s (ID: %s)", child.name, child.id)
                     sub_contacts |= child  # Include the direct child contact
                 # Recursively fetch all contacts for the child, including deeper levels
                 sub_contacts |= child._get_all_sub_contacts()
         return sub_contacts
+    
 
     @api.depends("child_ids", "child_ids.child_ids")
     def _compute_sub_contact_ids(self):
         """
-        Compute sub-contacts for the current company.
+        Compute sub-contacts for the current company, excluding patients.
         """
         for partner in self:
             if partner.is_company:  # Ensure we compute for companies only
                 _logger.debug("Computing sub-contacts for company: %s (ID: %s)", partner.name, partner.id)
                 all_sub_contacts = partner._get_all_sub_contacts()
                 # Exclude direct child contacts from the results
-                final_sub_contacts = all_sub_contacts - partner.child_ids.filtered(lambda c: not c.is_company)
+                final_sub_contacts = all_sub_contacts - partner.child_ids.filtered(
+                    lambda c: not c.is_company and c.partner_type_id.code != 'PATIENT'
+                )
                 _logger.debug("Final sub-contacts for company %s (ID: %s): %s", partner.name, partner.id, final_sub_contacts)
                 partner.sub_contact_ids = final_sub_contacts
             else:
                 partner.sub_contact_ids = self.env["res.partner"]  # Empty for non-companies
 
+
+
+    # def _get_all_sub_contacts(self):
+    #     """
+    #     Recursively fetch all sub-contacts for the current company,
+    #     excluding direct child contacts.
+    #     """
+    #     sub_contacts = self.env["res.partner"]
+    #     if self.is_company:
+    #         for child in self.child_ids:
+    #             if not child.is_company:  
+    #                 _logger.debug("Adding direct child contact: %s (ID: %s)", child.name, child.id)
+    #                 sub_contacts |= child 
+    #             sub_contacts |= child._get_all_sub_contacts()
+    #     return sub_contacts
+
+    # @api.depends("child_ids", "child_ids.child_ids")
+    # def _compute_sub_contact_ids(self):
+    #     """
+    #     Compute sub-contacts for the current company.
+    #     """
+    #     for partner in self:
+    #         if partner.is_company:  
+    #             _logger.debug("Computing sub-contacts for company: %s (ID: %s)", partner.name, partner.id)
+    #             all_sub_contacts = partner._get_all_sub_contacts()
+    #             final_sub_contacts = all_sub_contacts - partner.child_ids.filtered(lambda c: not c.is_company)
+    #             _logger.debug("Final sub-contacts for company %s (ID: %s): %s", partner.name, partner.id, final_sub_contacts)
+    #             partner.sub_contact_ids = final_sub_contacts
+    #         else:
+    #             partner.sub_contact_ids = self.env["res.partner"]  
+
     # Patients
+    # Direct Patients
+    patient_ids = fields.One2many(
+        'res.partner', 'parent_id', string='Patients',
+        domain=[('partner_type_id.code', '=', 'PATIENT')],
+        help="Directly associated patients."
+    )
+
+    patients_count = fields.Integer('Number of Patients', compute='_compute_patients_count')
+
+    # Sub-Patients
+    sub_patient_ids = fields.One2many(
+        comodel_name="res.partner",
+        string="Sub-Patients",
+        compute="_compute_sub_patient_ids",
+        store=False,
+        help="All sub-patients recursively associated with this company."
+    )
+
+    def _get_all_sub_patients(self):
+        """
+        Recursively fetch all sub-patients for the current company,
+        excluding direct child patients.
+        """
+        sub_patients = self.env["res.partner"]
+        if self.is_company:
+            for child in self.child_ids:
+                if child.partner_type_id.code == 'PATIENT':  # Include only patients
+                    _logger.debug("Adding direct child patient: %s (ID: %s)", child.name, child.id)
+                    sub_patients |= child  # Include the direct child patient
+                # Recursively fetch all sub-patients for the child, including deeper levels
+                sub_patients |= child._get_all_sub_patients()
+        return sub_patients
+
+    @api.depends("child_ids", "child_ids.child_ids")
+    def _compute_sub_patient_ids(self):
+        """
+        Compute sub-patients for the current company.
+        """
+        for partner in self:
+            if partner.is_company:  # Ensure we compute for companies only
+                _logger.debug("Computing sub-patients for company: %s (ID: %s)", partner.name, partner.id)
+                all_sub_patients = partner._get_all_sub_patients()
+                # Exclude direct child patients from the results
+                partner.sub_patient_ids = all_sub_patients - partner.patient_ids
+                _logger.debug("Final sub-patients for company %s (ID: %s): %s", partner.name, partner.id, partner.sub_patient_ids)
+            else:
+                partner.sub_patient_ids = self.env["res.partner"]  # Empty for non-companies
+
+    @api.depends('patient_ids')
+    def _compute_patients_count(self):
+        """
+        Compute the number of direct patients for each partner.
+        """
+        for partner in self:
+            partner.patients_count = len(partner.patient_ids)
+
+    # patient_ids = fields.One2many(
+    #     'res.partner', 'parent_id', string='Patients',
+    #     domain=[('partner_type_id.code', '=', 'PATIENT')],
+    #     help="Directly associated patients.")
+
+    # sub_patient_ids = fields.One2many(
+    #     comodel_name="res.partner",
+    #     compute="_compute_sub_patient_ids",
+    #     store=False,
+    #     string="Sub-Patients",
+    #     help="All sub-patients recursively associated with this partner."
+    # )
+
+    # def _get_all_sub_patients(self):
+    #     """
+    #     Recursively fetch all sub-patients for the current partner.
+    #     """
+    #     sub_patients = self.env['res.partner']
+    #     for patient in self.patient_ids:
+    #         sub_patients |= patient
+    #         sub_patients |= patient._get_all_sub_patients()
+    #     return sub_patients
+
+    # @api.depends('patient_ids', 'patient_ids.patient_ids')
+    # def _compute_sub_patient_ids(self):
+    #     """
+    #     Compute sub-patients for each partner.
+    #     """
+    #     for partner in self:
+    #         partner.sub_patient_ids = partner._get_all_sub_patients() - partner.patient_ids
 
 
 
-    parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
-    customer = fields.Boolean(string='Is a Customer', default=True,
-                              help="Check this box if this contact is a customer. It can be selected in sales orders.")
-    supplier = fields.Boolean(string='Is a Vendor',
-                              help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
+
+    # parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
+    # customer = fields.Boolean(string='Is a Customer', default=True,
+    #                           help="Check this box if this contact is a customer. It can be selected in sales orders.")
+    # supplier = fields.Boolean(string='Is a Vendor',
+    #                           help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
 
     @api.depends('partner_type_id')
     def _compute_parent_types(self):
@@ -136,17 +281,6 @@ class ResPartner(models.Model):
                 partner.parent_type_ids = partner.partner_type_id.parent_type_ids
             else:
                 partner.parent_type_ids = self.env['res.partner.type'].browse()
-
-    # @api.depends('child_ids')
-    # def _compute_affiliate_ids(self):
-    #     for partner in self:
-    #         partner.affiliate_ids = partner.child_ids.filtered(lambda c: c.is_company)
-
-    # @api.depends('child_ids')
-    # def _compute_affiliates_count(self):
-    #     affiliates = self.mapped('child_ids').filtered(
-    #         lambda child: child.is_company)
-    #     self.affiliates_count = len(affiliates)
 
     @api.depends('partner_type_id')
     def _compute_partner_type_infos(self):
@@ -165,14 +299,6 @@ class ResPartner(models.Model):
         res['partner_type_id'] = self.env['res.partner.type'].search([('code', '=', 'CUSTOMER')], limit=1).id
         return res
     
-    # @api.onchange('company_type')
-    # def _onchange_company_type(self):
-    #     code = 'CONTACT'
-    #     if self.company_type == 'company':
-    #         code = 'SUPPLIER' if self.supplier else 'CUSTOMER'
-    #     self.partner_type_id = self.partner_type_id.search(
-    #         [('code', '=', code)], limit=1)
-
     @api.onchange('company_type')
     def _onchange_company_type(self):
         if self.company_type == 'company':
@@ -186,7 +312,6 @@ class ResPartner(models.Model):
             code = 'CONTACT'
         
         self.partner_type_id = self.env['res.partner.type'].search([('code', '=', code)], limit=1)
-
 
     @api.onchange('partner_type_id')
     def _onchange_partner_type(self):
