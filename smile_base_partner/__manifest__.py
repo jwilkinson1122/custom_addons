@@ -3,6 +3,7 @@
     "name": "Partner Organisation",
     "version": "0.1",
     "depends": [
+        "base",
         "contacts",
         "sales_team",
     ],
