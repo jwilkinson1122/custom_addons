@@ -40,6 +40,7 @@ Partner Organisation
     "sequence": 0,
     "data": [
         "security/ir.model.access.csv",
+        # "views/kanban_template_view.xml",
         "views/res_partner_view.xml",
         "views/res_partner_type_view.xml",
         "data/res_partner_type_data.xml",
