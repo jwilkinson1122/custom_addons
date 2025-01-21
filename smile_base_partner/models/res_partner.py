@@ -21,12 +21,14 @@ class ResPartner(models.Model):
     parent_id = fields.Many2one(ondelete='restrict')
     type = fields.Selection(default=False)
     partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')
-    # partner_type_id = fields.Many2one(
-    #     'res.partner.type',
-    #     string="Partner Type",
-    #     default=lambda self: self.env.ref('your_module.partner_type_patient').id
-    # )
-    
+
+    partner_type_code = fields.Char(
+        string="Partner Type Code",
+        related="partner_type_id.code",  # Adjust this based on your model's relationships
+        store=True,
+        readonly=True,
+    )
+        
     can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
     parent_is_required = fields.Boolean(compute='_compute_partner_type_infos')
     parent_type_ids = fields.Many2many(

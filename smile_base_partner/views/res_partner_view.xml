@@ -10,11 +10,13 @@
                 <field name="can_have_parent" invisible="1"/>
                 <field name="parent_is_required" invisible="1"/>
                 <field name="parent_type_ids" invisible="1"/>
+                <field name="partner_type_code" invisible="1"/> 
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="before">
                 <field name="customer" invisible="1"/>
                 <field name="supplier" invisible="1"/>
                 <field name="parent_type_ids" invisible="1"/>
+                <field name="partner_type_code" invisible="1"/> 
                 <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]"/>
                 <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="not can_have_parent or not partner_type_id"/>
             </xpath>
@@ -300,7 +302,7 @@
                 <attribute name="string">Contacts</attribute>
             </xpath>
             <xpath expr="//field[@name='child_ids']" position="attributes">
-                <attribute name="domain">[('partner_type_id.code', '!=', 'PATIENT'), ('is_company', '=', False)]</attribute>
+                <attribute name="domain">[('partner_type_code', '!=', 'PATIENT'), ('is_company', '=', False)]</attribute>
             </xpath>
             <xpath expr="//field[@name='child_ids']" position="before">
                 <label for='child_ids' string="Direct Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
@@ -324,7 +326,7 @@
                             <field name="country_id" />
                         </tree>
                     </field>
-                    <!-- <field name="sub_contact_ids" mode="kanban" invisible="not sub_contact_ids" colspan="2" domain="[('partner_type_id.code', '!=', 'PATIENT'), ('is_company', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
+                    <!-- <field name="sub_contact_ids" mode="kanban" invisible="not sub_contact_ids" colspan="2" domain="[('partner_type_code', '!=', 'PATIENT'), ('is_company', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
                         <kanban>
                             <field name="id" />
                             <field name="color" />
@@ -444,7 +446,8 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr='//page[@name="contact_addresses"]' position="after">
-                <page name="patients" string="Patients" invisible="partner_type_id.code == 'PATIENT'">
+                <page name="patients" string="Patients" invisible="partner_type_code == 'PATIENT'">
+                    <!-- <field name="partner_type_code" invisible="1"/> -->
                     <group>
                         <label for="patient_ids" string="Direct Patients" class="fw-bolder mb-3 mt-4 small text-uppercase" />
                     </group>
@@ -481,13 +484,14 @@
                         </kanban>
                     </field> -->
 
-                    <field name="patient_ids" mode="kanban" nolabel="1" context="{'default_partner_type_code': 'PATIENT'}">
+                    <field name="patient_ids" mode="kanban" nolabel="1" domain="[('partner_type_code', '=', 'PATIENT')]" context="{'default_partner_type_code': 'PATIENT'}">
                         <kanban create="true">
                             <field name="id" />
                             <field name="color" />
                             <field name="name" />
                             <field name="title" />
                             <field name="partner_type_id"/>
+                            <field name="partner_type_code" />
                             <field name="type" />
                             <field name="email" />
                             <field name="parent_id" />
@@ -517,7 +521,7 @@
                                             <div t-if="record.email.raw_value">
                                                 <field name="email" widget="email" />
                                             </div>
-                                            <!-- <div t-if="record.type.raw_value != 'contact'">
+                                            <!-- <div t-if="record.partner_type_id and record.partner_type_code.raw_value != 'PATIENT'">
                                                 <div>
                                                     <field name="zip" />
                                                     <field name="city" />
@@ -525,10 +529,19 @@
                                                 <field t-if="record.state_id.raw_value" name="state_id" />
                                                 <field name="country_id" />
                                             </div> -->
-                                            <field name="zip" />
+                                            <div t-if="record.partner_type_code.raw_value != 'PATIENT'">
+                                                <div>
+                                                    <field name="zip" />
+                                                    <field name="city" />
+                                                </div>
+                                                <field t-if="record.state_id.raw_value" name="state_id" />
+                                                <field name="country_id" />
+                                            </div>
+
+                                            <!-- <field name="zip" />
                                             <field name="city" />
                                             <field t-if="record.state_id.raw_value" name="state_id" />
-                                            <field name="country_id" />
+                                            <field name="country_id" /> -->
                                             <div t-if="record.phone.raw_value">Phone: <field name="phone" />
                                             </div>
                                             <div t-if="record.mobile.raw_value">Mobile: <field name="mobile" />
@@ -540,10 +553,11 @@
                         </kanban>
                         <form string="Patient / Address">
                             <sheet>
+                                <field name="partner_type_code" invisible="1"/>
                                 <field name="partner_type_id" widget="radio" options="{'horizontal': true}" context="{'default_partner_type_code': 'PATIENT'}"/>
                                 <field name="parent_id" invisible="1" />
                                 <div class="text-muted oe_edit_only">
-                                    <p class="mb-0" invisible="partner_type_id.code == 'PATIENT'">
+                                    <p class="mb-0" invisible="partner_type_code == 'PATIENT'">
                                         <span
                                         >Use this to organize the contact details of patients of a given company.</span>
                                     </p>
@@ -551,10 +565,10 @@
                                 <hr />
                                 <group>
                                     <group>
-                                        <field name="name" string="Patient Name" required="partner_type_id.code == 'PATIENT'" />
-                                        <field name="title" options="{'no_open': True}" placeholder="e.g. Mr." invisible="partner_type_id.code != 'PATIENT'" />
-                                        <label for="street" string="Address" invisible="partner_type_id.code == 'PATIENT'" />
-                                        <div invisible="partner_type_id.code == 'PATIENT'">
+                                        <field name="name" string="Patient Name" required="partner_type_code == 'PATIENT'" />
+                                        <field name="title" options="{'no_open': True}" placeholder="e.g. Mr." invisible="partner_type_code != 'PATIENT'" />
+                                        <label for="street" string="Address" invisible="partner_type_code == 'PATIENT'" />
+                                        <div invisible="partner_type_code == 'PATIENT'">
                                             <div class="o_address_format" name="div_address">
                                                 <field name="street" placeholder="Street..." class="o_address_street" />
                                                 <field name="street2" placeholder="Street 2..." class="o_address_street" />
@@ -583,7 +597,7 @@
                     </field>
                     <group>
                         <label for="sub_patient_ids" string="Indirect Patients" class="fw-bolder mb-3 mt-4 small text-uppercase" />
-                        <field name="sub_patient_ids" mode="tree" invisible="not sub_patient_ids" colspan="2" domain="[('partner_type_id.code', '!=', 'PATIENT'), ('is_company', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
+                        <field name="sub_patient_ids" mode="tree" invisible="not sub_patient_ids" colspan="2" domain="[('partner_type_code', '!=', 'PATIENT'), ('is_company', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
                             <tree>
                                 <field name="id" />
                                 <field name="name" />
@@ -592,7 +606,7 @@
                                 <field name="phone" />
                             </tree>
                         </field>
-                        <!-- <field name="sub_patient_ids" mode="kanban" invisible="not sub_patient_ids" colspan="2" domain="[('partner_type_id.code', '!=', 'PATIENT'), ('is_company', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
+                        <!-- <field name="sub_patient_ids" mode="kanban" invisible="not sub_patient_ids" colspan="2" domain="[('partner_type_code', '!=', 'PATIENT'), ('is_company', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
                             <kanban create="false">
                                 <field name="id" />
                                 <field name="name" />
@@ -647,8 +661,10 @@
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
             <filter name="type_person" position="after">
-                <filter name="customer" string="Customer" domain="[('customer','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Customer Locations"/>
-                <filter name="supplier" string="Vendor" domain="[('supplier','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Vendor Locations"/>
+                <filter name="customer" string="Customer" domain="[('customer','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Customers"/>
+                <filter name="supplier" string="Vendor" domain="[('supplier','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Suppliers"/>
+                <filter name="patient_filter" string="Patients" domain="[('partner_type_code', '=', 'PATIENT')]" help="Patients"/>
+
             </filter>
         </field>
     </record>
