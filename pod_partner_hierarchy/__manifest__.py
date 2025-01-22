@@ -13,6 +13,8 @@
         "pod_web_chatter",
         "contacts",
         "sales_team",
+        "sale",
+        "sale_management",
     ],
     "license": "AGPL-3",
     "sequence": 0,
