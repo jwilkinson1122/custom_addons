@@ -39,21 +39,13 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
 
-
-            <!-- <record id="inherit_view_partner_form" model="ir.ui.view">
-                <field name="name">res.partner</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="pod_partner_hierarchy.view_partner_form" />
-                <field name="arch" type="xml">
-                    <xpath expr="//div[@id='o_work_partner_main']" position="inside">
-                        <xpath expr="//field[@name='affiliate_ids'][@mode='kanban']" position="move" />
-                    </xpath>
-                </field>
-            </record> -->
-
             <xpath expr="//page[@name='contact_addresses']" position="before">
                 <page string="Affiliates" name="affiliates_page" autofocus="True">
                     <div id="o_work_partner_container" class="row col-lg-12">
+                        <!-- <div id="o_partner_right" class="col-4">
+                            <separator string="Partner Hierarchy" />
+                            <field name="affiliate_ids" class="" widget="pod_partner_hierarchy" readonly="1" nolabel="1" />
+                        </div> -->
                         <div id="o_work_partner_main" class="col-8">
                             <separator string="Direct Affiliates" />
                             <field name="affiliate_ids" mode="kanban" nolabel="1" domain="[('user_ids', '=', False)]">
@@ -385,6 +377,17 @@
         </field>
     </record>
 
+    <!-- <record id="inherit_view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="pod_partner_hierarchy.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='o_work_partner_main']" position="inside">
+                    <xpath expr="//field[@name='affiliate_ids'][@mode='kanban']" position="move" />
+                </xpath>
+            </field>
+        </record> -->
+
     <record id="view_partner_address_form" model="ir.ui.view">
         <field name="name">res.partner.form.address</field>
         <field name="model">res.partner</field>
@@ -408,7 +411,6 @@
                 <filter name="customer" string="Customer" domain="[('customer','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Customers"/>
                 <filter name="supplier" string="Vendor" domain="[('supplier','=',1), '|', ('is_company', '=', True), ('parent_id', '=', False)]" help="Suppliers"/>
                 <filter name="patient_filter" string="Patients" domain="[('partner_type_code', '=', 'PATIENT')]" help="Patients"/>
-
             </filter>
         </field>
     </record>
