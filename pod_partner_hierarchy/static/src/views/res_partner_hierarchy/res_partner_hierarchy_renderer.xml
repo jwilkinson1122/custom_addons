@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates>
-
+    <!-- Inherit the existing web_hierarchy.HierarchyRenderer template -->
     <t t-name="pod_partner_hierarchy.ResPartnerHierarchyRenderer" t-inherit="web_hierarchy.HierarchyRenderer">
+        <!-- Replace the parent node's display with an Avatar component -->
         <xpath expr="//div[hasclass('o_hierarchy_parent_node_container')]/span" position="replace">
-            <Avatar
-                resModel="row.parentNode.model.resModel"
-                resId="row.parentNode.resId"
-                displayName="row.parentNode.data.display_name || row.parentNode.data.name"
-            />
+            <Avatar resModel="row.parentNode.model.resModel" resId="row.parentNode.resId" displayName="row.parentNode.data.display_name || row.parentNode.data.name" />
+        </xpath>
+
+        <!-- Modify the row container to adjust alignment and layout -->
+        <xpath expr="//div[hasclass('o_hierarchy_row')]" position="attributes">
+            <attribute name="class">o_hierarchy_row row justify-content-center flex-nowrap g-3</attribute>
+        </xpath>
+
+        <!-- Add separator between parent and child nodes -->
+        <xpath expr="//div[hasclass('o_hierarchy_separator')]" position="replace">
+            <div class="o_hierarchy_separator">
+                <div class="o_hierarchy_line"></div>
+            </div>
         </xpath>
     </t>
 
+    <!-- <t t-name="pod_partner_hierarchy.ResPartnerHierarchyRenderer" t-inherit="web_hierarchy.HierarchyRenderer">
+        <xpath expr="//div[hasclass('o_hierarchy_parent_node_container')]/span" position="replace">
+            <Avatar resModel="row.parentNode.model.resModel" resId="row.parentNode.resId" displayName="row.parentNode.data.display_name || row.parentNode.data.name" />
+        </xpath>
+    </t> -->
+
+   
 </templates>

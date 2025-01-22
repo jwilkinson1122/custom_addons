@@ -39,67 +39,86 @@ class ResPartner(models.Model):
     )
     
     # Affiliates
+    affiliate_ids = fields.One2many(
+        'res.partner', 
+        'parent_id', 
+        string='Affiliates',
+        compute='_compute_affiliate_ids',
+        domain=[('active', '=', True), ('is_company', '=', True)],
+        help="Directly associated affiliates (children)."
+    )
+
+    # affiliate_ids = fields.One2many('res.partner', string='Affiliates', compute='_compute_affiliates_count', help="Direct and indirect affiliates", compute_sudo=True)
+    
     # affiliate_ids = fields.One2many(
-    #     'res.partner', 
-    #     'parent_id', 
+    #     'res.partner',
+    #     'parent_id',
     #     string='Affiliates',
-    #     compute='_compute_affiliate_ids',
-    #     domain=[('active', '=', True), ('is_company', '=', True)],
-    #     help="Directly associated affiliates (children)."
+    #     compute='_compute_affiliates',
+    #     store=True,
+    #     help="Direct and indirect affiliates."
     # )
 
-    affiliate_ids = fields.One2many('res.partner', string='Affiliates', compute='_compute_affiliates_count', help="Direct and indirect affiliates", compute_sudo=True)
+    affiliates_count = fields.Integer('Number of Affiliates', store=True, recursive=True, compute='_compute_affiliates_count', compute_sudo=True)
 
-    # affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count')
-
+    
     # affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count', recursive=True, store=False, compute_sudo=True)
 
-    affiliates_count = fields.Integer(
-        'Number of Affiliates',
-        compute='_compute_affiliates_count',
-        store=True,  # Precompute values
-        recursive=True,
-        compute_sudo=True,
-    )
+    # affiliates_count = fields.Integer(
+    #     'Number of Affiliates',
+    #     compute='_compute_affiliates_count',
+    #     store=True, 
+    #     recursive=True,
+    #     compute_sudo=True,
+    # )
 
 
     affiliates_label = fields.Char(related='partner_type_id.affiliates_label', readonly=True)
 
 
-    def _get_affiliates(self, parents=None):
-        if not parents:
-            parents = self.env[self._name]
-        indirect_affiliates = self.env[self._name]
-        parents |= self
-        direct_affiliates = self.child_ids - parents
-        child_affiliates = direct_affiliates._get_affiliates(parents=parents) if direct_affiliates else self.browse()
-        indirect_affiliates |= child_affiliates
-        return indirect_affiliates | direct_affiliates
+    # def _get_affiliates(self, parents=None):
+    #     if not parents:
+    #         parents = self.env[self._name]
+    #     indirect_affiliates = self.env[self._name]
+    #     parents |= self
+    #     direct_affiliates = self.child_ids - parents
+    #     child_affiliates = direct_affiliates._get_affiliates(parents=parents) if direct_affiliates else self.browse()
+    #     indirect_affiliates |= child_affiliates
+    #     return indirect_affiliates | direct_affiliates
 
-    @api.depends('child_ids', 'child_ids.affiliates_count')
-    def _compute_affiliates_count(self):
+    # @api.depends('child_ids', 'child_ids.affiliates_count')
+    # def _compute_affiliates_count(self):
+    #     for partner in self:
+    #         partner.affiliate_ids = partner._get_affiliates()
+    #         partner.affiliates_count = len(partner.affiliate_ids)
+
+
+    
+    @api.depends('child_ids')
+    def _compute_affiliate_ids(self):
+        """
+        Compute the direct affiliates for each partner.
+        """
         for partner in self:
-            partner.affiliate_ids = partner._get_affiliates()
+            partner.affiliate_ids = partner.child_ids.filtered(lambda c: c.is_company)
+
+    @api.depends('affiliate_ids')
+    def _compute_affiliates_count(self):
+        """
+        Compute the number of direct affiliates.
+        """
+        for partner in self:
             partner.affiliates_count = len(partner.affiliate_ids)
 
     @api.constrains('parent_id')
     def _check_no_circular_reference(self):
+        """
+        Ensure no circular references exist between parent and child affiliates.
+        """
         for partner in self:
-            if partner in partner._get_affiliates():
+            if partner in partner.affiliate_ids.mapped('parent_id'):
                 raise ValidationError(_("A partner cannot be its own parent or affiliate."))
 
-
-    
-    # @api.depends('child_ids')
-    # def _compute_affiliate_ids(self):
-    #     for partner in self:
-    #         partner.affiliate_ids = partner.child_ids.filtered(lambda c: c.is_company)
-
-    # @api.depends('child_ids')
-    # def _compute_affiliates_count(self):
-    #     affiliates = self.mapped('child_ids').filtered(
-    #         lambda child: child.is_company)
-    #     self.affiliates_count = len(affiliates)
 
 
     # Sub Affiliates
@@ -131,9 +150,6 @@ class ResPartner(models.Model):
             partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids  # Exclude direct affiliates
 
     # Contacts
-    # child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
-    # contact_ids = fields.One2many('res.partner', 'parent_id', 'Contacts', domain=[('active', '=', True), ('is_company', '=', False)])
-    
     contact_ids = fields.One2many(
         'res.partner', 'parent_id',
         string='Contacts',
