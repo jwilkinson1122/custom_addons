@@ -74,9 +74,9 @@
 </t>
 
 <t t-name="pod_partner_hierarchy.pod_partner_hierarchy">
-    <!-- NOTE: Desidered behaviour:
-            The maximun number of people is always 7 (including 'self'). Managers have priority over suburdinates
-            Eg. 1 Manager + 1 self = show just 5 affiliates (if availables)
+    <!-- NOTE: Desired behavior:
+            The maximun number of people is always 7 (including 'self'). Managers have priority over subordinates
+            Eg. 1 Manager + 1 self = show just 5 affiliates (if available)
             Eg. 0 Manager + 1 self = show 6 affiliates (if available)
 
         -->

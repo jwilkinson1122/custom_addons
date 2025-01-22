@@ -112,6 +112,7 @@ export class PartnerOrgChart extends Component {
      * @param {MouseEvent} event
      * @returns {Promise} action loaded
      */
+    
     async _onPartnerRedirect(partnerId) {
         const action = await this.orm.call('res.partner', 'get_formview_action', [partnerId]);
         this.actionService.doAction(action); 

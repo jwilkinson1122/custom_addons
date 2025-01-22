@@ -10,6 +10,7 @@
         # "resource",
         "web",
         "web_hierarchy",
+        "pod_web_chatter",
         "contacts",
         "sales_team",
     ],
