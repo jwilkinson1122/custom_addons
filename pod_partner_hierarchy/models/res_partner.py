@@ -48,52 +48,9 @@ class ResPartner(models.Model):
         help="Directly associated affiliates (children)."
     )
 
-    # affiliate_ids = fields.One2many('res.partner', string='Affiliates', compute='_compute_affiliates_count', help="Direct and indirect affiliates", compute_sudo=True)
-    
-    # affiliate_ids = fields.One2many(
-    #     'res.partner',
-    #     'parent_id',
-    #     string='Affiliates',
-    #     compute='_compute_affiliates',
-    #     store=True,
-    #     help="Direct and indirect affiliates."
-    # )
-
     affiliates_count = fields.Integer('Number of Affiliates', store=True, recursive=True, compute='_compute_affiliates_count', compute_sudo=True)
-
-    
-    # affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count', recursive=True, store=False, compute_sudo=True)
-
-    # affiliates_count = fields.Integer(
-    #     'Number of Affiliates',
-    #     compute='_compute_affiliates_count',
-    #     store=True, 
-    #     recursive=True,
-    #     compute_sudo=True,
-    # )
-
-
     affiliates_label = fields.Char(related='partner_type_id.affiliates_label', readonly=True)
 
-
-    # def _get_affiliates(self, parents=None):
-    #     if not parents:
-    #         parents = self.env[self._name]
-    #     indirect_affiliates = self.env[self._name]
-    #     parents |= self
-    #     direct_affiliates = self.child_ids - parents
-    #     child_affiliates = direct_affiliates._get_affiliates(parents=parents) if direct_affiliates else self.browse()
-    #     indirect_affiliates |= child_affiliates
-    #     return indirect_affiliates | direct_affiliates
-
-    # @api.depends('child_ids', 'child_ids.affiliates_count')
-    # def _compute_affiliates_count(self):
-    #     for partner in self:
-    #         partner.affiliate_ids = partner._get_affiliates()
-    #         partner.affiliates_count = len(partner.affiliate_ids)
-
-
-    
     @api.depends('child_ids')
     def _compute_affiliate_ids(self):
         """
@@ -287,13 +244,6 @@ class ResPartner(models.Model):
                 partner.can_have_parent = True
                 partner.parent_is_required = partner.partner_type_id.parent_is_required
 
-    # @api.model
-    # def default_get(self, fields):
-    #     res = super(ResPartner, self).default_get(fields)
-    #     res['company_type'] = 'company'
-    #     res['partner_type_id'] = self.env['res.partner.type'].search([('code', '=', 'CUSTOMER')], limit=1).id
-    #     return res
-
     @api.model
     def default_get(self, fields):
         _logger.debug("Context Passed to default_get: %s", self._context)
@@ -310,22 +260,6 @@ class ResPartner(models.Model):
         return res
 
 
-    # @api.model
-    # def default_get(self, fields):
-    #     _logger.debug("Context Passed to default_get: %s", self._context)
-    #     res = super(ResPartner, self).default_get(fields)
-
-    #     partner_type_code = self._context.get('default_partner_type_code', 'CUSTOMER')  # Default to CUSTOMER
-    #     partner_type = self.env['res.partner.type'].search([('code', '=', partner_type_code)], limit=1)
-        
-    #     if partner_type:
-    #         res['partner_type_id'] = partner_type.id
-
-    #     res.setdefault('company_type', 'person' if partner_type_code == 'PATIENT' else 'company')
-        
-    #     return res
-
-    
     @api.onchange('company_type')
     def _onchange_company_type(self):
         if self.company_type == 'company':
@@ -371,13 +305,6 @@ class ResPartner(models.Model):
                     if key in partner.partner_type_id.field_ids.mapped('name')}
                 if children_vals:
                     partner.child_ids.write(children_vals)
-
-    # @api.model
-    # def create(self, vals):
-    #     if 'image_128' not in vals:
-    #         with open('/path/to/default_avatar.png', 'rb') as avatar_file:
-    #             vals['image_128'] = base64.b64encode(avatar_file.read())
-    #     return super(ResPartner, self).create(vals)
 
     @api.model
     def create(self, vals):
