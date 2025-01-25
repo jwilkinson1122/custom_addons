@@ -47,17 +47,17 @@
                                 <group>
                                     <field name="company_type"/>
                                     <field name="type" invisible="company_type != 'person'" required="company_type == 'person'"/>
-                                    <field name="customer" invisible="company_type != 'company'"/>
-                                    <field name="supplier" invisible="company_type != 'company'"/>
-                                    <field name="affiliates_label" invisible="company_type != 'company'"/>
+                                    <field name="is_account" invisible="company_type != 'company'"/>
+                                    <field name="is_affiliate" invisible="company_type != 'company'"/>
+                                    <field name="companies_label" invisible="company_type != 'company'"/>
+                                    <field name="is_contact" invisible="company_type != 'person'"/>
+                                    <field name="is_patient" invisible="company_type != 'person'"/>
                                     <field name="contacts_label" invisible="company_type != 'person'"/>
                                 </group>
                                 <group>
                                     <field name="can_have_parent" invisible="company_type != 'company'"/>
                                     <field name="parent_is_required" invisible="not can_have_parent or company_type != 'company'"/>
-                                    <!-- <field name="parent_type_ids" widget="many2many_tags" domain="[('id', '!=', id), ('company_type', '=', 'company')]" invisible="not can_have_parent"/> -->
                                     <field name="parent_type_ids" widget="many2many_tags" domain="[('id', '!=', id), ('company_type', '=', 'company')]" invisible="not can_have_parent"/>
-
                                     <field name="parent_relation_label" invisible="company_type != 'company'"/>
                                 </group>
                                 <group colspan="4">
@@ -87,7 +87,6 @@
     </record>
 
     <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
-
     <menuitem id="menu_partner_types" parent="contacts.res_partner_menu_config" sequence="2" action="action_partner_types"/>
 
 </odoo>

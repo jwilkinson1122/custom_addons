@@ -5,6 +5,7 @@
     "depends": [
         "base",
         "base_setup",
+        "account",
         # "phone_validation",
         "mail",
         # "resource",
@@ -15,15 +16,24 @@
         "sales_team",
         "sale",
         "sale_management",
+        "product",
     ],
     "license": "AGPL-3",
     "sequence": 0,
     "data": [
         "security/ir.model.access.csv",
+        "data/res_partner_type_data.xml",
+        "data/res_partner_company_type_data.xml",
+        "data/ir_sequence_data.xml",
         # "views/kanban_template_view.xml",
+        "views/res_config_settings_view.xml",
         "views/res_partner_view.xml",
         "views/res_partner_type_view.xml",
-        "data/res_partner_type_data.xml",
+        "views/res_partner_company_type_view.xml",
+        # "data/res_partner_type_data.xml",
+        # "data/res_partner_company_type_data.xml",
+        "views/sale_order_view.xml",
+
     ],
     "assets": {
         "web._assets_primary_variables": [

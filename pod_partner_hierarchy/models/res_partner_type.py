@@ -7,14 +7,20 @@ from odoo import fields, models
 class ResPartnerType(models.Model):
     _name = 'res.partner.type'
     _description = 'Contact Type'
-    _company_inherit_fields = ['company_type', 'customer', 'supplier']
-    _person_inherit_fields = ['company_type', 'type']
+    _company_inherit_fields = ['company_type', 'type', 'is_account', 'is_affiliate']
+    _person_inherit_fields = ['company_type', 'type', 'is_contact', 'is_patient']
 
     id = fields.Integer(readonly=True)
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(required=True)  # Readonly if id
+    code = fields.Char(required=True)  
     sequence = fields.Integer('Priority', default=10)
     active = fields.Boolean(default=True)
+
+    
+    is_account = fields.Boolean(string='Account', help="Check this box if this is a customer account.")
+    is_affiliate = fields.Boolean(string='Affiliate', help="Check this box if this is an affiliate.")
+    is_contact = fields.Boolean(string='Contact', help="Check this box if this is a contact.")
+    is_patient = fields.Boolean(string='Patient', help="Check this box if this is a patient.")
 
     # Partners hierarchy
     can_have_parent = fields.Boolean(default=True)
@@ -25,10 +31,10 @@ class ResPartnerType(models.Model):
         column1="child_type_id", column2="parent_type_id")
     parent_relation_label = fields.Char(
         'Parent relation label', translate=True, required=True,
-        default='attached to')
-    affiliates_label = fields.Char(
-        'Affiliates label', translate=True, required=True,
-        default='Affiliates')
+        default='Attached To:')
+    companies_label = fields.Char(
+        'Companies label', translate=True, required=True,
+        default='Companies')
     contacts_label = fields.Char(
         'Contacts label', translate=True, required=True,
         default='Contacts')
@@ -38,24 +44,18 @@ class ResPartnerType(models.Model):
         ('person', 'Individual'),
         ('company', 'Company'),
     ], 'Company Type', required=True, default='company')
-    customer = fields.Boolean(
-        string='Is a Customer', default=True,
-        help="Check this box if this contact is a customer.")
-    supplier = fields.Boolean(
-        string='Is a Vendor',
-        help="Check this box if this contact is a vendor. "
-        "If it's not checked, purchase people will not see it "
-        "when encoding a purchase order.")
+    
     type = fields.Selection(
         [
-            ('contact', 'Contact'),
+            ('contact', 'Contact Address'),
+            ('patient', 'Patient Address'),
             ('invoice', 'Invoice address'),
             ('delivery', 'Shipping address'),
             ('other', 'Other address'),
-        ], 'Address Type', default='contact',
+        ], 'Address Type', default=False,
         help="Used to select automatically the right address "
         "according to the context in sales and purchases documents.")
-
+    
     # Inherited fields for the children with a parent of this type
     field_ids = fields.Many2many(
         'ir.model.fields', domain=[
