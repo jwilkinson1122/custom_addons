@@ -57,30 +57,7 @@ class ResPartner(models.Model):
         readonly=True,
     )
 
-    company_type = fields.Selection(selection_add=[("affiliate", "Affiliate")])
-
-    # type = fields.Selection(
-    #     selection_add=[
-    #         ("patient", "Patient Address"),
-    #     ],
-    #     string="Address Type",
-    #     default=False,
-    # )
-
     type = fields.Selection(default=False)
-
-    # type = fields.Selection(
-    #     [
-    #         ('contact', 'Contact Address'),
-    #         ('invoice', 'Invoice Address'),
-    #         ('delivery', 'Shipping Address'),
-    #         ('other', 'Other Address'),
-    #         ('patient', 'Patient Address'),
-    #     ],
-    #     string="Address Type",
-    #     default=lambda self: 'patient' if self._context.get('default_partner_type_code') == 'PATIENT' else 'contact',
-    # )
-
 
     partner_company_type = fields.Many2one(
         string="Company Type",
@@ -92,7 +69,6 @@ class ResPartner(models.Model):
         selection=[
             ("invoice", "Invoice Address"),
             ("delivery", "Delivery Address"),
-            ("affiliate", "Affiliate Address"),
             ("other", "Other Address"),
         ],
         string="Company Address Type",
@@ -106,10 +82,10 @@ class ResPartner(models.Model):
             ("contact", "Contact Address"),
             ("patient", "Patient Address"),
         ],
-        string="Contact Address Type",
         compute="_compute_contact_address_type",
-        inverse="_inverse_contact_address_type",
-        store=True,
+        string="Contact Address Type",
+        default="contact",
+        required=False,
     )
 
     @api.depends("type")
@@ -123,17 +99,6 @@ class ResPartner(models.Model):
             else:
                 record.company_address_type = False
 
-    @api.depends("type")
-    def _compute_contact_address_type(self):
-        """
-        Compute the contact_address_type based on the type field, filtering allowed options.
-        """
-        for record in self:
-            if record.type in dict(self._fields["contact_address_type"].selection):
-                record.contact_address_type = record.type
-            else:
-                record.contact_address_type = False
-
     def _inverse_company_address_type(self):
         """
         Set the type field based on company_address_type when it changes.
@@ -142,13 +107,19 @@ class ResPartner(models.Model):
             if record.company_address_type:
                 record.type = record.company_address_type
 
-    def _inverse_contact_address_type(self):
+    @api.depends("type", "partner_type_code")
+    def _compute_contact_address_type(self):
         """
-        Set the type field based on contact_address_type when it changes.
+        Compute the contact_address_type based on the type field and partner_type_code.
+        Default to "contact" or "patient" based on partner_type_code.
         """
         for record in self:
-            if record.contact_address_type:
-                record.type = record.contact_address_type
+            if record.partner_type_code == "PATIENT":
+                record.contact_address_type = "patient"
+            elif record.type in dict(self._fields["contact_address_type"].selection):
+                record.contact_address_type = record.type
+            else:
+                record.contact_address_type = "contact"  # Fallback default
 
 
     can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
@@ -186,14 +157,11 @@ class ResPartner(models.Model):
         for partner in self:
             partner.affiliates_count = len(partner.affiliate_ids)
 
-
-
     @api.constrains('parent_id', 'partner_type_code')
     def _check_parent_id_for_affiliates(self):
         for partner in self:
             if partner.partner_type_code == 'AFFILIATE' and not partner.parent_id:
                 raise ValidationError(_("Affiliates must have a parent partner defined."))
-
 
     @api.constrains('parent_id')
     def _check_no_circular_reference(self):
@@ -345,14 +313,6 @@ class ResPartner(models.Model):
         
         return {"domain": {"responsible_contact_id": domain}}
 
-    # @api.onchange('parent_id')
-    # def _onchange_parent_id(self):
-    #     if self.parent_id:
-    #         self.contact_ids = self.env['res.partner'].search([('parent_id', '=', self.parent_id.id)])
-    #         if not self.contact_ids:
-    #             return {'warning': {'title': _("No Contacts Found"), 'message': _("No contacts found for the selected parent.")}}
-
-
     # Patients
     patient_ids = fields.One2many(
         'res.partner', 'parent_id', string='Patients',
@@ -441,21 +401,24 @@ class ResPartner(models.Model):
                 partner.can_have_parent = True
                 partner.parent_is_required = partner.partner_type_id.parent_is_required
 
-
     @api.model
     def default_get(self, fields):
         res = super(ResPartner, self).default_get(fields)
-        _logger.debug(f"Default values before partner_type_id mapping: {res}")
-        _logger.debug(f"Partner type before change: {self.partner_type_id} (Code: {self.partner_type_code})")
+        _logger.debug(f"Default values before setting contact_address_type: {res}")
+        
+        # Set `contact_address_type` based on the context
+        default_type = self._context.get("default_contact_address_type")
+        if default_type:
+            res["contact_address_type"] = default_type
+            _logger.debug(f"Set default contact_address_type to: {default_type}")
+        elif self._context.get("default_partner_type_code") == "PATIENT":
+            res["contact_address_type"] = "patient"
+            _logger.debug("Set default contact_address_type to 'patient' based on context.")
+        else:
+            res["contact_address_type"] = "contact"
+            _logger.debug("Set default contact_address_type to 'contact' as fallback.")
 
-        if not res.get("partner_type_id") and self._context.get("default_partner_type_code"):
-            partner_type_code = self._context.get("default_partner_type_code")
-            partner_type = self.env["res.partner.type"].search([("code", "=", partner_type_code)], limit=1)
-            if partner_type:
-                res["partner_type_id"] = partner_type.id
-                _logger.debug(f"Set default partner_type_id to: {partner_type.id}")
         return res
-    
 
     @api.onchange('company_type')
     def _onchange_company_type(self):
@@ -466,7 +429,6 @@ class ResPartner(models.Model):
         code = type_mapping.get(self.company_type, 'CONTACT')
         self.partner_type_id = self.env['res.partner.type'].search([('code', '=', code)], limit=1)
 
-
     @api.onchange('partner_type_id')
     def _onchange_partner_type(self):
         """Handle changes in partner type to update parent-related fields."""
@@ -476,7 +438,6 @@ class ResPartner(models.Model):
         else:
             self.can_have_parent = False
 
- 
     @api.onchange("partner_type_code")
     def _onchange_partner_type_code(self):
         if self.partner_type_code:
@@ -484,7 +445,6 @@ class ResPartner(models.Model):
             if partner_type and self.partner_type_id != partner_type.id:
                 self.partner_type_id = partner_type
                 _logger.debug(f"Set partner_type_id in onchange method to: {partner_type.id}")
-
 
     def _get_inherit_values(self, partner_type, not_null=False):
         """
@@ -521,35 +481,6 @@ class ResPartner(models.Model):
             if 'ref' in partner.partner_type_id.field_ids.mapped("name"):
                 _logger.debug(f"Updating children with ref: {vals.get('ref')}")
 
-    def _generate_reference(self, parent_ref, ref_type="affiliate"):
-        """
-        Generate the next reference code based on the parent's ref.
-        Supports both affiliate and contact/patient reference generation.
-
-        :param parent_ref: The reference of the parent partner.
-        :param ref_type: The type of reference to generate. Default is 'affiliate'.
-        :return: The generated reference code.
-        """
-        if not parent_ref:
-            _logger.warning("Parent reference is missing while generating the reference.")
-            return _("New/01")  # Default reference
-
-        existing_refs = self.search(
-            [('parent_id', '=', self.parent_id.id), ('ref', 'like', f"{parent_ref}/")],
-            order='ref desc', limit=1
-        ).mapped('ref')
-
-        if existing_refs:
-            last_ref = existing_refs[0]
-            try:
-                last_number = int(last_ref.split('/')[-1])
-                return f"{parent_ref}/{str(last_number + 1).zfill(2)}"
-            except (ValueError, IndexError):
-                _logger.warning("Invalid reference format for ref: %s", last_ref)
-
-        return f"{parent_ref}/01"  # Default first reference
-
-
     @api.model
     def create(self, vals):
         if not vals.get("partner_type_id") and vals.get("partner_type_code"):
@@ -560,83 +491,6 @@ class ResPartner(models.Model):
                 vals["partner_type_id"] = partner_type.id
                 _logger.debug(f"Set partner_type_id in create method to: {partner_type.id}")
         return super(ResPartner, self).create(vals)
-
-
- 
-    # @api.model
-    # def create(self, vals_list):
-    #     """
-    #     Unified create method to handle reference generation, partner type inheritance, 
-    #     and initialization of partner-specific fields.
-        
-    #     :param vals_list: Either a single dictionary or a list of dictionaries for creating partners.
-    #     :return: The created partner records.
-    #     """
-    #     if isinstance(vals_list, dict):
-    #         vals_list = [vals_list]
-    #     elif not isinstance(vals_list, list) or not all(isinstance(vals, dict) for vals in vals_list):
-    #         raise ValueError("Invalid input: 'vals_list' must be a dictionary or a list of dictionaries.")
-
-    #     sequence_mapping = {
-    #         "account": "res.partner.account",
-    #         "affiliate": "res.partner.affiliate",
-    #         "contact": "res.partner.contact",
-    #         "patient": "res.partner.patient",
-    #     }
-
-    #     for vals in vals_list:
-    #         _logger.debug("Creating partner with vals: %s", vals)
-            
-    #         partner_type_code = vals.get("partner_type_code", "").lower()
-    #         partner_type = None
-    #         if partner_type_code:
-    #             partner_type = self.env["res.partner.type"].search(
-    #                 [("code", "=", partner_type_code.upper())], limit=1
-    #             )
-    #             if not partner_type:
-    #                 raise ValidationError(_("Invalid partner type code: %s" % vals.get("partner_type_code")))
-
-    #         if partner_type_code == "affiliate" and not vals.get("parent_id"):
-    #             raise ValidationError(
-    #                 _("Parent ID is mandatory for affiliates. Please select a valid parent.")
-    #             )
-
-    #         parent_id = vals.get("parent_id")
-    #         _logger.debug("Parent ID from vals: %s", parent_id)
-
-    #         if parent_id:
-    #             parent_partner = self.browse(parent_id).exists()
-    #             if parent_partner:
-    #                 _logger.debug("Parent partner exists: %s", parent_partner)
-    #                 if parent_partner.ref:
-    #                     ref_type = partner_type_code or "affiliate"
-    #                     generated_ref = self._generate_reference(parent_partner.ref, ref_type)
-    #                     vals["ref"] = generated_ref
-    #                     _logger.debug(f"Generated Ref: {generated_ref} for partner with vals: {vals}")
-    #                 else:
-    #                     _logger.warning("Parent partner does not have a reference. Parent ID: %s", parent_id)
-    #             else:
-    #                 raise ValidationError(_("The selected Parent ID (%s) does not exist.") % parent_id)
-    #         else:
-    #             _logger.warning("Parent ID is missing while generating reference. Vals: %s", vals)
-    #             if not vals.get("ref"):
-    #                 sequence_code = sequence_mapping.get(partner_type_code, "res.partner.account")
-    #                 vals["ref"] = self.env["ir.sequence"].next_by_code(sequence_code) or _("New")
-
-    #     _logger.debug("Creating partner with values: %s", vals_list)
-    #     partners = super(ResPartner, self).create(vals_list)
-
-    #     for partner in partners:
-    #         partner._update_children(vals_list[0])  
-
-    #     return partners
-
-
-    def copy(self, default=None):
-        default = default or {}
-        if self._needs_ref():
-            default["ref"] = self._generate_reference()
-        return super().copy(default=default)
 
     def write(self, vals):
         """
@@ -655,11 +509,6 @@ class ResPartner(models.Model):
                 partners_by_type[partner.partner_type_id] |= partner
 
         for partner_type, partners in partners_by_type.items():
-            # Generate reference if needed
-            for partner in partners:
-                if not partner.ref and partner._needs_ref(vals=vals):
-                    vals["ref"] = partner._generate_reference(vals=vals)
-            # Update inherited values if applicable
             if partner_type and list(vals.keys()) != ['is_company']:  # Avoid infinite loop
                 vals.update(self._get_inherit_values(partner_type, not_null=True))
 
@@ -671,25 +520,6 @@ class ResPartner(models.Model):
         # Update children with inherited values
         self._update_children(vals)
         return True
-
-    def _needs_ref(self, vals=None):
-        """
-        Checks whether a sequence value should be assigned to a partner's 'ref'.
-        """
-        if not vals and not self:
-            raise exceptions.UserError(
-                _("Either field values or an id must be provided.")
-            )
-        fields_for_check = ["is_company", "parent_id"]
-        vals_for_check = vals.copy() if vals else {}
-        if self:
-            for field in fields_for_check:
-                if field not in vals_for_check:
-                    vals_for_check[field] = self[field]
-        _logger.debug(f"Needs ref evaluation: {vals_for_check}")
-
-        # return bool(vals_for_check.get("is_company") or vals_for_check.get("parent_id"))
-        return bool(vals_for_check.get("is_company", False) or vals_for_check.get("parent_id"))
 
     @api.model
     def _commercial_fields(self):
