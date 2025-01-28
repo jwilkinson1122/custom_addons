@@ -111,7 +111,8 @@ class ContactOrgChartController(http.Controller):
         if include_contacts:
             values["contacts"] = [
                 self._prepare_partner_data(contact)
-                for contact in partner.contact_ids
+                for contact in partner.child_ids
+                # for contact in partner.contact_ids
             ]
 
         # Reverse the order of managers for proper hierarchy display

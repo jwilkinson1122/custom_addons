@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-
     <record id="partner_type_account" model="res.partner.type">
       <field name="name">Account</field>
       <field name="code">ACCOUNT</field>
@@ -9,6 +8,8 @@
       <field name="is_contact" eval="False"/>
       <field name="is_patient" eval="False"/>
       <field name="company_type">company</field>
+      <!-- <field name="can_have_parent" eval="False"/>
+      <field name="parent_is_required" eval="False"/> -->
     </record>
     <record id="partner_type_affiliate" model="res.partner.type">
       <field name="name">Affiliate</field>
@@ -18,6 +19,8 @@
       <field name="is_contact" eval="False"/>
       <field name="is_patient" eval="False"/>
       <field name="company_type">company</field>
+      <!-- <field name="can_have_parent" eval="True"/>
+      <field name="parent_is_required" eval="True"/> -->
       <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account')])]"/>
     </record>
     <record id="partner_type_contact" model="res.partner.type">
@@ -28,6 +31,8 @@
       <field name="is_contact" eval="True"/>
       <field name="is_patient" eval="False"/>
       <field name="company_type">person</field>
+      <field name="can_have_parent" eval="True"/>
+      <field name="parent_is_required" eval="True"/>
       <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate')])]"/>
       <!-- <field name="type">contact</field> -->
     </record>
@@ -39,6 +44,8 @@
       <field name="is_contact" eval="False"/>
       <field name="is_patient" eval="True"/>
       <field name="company_type">person</field>
+      <field name="can_have_parent" eval="True"/>
+      <field name="parent_is_required" eval="True"/>
       <field name="parent_type_ids" eval="[(6, 0, [ref('partner_type_account'), ref('partner_type_affiliate')])]"/>
       <!-- <field name="type">contact</field> -->
     </record>

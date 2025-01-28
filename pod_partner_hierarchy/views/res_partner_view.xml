@@ -73,7 +73,6 @@
                         <label for="commercial_partner" string="Commercial Partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                         <field name="commercial_partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                     </div>
-
                 </div>
             </xpath>
 
@@ -87,11 +86,7 @@
                         <span class="o_form_label o_td_label" name="address_name">
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
                             <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
-                            <!-- <field name="contact_address_type" placeholder="Address Type" invisible="context.get('default_partner_type_code') not in ['CONTACT', 'PATIENT']" required="not is_company" class="fw-bold"/> -->
-                            <!-- <field name="contact_address_type" placeholder="Address Type" widget="selection" invisible="context.get('default_partner_type_code') not in ['CONTACT', 'PATIENT']" required="not is_company" class="fw-bold"/> -->
                             <field name="contact_address_type" placeholder="Address Type" widget="selection" invisible="is_company" required="not is_company" class="fw-bold"/>
-
-                            <!-- <field name="contact_address_type" placeholder="Address Type" invisible="is_company" required="not is_company" readonly="not is_company" class="fw-bold"/> -->
                             <field name="partner_company_type" placeholder="Company Type" invisible="not is_company" required="is_company" class="fw-bold"/>
                         </span>
                         <div class="o_address_format">
@@ -345,11 +340,6 @@
     <!-- <xpath expr="//page[@name='sales_purchases']//field[@name='ref']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath> -->
-
-
-    <xpath expr="//field[@name='child_ids']" position="attributes">
-        <attribute name="domain">[('is_patient', '=', True), ('is_company', '=', False), ('user_ids', '=', False)]</attribute>
-    </xpath>
     <xpath expr="//field[@name='child_ids']" position="before">
         <label for='child_ids' string="Direct Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
     </xpath>
@@ -385,7 +375,7 @@
             <group>
                 <label for="patient_ids" string="Direct Patients" class="fw-bolder mb-3 mt-4 small text-uppercase" />
             </group>
-            <field name="patient_ids" mode="kanban" nolabel="1" domain="[('partner_type_code', '=', 'PATIENT'), ('user_ids', '=', False)]" context="{'default_partner_type_code': 'PATIENT'}">
+            <field name="patient_ids" mode="kanban" nolabel="1" domain="[('is_patient', '=', False), ('user_ids', '=', False)]" context="{'default_partner_type_code': 'PATIENT'}">
                 <kanban>
 
                     <!-- <kanban create="true"> -->
@@ -631,7 +621,7 @@
 <field name="res_model">res.partner</field>
 <field name="view_mode">kanban,tree,form,activity</field>
 <field name="search_view_id" ref="view_res_partner_filter"/>
-<field name="domain">[('is_account', '=', True), ('is_company', '=', True), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<field name="domain">[('is_account', '=', True), ('is_company', '=', True), ('is_affiliate', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
 <field name="context">{
             'default_partner_type_code': 'ACCOUNT',
             'default_is_account': True, 
