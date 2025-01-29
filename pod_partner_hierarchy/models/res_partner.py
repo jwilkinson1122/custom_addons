@@ -26,18 +26,19 @@ class ResPartner(models.Model):
     
     can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
     parent_is_required = fields.Boolean(compute='_compute_partner_type_infos')
-
-    # Field Declarations
-    fax_number = fields.Char(string="Fax")
-    legacy_customer_code = fields.Char("Legacy ID", readonly=True)
-    parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
     customer = fields.Boolean(string='Is a Customer', default=True, help="Check if this contact is a customer.")
     supplier = fields.Boolean(string='Is a Vendor', help="Check if this contact is a vendor.")
     commercial_partner = fields.Boolean(
         string="Trading Company",
         help="Mark as True if this partner acts as its own trading company, even with a parent company."
     )
-
+    # Field Declarations
+    fax_number = fields.Char(string="Fax")
+    # ref = fields.Char("ID", readonly=True, default=lambda self: _("New"))
+    customer_code = fields.Char(string="Customer Code", readonly=True, default=lambda self: _("New"))
+    legacy_customer_code = fields.Char("Legacy ID", readonly=True)
+    parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
+    
     # Computed Fields
     parent_id = fields.Many2one(ondelete='restrict')
     partner_type_id = fields.Many2one('res.partner.type', 'Partner Type')
@@ -372,32 +373,95 @@ class ResPartner(models.Model):
             if contacts:
                 self.responsible_contact_id = contacts[0]
 
-    # Overridden Methods
+ 
     @api.model
     def create(self, vals):
-        if vals.get("parent_id"):
-            parent = self.browse(vals["parent_id"])
-            vals["ref"] = self._generate_reference(parent.ref, "affiliate")
-        return super().create(vals)
+        """
+        Handles customer code generation during record creation and retains legacy_customer_code if provided.
+        """
+        _logger.info("Creating a new partner with values: %s", vals)
+
+        # Generate the new customer code using standard sequence logic
+        vals["customer_code"] = self._generate_reference(vals)
+        _logger.info("Generated customer code: %s", vals["customer_code"])
+
+        # Retain the legacy code if provided
+        legacy_customer_code = vals.get("legacy_customer_code")
+        if legacy_customer_code:
+            _logger.info("Checking legacy customer code: %s", legacy_customer_code)
+            # Validate that it's unique within the system
+            if self.search([("legacy_customer_code", "=", legacy_customer_code)]):
+                _logger.error("Legacy Customer Code %s is not unique!", legacy_customer_code)
+                raise ValidationError(_("Legacy Customer Code must be unique."))
+            vals["legacy_customer_code"] = legacy_customer_code
+            _logger.info("Legacy customer code retained: %s", legacy_customer_code)
+
+        partner = super(ResPartner, self).create(vals)
+        _logger.info("Partner created successfully with ID: %s and customer code: %s", partner.id, partner.customer_code)
+        return partner
 
     def write(self, vals):
-        if "parent_id" in vals and vals["parent_id"]:
-            parent = self.browse(vals["parent_id"])
-            vals["ref"] = self._generate_reference(parent.ref, "affiliate")
-        return super().write(vals)
+        """
+        Handles updates to legacy_customer_code and regenerates customer_code if type or parent changes.
+        """
+        _logger.info("Updating partner(s) with values: %s", vals)
 
-    # Utility Methods
-    def _generate_reference(self, parent_ref, ref_type="affiliate"):
-        if not self.parent_id:
-            return f"{parent_ref}/01"
-        last_ref = self.search(
-            [("parent_id", "=", self.parent_id.id), ("ref", "like", f"{parent_ref}/")],
-            order="ref desc", limit=1
-        ).mapped("ref")
-        if last_ref:
-            last_number = int(last_ref[0].split("/")[-1])
-            return f"{parent_ref}/{last_number + 1:02}"
-        return f"{parent_ref}/01"
+        if "legacy_customer_code" in vals:
+            legacy_customer_code = vals.get("legacy_customer_code")
+            _logger.info("Validating new legacy customer code: %s", legacy_customer_code)
+            # Validate that the new legacy code is unique
+            if self.search([("legacy_customer_code", "=", legacy_customer_code)]):
+                _logger.error("Legacy Customer Code %s is not unique!", legacy_customer_code)
+                raise ValidationError(_("Legacy Customer Code must be unique."))
+        
+        if "parent_id" in vals or any(key in vals for key in ["is_account", "is_affiliate", "is_contact", "is_patient"]):
+            for partner in self:
+                _logger.info("Regenerating customer code for partner ID: %s", partner.id)
+                vals["customer_code"] = self._generate_reference(vals)
+                _logger.info("Updated customer code: %s", vals["customer_code"])
+
+        result = super(ResPartner, self).write(vals)
+        _logger.info("Partner(s) updated successfully.")
+        return result
+
+    def _generate_reference(self, vals):
+        """
+        Generate a new customer code based on the partner type and parent relationship.
+        """
+        _logger.info("Generating customer code for values: %s", vals)
+
+        sequence_code = None
+        if vals.get("is_account"):
+            sequence_code = "res.partner.account"
+        elif vals.get("is_affiliate"):
+            sequence_code = "res.partner.affiliate"
+        elif vals.get("is_contact"):
+            sequence_code = "res.partner.contact"
+        elif vals.get("is_patient"):
+            sequence_code = "res.partner.patient"
+
+        if not sequence_code:
+            _logger.error("Unable to determine sequence type for values: %s", vals)
+            raise ValidationError(_("Unable to determine sequence type for this partner."))
+
+        # Generate the sequence-based code
+        new_code = self.env["ir.sequence"].next_by_code(sequence_code)
+        _logger.info("Generated sequence-based code: %s", new_code)
+
+        # Append the parent reference for affiliates
+        if vals.get("is_affiliate") and vals.get("parent_id"):
+            parent = self.browse(vals["parent_id"])
+            if not parent.customer_code:
+                _logger.error("Parent must have a customer code assigned. Parent ID: %s", parent.id)
+                raise ValidationError(_("Parent must have a customer code assigned."))
+
+            # Use only the suffix from the affiliate sequence
+            affiliate_suffix = new_code[len("AF"):]  # Strip the "AF" prefix to get the padded suffix
+            new_code = f"{parent.customer_code}/AF{affiliate_suffix}"
+            _logger.info("Affiliate customer code generated: %s", new_code)
+
+        return new_code
+
 
     def view_affiliates(self):
         return {
