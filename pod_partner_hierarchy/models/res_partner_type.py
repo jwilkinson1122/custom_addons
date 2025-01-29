@@ -15,11 +15,18 @@ class ResPartnerType(models.Model):
     sequence = fields.Integer('Priority', default=10)
     active = fields.Boolean(default=True)
 
-    
     is_account = fields.Boolean(string='Account', help="Check this box if this is a customer account.")
     is_affiliate = fields.Boolean(string='Affiliate', help="Check this box if this is an affiliate.")
     is_contact = fields.Boolean(string='Contact', help="Check this box if this is a contact.")
     is_patient = fields.Boolean(string='Patient', help="Check this box if this is a patient.")
+
+    channel_partner_ids = fields.Many2many(
+        'res.partner',
+        'res_partner_type_channel_rel',
+        'type_id',
+        'partner_id',
+        string="Channel Partners"
+    )
 
     # Partners hierarchy
     can_have_parent = fields.Boolean(default=True)
@@ -28,6 +35,7 @@ class ResPartnerType(models.Model):
         'res.partner.type', string='Company types authorized for parent',
         relation="res_partner_type_parent_types_rel",
         column1="child_type_id", column2="parent_type_id")
+
     parent_relation_label = fields.Char(
         'Parent relation label', translate=True, required=True,
         default='Attached To:')
