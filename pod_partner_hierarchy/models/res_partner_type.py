@@ -3,7 +3,6 @@
 
 from odoo import fields, models
 
-
 class ResPartnerType(models.Model):
     _name = 'res.partner.type'
     _description = 'Contact Type'

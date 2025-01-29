@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import logging
 import json
 from lxml import etree
@@ -34,7 +32,6 @@ class ResPartner(models.Model):
     )
     # Field Declarations
     fax_number = fields.Char(string="Fax")
-    # ref = fields.Char("ID", readonly=True, default=lambda self: _("New"))
     customer_code = fields.Char(string="Customer Code", readonly=True, default=lambda self: _("New"))
     legacy_customer_code = fields.Char("Legacy ID", readonly=True)
     parent_relation_label = fields.Char(related='partner_type_id.parent_relation_label', readonly=True)
@@ -92,24 +89,20 @@ class ResPartner(models.Model):
         store=True,
     )
 
-    contact_address_type = fields.Selection(
-        selection=[
-            ("contact", "Contact Address"),
-            ("patient", "Patient Address"),
-        ],
-        compute="_compute_contact_address_type",
-        string="Contact Address Type",
-        default="contact",
-        required=False,
-    )
-
     # Affiliate Fields
      # force "active_test" domain to bypass _search() override
+    # affiliate_ids = fields.One2many(
+    #     "res.partner",
+    #     "parent_id",
+    #     string="Affiliates",
+    #     domain=[("active", "=", True), ("is_company", "=", True), ("is_affiliate", "=", True)],
+    # )
+
     affiliate_ids = fields.One2many(
         "res.partner",
         "parent_id",
         string="Affiliates",
-        domain=[("active", "=", True), ("is_company", "=", True), ("is_affiliate", "=", True)],
+        domain=[("active", "=", True), ("is_affiliate", "=", True)],
     )
 
     affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count', compute_sudo=True)
@@ -373,7 +366,8 @@ class ResPartner(models.Model):
             if contacts:
                 self.responsible_contact_id = contacts[0]
 
- 
+
+
     @api.model
     def create(self, vals):
         """
@@ -399,7 +393,7 @@ class ResPartner(models.Model):
         partner = super(ResPartner, self).create(vals)
         _logger.info("Partner created successfully with ID: %s and customer code: %s", partner.id, partner.customer_code)
         return partner
-
+    
     def write(self, vals):
         """
         Handles updates to legacy_customer_code and regenerates customer_code if type or parent changes.
@@ -423,6 +417,7 @@ class ResPartner(models.Model):
         result = super(ResPartner, self).write(vals)
         _logger.info("Partner(s) updated successfully.")
         return result
+    
 
     def _generate_reference(self, vals):
         """
@@ -430,6 +425,7 @@ class ResPartner(models.Model):
         """
         _logger.info("Generating customer code for values: %s", vals)
 
+        # Determine the sequence code
         sequence_code = None
         if vals.get("is_account"):
             sequence_code = "res.partner.account"
@@ -446,23 +442,67 @@ class ResPartner(models.Model):
 
         # Generate the sequence-based code
         new_code = self.env["ir.sequence"].next_by_code(sequence_code)
+        if not new_code:
+            _logger.error("Unable to generate sequence code for '%s'.", sequence_code)
+            raise ValidationError(_("Unable to generate a sequence for '%s'. Please check configuration.") % sequence_code)
+        
         _logger.info("Generated sequence-based code: %s", new_code)
 
-        # Append the parent reference for affiliates
-        if vals.get("is_affiliate") and vals.get("parent_id"):
-            parent = self.browse(vals["parent_id"])
-            if not parent.customer_code:
-                _logger.error("Parent must have a customer code assigned. Parent ID: %s", parent.id)
-                raise ValidationError(_("Parent must have a customer code assigned."))
+        # Append parent reference for affiliates
+        if vals.get("is_affiliate"):
+            parent_id = vals.get("parent_id")
+            if not parent_id:
+                _logger.error("Affiliate must have a parent. Values: %s", vals)
+                raise ValidationError(_("Affiliates must be linked to a parent company."))
 
-            # Use only the suffix from the affiliate sequence
-            affiliate_suffix = new_code[len("AF"):]  # Strip the "AF" prefix to get the padded suffix
+            parent = self.browse(parent_id)
+            if not parent.customer_code:
+                _logger.error("Parent must have a customer code assigned. Parent ID: %s", parent_id)
+                raise ValidationError(_("Parent must have a customer code assigned before creating affiliates."))
+
+            # Append parent code and ensure proper formatting for affiliate codes
+            affiliate_suffix = new_code[len("AF"):]  # Ensure suffix only
             new_code = f"{parent.customer_code}/AF{affiliate_suffix}"
-            _logger.info("Affiliate customer code generated: %s", new_code)
+            _logger.info("Generated affiliate customer code: %s", new_code)
 
         return new_code
 
 
+    # def _generate_reference(self, vals):
+    #     """
+    #     Generate a new customer code based on the partner type and parent relationship.
+    #     """
+    #     _logger.info("Generating customer code for values: %s", vals)
+
+    #     sequence_code = None
+    #     if vals.get("is_account"):
+    #         sequence_code = "res.partner.account"
+    #     elif vals.get("is_affiliate"):
+    #         sequence_code = "res.partner.affiliate"
+    #     elif vals.get("is_contact"):
+    #         sequence_code = "res.partner.contact"
+    #     elif vals.get("is_patient"):
+    #         sequence_code = "res.partner.patient"
+
+    #     if not sequence_code:
+    #         _logger.error("Unable to determine sequence type for values: %s", vals)
+    #         raise ValidationError(_("Unable to determine sequence type for this partner."))
+
+    #     new_code = self.env["ir.sequence"].next_by_code(sequence_code)
+    #     _logger.info("Generated sequence-based code: %s", new_code)
+
+    #     if vals.get("is_affiliate") and vals.get("parent_id"):
+    #         parent = self.browse(vals["parent_id"])
+    #         if not parent.customer_code:
+    #             _logger.error("Parent must have a customer code assigned. Parent ID: %s", parent.id)
+    #             raise ValidationError(_("Parent must have a customer code assigned."))
+
+    #         new_code = f"{parent.customer_code}/{new_code}"
+    #         _logger.info("Affiliate customer code generated: %s", new_code)
+
+    #     return new_code
+    
+    
     def view_affiliates(self):
         return {
             'name': _('Affiliates'),
@@ -475,4 +515,4 @@ class ResPartner(models.Model):
                 ('is_affiliate', '=', True)
             ],
             'target': 'current',
-        }
+        } 

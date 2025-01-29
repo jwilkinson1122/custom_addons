@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="view_partner_tree" model="ir.ui.view">
         <field name="name">res.partner.tree</field>
         <field name="model">res.partner</field>
@@ -74,6 +73,12 @@
                         <field name="responsible_contact_id" placeholder="Select Contact" class="oe_inline" invisible="context.get('default_partner_type_code') not in ['PATIENT']" required="1" options="{'no_create': True}"/>
                         <label for="commercial_partner" string="Commercial Partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                         <field name="commercial_partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
+                        <!-- <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" invisible="is_account"/>
+                        <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="is_account"/>
+                        <field name="parent_id" widget="res_partner_many2one" placeholder="Company" domain="[('is_company', '=', True), ('id', '!=', 1)]" invisible="is_account" class="fw-bold"/>
+                        <field name="responsible_contact_id" placeholder="Select Contact" class="oe_inline" required="1" options="{'no_create': True}" invisible="not is_patient"/>
+                        <label for="commercial_partner" string="Commercial Partner" invisible="not is_contact"/>
+                        <field name="commercial_partner" invisible="not is_contact"/> -->
                     </div>
                 </div>
             </xpath>
@@ -81,6 +86,7 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+
             <xpath expr="//group" position="replace">
                 <separator name="contact_info" string="Contact Information"/>
                 <group>
@@ -327,6 +333,7 @@
             </div>
         </page>
     </xpath>
+
     <!-- Contacts Notebook Page -->
     <xpath expr="//page[@name='contact_addresses']" position="attributes">
         <attribute name="autofocus"></attribute>
@@ -342,12 +349,6 @@
     <xpath expr="//page[@name='accounting_disabled']" position="attributes">
         <attribute name="invisible">is_patient</attribute>
     </xpath>
-    <!-- <xpath expr="//page[@name='sales_purchases']//field[@name='ref']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath> -->
-    <!-- <xpath expr="//page[@name='sales_purchases']//field[@name='customer_code']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath> -->
     <xpath expr="//field[@name='child_ids']" position="before">
         <label for='child_ids' string="Direct Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
     </xpath>
@@ -383,10 +384,10 @@
             <group>
                 <label for="patient_ids" string="Direct Patients" class="fw-bolder mb-3 mt-4 small text-uppercase" />
             </group>
-            <field name="patient_ids" mode="kanban" nolabel="1" domain="[('is_patient', '=', False), ('user_ids', '=', False)]" context="{'default_partner_type_code': 'PATIENT'}">
-                <kanban>
-
-                    <!-- <kanban create="true"> -->
+            
+            <!-- <field name="patient_ids" mode="kanban" nolabel="1" domain="[('is_patient', '=', False), ('user_ids', '=', False)]" context="{'default_partner_type_code': 'PATIENT'}"> -->
+            <field name="patient_ids" mode="kanban" nolabel="1" domain="[('is_patient', '=', False), ('user_ids', '=', False)]" context="{'default_is_patient': True}">
+                <kanban create="true">
                     <field name="id" />
                     <field name="ref"/>
                     <field name="customer_code"/>
@@ -457,6 +458,7 @@
                         <field name="is_patient" invisible="1"/>
                         <field name="partner_type_code" invisible="1"/>
                         <field name="partner_type_id" widget="radio" options="{'horizontal': true}" context="{'default_partner_type_code': 'PATIENT'}" domain="[('code', '=', 'PATIENT')]" required="1"/>
+                        <!-- <field name="partner_type_id" widget="radio" options="{'horizontal': true}" context="{'default_is_patient': True}" domain="[('is_patient', '=', True)]" required="1"/> -->
                         <field name="parent_id" invisible="1" />
                         <div class="text-muted oe_edit_only">
                             <p class="mb-0" invisible="is_patient">
@@ -500,6 +502,8 @@
             <group>
                 <label for="sub_patient_ids" string="Indirect Patients" class="fw-bolder mb-3 mt-4 small text-uppercase" />
                 <field name="sub_patient_ids" mode="tree" invisible="not sub_patient_ids" colspan="2" domain="[('partner_type_code', '!=', 'PATIENT'), ('is_company', '=', False), ('user_ids', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1">
+
+                <!-- <field name="sub_patient_ids" mode="tree" invisible="not sub_patient_ids" colspan="2" domain="[('is_patient', '!=', True), ('is_company', '=', False), ('user_ids', '=', False)]" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id}" nolabel="1"> -->
                     <tree>
                         <field name="id" />
                         <field name="name" />
@@ -537,27 +541,6 @@
             </group>
         </page>
     </xpath>
-
-    <!-- Page for patients list -->
-    <!-- <xpath expr='//page[@name="contact_addresses"]' position="after">
-                <page name="patients_list" string="Patients" invisible="is_is_affiliate or patient">
-                    <separator name="patients" string="Patients List" />
-                    <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_ids or patient_ids == ''" mode="kanban">
-        No Patients Available
-                    </div>
-                    <field name="patient_ids" domain="[('patient', '=', True), ('parent_id', '=', active_id)]" context="{'default_parent_id': id, 'default_patient': True}" mode="kanban"/>
-                </page>
-            </xpath> -->
-
-
-    <!-- Personal Information -->
-    <!-- <xpath expr="//page[@name='internal_notes']" position="after">
-                <page name="personal_information_page" string="Patient Details" invisible="not patient">
-                    <group name="personal_information_group">
-    
-                    </group>
-                </page>
-            </xpath> -->
 
     <xpath expr="//notebook/page[@name='internal_notes']" position="before">
         <page name="orders" string="Orders">
@@ -623,7 +606,6 @@
 </field>
 </record>
 
-
 <record id="partner_account_action" model="ir.actions.act_window">
 <field name="name">Accounts</field>
 <field name="type">ir.actions.act_window</field>
@@ -631,6 +613,8 @@
 <field name="view_mode">kanban,tree,form,activity</field>
 <field name="search_view_id" ref="view_res_partner_filter"/>
 <field name="domain">[('is_account', '=', True), ('is_company', '=', True), ('is_affiliate', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+
+<!-- <field name="domain">[('is_account', '=', True), ('is_company', '=', True), ('is_affiliate', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field> -->
 <field name="context">{
             'default_partner_type_code': 'ACCOUNT',
             'default_is_account': True, 
@@ -653,10 +637,12 @@
 <field name="res_model">res.partner</field>
 <field name="view_mode">kanban,tree,form,activity</field>
 <field name="search_view_id" ref="view_res_partner_filter"/>
-<field name="domain">[('is_affiliate', '=', True), ('is_company', '=', True), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<field name="domain">[('is_affiliate', '=', True), ('is_company', '=', True), ('is_account', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<!-- <field name="domain">[('is_affiliate', '=', True), ('is_company', '=', True), ('is_account', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field> -->
 <field name="context">{
             'default_partner_type_code': 'AFFILIATE',
             'default_is_affiliate': True, 
+            'default_is_account': False,
             'default_is_company': True
         }</field>
 <field name="help" type="html">
@@ -714,6 +700,94 @@
     </p>
 </field>
 </record>
+
+
+<!-- <record id="partner_account_action" model="ir.actions.act_window">
+<field name="name">Accounts</field>
+<field name="type">ir.actions.act_window</field>
+<field name="res_model">res.partner</field>
+<field name="view_mode">kanban,tree,form,activity</field>
+<field name="search_view_id" ref="view_res_partner_filter"/>
+<field name="domain">[('is_account', '=', True), ('is_company', '=', True), ('is_affiliate', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<field name="context">{
+            'default_is_account': True, 
+            'default_is_company': True
+        }</field>
+<field name="help" type="html">
+    <p class="o_view_nocontent_smiling_face">
+            Create a Customer Account in your address book
+    </p>
+    <p>
+            Odoo helps you track all activities related to your customers accounts.
+    </p>
+</field>
+</record>
+
+
+<record id="partner_affiliate_action" model="ir.actions.act_window">
+<field name="name">Affiliates</field>
+<field name="type">ir.actions.act_window</field>
+<field name="res_model">res.partner</field>
+<field name="view_mode">kanban,tree,form,activity</field>
+<field name="search_view_id" ref="view_res_partner_filter"/>
+<field name="domain">[('is_affiliate', '=', True), ('is_company', '=', True), ('is_account', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<field name="context">{
+            'default_is_affiliate': True, 
+            'default_is_company': True
+        }</field>
+<field name="help" type="html">
+    <p class="o_view_nocontent_smiling_face">
+            Create a Customer Affiliate in your address book
+    </p>
+    <p>
+            Odoo helps you track all activities related to your customers' affiliates.
+    </p>
+</field>
+</record>
+
+<record id="contacts.action_contacts" model="ir.actions.act_window">
+<field name="name">Contacts</field>
+<field name="res_model">res.partner</field>
+<field name="view_mode">kanban,tree,form,activity</field>
+<field name="search_view_id" ref="view_res_partner_filter"/>
+<field name="domain">[('is_contact', '=', True), ('is_company', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<field name="context">{
+            'default_contact_address_type': 'contact',
+            'default_is_contact': True, 
+            'default_is_company': False
+        }</field>
+<field name="help" type="html">
+    <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+    </p>
+    <p>
+            Odoo helps you track all activities related to your contacts.
+    </p>
+</field>
+</record>
+
+
+<record id="partner_patient_action" model="ir.actions.act_window">
+<field name="name">Patients</field>
+<field name="type">ir.actions.act_window</field>
+<field name="res_model">res.partner</field>
+<field name="view_mode">kanban,tree,form,activity</field>
+<field name="search_view_id" ref="view_res_partner_filter"/>
+<field name="domain">[('is_patient', '=', True), ('is_company', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+<field name="context">{
+            'default_contact_address_type': 'patient',
+            'default_is_patient': True, 
+            'default_is_company': False
+        }</field>
+<field name="help" type="html">
+    <p class="o_view_nocontent_smiling_face">
+            Create a Patient in your address book
+    </p>
+    <p>
+            Odoo helps you track all activities related to your customers' patients.
+    </p>
+</field>
+</record> -->
 
 <!-- Define root menu for contacts -->
 <menuitem id="contacts.menu_contacts" name="Customers" web_icon="contacts,static/description/icon.png" groups="base.group_user,base.group_partner_manager" sequence="20"/>
