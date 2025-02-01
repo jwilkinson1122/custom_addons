@@ -5,8 +5,8 @@ from odoo import fields, models
 
 class ResPartnerType(models.Model):
     _name = 'res.partner.type'
-    _description = 'Contact Type'
-    _company_inherit_fields = ['company_type', 'type', 'is_account', 'is_affiliate']
+    _description = 'Partner Type'
+    _company_inherit_fields = ['company_type', 'type', 'is_company', 'is_account', 'is_affiliate']
     _person_inherit_fields = ['company_type', 'type', 'is_contact', 'is_patient']
 
     id = fields.Integer(readonly=True)
@@ -15,6 +15,7 @@ class ResPartnerType(models.Model):
     sequence = fields.Integer('Priority', default=10)
     active = fields.Boolean(default=True)
 
+    is_company = fields.Boolean(string='Company', help="Check this box if this is a company.")
     is_account = fields.Boolean(string='Account', help="Check this box if this is a customer account.")
     is_affiliate = fields.Boolean(string='Affiliate', help="Check this box if this is an affiliate.")
     is_contact = fields.Boolean(string='Contact', help="Check this box if this is a contact.")
@@ -50,18 +51,30 @@ class ResPartnerType(models.Model):
     company_type = fields.Selection([
         ('person', 'Individual'),
         ('company', 'Company'),
-    ], 'Company Type', required=True, default='company')
+    ], 'Company Type', required=True, default='person')
+
+ 
+    # type = fields.Selection(
+    #     [   
+    #         ('invoice', 'Invoice address'),
+    #         ('delivery', 'Shipping address'),
+    #         ("supplier", "Vendor Address"),
+    #         ('other', 'Other address'),
+    #     ], string='Address Type', default=False,
+    #     help="Used to select automatically the right address "
+    #     "according to the context in sales and purchases documents.")
     
     type = fields.Selection(
-        [
-            ('contact', 'Contact Address'),
-            ('patient', 'Patient Address'),
-            ('invoice', 'Invoice address'),
-            ('delivery', 'Shipping address'),
-            ('other', 'Other address'),
-        ], 'Address Type', default=False,
-        help="Used to select automatically the right address "
-        "according to the context in sales and purchases documents.")
+        [('contact', 'Contact'),
+         ('invoice', 'Invoice Address'),
+         ('delivery', 'Delivery Address'),
+         ('other', 'Other Address'),
+        ], string='Address Type',
+        default='contact',
+        help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+             "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+             "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+             "- Other: Other address for the company (e.g. subsidiary, ...)")
     
     # Inherited fields for the children with a parent of this type
     field_ids = fields.Many2many(

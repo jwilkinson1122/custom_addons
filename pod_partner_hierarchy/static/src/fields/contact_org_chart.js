@@ -39,7 +39,8 @@ class PartnerOrgChartPopover extends Component {
 
 export class PartnerOrgChart extends Component {
     static template = "pod_partner_hierarchy.pod_partner_hierarchy";
-    static props = {...standardFieldProps};
+    static props = {...standardFieldProps, record: Object};
+    
     async setup() {
         super.setup();
 
@@ -48,6 +49,12 @@ export class PartnerOrgChart extends Component {
         this.actionService = useService("action");
         this.user = useService("user");
         this.popover = usePopover(PartnerOrgChartPopover);
+
+        if (!this.props.record || !this.props.record.data) {
+            console.error("PartnerOrgChart: Missing or invalid record data");
+            return;
+        }
+
 
         this.state = useState({'partner_id': null});
         this.lastParent = null;
@@ -61,42 +68,89 @@ export class PartnerOrgChart extends Component {
      * Called on start and on render
      */
     async handleComponentUpdate() {
+        if (!this.props.record) {
+            console.error("handleComponentUpdate: Missing record context");
+            return;
+        }
         this.partner = this.props.record.data;
         this.state.partner_id = this.props.record.resId
+        
         const manager = this.partner.parent_id;
         const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
         this.lastParent = manager;
         this.lastRecord = this.props.record;
+        
         await this.fetchPartnerData(this.state.partner_id, forceReload);
     }
+
+    // async fetchPartnerData(partnerId, force = false) {
+    //     if (!partnerId) {
+    //         this.managers = [];
+    //         this.children = [];
+    //         if (this.view_partner_id) {
+    //             this.render(true);
+    //         }
+    //         this.view_partner_id = null;
+    //     } else if (partnerId !== this.view_partner_id || force) {
+    //         this.view_partner_id = partnerId;
+    //         let orgData = await this.rpc(
+    //             '/partner/get_org_chart',
+    //             {
+    //                 partner_id: partnerId,
+    //                 include_affiliates: true,
+    //                 context: this.user.context,
+    //             }
+    //         );
+    //         if (Object.keys(orgData).length === 0) {
+    //             orgData = {
+    //                 managers: [],
+    //                 children: [], 
+    //                 affiliates: [],
+    //             }
+    //         }
+    //         this.managers = orgData.managers;
+    //         this.children = orgData.children; 
+    //         this.affiliates = orgData.affiliates;
+    //         this.managers_more = orgData.managers_more;
+    //         this.self = orgData.self;
+    //         this.render(true);
+    //     }
+    // }
 
     async fetchPartnerData(partnerId, force = false) {
         if (!partnerId) {
             this.managers = [];
             this.children = [];
+            this.affiliates = [];
             if (this.view_partner_id) {
                 this.render(true);
             }
             this.view_partner_id = null;
         } else if (partnerId !== this.view_partner_id || force) {
             this.view_partner_id = partnerId;
-            let orgData = await this.rpc(
-                '/partner/get_org_chart',
-                {
-                    partner_id: partnerId,
-                    context: this.user.context,
+    
+            // Fetch data, ensuring we include affiliates when viewing an account
+            let orgData = await this.rpc('/partner/get_org_chart', {
+                partner_id: partnerId,
+                include_affiliates: true,   
+                context: this.user.context,
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 }
-            );
-            if (Object.keys(orgData).length === 0) {
-                orgData = {
-                    managers: [],
-                    children: [],
-                }
+            });
+    
+            if (!orgData || Object.keys(orgData).length === 0) {
+                orgData = { managers: [], children: [], affiliates: [] };
             }
+    
             this.managers = orgData.managers;
             this.children = orgData.children;
+            this.affiliates = orgData.affiliates; // Store affiliates separately
             this.managers_more = orgData.managers_more;
             this.self = orgData.self;
+    
             this.render(true);
         }
     }
@@ -123,6 +177,8 @@ export class PartnerOrgChart extends Component {
         this.state.partner_id = managerId;
     }
 }
+
+
 
 export const partnerOrgChart = {
     component: PartnerOrgChart,

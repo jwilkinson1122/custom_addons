@@ -19,12 +19,4 @@
             </div>
         </xpath>
     </t>
-
-    <!-- <t t-name="pod_partner_hierarchy.ResPartnerHierarchyRenderer" t-inherit="web_hierarchy.HierarchyRenderer">
-        <xpath expr="//div[hasclass('o_hierarchy_parent_node_container')]/span" position="replace">
-            <Avatar resModel="row.parentNode.model.resModel" resId="row.parentNode.resId" displayName="row.parentNode.data.display_name || row.parentNode.data.name" />
-        </xpath>
-    </t> -->
-
-   
 </templates>

@@ -47,6 +47,7 @@
                                 <group>
                                     <field name="company_type"/>
                                     <field name="type" invisible="company_type != 'person'" required="company_type == 'person'"/>
+                                    <field name="is_company" invisible="1"/>
                                     <field name="is_account" invisible="company_type != 'company'"/>
                                     <field name="is_affiliate" invisible="company_type != 'company'"/>
                                     <field name="companies_label" invisible="company_type != 'company'"/>

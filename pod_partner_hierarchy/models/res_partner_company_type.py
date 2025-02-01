@@ -3,7 +3,7 @@
 from odoo import models, fields
 
 
-class PartnerCompanyType(models.Model):
+class PartnerClinicType(models.Model):
     _name = "partner.company.type"
     _description = "Company Types"
 
