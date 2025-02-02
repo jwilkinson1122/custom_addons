@@ -352,22 +352,39 @@ class Partner(models.Model):
 
 
     # Onchange Methods
-    @api.onchange('use_parent_address')
+    # @api.onchange('use_parent_address')
+    # def _onchange_use_parent_address(self):
+    #     if self.use_parent_address and self.parent_id:
+    #         self.street = self.parent_id.street
+    #         self.city = self.parent_id.city
+    #         self.zip = self.parent_id.zip
+    #         self.state_id = self.parent_id.state_id
+    #         self.country_id = self.parent_id.country_id
+    #     elif not self.use_parent_address:
+    #         self.street = False
+    #         self.city = False
+    #         self.zip = False
+    #         self.state_id = False
+    #         self.country_id = False
+
+    @api.onchange('use_parent_address', 'parent_id')
     def _onchange_use_parent_address(self):
         if self.use_parent_address and self.parent_id:
-            # Clear custom address if switching to parent address
             self.street = self.parent_id.street
+            self.street2 = self.parent_id.street2
             self.city = self.parent_id.city
             self.zip = self.parent_id.zip
             self.state_id = self.parent_id.state_id
             self.country_id = self.parent_id.country_id
         elif not self.use_parent_address:
-            # Make address fields editable
-            self.street = False
-            self.city = False
-            self.zip = False
+            self.street = ''
+            self.street2 = ''
+            self.city = ''
+            self.zip = ''
             self.state_id = False
             self.country_id = False
+
+
 
     @api.onchange('company_type')
     def _onchange_company_type(self):

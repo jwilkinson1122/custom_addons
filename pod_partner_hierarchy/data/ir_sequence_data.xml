@@ -3,15 +3,15 @@
     <record id="seq_res_partner_account" model="ir.sequence">
         <field name="name">Account Code</field>
         <field name="code">res.partner.account</field>
-        <field name="prefix">ACC-</field>
-        <field name="padding">5</field>
+        <field name="prefix">ID</field>
+        <field name="padding">4</field>
         <field name="number_next">1</field>
     </record>
 
     <record id="seq_res_partner_affiliate" model="ir.sequence">
         <field name="name">Affiliate Code</field>
         <field name="code">res.partner.affiliate</field>
-        <field name="prefix">AFF-</field>
+        <field name="prefix"></field>
         <field name="padding">3</field>
         <field name="number_next">1</field>
     </record>
@@ -19,7 +19,7 @@
     <record id="seq_res_partner_contact" model="ir.sequence">
         <field name="name">Contact Code</field>
         <field name="code">res.partner.contact</field>
-        <field name="prefix">CON-</field>
+        <field name="prefix">CT</field>
         <field name="padding">3</field>
         <field name="number_next">1</field>
     </record>
@@ -27,7 +27,7 @@
     <record id="seq_res_partner_patient" model="ir.sequence">
         <field name="name">Patient Code</field>
         <field name="code">res.partner.patient</field>
-        <field name="prefix">PAT-</field>
+        <field name="prefix">PT</field>
         <field name="padding">3</field>
         <field name="number_next">1</field>
     </record>
@@ -35,7 +35,7 @@
     <record id="seq_res_partner_generic" model="ir.sequence">
         <field name="name">Generic Partner Code</field>
         <field name="code">res.partner.generic</field>
-        <field name="prefix">GEN-</field>
+        <field name="prefix">GEN</field>
         <field name="padding">3</field>
         <field name="number_next">1</field>
     </record>
