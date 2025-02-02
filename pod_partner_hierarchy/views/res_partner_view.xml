@@ -63,12 +63,18 @@
                         <field name="company_type" invisible="1"/>
                         <field name="parent_type_ids" invisible="1"/>
                         <field name="partner_type_code" invisible="1"/>
-                        <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" invisible="is_account"/>
+                        <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" readonly="1" invisible="is_account"/>
                         <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="is_account"/>
                         <field name="parent_id" widget="res_partner_many2one" placeholder="Company" invisible="is_account" domain="[('is_company', '=', True), ('id', '!=', 1)]" required="1" class="fw-bold"/>
                         <field name="responsible_contact_id" placeholder="Select Contact" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
-                        <label for="commercial_partner" string="Commercial Partner" invisible="not is_contact"/>
-                        <field name="commercial_partner" invisible="not is_contact"/>
+                        
+                        <!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Company" invisible="context.get('default_partner_type_code') == 'ACCOUNT'" domain="[('is_company', '=', True), ('id', '!=', 1)]" class="fw-bold"/> -->
+
+                        <!-- <label for="commercial_partner" string="Commercial Partner" invisible="not is_contact"/>
+                        <field name="commercial_partner" invisible="not is_contact"/> -->
+                        <!-- <field name="responsible_contact_id" placeholder="Select Contact" class="oe_inline" invisible="context.get('default_partner_type_code') not in ['PATIENT']" required="1" options="{'no_create': True}"/> -->
+                        <label for="commercial_partner" string="Commercial Partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
+                        <field name="commercial_partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                     </div>
                 </div>
             </xpath>
@@ -93,8 +99,10 @@
             <xpath expr="//group" position="replace">
                 <separator name="contact_info" string="Contact Information"/>
                 <group name="address">
-                    <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="is_account"/>
+                    <!-- <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="is_account"/> -->
                     <group>
+                        <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="is_account"/>
+
                         <!-- <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" attrs="{'invisible': [('parent_id', '=', False)]}"/> -->
                         <span class="o_form_label o_td_label" name="address_name">
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
