@@ -13,10 +13,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     is_reorder = fields.Boolean("Is Reorder")
-
-    is_enable_reorder = fields.Boolean(
-        string="Enable Reorder", compute="_compute_is_enable_reorder", store=True
-    )
+    is_enable_reorder = fields.Boolean(string="Enable Reorder", compute="_compute_is_enable_reorder", store=True)
 
     order_history_ids = fields.One2many(
         "order.history",
@@ -38,6 +35,92 @@ class SaleOrder(models.Model):
         inverse_name="sale_order_id",
         string="Selectable Order History",
     )
+
+    use_parent_address = fields.Boolean(
+        string="Use Parent Address",
+        help="Enable this option to inherit the parent's delivery address."
+    )
+
+    # Related fields to fetch the parent's address
+    parent_street = fields.Char(related='partner_id.parent_id.street', readonly=True)
+    parent_city = fields.Char(related='partner_id.parent_id.city', readonly=True)
+    parent_zip = fields.Char(related='partner_id.parent_id.zip', readonly=True)
+    parent_state_id = fields.Many2one('res.country.state', related='partner_id.parent_id.state_id', readonly=True)
+    parent_country_id = fields.Many2one('res.country', related='partner_id.parent_id.country_id', readonly=True)
+
+
+    partner_invoice_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Invoice Address",
+        compute='_compute_partner_invoice_id',
+        store=True, readonly=False, required=True, precompute=True,
+        check_company=True,
+        index='btree_not_null'
+    )
+    
+    partner_shipping_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Delivery Address",
+        compute='_compute_partner_shipping_id',
+        store=True, readonly=False, required=True, precompute=True,
+        check_company=True,
+        index='btree_not_null'
+    )
+
+    @api.depends('partner_id')
+    def _compute_partner_invoice_id(self):
+        for order in self:
+            order.partner_invoice_id = (
+                order.partner_id.address_get(['invoice'])['invoice']
+                if order.partner_id else False
+            )
+
+    @api.depends('partner_id')
+    def _compute_partner_shipping_id(self):
+        for order in self:
+            if order.partner_id:
+                if order.partner_id.use_parent_address and order.partner_id.parent_id:
+                    # Use the parent partner's delivery address
+                    order.partner_shipping_id = order.partner_id.parent_id.address_get(['delivery'])['delivery']
+                else:
+                    # Use the current partner's delivery address
+                    order.partner_shipping_id = order.partner_id.address_get(['delivery'])['delivery']
+            else:
+                order.partner_shipping_id = False
+
+    @api.depends('partner_shipping_id', 'partner_id', 'company_id')
+    def _compute_fiscal_position_id(self):
+        """
+        Trigger the change of fiscal position when the shipping address is modified.
+        """
+        cache = {}
+        for order in self:
+            if not order.partner_id:
+                order.fiscal_position_id = False
+                continue
+            fpos_id_before = order.fiscal_position_id.id
+            key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
+            if key not in cache:
+                cache[key] = self.env['account.fiscal.position'].with_company(
+                    order.company_id
+                )._get_fiscal_position(order.partner_id, order.partner_shipping_id).id
+            if fpos_id_before != cache[key] and order.order_line:
+                order.show_update_fpos = True
+            order.fiscal_position_id = cache[key]
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.partner_id:
+            self._compute_partner_shipping_id()
+            self._compute_partner_invoice_id()
+
+    @api.onchange('use_parent_address', 'partner_id')
+    def _onchange_use_parent_address(self):
+        for order in self:
+            if order.use_parent_address and order.partner_id.parent_id:
+                order.partner_shipping_id = order.partner_id.parent_id
+            elif not order.use_parent_address:
+                order.partner_shipping_id = order.partner_id.address_get(['delivery']).get('delivery')
 
     @api.depends("partner_id")
     def _compute_is_enable_reorder(self):
@@ -224,7 +307,7 @@ class SaleOrder(models.Model):
         today = fields.Date.today()
         return [(today - timedelta(days=i)) for i in range(n)]
 
-
+    
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

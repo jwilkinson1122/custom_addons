@@ -11,7 +11,7 @@
 
             <!-- Add a new tab for Patient Data -->
             <xpath expr="//page[@name='contact_addresses']" position="after">
-                <page string="Patient Data" attrs="{'invisible': [('patient', '=', False)]}">
+                <page string="Patient Data" invisible="not patient" >
                     <field name="patient_ids" mode="tree,form" context="{'default_partner_id': active_id}">
                         <tree string="Prescriptions">
                             <field name="prescription_date"/>

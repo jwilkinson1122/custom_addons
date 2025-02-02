@@ -6,6 +6,28 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+            
+                <!-- Adding the Use Parent Address boolean under the customer section -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="not partner_id" options="{'terminology': 'delivery'}"/>
+                </xpath>
+
+                <!-- Customizing the Delivery Address field to make it readonly if using parent address -->
+                <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                    <attribute name="readonly">use_parent_address</attribute>
+                </xpath>
+
+                <!-- Display Parent Address Fields When use_parent_address is True -->
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <group invisible="not use_parent_address">
+                        <field name="parent_street" readonly="1" string="Street"/>
+                        <field name="parent_city" readonly="1" string="City"/>
+                        <field name="parent_zip" readonly="1" string="ZIP"/>
+                        <field name="parent_state_id" readonly="1" string="State"/>
+                        <field name="parent_country_id" readonly="1" string="Country"/>
+                    </group>
+                </xpath>
+
                 <xpath expr="//field[@name='pricelist_id']" position="after">
                     <field name="is_reorder" invisible="1"/>
                 </xpath>
