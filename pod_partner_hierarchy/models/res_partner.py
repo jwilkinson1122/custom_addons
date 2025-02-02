@@ -188,19 +188,32 @@ class Partner(models.Model):
             partner.can_have_parent = partner.partner_type_id.can_have_parent
             partner.parent_is_required = partner.partner_type_id.parent_is_required
 
+    # @api.model
+    # def default_get(self, fields):
+    #     _logger.debug("Context Passed to default_get: %s", self._context)
+    #     res = super(Partner, self).default_get(fields)
+
+    #     if res.get("is_affiliate") and not res.get("parent_id"):
+    #         parent = self.env["res.partner"].search([("is_account", "=", True)], limit=1)
+    #         if parent:
+    #             res["parent_id"] = parent.id 
+    #         else:
+    #             _logger.warning("No available parent account for affiliate.")
+        
+    #     return res
+
     @api.model
     def default_get(self, fields):
         _logger.debug("Context Passed to default_get: %s", self._context)
         res = super(Partner, self).default_get(fields)
 
+        # Remove automatic parent assignment logic
         if res.get("is_affiliate") and not res.get("parent_id"):
-            parent = self.env["res.partner"].search([("is_account", "=", True)], limit=1)
-            if parent:
-                res["parent_id"] = parent.id  # Set first available account as parent
-            else:
-                _logger.warning("No available parent account for affiliate.")
-        
+            res["parent_id"] = False  # Explicitly ensure the field is empty
+            _logger.info("Parent ID left empty for manual selection.")
+
         return res
+
 
     # Affiliates
     @api.depends('affiliate_ids')
@@ -344,13 +357,23 @@ class Partner(models.Model):
                 raise ValidationError(_("Affiliates must have a parent account."))
 
 
+    # Skip validation for unsaved (new) records
+    # @api.constrains('parent_id', 'is_affiliate')
+    # def _check_affiliate_parent_constraint(self):
+    #     for record in self:
+    #         if not record.id:  
+    #             continue
+    #         if record.is_affiliate and not record.parent_id:
+    #             raise ValidationError(_("Affiliates must have a parent account."))
+            
+
     @api.constrains('parent_id', 'is_affiliate')
     def _check_affiliate_parent_constraint(self):
         for record in self:
-            if not record.id:  # Skip validation for unsaved (new) records
-                continue
             if record.is_affiliate and not record.parent_id:
-                raise ValidationError(_("Affiliates must have a parent account."))
+                if record.create_date:  # Ensure the record has been saved
+                    raise ValidationError(_("Affiliates must have a parent account."))
+
 
     # Onchange Methods
     @api.onchange('use_parent_address')
@@ -385,34 +408,52 @@ class Partner(models.Model):
             [(partner_type_field, '=', True)], limit=1
         )
 
+    # @api.onchange("parent_id")
+    # def _onchange_parent_id(self):
+    #     self.apply_contact_logic()
+
+    #     if self.is_affiliate and not self.parent_id:
+    #         raise ValidationError(_("Affiliates must have a parent account."))
+
+    #     domain = [("is_company", "=", False)]
+    #     if self.parent_id:
+    #         domain.append(("parent_id", "=", self.parent_id.id))
+    #     return {"domain": {"responsible_contact_id": domain}}
+
+
+    # @api.onchange("partner_type_id")
+    # def _onchange_partner_type(self):
+    #     """Handle changes in partner type to update parent-related fields."""
+    #     if self.partner_type_id:
+    #         self.update(self._get_inherit_values(self.partner_type_id))
+    #         if self.partner_type_id.type == 'contact':
+    #             self.is_contact = True 
+    #             self.type = False 
+    #         else:
+    #             self.is_contact = False
+    #             self.type = self.partner_type_id.type if self.partner_type_id.type in dict(self._fields['type'].selection).keys() else False
+    #     if self.is_affiliate and not self.parent_id:
+    #         raise ValidationError(_("Affiliates must have a parent account."))
+
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
         self.apply_contact_logic()
-
-        # Enforce validation for affiliates
-        if self.is_affiliate and not self.parent_id:
-            raise ValidationError(_("Affiliates must have a parent account."))
-
         domain = [("is_company", "=", False)]
         if self.parent_id:
             domain.append(("parent_id", "=", self.parent_id.id))
         return {"domain": {"responsible_contact_id": domain}}
 
-
     @api.onchange("partner_type_id")
     def _onchange_partner_type(self):
-        """Handle changes in partner type to update parent-related fields."""
         if self.partner_type_id:
             self.update(self._get_inherit_values(self.partner_type_id))
             if self.partner_type_id.type == 'contact':
-                self.is_contact = True  # Use is_contact instead
-                self.type = False  # Remove 'contact' from type
+                self.is_contact = True
+                self.type = False
             else:
                 self.is_contact = False
                 self.type = self.partner_type_id.type if self.partner_type_id.type in dict(self._fields['type'].selection).keys() else False
-        # Enforce validation for affiliates only when necessary
-        if self.is_affiliate and not self.parent_id:
-            raise ValidationError(_("Affiliates must have a parent account."))
+
 
 
     def _get_inherit_values(self, partner_type, not_null=False):

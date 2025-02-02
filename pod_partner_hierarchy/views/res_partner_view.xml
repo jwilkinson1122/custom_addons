@@ -65,6 +65,9 @@
                         <field name="partner_type_code" invisible="1"/>
                         <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" invisible="is_account"/>
                         <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="is_account"/>
+                        
+                        <!-- <field name="parent_id" required="1" attrs="{'invisible': [('is_affiliate', '=', False)]}"/> -->
+
                         <field name="parent_id" widget="res_partner_many2one" placeholder="Company" invisible="is_account" domain="[('is_company', '=', True), ('id', '!=', 1)]" required="1" class="fw-bold"/>
                         <field name="responsible_contact_id" placeholder="Select Contact" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
                         <label for="commercial_partner" string="Commercial Partner" invisible="not is_contact"/>
