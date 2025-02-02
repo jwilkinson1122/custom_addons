@@ -188,20 +188,6 @@ class Partner(models.Model):
             partner.can_have_parent = partner.partner_type_id.can_have_parent
             partner.parent_is_required = partner.partner_type_id.parent_is_required
 
-    # @api.model
-    # def default_get(self, fields):
-    #     _logger.debug("Context Passed to default_get: %s", self._context)
-    #     res = super(Partner, self).default_get(fields)
-
-    #     if res.get("is_affiliate") and not res.get("parent_id"):
-    #         parent = self.env["res.partner"].search([("is_account", "=", True)], limit=1)
-    #         if parent:
-    #             res["parent_id"] = parent.id 
-    #         else:
-    #             _logger.warning("No available parent account for affiliate.")
-        
-    #     return res
-
     @api.model
     def default_get(self, fields):
         _logger.debug("Context Passed to default_get: %s", self._context)
@@ -357,16 +343,6 @@ class Partner(models.Model):
                 raise ValidationError(_("Affiliates must have a parent account."))
 
 
-    # Skip validation for unsaved (new) records
-    # @api.constrains('parent_id', 'is_affiliate')
-    # def _check_affiliate_parent_constraint(self):
-    #     for record in self:
-    #         if not record.id:  
-    #             continue
-    #         if record.is_affiliate and not record.parent_id:
-    #             raise ValidationError(_("Affiliates must have a parent account."))
-            
-
     @api.constrains('parent_id', 'is_affiliate')
     def _check_affiliate_parent_constraint(self):
         for record in self:
@@ -408,32 +384,6 @@ class Partner(models.Model):
             [(partner_type_field, '=', True)], limit=1
         )
 
-    # @api.onchange("parent_id")
-    # def _onchange_parent_id(self):
-    #     self.apply_contact_logic()
-
-    #     if self.is_affiliate and not self.parent_id:
-    #         raise ValidationError(_("Affiliates must have a parent account."))
-
-    #     domain = [("is_company", "=", False)]
-    #     if self.parent_id:
-    #         domain.append(("parent_id", "=", self.parent_id.id))
-    #     return {"domain": {"responsible_contact_id": domain}}
-
-
-    # @api.onchange("partner_type_id")
-    # def _onchange_partner_type(self):
-    #     """Handle changes in partner type to update parent-related fields."""
-    #     if self.partner_type_id:
-    #         self.update(self._get_inherit_values(self.partner_type_id))
-    #         if self.partner_type_id.type == 'contact':
-    #             self.is_contact = True 
-    #             self.type = False 
-    #         else:
-    #             self.is_contact = False
-    #             self.type = self.partner_type_id.type if self.partner_type_id.type in dict(self._fields['type'].selection).keys() else False
-    #     if self.is_affiliate and not self.parent_id:
-    #         raise ValidationError(_("Affiliates must have a parent account."))
 
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
@@ -511,41 +461,6 @@ class Partner(models.Model):
         return super(Partner, self).create(vals)
 
 
-    # @api.model
-    # def create(self, vals):
-    #     """
-    #     Ensure that Affiliates have a parent account before creation.
-    #     """
-    #     _logger.debug("Received vals for create: %s", vals)
-
-    #     if vals.get("parent_id"):
-    #         vals["parent_id"] = int(vals["parent_id"])
-
-    #     if vals.get("is_affiliate") and not vals.get("parent_id"):
-
-    #         parent_partner = self.env["res.partner"].search([("is_account", "=", True)], limit=1)
-    #         if parent_partner:
-    #             vals["parent_id"] = parent_partner.id
-    #             _logger.warning("Automatically assigned parent %s to affiliate.", parent_partner.name)
-    #         else:
-    #             raise ValidationError(_("Affiliates must have a parent account."))
-
-    #         parent_partner = self.env["res.partner"].browse(vals["parent_id"])
-    #         if not parent_partner.exists():
-    #             _logger.error("Parent account does not exist. ID: %s", vals["parent_id"])
-    #             raise ValidationError(_("The specified parent account does not exist."))
-
-    #         if not parent_partner.is_account:
-    #             _logger.error("Parent must be an account. ID: %s, is_account: %s", vals["parent_id"], parent_partner.is_account)
-    #             raise ValidationError(_("The parent record must be an account."))
-            
-    #         vals["customer_code"] = self._generate_reference(parent_partner.customer_code)
-    #         _logger.debug("Assigned affiliate customer_code: %s", vals["customer_code"])
-
-    #     return super(Partner, self).create(vals)
-    
-
-
     def write(self, vals):
         _logger.info("Updating partner(s) with values: %s", vals)
 
@@ -567,91 +482,10 @@ class Partner(models.Model):
         return result
 
 
-    # def write(self, vals):
-    #     _logger.info("Updating partner(s) with values: %s", vals)
-
-    #     if "parent_id" in vals:
-    #         for record in self:
-    #             if record.is_affiliate and not vals["parent_id"]:
-    #                 raise ValidationError(_("Affiliates must have a parent account."))
-                
-    #     partners_by_type = {}
-    #     if vals.get("partner_type_id"):
-    #         partner_type = self.env["res.partner.type"].browse(vals["partner_type_id"])
-    #         partners_by_type[partner_type] = self
-    #     else:
-    #         for partner in self:
-    #             partners_by_type.setdefault(partner.partner_type_id, self.browse())
-    #             partners_by_type[partner.partner_type_id] |= partner
-
-    #     for partner_type, partners in partners_by_type.items():
-    #         if list(vals.keys()) != ["is_company"]:  # Avoid infinite loop
-    #             vals.update(self._get_inherit_values(partner_type, not_null=True))
-
-    #     if "legacy_customer_code" in vals:
-    #         legacy_customer_code = vals["legacy_customer_code"]
-    #         _logger.info("Validating new legacy_customer_code: %s", legacy_customer_code)
-    #         if self.search([("legacy_customer_code", "=", legacy_customer_code)]):
-    #             _logger.error("Legacy Customer Code %s is not unique!", legacy_customer_code)
-    #             raise ValidationError(_("Legacy Customer Code must be unique."))
-
-    #     needs_code_update = any(
-    #         key in vals for key in ["parent_id", "is_account", "is_affiliate", "is_contact", "is_patient"]
-    #     )
-
-    #     for partner in self:
-    #         if needs_code_update and not partner.customer_code:
-    #             _logger.info("Regenerating customer_code for partner ID: %s", partner.id)
-    #             vals["customer_code"] = self._generate_reference(vals)
-    #             _logger.info("Updated customer_code: %s", vals["customer_code"])
-
-    #     result = super(Partner, self).write(vals)
-
-    #     self._validate_affiliate_parent()
-    #     self._update_children(vals)
-    #     _logger.info("Partner(s) updated successfully.")
-
-    #     return result
-    
-
-    def _generate_reference(self, vals):
-        _logger.debug("Generating reference with vals: %s", vals)
-
-        if isinstance(vals, str):
-            return vals
-
-        if not isinstance(vals, dict):
-            raise ValidationError(_("Invalid data passed for reference generation."))
-
-        sequence_map = {
-            "is_account": "res.partner.account",
-            "is_affiliate": "res.partner.affiliate",
-            "is_contact": "res.partner.contact",
-            "is_patient": "res.partner.patient"
-        }
-
-        for key, seq_code in sequence_map.items():
-            if vals.get(key):
-                new_code = self.env["ir.sequence"].next_by_code(seq_code)
-                if not new_code:
-                    raise ValidationError(_("Unable to generate sequence for %s" % key))
-                return new_code
-
-        new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
-        if not new_code:
-            raise ValidationError(_("Unable to generate generic customer code."))
-        return new_code
-
-
-
-    # Ensure `_generate_reference` uses the sequence value
     # def _generate_reference(self, vals):
-    #     """
-    #     Generates a customer_code based on the type of partner.
-    #     """
     #     _logger.debug("Generating reference with vals: %s", vals)
 
-    #     if isinstance(vals, str): 
+    #     if isinstance(vals, str):
     #         return vals
 
     #     if not isinstance(vals, dict):
@@ -671,9 +505,55 @@ class Partner(models.Model):
     #                 raise ValidationError(_("Unable to generate sequence for %s" % key))
     #             return new_code
 
-    #     raise ValidationError(_("Unable to determine customer code sequence."))
+    #     new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
+    #     if not new_code:
+    #         raise ValidationError(_("Unable to generate generic customer code."))
+    #     return new_code
 
-   
+
+    def _generate_reference(self, vals):
+        _logger.debug("Generating reference with vals: %s", vals)
+
+        if isinstance(vals, str):
+            return vals
+
+        if not isinstance(vals, dict):
+            raise ValidationError(_("Invalid data passed for reference generation."))
+
+        sequence_map = {
+            "is_account": "res.partner.account",
+            "is_affiliate": "res.partner.affiliate",
+            "is_contact": "res.partner.contact",
+            "is_patient": "res.partner.patient"
+        }
+
+        new_code = ""
+        for key, seq_code in sequence_map.items():
+            if vals.get(key):
+                generated_code = self.env["ir.sequence"].next_by_code(seq_code)
+                if not generated_code:
+                    raise ValidationError(_("Unable to generate sequence for %s" % key))
+                
+                # Check if it's an affiliate and has a parent
+                parent_id = vals.get("parent_id")
+                if vals.get("is_affiliate") and parent_id:
+                    parent = self.env["res.partner"].browse(parent_id)
+                    if parent.exists() and parent.customer_code:
+                        new_code = f"{parent.customer_code}{generated_code}"
+                    else:
+                        new_code = generated_code  # Fallback if parent doesn't exist or has no code
+                else:
+                    new_code = generated_code
+
+                return new_code
+
+        # Fallback for generic sequence
+        new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
+        if not new_code:
+            raise ValidationError(_("Unable to generate generic customer code."))
+        return new_code
+
+
     def view_affiliates(self):
         return {
             'name': _('Affiliates'),
