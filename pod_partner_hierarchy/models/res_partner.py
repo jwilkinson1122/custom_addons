@@ -102,10 +102,20 @@ class Partner(models.Model):
         domain=[("active", "=", True), ("is_affiliate", "=", True)],
     )
 
+    # org_chart_affiliate_ids = fields.One2many(
+    #     related="affiliate_ids",
+    #     string="Direct Affiliates",
+    # )
+
     affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count', compute_sudo=True)
     companies_label = fields.Char(related='partner_type_id.companies_label', readonly=True)
 
     child_ids = fields.One2many(domain=[("active", "=", True), ("is_company", "=", False), ("is_contact", "=", True)])
+
+    # org_chart_contact_ids = fields.One2many(
+    #     related="child_ids",
+    #     string="Direct Contacts",
+    # )
 
     sub_contact_ids = fields.One2many(
         comodel_name="res.partner",

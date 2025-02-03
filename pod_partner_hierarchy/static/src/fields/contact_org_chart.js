@@ -87,32 +87,35 @@ export class PartnerOrgChart extends Component {
     //     if (!partnerId) {
     //         this.managers = [];
     //         this.children = [];
+    //         this.affiliates = [];
     //         if (this.view_partner_id) {
     //             this.render(true);
     //         }
     //         this.view_partner_id = null;
     //     } else if (partnerId !== this.view_partner_id || force) {
     //         this.view_partner_id = partnerId;
-    //         let orgData = await this.rpc(
-    //             '/partner/get_org_chart',
-    //             {
-    //                 partner_id: partnerId,
-    //                 include_affiliates: true,
-    //                 context: this.user.context,
+    
+    //         let orgData = await this.rpc('/partner/get_org_chart', {
+    //             partner_id: partnerId,
+    //             include_affiliates: true,   
+    //             context: this.user.context,
+    //         }, {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 "Access-Control-Allow-Origin": "*"
     //             }
-    //         );
-    //         if (Object.keys(orgData).length === 0) {
-    //             orgData = {
-    //                 managers: [],
-    //                 children: [], 
-    //                 affiliates: [],
-    //             }
+    //         });
+    
+    //         if (!orgData || Object.keys(orgData).length === 0) {
+    //             orgData = { managers: [], children: [], affiliates: [] };
     //         }
+    
     //         this.managers = orgData.managers;
-    //         this.children = orgData.children; 
-    //         this.affiliates = orgData.affiliates;
+    //         this.children = orgData.children;
+    //         this.affiliates = orgData.affiliates; 
     //         this.managers_more = orgData.managers_more;
     //         this.self = orgData.self;
+    
     //         this.render(true);
     //     }
     // }
@@ -122,17 +125,15 @@ export class PartnerOrgChart extends Component {
             this.managers = [];
             this.children = [];
             this.affiliates = [];
-            if (this.view_partner_id) {
-                this.render(true);
-            }
+            
             this.view_partner_id = null;
         } else if (partnerId !== this.view_partner_id || force) {
             this.view_partner_id = partnerId;
     
-            // Fetch data, ensuring we include affiliates when viewing an account
+            // ✅ Ensure affiliates are included when viewing an account
             let orgData = await this.rpc('/partner/get_org_chart', {
                 partner_id: partnerId,
-                include_affiliates: true,   
+                include_affiliates: true,  // Make sure this is set to true
                 context: this.user.context,
             }, {
                 headers: {
@@ -141,19 +142,16 @@ export class PartnerOrgChart extends Component {
                 }
             });
     
-            if (!orgData || Object.keys(orgData).length === 0) {
-                orgData = { managers: [], children: [], affiliates: [] };
-            }
-    
-            this.managers = orgData.managers;
-            this.children = orgData.children;
-            this.affiliates = orgData.affiliates; // Store affiliates separately
+            this.managers = orgData.managers || [];
+            this.children = orgData.children || [];
+            this.affiliates = orgData.affiliates || [];  // ✅ Store affiliates correctly
             this.managers_more = orgData.managers_more;
             this.self = orgData.self;
     
             this.render(true);
         }
     }
+    
 
     _onOpenPopover(event, partner) {
         this.popover.open(event.currentTarget, { partner });
