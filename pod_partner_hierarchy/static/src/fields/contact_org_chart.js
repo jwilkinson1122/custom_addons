@@ -83,70 +83,24 @@ export class PartnerOrgChart extends Component {
         await this.fetchPartnerData(this.state.partner_id, forceReload);
     }
 
-    // async fetchPartnerData(partnerId, force = false) {
-    //     if (!partnerId) {
-    //         this.managers = [];
-    //         this.children = [];
-    //         this.affiliates = [];
-    //         if (this.view_partner_id) {
-    //             this.render(true);
-    //         }
-    //         this.view_partner_id = null;
-    //     } else if (partnerId !== this.view_partner_id || force) {
-    //         this.view_partner_id = partnerId;
-    
-    //         let orgData = await this.rpc('/partner/get_org_chart', {
-    //             partner_id: partnerId,
-    //             include_affiliates: true,   
-    //             context: this.user.context,
-    //         }, {
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 "Access-Control-Allow-Origin": "*"
-    //             }
-    //         });
-    
-    //         if (!orgData || Object.keys(orgData).length === 0) {
-    //             orgData = { managers: [], children: [], affiliates: [] };
-    //         }
-    
-    //         this.managers = orgData.managers;
-    //         this.children = orgData.children;
-    //         this.affiliates = orgData.affiliates; 
-    //         this.managers_more = orgData.managers_more;
-    //         this.self = orgData.self;
-    
-    //         this.render(true);
-    //     }
-    // }
-
     async fetchPartnerData(partnerId, force = false) {
         if (!partnerId) {
             this.managers = [];
             this.children = [];
             this.affiliates = [];
-            
             this.view_partner_id = null;
         } else if (partnerId !== this.view_partner_id || force) {
             this.view_partner_id = partnerId;
     
-            // ✅ Ensure affiliates are included when viewing an account
             let orgData = await this.rpc('/partner/get_org_chart', {
                 partner_id: partnerId,
-                include_affiliates: true,  // Make sure this is set to true
-                context: this.user.context,
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                }
+                include_affiliates: true,  // ✅ Ensure this is true
             });
     
+            this.self = orgData.self || {};          // ✅ Always include self
             this.managers = orgData.managers || [];
             this.children = orgData.children || [];
-            this.affiliates = orgData.affiliates || [];  // ✅ Store affiliates correctly
-            this.managers_more = orgData.managers_more;
-            this.self = orgData.self;
+            this.affiliates = orgData.affiliates || []; // ✅ Include affiliates
     
             this.render(true);
         }

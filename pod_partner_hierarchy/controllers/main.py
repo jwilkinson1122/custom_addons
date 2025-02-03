@@ -95,7 +95,8 @@ class ContactOrgChartController(http.Controller):
 
         partner = self._check_partner(partner_id, **kw)
         if not partner:
-            return {'managers': [], 'children': [], 'affiliates': []}
+            return {'managers': [], 'children': [], 'affiliates': [], 'self': {}}
+            # return {'managers': [], 'children': [], 'affiliates': []}
 
         ancestors, current = request.env['res.partner'].sudo(), partner.sudo()
         while current.parent_id and len(ancestors) < self._managers_level + 1 and current != current.parent_id:

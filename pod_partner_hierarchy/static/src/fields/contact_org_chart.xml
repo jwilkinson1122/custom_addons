@@ -17,34 +17,26 @@
     <!-- Partner Contact Content -->
     <t t-name="pod_partner_hierarchy.pod_partner_hierarchy_contact_content">
         <div class="o_media_left position-relative">
-            <a t-if="!is_self" class="o_media_object d-block rounded o_partner_redirect" 
-               t-att-style="'background-image:url(/web/image/res.partner/' + partner.id + '/avatar_1024/)'"
-               t-att-alt="partner.name" t-att-data-partner-id="partner.id" t-att-href="partner.link" 
-               t-on-click.prevent="() => this._onPartnerRedirect(partner.id)"/>
-            <div t-if="is_self" class="o_media_object d-block rounded border border-info" 
-                 t-att-style="'background-image:url(/web/image/res.partner/' + partner.id + '/avatar_1024/)'"/>
+            <a t-if="!is_self" class="o_media_object d-block rounded o_partner_redirect" t-att-style="'background-image:url(/web/image/res.partner/' + partner.id + '/avatar_1024/)'" t-att-alt="partner.name" t-att-data-partner-id="partner.id" t-att-href="partner.link" t-on-click.prevent="() => this._onPartnerRedirect(partner.id)"/>
+            <div t-if="is_self" class="o_media_object d-block rounded border border-info" t-att-style="'background-image:url(/web/image/res.partner/' + partner.id + '/avatar_1024/)'"/>
         </div>
         <div class="d-flex flex-grow-1 align-items-center justify-content-between position-relative px-3">
-            <a t-if="!is_self" class="o_partner_redirect d-flex flex-column" t-att-href="partner.link" 
-               t-att-data-partner-id="partner.id" t-on-click.prevent="() => this._onPartnerRedirect(partner.id)">
+            <a t-if="!is_self" class="o_partner_redirect d-flex flex-column" t-att-href="partner.link" t-att-data-partner-id="partner.id" t-on-click.prevent="() => this._onPartnerRedirect(partner.id)">
                 <b class="o_media_heading m-0 fs-6" t-esc="partner.name"/>
-                <small class="text-muted" t-if="partner.phone">Phone: <span t-esc="partner.phone"/></small>
-                <small class="text-muted" t-if="partner.email">Email: <span t-esc="partner.email"/></small>
+                <small class="text-muted" t-if="partner.phone">Phone: <span t-esc="partner.phone"/>
+                </small>
+                <small class="text-muted" t-if="partner.email">Email: <span t-esc="partner.email"/>
+                </small>
             </a>
             <div t-if="is_self" class="d-flex flex-column">
                 <h5 class="o_media_heading m-0" t-esc="partner.name"/>
-                <small class="text-muted" t-if="partner.phone">Phone: <span t-esc="partner.phone"/></small>
-                <small class="text-muted" t-if="partner.email">Email: <span t-esc="partner.email"/></small>
+                <small class="text-muted" t-if="partner.phone">Phone: <span t-esc="partner.phone"/>
+                </small>
+                <small class="text-muted" t-if="partner.email">Email: <span t-esc="partner.email"/>
+                </small>
             </div>
-            <button t-if="partner.indirect_sub_count &gt; 0" class="btn p-0 fs-3" 
-                    t-att-data-part-name="partner.name or 'Unknown'" t-att-data-part-id="partner.id or ''" 
-                    t-att-data-part-dir-subs="partner.direct_sub_count or 0" 
-                    t-att-data-part-ind-subs="partner.indirect_sub_count or 0" 
-                    data-bs-trigger="focus" data-bs-toggle="popover" 
-                    t-on-click="(event) => this._onOpenPopover(event, partner)">
-                <a href="#" class="badge rounded-pill bg-300 border" 
-                   t-attf-class="#{partner.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }" 
-                   t-esc="partner.indirect_sub_count"/>
+            <button t-if="partner.indirect_sub_count &gt; 0" class="btn p-0 fs-3" t-att-data-part-name="partner.name or 'Unknown'" t-att-data-part-id="partner.id or ''" t-att-data-part-dir-subs="partner.direct_sub_count or 0" t-att-data-part-ind-subs="partner.indirect_sub_count or 0" data-bs-trigger="focus" data-bs-toggle="popover" t-on-click="(event) => this._onOpenPopover(event, partner)">
+                <a href="#" class="badge rounded-pill bg-300 border" t-attf-class="#{partner.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }" t-esc="partner.indirect_sub_count"/>
             </button>
         </div>
     </t>
@@ -52,31 +44,23 @@
     <!-- Partner Hierarchy Structure -->
     <t t-name="pod_partner_hierarchy.pod_partner_hierarchy">
         <t t-set="part_count" t-value="0"/>
-        <div t-if="managers.length &gt; 0" class="o_org_chart_group_up position-relative">
-            <div t-if="managers_more" class="o_org_chart_more pe-3">
-                <a href="#" class="o_partner_more_managers d-block bg-100 px-3" 
-                   t-att-data-partner-id="managers[0].id" 
-                   t-on-click.prevent="() => this._onPartnerMoreManager(managers[0].id)">
-                    <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
-                </a>
-            </div>
-            <t t-foreach="managers" t-as="partner" t-key="partner.id">
-                <t t-call="pod_partner_hierarchy.contact_org_chart_partner">
-                    <t t-set="partner_type" t-value="'manager'"/>
-                </t>
-            </t>
-        </div>
-        <t t-if="children.length or managers.length" t-call="pod_partner_hierarchy.contact_org_chart_partner">
+
+        <!-- ✅ Display Self (Account) at the Top -->
+        <t t-if="self" t-call="pod_partner_hierarchy.contact_org_chart_partner">
             <t t-set="partner_type" t-value="'self'"/>
             <t t-set="partner" t-value="self"/>
         </t>
-        <t t-if="!children.length and !managers.length">
-            <div class="alert alert-info" role="alert">
-                <p><b>No hierarchy.</b></p>
-                <p>This partner has no affiliates.</p>
-                <p>Set a parent or child partner and save the record to see the organizational chart.</p>
-            </div>
-        </t>
+
+        <!-- ✅ Display Affiliates Under the Account -->
+        <div t-if="affiliates.length" class="o_org_chart_group_down position-relative">
+            <t t-foreach="affiliates" t-as="partner" t-key="partner.id">
+                <t t-call="pod_partner_hierarchy.contact_org_chart_partner">
+                    <t t-set="partner_type" t-value="'affiliate'"/>
+                </t>
+            </t>
+        </div>
+
+        <!-- ✅ Display Children (Contacts/Sub-Accounts) if Present -->
         <div t-if="children.length" class="o_org_chart_group_down position-relative">
             <t t-foreach="children" t-as="partner" t-key="partner.id">
                 <t t-if="part_count &lt; 20">
@@ -85,24 +69,20 @@
                     </t>
                 </t>
             </t>
-            <t t-if="(children.length + managers.length) &gt; 19">
-                <div class="o_org_chart_entry o_org_chart_more d-flex overflow-visible">
-                    <div class="o_media_left position-relative">
-                        <a href="#" class="o_org_chart_show_more o_partner_sub_redirect btn btn-link ps-2" 
-                           t-att-data-partner-id="self.id" t-att-data-partner-name="self.name" 
-                           t-on-click.prevent="_onPartnerSubRedirect">See All</a>
-                    </div>
-                </div>
-            </t>
         </div>
-        <t t-if="affiliates.length" class="o_org_chart_group_down position-relative">
-            <t t-foreach="affiliates" t-as="partner" t-key="partner.id">
-                <t t-call="pod_partner_hierarchy.contact_org_chart_partner">
-                    <t t-set="partner_type" t-value="'affiliate'"/>  <!-- ✅ Mark as affiliate -->
-                </t>
-            </t>
+
+        <!-- 🚫 Remove "No Hierarchy" Alert if Affiliates Exist -->
+        <t t-if="!affiliates.length and !children.length and !managers.length">
+            <div class="alert alert-info" role="alert">
+                <p>
+                    <b>No hierarchy.</b>
+                </p>
+                <p>This partner has no affiliates.</p>
+                <p>Set a parent or child partner and save the record to see the organizational chart.</p>
+            </div>
         </t>
     </t>
+
 
     <t t-name="pod_partner_hierarchy.partner_orgchart_contact_popover">
         <div class="popover o_org_chart_popup" role="tooltip">
