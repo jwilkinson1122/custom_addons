@@ -50,7 +50,9 @@ class Partner(models.Model):
         compute='_compute_parent_types'
     )
 
-    use_parent_address = fields.Boolean(string='Use Parent Address', default=True)
+    # use_parent_address = fields.Boolean(string='Use Parent Address', default=True)
+    use_parent_address = fields.Boolean(string='Use Parent Address', default=False)
+
 
     # Related fields to fetch the parent's address if use_parent_address is True
     parent_street = fields.Char(related='parent_id.street', readonly=True)
@@ -362,21 +364,6 @@ class Partner(models.Model):
 
 
     # Onchange Methods
-    # @api.onchange('use_parent_address')
-    # def _onchange_use_parent_address(self):
-    #     if self.use_parent_address and self.parent_id:
-    #         self.street = self.parent_id.street
-    #         self.city = self.parent_id.city
-    #         self.zip = self.parent_id.zip
-    #         self.state_id = self.parent_id.state_id
-    #         self.country_id = self.parent_id.country_id
-    #     elif not self.use_parent_address:
-    #         self.street = False
-    #         self.city = False
-    #         self.zip = False
-    #         self.state_id = False
-    #         self.country_id = False
-
     @api.onchange('use_parent_address', 'parent_id')
     def _onchange_use_parent_address(self):
         if self.use_parent_address and self.parent_id:
@@ -393,6 +380,23 @@ class Partner(models.Model):
             self.zip = ''
             self.state_id = False
             self.country_id = False
+
+    # @api.onchange('use_parent_address', 'parent_id')
+    # def _onchange_use_parent_address(self):
+    #     if self.use_parent_address and self.parent_id:
+    #         self.street = self.parent_id.street
+    #         self.street2 = self.parent_id.street2
+    #         self.city = self.parent_id.city
+    #         self.zip = self.parent_id.zip
+    #         self.state_id = self.parent_id.state_id
+    #         self.country_id = self.parent_id.country_id
+    #     elif not self.use_parent_address:
+    #         self.street = ''
+    #         self.street2 = ''
+    #         self.city = ''
+    #         self.zip = ''
+    #         self.state_id = False
+    #         self.country_id = False
 
 
 
