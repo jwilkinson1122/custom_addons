@@ -65,7 +65,7 @@ class Partner(models.Model):
     partner_type_id = fields.Many2one('res.partner.type', 'Partner Type', help="Specify the type of partner.")
     partner_type_code = fields.Char(related="partner_type_id.code", store=True, readonly=True)
     partner_company_type = fields.Many2one(
-        string="Company Type",
+        # string="Company Type",
         comodel_name="partner.company.type",
         help="Specify the type of company this belongs to."
     )

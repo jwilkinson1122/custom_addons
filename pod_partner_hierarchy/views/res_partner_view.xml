@@ -77,7 +77,9 @@
                         <span class="o_form_label o_td_label" name="address_name">
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
                             <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
-                            <field name="partner_company_type" placeholder="Company Type" invisible="not is_company" required="is_company" class="fw-bold"/>
+                            <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
+                            <!-- <field name="partner_company_type" placeholder="Company Type" widget="many2one" class="fw-bold"/> -->
+
                         </span>
                         <div class="o_address_format">
                             <field name="street" placeholder="Street..." class="o_address_street" />
@@ -208,10 +210,10 @@
                                         </div>
                                         <group>
                                             <group>
-                                                <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address"/>
+                                                <!-- <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address"/> -->
                                                 <span class="o_form_label o_td_label" name="address_name">
                                                     <field name="company_address_type" placeholder="Address Type" widget="selection" class="fw-bold"/>
-                                                    <field name="partner_company_type" placeholder="Company Type" widget="selection" class="fw-bold"/>
+                                                    <field name="partner_company_type" options="{'no_open': True, 'no_create': True}" placeholder="Company Type" widget="many2one" class="fw-bold"/>
                                                 </span>
                                                 <div>
                                                     <div class="o_address_format" name="div_address">
