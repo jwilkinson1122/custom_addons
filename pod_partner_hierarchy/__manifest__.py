@@ -40,6 +40,7 @@
             "pod_partner_hierarchy/static/src/scss/variables.scss",
         ],
         "web.assets_backend": [
+            # "ppod_partner_hierarchy/static/src/scss/style.scss",
             "pod_partner_hierarchy/static/src/fields/*",
             "pod_partner_hierarchy/static/src/views/**/*",
         ],

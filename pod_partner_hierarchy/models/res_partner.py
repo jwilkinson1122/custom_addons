@@ -384,13 +384,13 @@ class Partner(models.Model):
     # @api.onchange('use_parent_address', 'parent_id')
     # def _onchange_use_parent_address(self):
     #     if self.use_parent_address and self.parent_id:
-    #         self.street = self.parent_id.street
-    #         self.street2 = self.parent_id.street2
-    #         self.city = self.parent_id.city
-    #         self.zip = self.parent_id.zip
-    #         self.state_id = self.parent_id.state_id
-    #         self.country_id = self.parent_id.country_id
-    #     elif not self.use_parent_address:
+    #         self.street = self.parent_id.street or ''
+    #         self.street2 = self.parent_id.street2 or ''
+    #         self.city = self.parent_id.city or ''
+    #         self.zip = self.parent_id.zip or ''
+    #         self.state_id = self.parent_id.state_id.id if self.parent_id.state_id else False
+    #         self.country_id = self.parent_id.country_id.id if self.parent_id.country_id else False
+    #     else:
     #         self.street = ''
     #         self.street2 = ''
     #         self.city = ''
@@ -398,7 +398,16 @@ class Partner(models.Model):
     #         self.state_id = False
     #         self.country_id = False
 
-
+    # @api.depends('use_parent_address', 'parent_id')
+    # def _compute_address_from_parent(self):
+    #     for record in self:
+    #         if record.use_parent_address and record.parent_id:
+    #             record.street = record.parent_id.street
+    #             record.street2 = record.parent_id.street2
+    #             record.city = record.parent_id.city
+    #             record.zip = record.parent_id.zip
+    #             record.state_id = record.parent_id.state_id
+    #             record.country_id = record.parent_id.country_id
 
     @api.onchange('company_type')
     def _onchange_company_type(self):
@@ -414,7 +423,6 @@ class Partner(models.Model):
         self.partner_type_id = self.env['res.partner.type'].search(
             [(partner_type_field, '=', True)], limit=1
         )
-
 
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
@@ -511,36 +519,6 @@ class Partner(models.Model):
         _logger.info("Partner(s) updated successfully.")
 
         return result
-
-
-    # def _generate_reference(self, vals):
-    #     _logger.debug("Generating reference with vals: %s", vals)
-
-    #     if isinstance(vals, str):
-    #         return vals
-
-    #     if not isinstance(vals, dict):
-    #         raise ValidationError(_("Invalid data passed for reference generation."))
-
-    #     sequence_map = {
-    #         "is_account": "res.partner.account",
-    #         "is_affiliate": "res.partner.affiliate",
-    #         "is_contact": "res.partner.contact",
-    #         "is_patient": "res.partner.patient"
-    #     }
-
-    #     for key, seq_code in sequence_map.items():
-    #         if vals.get(key):
-    #             new_code = self.env["ir.sequence"].next_by_code(seq_code)
-    #             if not new_code:
-    #                 raise ValidationError(_("Unable to generate sequence for %s" % key))
-    #             return new_code
-
-    #     new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
-    #     if not new_code:
-    #         raise ValidationError(_("Unable to generate generic customer code."))
-    #     return new_code
-
 
     def _generate_reference(self, vals):
         _logger.debug("Generating reference with vals: %s", vals)
