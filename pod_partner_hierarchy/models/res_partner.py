@@ -50,9 +50,8 @@ class Partner(models.Model):
         compute='_compute_parent_types'
     )
 
-    # use_parent_address = fields.Boolean(string='Use Parent Address', default=True)
-    use_parent_address = fields.Boolean(string='Use Parent Address', default=False)
-
+    use_parent_address = fields.Boolean(string='Use Parent Address', default=True)
+    # use_parent_address = fields.Boolean(string='Use Parent Address', default=False)
 
     # Related fields to fetch the parent's address if use_parent_address is True
     parent_street = fields.Char(related='parent_id.street', readonly=True)
@@ -104,20 +103,19 @@ class Partner(models.Model):
         domain=[("active", "=", True), ("is_affiliate", "=", True)],
     )
 
-    # org_chart_affiliate_ids = fields.One2many(
-    #     related="affiliate_ids",
-    #     string="Direct Affiliates",
-    # )
-
     affiliates_count = fields.Integer('Number of Affiliates', compute='_compute_affiliates_count', compute_sudo=True)
+    # Sub Affiliates
+    sub_affiliate_ids = fields.One2many(
+        comodel_name="res.partner",
+        string="Sub-Affiliates",
+        compute="_compute_sub_affiliate_ids",
+        # store=False,
+        help="Indirectly associated affiliates (grandchildren)."
+    )
+
     companies_label = fields.Char(related='partner_type_id.companies_label', readonly=True)
 
     child_ids = fields.One2many(domain=[("active", "=", True), ("is_company", "=", False), ("is_contact", "=", True)])
-
-    # org_chart_contact_ids = fields.One2many(
-    #     related="child_ids",
-    #     string="Direct Contacts",
-    # )
 
     sub_contact_ids = fields.One2many(
         comodel_name="res.partner",
@@ -136,16 +134,6 @@ class Partner(models.Model):
 
     # Patient and Sub-Patient Fields
     patient = fields.Boolean(string="Is a Patient", compute="_compute_patient_ids", store=True)
-        # Sub Affiliates
-    sub_affiliate_ids = fields.One2many(
-        comodel_name="res.partner",
-        string="Sub-Affiliates",
-        compute="_compute_sub_affiliate_ids",
-        # store=False,
-        help="Indirectly associated affiliates (grandchildren)."
-    )
-
-
     patient_ids = fields.One2many('res.partner', 'parent_id', domain=[('is_patient', '=', True)])
     patients_count = fields.Integer('Number of Patients', compute='_compute_patients_count')
     sub_patient_ids = fields.One2many(
@@ -214,6 +202,10 @@ class Partner(models.Model):
 
 
     # Affiliates
+    # @api.model
+    # def _commercial_fields(self):
+    #     return super(Partner, self)._commercial_fields() + ["company_id"]
+
     @api.depends('affiliate_ids')
     def _compute_affiliates_count(self):
         for partner in self:
@@ -239,6 +231,14 @@ class Partner(models.Model):
             partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids  # Exclude direct affiliates
 
     # Contacts
+    # def _get_contact_name(self, partner, name):
+    #     if self.env.context.get("_two_lines_partner_address"):
+    #         return "{}\n {}".format(
+    #             partner.commercial_company_name or partner.sudo().parent_id.name, name
+    #         )
+    #     else:
+    #         return super()._get_contact_name(partner, name)
+
     @api.depends('child_ids')
     def _compute_contacts_count(self):
         for partner in self:
@@ -259,23 +259,39 @@ class Partner(models.Model):
                 sub_contacts |= child._get_all_sub_contacts()
         return sub_contacts
     
-    @api.depends("child_ids", "child_ids.child_ids")
+    # @api.depends("child_ids", "child_ids.child_ids")
+    # def _compute_sub_contact_ids(self):
+    #     """
+    #     Compute sub-contacts for the current company, excluding patients.
+    #     """
+    #     for partner in self:
+    #         if partner.is_company:  
+    #             _logger.debug("Computing sub-contacts for company: %s (ID: %s)", partner.name, partner.id)
+    #             all_sub_contacts = partner._get_all_sub_contacts()
+    #             final_sub_contacts = all_sub_contacts - partner.child_ids.filtered(
+    #                 lambda c: not c.is_company and not c.is_patient
+    #             )
+    #             _logger.debug("Final sub-contacts for company %s (ID: %s): %s", partner.name, partner.id, final_sub_contacts)
+    #             partner.sub_contact_ids = final_sub_contacts
+    #         else:
+    #             partner.sub_contact_ids = self.env["res.partner"]  
+
+    @api.depends("affiliate_ids", "affiliate_ids.child_ids")
     def _compute_sub_contact_ids(self):
-        """
-        Compute sub-contacts for the current company, excluding patients.
-        """
         for partner in self:
-            if partner.is_company:  # Ensure we compute for companies only
-                _logger.debug("Computing sub-contacts for company: %s (ID: %s)", partner.name, partner.id)
-                all_sub_contacts = partner._get_all_sub_contacts()
-                # Exclude direct child contacts from the results
-                final_sub_contacts = all_sub_contacts - partner.child_ids.filtered(
-                    lambda c: not c.is_company and not c.is_patient
-                )
-                _logger.debug("Final sub-contacts for company %s (ID: %s): %s", partner.name, partner.id, final_sub_contacts)
-                partner.sub_contact_ids = final_sub_contacts
-            else:
-                partner.sub_contact_ids = self.env["res.partner"]  # Empty for non-companies
+            all_sub_contacts = self.env["res.partner"]  
+
+            def get_indirect_contacts(partner):
+                nonlocal all_sub_contacts 
+                for affiliate in partner.affiliate_ids:
+                    all_sub_contacts |= affiliate.child_ids.filtered(lambda c: not c.is_company and not c.is_patient)
+                    get_indirect_contacts(affiliate)
+
+            get_indirect_contacts(partner)
+
+            partner.sub_contact_ids = all_sub_contacts
+
+
 
     # Patients
     @api.depends('patient_ids')
@@ -381,34 +397,6 @@ class Partner(models.Model):
             self.state_id = False
             self.country_id = False
 
-    # @api.onchange('use_parent_address', 'parent_id')
-    # def _onchange_use_parent_address(self):
-    #     if self.use_parent_address and self.parent_id:
-    #         self.street = self.parent_id.street or ''
-    #         self.street2 = self.parent_id.street2 or ''
-    #         self.city = self.parent_id.city or ''
-    #         self.zip = self.parent_id.zip or ''
-    #         self.state_id = self.parent_id.state_id.id if self.parent_id.state_id else False
-    #         self.country_id = self.parent_id.country_id.id if self.parent_id.country_id else False
-    #     else:
-    #         self.street = ''
-    #         self.street2 = ''
-    #         self.city = ''
-    #         self.zip = ''
-    #         self.state_id = False
-    #         self.country_id = False
-
-    # @api.depends('use_parent_address', 'parent_id')
-    # def _compute_address_from_parent(self):
-    #     for record in self:
-    #         if record.use_parent_address and record.parent_id:
-    #             record.street = record.parent_id.street
-    #             record.street2 = record.parent_id.street2
-    #             record.city = record.parent_id.city
-    #             record.zip = record.parent_id.zip
-    #             record.state_id = record.parent_id.state_id
-    #             record.country_id = record.parent_id.country_id
-
     @api.onchange('company_type')
     def _onchange_company_type(self):
         """Update partner_type_id based on the selected company_type using boolean fields."""
@@ -498,8 +486,8 @@ class Partner(models.Model):
             _logger.debug("Generated customer_code: %s", vals["customer_code"])
 
         return super(Partner, self).create(vals)
-
-
+    
+    
     def write(self, vals):
         _logger.info("Updating partner(s) with values: %s", vals)
 
@@ -519,7 +507,7 @@ class Partner(models.Model):
         _logger.info("Partner(s) updated successfully.")
 
         return result
-
+    
     def _generate_reference(self, vals):
         _logger.debug("Generating reference with vals: %s", vals)
 
@@ -530,30 +518,30 @@ class Partner(models.Model):
             raise ValidationError(_("Invalid data passed for reference generation."))
 
         sequence_map = {
-            "is_account": "res.partner.account",
-            "is_affiliate": "res.partner.affiliate",
-            "is_contact": "res.partner.contact",
-            "is_patient": "res.partner.patient"
+            "is_account": ("res.partner.account", "AC"),
+            "is_affiliate": ("res.partner.affiliate", "AF"),
+            "is_contact": ("res.partner.contact", "CT"),
+            "is_patient": ("res.partner.patient", "PT")
         }
 
         new_code = ""
-        for key, seq_code in sequence_map.items():
+        for key, (seq_code, prefix) in sequence_map.items():
             if vals.get(key):
-                generated_code = self.env["ir.sequence"].next_by_code(seq_code)
-                if not generated_code:
-                    raise ValidationError(_("Unable to generate sequence for %s" % key))
-                
-                # Check if it's an affiliate and has a parent
-                parent_id = vals.get("parent_id")
-                if vals.get("is_affiliate") and parent_id:
-                    parent = self.env["res.partner"].browse(parent_id)
-                    if parent.exists() and parent.customer_code:
-                        new_code = f"{parent.customer_code}{generated_code}"
-                    else:
-                        new_code = generated_code  # Fallback if parent doesn't exist or has no code
-                else:
-                    new_code = generated_code
+                # Get the max customer_code for this type
+                existing_codes = self.env["res.partner"].search([
+                    (key, "=", True),
+                    ("customer_code", "ilike", f"{prefix}%")
+                ], order="customer_code desc", limit=1)
 
+                if existing_codes:
+                    last_code = existing_codes.customer_code
+                    # Extract numeric part, increment by 1
+                    number = int(last_code.lstrip(prefix)) + 1
+                else:
+                    number = 1
+
+                # Format new code with padding
+                new_code = f"{prefix}{str(number).zfill(3)}"
                 return new_code
 
         # Fallback for generic sequence
