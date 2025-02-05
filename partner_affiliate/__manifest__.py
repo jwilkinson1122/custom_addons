@@ -2,8 +2,25 @@
     'name': 'Partner Affiliates',
     'version': '17.0.1.1.0',
     'license': 'AGPL-3',
-    'depends': ['base', 'web', 'mail', 'web_hierarchy', 'contacts'],
-    'data': ['views/res_partner_views.xml'],
+    'depends': [
+        'base', 
+        'base_setup',
+        'web', 
+        'mail', 
+        'web_hierarchy', 
+        'account',
+        'contacts', 
+        # 'pod_web_chatter',
+        'sales_team',
+        'sale',
+        'sale_management',
+        'product',
+
+        ],
+    'data': [
+        'security/ir.model.access.csv', 
+        'views/res_partner_views.xml'
+        ],
     'assets': {
         'web._assets_primary_variables': [
             'partner_affiliate/static/src/scss/variables.scss',

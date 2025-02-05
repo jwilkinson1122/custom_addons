@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_partner_company,access_partner_company,model_res_partner,base.group_user,1,1,1,0
+access_partner_affiliate,access_partner_affiliate,model_res_partner,base.group_user,1,1,1,0
+access_partner_contact,access_partner_contact,model_res_partner,base.group_user,1,1,1,0
+access_partner_patient,access_partner_patient,model_res_partner,base.group_user,1,1,1,0

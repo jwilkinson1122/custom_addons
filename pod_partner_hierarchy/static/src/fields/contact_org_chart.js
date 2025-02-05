@@ -1,16 +1,14 @@
 /** @odoo-module */
 
-//import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-//import { user } from "@web/core/user";
 import { onPartnerSubRedirect } from './hooks';
 import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class PartnerOrgChartPopover extends Component {
-    static template = "pod_partner_hierarchy.partner_orgchart_contact_popover";
+    static template = "pod_partner_hierarchy.partner_org_chart_popover";
     static props = {
         partner: Object,
         close: Function,
@@ -24,13 +22,6 @@ class PartnerOrgChartPopover extends Component {
         this._onPartnerSubRedirect = onPartnerSubRedirect();
     }
 
-    /**
-     * Redirect to the Partner form view.
-     *
-     * @private
-     * @param {MouseEvent} event
-     * @returns {Promise} action loaded
-     */
     async _onPartnerRedirect(partnerId) {
         const action = await this.orm.call('res.partner', 'get_formview_action', [partnerId]);
         this.actionService.doAction(action); 
@@ -38,9 +29,8 @@ class PartnerOrgChartPopover extends Component {
 }
 
 export class PartnerOrgChart extends Component {
-    static template = "pod_partner_hierarchy.pod_partner_hierarchy";
-    static props = {...standardFieldProps, record: Object};
-    
+    static template = "pod_partner_hierarchy.partner_org_chart";
+    static props = {...standardFieldProps};
     async setup() {
         super.setup();
 
@@ -50,12 +40,6 @@ export class PartnerOrgChart extends Component {
         this.user = useService("user");
         this.popover = usePopover(PartnerOrgChartPopover);
 
-        if (!this.props.record || !this.props.record.data) {
-            console.error("PartnerOrgChart: Missing or invalid record data");
-            return;
-        }
-
-
         this.state = useState({'partner_id': null});
         this.lastParent = null;
         this._onPartnerSubRedirect = onPartnerSubRedirect();
@@ -64,61 +48,54 @@ export class PartnerOrgChart extends Component {
         onWillRender(this.handleComponentUpdate.bind(this));
     }
 
-    /**
-     * Called on start and on render
-     */
     async handleComponentUpdate() {
-        if (!this.props.record) {
-            console.error("handleComponentUpdate: Missing record context");
-            return;
-        }
         this.partner = this.props.record.data;
         this.state.partner_id = this.props.record.resId
-        
         const manager = this.partner.parent_id;
         const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
         this.lastParent = manager;
         this.lastRecord = this.props.record;
-        
         await this.fetchPartnerData(this.state.partner_id, forceReload);
     }
 
     async fetchPartnerData(partnerId, force = false) {
         if (!partnerId) {
             this.managers = [];
-            this.children = [];
             this.affiliates = [];
+            this.children = [];
+            if (this.view_partner_id) {
+                this.render(true);
+            }
             this.view_partner_id = null;
         } else if (partnerId !== this.view_partner_id || force) {
             this.view_partner_id = partnerId;
-    
-            let orgData = await this.rpc('/partner/get_org_chart', {
-                partner_id: partnerId,
-                include_affiliates: true,  // ✅ Ensure this is true
-            });
-    
-            this.self = orgData.self || {};          // ✅ Always include self
-            this.managers = orgData.managers || [];
-            this.children = orgData.children || [];
-            this.affiliates = orgData.affiliates || []; // ✅ Include affiliates
-    
+            let orgData = await this.rpc(
+                '/partner/get_partner_hierarchy',
+                {
+                    partner_id: partnerId,
+                    context: this.user.context,
+                }
+            );
+            if (Object.keys(orgData).length === 0) {
+                orgData = {
+                    managers: [],
+                    affiliates: [],
+                    children: [],
+                }
+            }
+            this.managers = orgData.managers;
+            this.affiliates = orgData.affiliates;
+            this.children = orgData.children;
+            this.managers_more = orgData.managers_more;
+            this.self = orgData.self;
             this.render(true);
         }
     }
-    
 
     _onOpenPopover(event, partner) {
         this.popover.open(event.currentTarget, { partner });
     }
 
-    /**
-     * Redirect to the employee form view.
-     *
-     * @private
-     * @param {MouseEvent} event
-     * @returns {Promise} action loaded
-     */
-    
     async _onPartnerRedirect(partnerId) {
         const action = await this.orm.call('res.partner', 'get_formview_action', [partnerId]);
         this.actionService.doAction(action); 
@@ -130,10 +107,8 @@ export class PartnerOrgChart extends Component {
     }
 }
 
-
-
 export const partnerOrgChart = {
     component: PartnerOrgChart,
 };
 
-registry.category("fields").add("pod_partner_hierarchy", partnerOrgChart );
+registry.category("fields").add("partner_org_chart", partnerOrgChart );

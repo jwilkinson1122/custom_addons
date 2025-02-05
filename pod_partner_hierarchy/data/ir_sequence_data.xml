@@ -32,7 +32,7 @@
         <field name="number_next">1</field>
     </record>
 
-    <record id="seq_res_partner_generic" model="ir.sequence">
+     <record id="seq_res_partner_generic" model="ir.sequence">
         <field name="name">Generic Partner Code</field>
         <field name="code">res.partner.generic</field>
         <field name="prefix">GEN</field>

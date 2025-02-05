@@ -2,10 +2,10 @@
 
 from odoo import http
 from odoo.exceptions import AccessError
-# from odoo.http import request
-from odoo.http import request, Response
+from odoo.http import request
 
-class ContactOrgChartController(http.Controller):
+
+class PartnerHierarchyController(http.Controller):
     _managers_level = 5  # FP request
 
     def _check_partner(self, partner_id, **kw):
@@ -36,115 +36,47 @@ class ContactOrgChartController(http.Controller):
             phone=partner.phone,
             email=partner.email,
             link='/mail/view?model=%s&res_id=%s' % ('res.partner', partner.id,),
-            direct_sub_count=len(partner.child_ids - partner),
-            indirect_sub_count=partner.affiliates_count,
+            direct_sub_count=len(partner.affiliate_ids - partner),
+            indirect_sub_count=partner.affiliate_all_count,
         )
 
     @http.route('/partner/get_redirect_model', type='json', auth='user')
     def get_redirect_model(self):
         return 'res.partner'
-    
-    # @http.route('/partner/get_org_chart', type='json', auth='user', cors='*', methods=['OPTIONS', 'POST'])
-    # def get_org_chart(self, partner_id, include_contacts=False, include_affiliates=True, **kw):
-    #     """
-    #     Handle the organization chart request with CORS headers.
-    #     """
-    #     if request.httprequest.method == 'OPTIONS':
-    #         headers = {
-    #             'Access-Control-Allow-Origin': '*',
-    #             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-    #             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    #         }
-    #         return Response(status=200, headers=headers)
 
-    #     partner = self._check_partner(partner_id, **kw)
-    #     if not partner:
-    #         return {'managers': [], 'children': [], 'affiliates': []}
-
-    #     ancestors, current = request.env['res.partner'].sudo(), partner.sudo()
-    #     while current.parent_id and len(ancestors) < self._managers_level + 1 and current != current.parent_id:
-    #         ancestors += current.parent_id
-    #         current = current.parent_id
-
-    #     children = partner.child_ids.filtered(lambda p: not p.is_affiliate)
-    #     affiliates = partner.affiliate_ids if include_affiliates else []
-
-    #     values = {
-    #         'self': self._prepare_partner_data(partner),
-    #         'managers': [self._prepare_partner_data(ancestor) for idx, ancestor in enumerate(ancestors) if idx < self._managers_level],
-    #         'managers_more': len(ancestors) > self._managers_level,
-    #         'children': [self._prepare_partner_data(child) for child in children],
-    #         'affiliates': [self._prepare_partner_data(affiliate) for affiliate in affiliates],
-    #     }
-
-    #     values['managers'].reverse()
-    #     return values
-
-    @http.route('/partner/get_org_chart', type='json', auth='user', cors='*', methods=['OPTIONS', 'POST'])
-    def get_org_chart(self, partner_id, include_contacts=False, include_affiliates=True, **kw):
-        """
-        Handle the organization chart request with CORS headers.
-        """
-        if request.httprequest.method == 'OPTIONS':
-            headers = {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            }
-            return Response(status=200, headers=headers)
+    @http.route('/partner/get_partner_hierarchy', type='json', auth='user')
+    def get_partner_hierarchy(self, partner_id, **kw):
 
         partner = self._check_partner(partner_id, **kw)
-        if not partner:
-            return {'managers': [], 'children': [], 'affiliates': [], 'self': {}}
-            # return {'managers': [], 'children': [], 'affiliates': []}
+        if not partner:  # to check
+            return {
+                'managers': [],
+                'affiliates': [],
+                'children': [],
+            }
 
+        # compute partner data for partner hierarchy
         ancestors, current = request.env['res.partner'].sudo(), partner.sudo()
         while current.parent_id and len(ancestors) < self._managers_level + 1 and current != current.parent_id:
             ancestors += current.parent_id
             current = current.parent_id
 
-        affiliates = partner.affiliate_ids | partner.sub_affiliate_ids if include_affiliates else []
+        values = dict(
+            self=self._prepare_partner_data(partner),
+            managers=[
+                self._prepare_partner_data(ancestor)
+                for idx, ancestor in enumerate(ancestors)
+                if idx < self._managers_level
+            ],
+            managers_more=len(ancestors) > self._managers_level,
+            affiliates=[self._prepare_partner_data(affiliate) for affiliate in partner.affiliate_ids if affiliate != partner],
+            children=[self._prepare_partner_data(child) for child in partner.child_ids if child != partner],
 
-        values = {
-            'self': self._prepare_partner_data(partner),
-            'managers': [self._prepare_partner_data(ancestor) for idx, ancestor in enumerate(ancestors) if idx < self._managers_level],
-            'managers_more': len(ancestors) > self._managers_level,
-            'children': [self._prepare_partner_data(child) for child in partner.child_ids.filtered(lambda p: not p.is_affiliate)],
-            'affiliates': [self._prepare_partner_data(affiliate) for affiliate in affiliates], 
-        }
-
+        )
         values['managers'].reverse()
         return values
 
-
-
-
-    # @http.route('/partner/get_org_chart', type='json', auth='user')
-    # def get_org_chart(self, partner_id, include_contacts=False, include_affiliates=True, **kw):
-        
-    #     partner = self._check_partner(partner_id, **kw)
-    #     if not partner:
-    #         return {'managers': [], 'children': [], 'affiliates': []}
-
-    #     ancestors, current = request.env['res.partner'].sudo(), partner.sudo()
-    #     while current.parent_id and len(ancestors) < self._managers_level + 1 and current != current.parent_id:
-    #         ancestors += current.parent_id
-    #         current = current.parent_id
-
-    #     affiliates = partner.affiliate_ids | partner.sub_affiliate_ids if include_affiliates else []
-
-    #     values = {
-    #         'self': self._prepare_partner_data(partner),
-    #         'managers': [self._prepare_partner_data(ancestor) for idx, ancestor in enumerate(ancestors) if idx < self._managers_level],
-    #         'managers_more': len(ancestors) > self._managers_level,
-    #         'children': [self._prepare_partner_data(child) for child in partner.child_ids.filtered(lambda p: not p.is_affiliate)],
-    #         'affiliates': [self._prepare_partner_data(affiliate) for affiliate in affiliates], 
-    #     }
-
-    #     values['managers'].reverse()
-    #     return values
-
-
+    # Affiliates
     @http.route('/partner/get_affiliates', type='json', auth='user')
     def get_affiliates(self, partner_id, affiliates_type=None, **kw):
         """
@@ -158,11 +90,32 @@ class ContactOrgChartController(http.Controller):
             return {}
 
         if affiliates_type == 'direct':
-            res = (partner.child_ids - partner).ids
+            res = (partner.affiliate_ids - partner).ids
         elif affiliates_type == 'indirect':
-            res = (partner.affiliate_ids - partner.child_ids).ids
+            res = (partner.affiliate_ids - partner.affiliate_ids).ids
         else:
             res = partner.affiliate_ids.ids
+        return res
+    
+    # Contacts
+    @http.route('/partner/get_children', type='json', auth='user')
+    def get_children(self, partner_id, children_type=None, **kw):
+        """
+        Get partner contacts.
+        Possible values for 'children_type':
+            - 'indirect'
+            - 'direct'
+        """
+        partner = self._check_partner(partner_id, **kw)
+        if not partner:  # to check
+            return {}
+
+        if children_type == 'direct':
+            res = (partner.child_ids - partner).ids
+        elif children_type == 'indirect':
+            res = (partner.child_ids - partner.child_ids).ids
+        else:
+            res = partner.child_ids.ids
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

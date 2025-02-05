@@ -28,7 +28,7 @@ class Partner(models.Model):
         string='Patient',
         help="Check this box if this is a Patient.")
     
-    channel_ids = fields.Many2many(relation='res_partner_channel_rel')
+    # channel_ids = fields.Many2many(relation='res_partner_channel_rel')
     can_have_parent = fields.Boolean(compute='_compute_partner_type_infos')
     parent_is_required = fields.Boolean(compute='_compute_partner_type_infos')
   
@@ -142,22 +142,6 @@ class Partner(models.Model):
         compute="_compute_sub_patient_ids",
     )
 
-    # Prescriptions
-    patient_prescriptions = fields.One2many(
-        'orthotic.prescription', 'partner_id', string="Prescriptions"
-    )
-
-
-    # Sale Orders
-    sale_order_ids = fields.One2many("sale.order", "partner_id", string="Sale Orders")
-    current_sale_order_ids = fields.One2many(
-        "sale.order", compute="_compute_current_sale_order_ids", string="Current Orders"
-    )
-    historic_sale_order_ids = fields.One2many(
-        "sale.order", compute="_compute_historic_sale_order_ids", string="Historic Orders"
-    )
-    reorder_count = fields.Integer(compute="_compute_reorder_order_count", string="Reorder")
-
     # Compute and Inverse Methods
     @api.depends("type")
     def _compute_company_address_type(self):
@@ -167,7 +151,6 @@ class Partner(models.Model):
                     record.company_address_type = record.type
                 else:
                     record.company_address_type = False  # ✅ Keep it empty if not set
-
 
     def _inverse_company_address_type(self):
         for record in self:
@@ -202,10 +185,6 @@ class Partner(models.Model):
 
 
     # Affiliates
-    # @api.model
-    # def _commercial_fields(self):
-    #     return super(Partner, self)._commercial_fields() + ["company_id"]
-
     @api.depends('affiliate_ids')
     def _compute_affiliates_count(self):
         for partner in self:
@@ -231,14 +210,6 @@ class Partner(models.Model):
             partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids  # Exclude direct affiliates
 
     # Contacts
-    # def _get_contact_name(self, partner, name):
-    #     if self.env.context.get("_two_lines_partner_address"):
-    #         return "{}\n {}".format(
-    #             partner.commercial_company_name or partner.sudo().parent_id.name, name
-    #         )
-    #     else:
-    #         return super()._get_contact_name(partner, name)
-
     @api.depends('child_ids')
     def _compute_contacts_count(self):
         for partner in self:
@@ -258,23 +229,6 @@ class Partner(models.Model):
                 # Recursively fetch all contacts for the child, including deeper levels
                 sub_contacts |= child._get_all_sub_contacts()
         return sub_contacts
-    
-    # @api.depends("child_ids", "child_ids.child_ids")
-    # def _compute_sub_contact_ids(self):
-    #     """
-    #     Compute sub-contacts for the current company, excluding patients.
-    #     """
-    #     for partner in self:
-    #         if partner.is_company:  
-    #             _logger.debug("Computing sub-contacts for company: %s (ID: %s)", partner.name, partner.id)
-    #             all_sub_contacts = partner._get_all_sub_contacts()
-    #             final_sub_contacts = all_sub_contacts - partner.child_ids.filtered(
-    #                 lambda c: not c.is_company and not c.is_patient
-    #             )
-    #             _logger.debug("Final sub-contacts for company %s (ID: %s): %s", partner.name, partner.id, final_sub_contacts)
-    #             partner.sub_contact_ids = final_sub_contacts
-    #         else:
-    #             partner.sub_contact_ids = self.env["res.partner"]  
 
     @api.depends("affiliate_ids", "affiliate_ids.child_ids")
     def _compute_sub_contact_ids(self):
@@ -290,8 +244,6 @@ class Partner(models.Model):
             get_indirect_contacts(partner)
 
             partner.sub_contact_ids = all_sub_contacts
-
-
 
     # Patients
     @api.depends('patient_ids')
@@ -334,22 +286,6 @@ class Partner(models.Model):
             else:
                 partner.sub_patient_ids = self.env["res.partner"]  # Empty for non-companies
 
-    # Sales Orders
-    @api.depends("sale_order_ids")
-    def _compute_current_sale_order_ids(self):
-        for partner in self:
-            partner.current_sale_order_ids = partner.sale_order_ids.filtered(lambda o: o.state not in ("done", "cancel"))
-
-    @api.depends("sale_order_ids")
-    def _compute_historic_sale_order_ids(self):
-        for partner in self:
-            partner.historic_sale_order_ids = partner.sale_order_ids.filtered(lambda o: o.state in ("done", "cancel"))
-
-    @api.depends("sale_order_ids")
-    def _compute_reorder_order_count(self):
-        for partner in self:
-            partner.reorder_count = len(partner.historic_sale_order_ids)
-
     # Constraints
     @api.constrains('parent_id', 'partner_type_code', 'is_affiliate')
     def _check_no_circular_reference(self):
@@ -370,14 +306,12 @@ class Partner(models.Model):
             if partner.is_patient and not partner.parent_id:
                 raise ValidationError(_("Affiliates must have a parent account."))
 
-
     @api.constrains('parent_id', 'is_affiliate')
     def _check_affiliate_parent_constraint(self):
         for record in self:
             if record.is_affiliate and not record.parent_id:
                 if record.create_date:  # Ensure the record has been saved
                     raise ValidationError(_("Affiliates must have a parent account."))
-
 
     # Onchange Methods
     @api.onchange('use_parent_address', 'parent_id')
@@ -431,8 +365,6 @@ class Partner(models.Model):
                 self.is_contact = False
                 self.type = self.partner_type_id.type if self.partner_type_id.type in dict(self._fields['type'].selection).keys() else False
 
-
-
     def _get_inherit_values(self, partner_type, not_null=False):
         if not partner_type:
             return {}
@@ -473,7 +405,6 @@ class Partner(models.Model):
             if record.is_affiliate and not record.parent_id:
                 raise ValidationError(_("Affiliates must have a parent account."))
 
-
     @api.model
     def create(self, vals):
         _logger.debug("Received vals for create: %s", vals)
@@ -486,7 +417,6 @@ class Partner(models.Model):
             _logger.debug("Generated customer_code: %s", vals["customer_code"])
 
         return super(Partner, self).create(vals)
-    
     
     def write(self, vals):
         _logger.info("Updating partner(s) with values: %s", vals)
@@ -517,38 +447,33 @@ class Partner(models.Model):
         if not isinstance(vals, dict):
             raise ValidationError(_("Invalid data passed for reference generation."))
 
-        sequence_map = {
-            "is_account": ("res.partner.account", "AC"),
-            "is_affiliate": ("res.partner.affiliate", "AF"),
-            "is_contact": ("res.partner.contact", "CT"),
-            "is_patient": ("res.partner.patient", "PT")
-        }
+        # Priority: Check for is_patient first
+        if vals.get("is_patient"):
+            seq_code, prefix = "res.partner.patient", "PT"
+        elif vals.get("is_account"):
+            seq_code, prefix = "res.partner.account", "AC"
+        elif vals.get("is_affiliate"):
+            seq_code, prefix = "res.partner.affiliate", "AF"
+        elif vals.get("is_contact"):
+            seq_code, prefix = "res.partner.contact", "CT"
+        else:
+            seq_code, prefix = "res.partner.generic", "GEN"
 
-        new_code = ""
-        for key, (seq_code, prefix) in sequence_map.items():
-            if vals.get(key):
-                # Get the max customer_code for this type
-                existing_codes = self.env["res.partner"].search([
-                    (key, "=", True),
-                    ("customer_code", "ilike", f"{prefix}%")
-                ], order="customer_code desc", limit=1)
+        # Generate the next sequence
+        existing_codes = self.env["res.partner"].search([
+            (seq_code.split(".")[-1], "=", True),
+            ("customer_code", "ilike", f"{prefix}%")
+        ], order="customer_code desc", limit=1)
 
-                if existing_codes:
-                    last_code = existing_codes.customer_code
-                    # Extract numeric part, increment by 1
-                    number = int(last_code.lstrip(prefix)) + 1
-                else:
-                    number = 1
+        if existing_codes:
+            last_code = existing_codes.customer_code
+            number = int(last_code.lstrip(prefix)) + 1
+        else:
+            number = 1
 
-                # Format new code with padding
-                new_code = f"{prefix}{str(number).zfill(3)}"
-                return new_code
-
-        # Fallback for generic sequence
-        new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
-        if not new_code:
-            raise ValidationError(_("Unable to generate generic customer code."))
+        new_code = f"{prefix}{str(number).zfill(3)}"
         return new_code
+
 
 
     def view_affiliates(self):
