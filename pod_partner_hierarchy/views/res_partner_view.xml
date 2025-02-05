@@ -30,14 +30,14 @@
             <xpath expr="//field[@name='company_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <!-- <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="view_affiliates" type="object" class="oe_stat_button" icon="fa-building" invisible="affiliates_count == 0">
                     <span>
                         <field name="affiliates_count" widget="statinfo" nolabel="1"/>
                         <field name="companies_label"/>
                     </span>
                 </button>
-            </xpath>
+            </xpath> -->
             <xpath expr="//div[hasclass('oe_title')]" position="replace">
                 <h2>
                     <field name='customer_code' readonly="1"/>
@@ -735,7 +735,13 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="search_view_id" ref="view_res_partner_filter"/>
-        <field name="domain">[('is_contact', '=', True), ('is_company', '=', False), ('id', '!=', 1), ('user_ids', '=', False)]</field>
+        <field name="domain">[
+        ('is_contact', '=', True), 
+        ('is_company', '=', False), 
+        ('is_patient', '=', False), 
+        ('user_ids', '=', False),
+        ('id', '!=', 1), 
+        ]</field>
         <field name="context">{
                 'default_company_type':'person',
                 'default_type':'contact',

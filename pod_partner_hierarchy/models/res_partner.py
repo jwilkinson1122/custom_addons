@@ -447,34 +447,35 @@ class Partner(models.Model):
         if not isinstance(vals, dict):
             raise ValidationError(_("Invalid data passed for reference generation."))
 
-        # Priority: Check for is_patient first
-        if vals.get("is_patient"):
-            seq_code, prefix = "res.partner.patient", "PT"
-        elif vals.get("is_account"):
-            seq_code, prefix = "res.partner.account", "AC"
-        elif vals.get("is_affiliate"):
-            seq_code, prefix = "res.partner.affiliate", "AF"
-        elif vals.get("is_contact"):
-            seq_code, prefix = "res.partner.contact", "CT"
-        else:
-            seq_code, prefix = "res.partner.generic", "GEN"
+        sequence_map = {
+            "is_patient": ("res.partner.patient", "PT"),
+            "is_account": ("res.partner.account", "AC"),
+            "is_affiliate": ("res.partner.affiliate", "AF"),
+            "is_contact": ("res.partner.contact", "CT"),
+        }
 
-        # Generate the next sequence
-        existing_codes = self.env["res.partner"].search([
-            (seq_code.split(".")[-1], "=", True),
-            ("customer_code", "ilike", f"{prefix}%")
-        ], order="customer_code desc", limit=1)
+        new_code = ""
+        for key, (seq_code, prefix) in sequence_map.items():
+            if vals.get(key):
+                # Fetch the last used code with the same prefix
+                last_code = self.env["res.partner"].search([
+                    (key, "=", True),
+                    ("customer_code", "like", f"{prefix}%")
+                ], order="customer_code desc", limit=1).customer_code
 
-        if existing_codes:
-            last_code = existing_codes.customer_code
-            number = int(last_code.lstrip(prefix)) + 1
-        else:
-            number = 1
+                # Extract the number and increment
+                number = int(last_code.lstrip(prefix)) + 1 if last_code else 1
 
-        new_code = f"{prefix}{str(number).zfill(3)}"
+                # Generate a new code with padding
+                new_code = f"{prefix}{str(number).zfill(3)}"
+                return new_code
+
+        # Fallback for generic sequence
+        new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
+        if not new_code:
+            raise ValidationError(_("Unable to generate generic customer code."))
+
         return new_code
-
-
 
     def view_affiliates(self):
         return {
@@ -510,6 +511,17 @@ class Partner(models.Model):
         result['fields'] = self.fields_get(view_fields)
         return self._update_fields_view_get_result(result, view_type)
 
+    def name_get(self):
+        result = []
+        for partner in self:
+            if partner.is_contact:
+                name = partner.name  # Only display the contact's name
+            else:
+                name = partner.display_name  # Default behavior for other types
+            result.append((partner.id, name))
+        return result
+
+
     @api.model
     def _format_args(self, args):
         for cond in (args or []):
@@ -522,10 +534,18 @@ class Partner(models.Model):
                         cond[2] = item[2]
                         break
 
+    # @api.model
+    # def name_search(self, name, args=None, operator='ilike', limit=100):
+    #     self._format_args(args)
+    #     return super(Partner, self).name_search(name, args, operator, limit)
+    
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        self._format_args(args)
-        return super(Partner, self).name_search(name, args, operator, limit)
+        args = args or []
+        domain = args + ['|', ('name', operator, name), ('customer_code', operator, name)]
+        partners = self.search(domain, limit=limit)
+        return partners.name_get()
+
 
     def _search(self, args, offset=0, limit=None, order=None, count=False):
         self._format_args(args)
