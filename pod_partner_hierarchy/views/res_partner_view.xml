@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='display_name']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='complete_name']" position="after">
+            <xpath expr="//field[@name='display_name']" position="after">
                 <field name='customer_code'/>
                 <field name="legacy_customer_code"/>
                 <field name="parent_id" column_invisible="context.get('default_is_parent_company', False)"/>
@@ -55,6 +55,7 @@
                         <field name="is_contact" invisible="1"/>
                         <field name="is_patient" invisible="1"/>
                         <field name="active" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
                         <field name="can_have_parent" invisible="1"/>
                         <field name="parent_is_required" invisible="1"/>
                         <field name="company_type" invisible="1"/>
@@ -62,8 +63,8 @@
                         <field name="partner_type_code" invisible="1"/>
                         <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" invisible="is_account"/>
                         <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="is_account"/>
-                        <field name="parent_id" widget="res_partner_many2one" placeholder="Company" invisible="is_account" domain="[('is_company', '=', True), ('id', '!=', 1)]" required="1" class="fw-bold"/>
-                        <field name="responsible_contact_id" placeholder="Select Contact" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
+                        <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold" options="{'no_create': True}"/>
+                        <field name="responsible_contact_id" placeholder="Select Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
                         <label for="commercial_partner" string="Commercial Partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                         <field name="commercial_partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                     </div>
@@ -73,13 +74,19 @@
                 <separator name="contact_info" string="Contact Information"/>
                 <group name="address">
                     <group>
-                        <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="is_account"/>
+                        <!-- <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="is_account" help="Enable to use the parent account's address." /> -->
                         <span class="o_form_label o_td_label" name="address_name">
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
                             <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
                             <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
-                            <!-- <field name="partner_company_type" placeholder="Company Type" widget="many2one" class="fw-bold"/> -->
 
+
+                            <!-- <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" class="fw-bold"/>
+                            <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" class="fw-bold"/> -->
+
+                            <!-- <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
+                            <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/> -->
+                            <!-- <field name="partner_company_type" placeholder="Company Type" widget="many2one" class="fw-bold"/> -->
                         </span>
                         <div class="o_address_format">
                             <field name="street" placeholder="Street..." class="o_address_street" />
@@ -91,7 +98,11 @@
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
                         </div>
-                        <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
+                        <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
+                        <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
+                        <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
+                        <field name="partner_supplier_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'supplier')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
+
                     </group>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
@@ -130,9 +141,17 @@
             <!-- Affiliates Notebook Page -->
             <xpath expr="//page[@name='contact_addresses']" position="before">
                 <page string="Affiliates" name="affiliates_page" autofocus="autofocus" invisible="is_patient">
+                    <!-- <group>
+                        <group>
+                            <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" />
+                            <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" />
+                            <field name="partner_supplier_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'supplier')]" options="{'no_open': True, 'no_create': True}" />
+                        </group>
+                    </group> -->
                     <label for='affiliate_ids' string="Direct Affiliates" class="fw-bolder mb-3 mt-4 small text-uppercase" />
                     <field name="affiliate_ids" mode="kanban" nolabel="1" domain="[('user_ids', '=', False)]">
-                        <kanban create="true" context="{'default_use_parent_address': True}">
+                        <kanban create="true">
+                            <!-- <kanban create="true" context="{'default_use_parent_address': True}"> -->
                             <field name="id" />
                             <field name="color" />
                             <field name="ref"/>
@@ -216,17 +235,13 @@
                                 <separator string="Company Type" />
                                 <field name="partner_company_type" widget="radio" options="{'horizontal': true}" />
                                 <separator string="Address Type" />
-                                <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address"/>
-
-
-                                <!-- <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address" invisible="not parent_id" onchange="onchange_use_parent_address(parent_id)" /> -->
-
-                                <label for='use_parent_address' string="Use Parent Address"/>
+                                <!-- <field name="use_parent_address" widget="boolean_toggle" string="Use Parent Address"/> -->
+                                <!-- <label for='use_parent_address' string="Use Parent Address"/>
                                 <div class="text-muted oe_edit_only">
                                     <p class="mb-0" invisible="use_parent_address != True">
                                         <span>Use the parent account address. Add more details here....</span>
                                     </p>
-                                </div>
+                                </div> -->
                                 <field name="company_address_type" widget="radio" options="{'horizontal': true}" />
                                 <div class="text-muted oe_edit_only">
                                     <p class="mb-0" invisible="company_address_type != 'invoice'">

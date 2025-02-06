@@ -22,7 +22,6 @@
         "views/res_partner_view.xml",
         "views/res_partner_type_view.xml",
         "views/res_partner_company_type_view.xml",
-
     ],
     "assets": {
         "web._assets_primary_variables": [
