@@ -99,10 +99,17 @@
                             </div>
                         </div>
                         <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
-                        <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
+                        <!-- <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
                         <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
-                        <field name="partner_supplier_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'supplier')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
-
+                        <field name="partner_supplier_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'supplier')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/> -->
+                       
+                         
+                        <field name="use_parent_invoice_address" invisible="not parent_id"/>
+                        <field name="use_parent_shipping_address" invisible="not parent_id"/>
+                        <!-- <field name="invoice_address_to_use_id" invisible="not use_parent_invoice_address" required="use_parent_invoice_address"/> -->
+                        
+               
+                        <!-- <newline/> -->
                     </group>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
@@ -148,6 +155,15 @@
                             <field name="partner_supplier_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'supplier')]" options="{'no_open': True, 'no_create': True}" />
                         </group>
                     </group> -->
+                    <!-- <group>
+                        <group>
+                            <field name="use_parent_invoice_address" invisible="not parent_id"/>
+                        </group>
+                        <group>
+                            <field name="invoice_address_to_use_id" invisible="not use_parent_invoice_address" required="use_parent_invoice_address"/>
+                        </group>
+                    </group>
+                    <newline/> -->
                     <label for='affiliate_ids' string="Direct Affiliates" class="fw-bolder mb-3 mt-4 small text-uppercase" />
                     <field name="affiliate_ids" mode="kanban" nolabel="1" domain="[('user_ids', '=', False)]">
                         <kanban create="true">
@@ -376,6 +392,19 @@
                 <attribute name="nolabel">1</attribute>
                 <attribute name="domain">[('is_contact', '=', True), ('user_ids', '=', False)]</attribute>
             </xpath>
+            <!-- <field name="child_ids" position="before">
+                <group>
+                    <group>
+                        <field name="use_parent_invoice_address" attrs="{'invisible': [('parent_id', '=', False)]}" />
+                    </group>
+                    <group>
+                        <field name="invoice_address_to_use_id" attrs="{
+                                'invisible': [('use_parent_invoice_address', '=', False)],
+                                'required': [('use_parent_invoice_address', '=', True)]}" />
+                    </group>
+                </group>
+                <newline/>
+            </field> -->
             <xpath expr="//field[@name='child_ids']" position="before">
                 <label for='child_ids' string="Direct Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
             </xpath>
