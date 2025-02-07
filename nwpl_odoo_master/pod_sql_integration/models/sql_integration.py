@@ -148,11 +148,11 @@ class SqlIntegration(models.Model):
         """Fetches a unique record based on the provided domain filter."""
         return self.env[self.model_name].search(domain_filter, limit=1)
 
-    def _get_val_dict(self, method, data):
-        """
-        Constructs a dictionary of values for integration fields, handling different field types.
-        """
-        non_values = {"", "NULL", "null", "False", "FALSE"}
+    def _get_val_dict(self, method, data=None):
+        """Constructs a dictionary of values for integration fields safely."""
+        if data is None:
+            data = []
+
         val_dict = {}
 
         for field in self.integration_fields:
@@ -160,36 +160,69 @@ class SqlIntegration(models.Model):
                 continue  # Skip excluded fields
 
             field_name = field.res_field_id.name
-            field_type = field.res_field_id.ttype
-            field_value = field.value
+            index = int(field.value) if field.value.isdigit() else None
 
-            # Handle evaluation types
             if field.evaluation_type == "seq":
-                val = (
-                    None
-                    if data[int(field_value)] in non_values
-                    else data[int(field_value)]
-                )
+                # Prevent index out of range error
+                if index is not None and 0 <= index < len(data):
+                    val_dict[field_name] = data[index]
+                else:
+                    _logger.warning(
+                        f"Index out of range: {index} for field {field_name} (data length={len(data)})"
+                    )
+                    val_dict[field_name] = (
+                        None  # Avoid crash by setting a default value
+                    )
             elif field.evaluation_type == "value":
-                val = field_value
+                val_dict[field_name] = field.value
             elif field.evaluation_type == "find":
-                val = self._resolve_related_value(field, data)
-            else:
-                continue  # Unknown evaluation type, skip field
-
-            # Process specific field types
-            if field_type in ["date", "datetime"]:
-                val_dict[field_name] = False if val in non_values else val
-            elif field_type == "binary" and field.evaluation_type == "seq":
-                val_dict[field_name] = (
-                    base64.b64encode(data[int(field_value)]).decode()
-                    if field_value.isdigit()
-                    else None
-                )
-            else:
-                val_dict[field_name] = val
+                try:
+                    domain = eval(field.value)  # Convert string to actual domain
+                    res = self.env[field.res_field_id.relation].search(domain, limit=1)
+                    val_dict[field_name] = res.id if res else None
+                except Exception as e:
+                    _logger.warning(f"Error evaluating domain {field.value}: {e}")
+                    val_dict[field_name] = None
 
         return val_dict
+
+    # def _get_val_dict(self, method, data):
+    #     """
+    #     Constructs a dictionary of values for integration fields, handling different field types.
+    #     """
+    #     non_values = {"", "NULL", "null", "False", "FALSE"}
+    #     val_dict = {}
+
+    #     for field in self.integration_fields:
+    #         if method == field.exclude:
+    #             continue
+    #         field_name = field.res_field_id.name
+    #         field_type = field.res_field_id.ttype
+    #         field_value = field.value
+    #         if field.evaluation_type == "seq":
+    #             val = (
+    #                 None
+    #                 if data[int(field_value)] in non_values
+    #                 else data[int(field_value)]
+    #             )
+    #         elif field.evaluation_type == "value":
+    #             val = field_value
+    #         elif field.evaluation_type == "find":
+    #             val = self._resolve_related_value(field, data)
+    #         else:
+    #             continue
+    #         if field_type in ["date", "datetime"]:
+    #             val_dict[field_name] = False if val in non_values else val
+    #         elif field_type == "binary" and field.evaluation_type == "seq":
+    #             val_dict[field_name] = (
+    #                 base64.b64encode(data[int(field_value)]).decode()
+    #                 if field_value.isdigit()
+    #                 else None
+    #             )
+    #         else:
+    #             val_dict[field_name] = val
+
+    #     return val_dict
 
     # def _resolve_related_value(self, field, data):
     #     """
@@ -294,26 +327,24 @@ class SqlIntegration(models.Model):
     #     return None
 
     def run_now(self):
-        """Executes the integration process."""
-        self.ensure_one()
+        """Executes the integration process with detailed debugging."""
         datas = self.fetch_data_from_sql()
         if not datas:
+            _logger.warning("No data retrieved from SQL Server.")
             return
 
         for data in datas["datas"]:
+            _logger.debug(f"Processing data: {data}")
+
             try:
                 with self.env.cr.savepoint():
-                    vals = self._get_val_dict(
+                    vals = self._get_val_string(
                         "create" if self.action_type.startswith("create") else "update",
                         data,
                     )
-                    domain = ast.literal_eval(
-                        re.sub(
-                            r'"data\[\d+\]"',
-                            lambda m: m.group(0).replace('"', ""),
-                            self.filter_domain,
-                        )
-                    )
+                    _logger.debug(f"Generated values: {vals}")
+
+                    domain = eval(self.filter_domain) if self.filter_domain else []
                     unique = self._get_unique_record(domain)
 
                     if self.action_type == "create" or (
@@ -323,15 +354,56 @@ class SqlIntegration(models.Model):
                     elif self.action_type == "update" and unique:
                         unique.write(vals)
                     elif self.action_type == "update_create_not_exist":
-                        (
+                        if unique:
                             unique.write(vals)
-                            if unique
-                            else self.env[self.model_name].create(vals)
-                        )
+                        else:
+                            self.env[self.model_name].create(vals)
             except Exception as e:
-                _logger.warning("Exception in SQL Integration %s: %s", self.name, e)
+                _logger.warning(
+                    f"Exception in SQL Integration {self.name}: {e} (data={data})"
+                )
 
         self.last_call = fields.Datetime.now()
+
+    # def run_now(self):
+    #     """Executes the integration process."""
+    #     self.ensure_one()
+    #     datas = self.fetch_data_from_sql()
+    #     if not datas:
+    #         return
+
+    #     for data in datas["datas"]:
+    #         try:
+    #             with self.env.cr.savepoint():
+    #                 vals = self._get_val_dict(
+    #                     "create" if self.action_type.startswith("create") else "update",
+    #                     data,
+    #                 )
+    #                 domain = ast.literal_eval(
+    #                     re.sub(
+    #                         r'"data\[\d+\]"',
+    #                         lambda m: m.group(0).replace('"', ""),
+    #                         self.filter_domain,
+    #                     )
+    #                 )
+    #                 unique = self._get_unique_record(domain)
+
+    #                 if self.action_type == "create" or (
+    #                     self.action_type == "create_not_exist" and not unique
+    #                 ):
+    #                     self.env[self.model_name].create(vals)
+    #                 elif self.action_type == "update" and unique:
+    #                     unique.write(vals)
+    #                 elif self.action_type == "update_create_not_exist":
+    #                     (
+    #                         unique.write(vals)
+    #                         if unique
+    #                         else self.env[self.model_name].create(vals)
+    #                     )
+    #         except Exception as e:
+    #             _logger.warning("Exception in SQL Integration %s: %s", self.name, e)
+
+    #     self.last_call = fields.Datetime.now()
 
     def connect_sql_server(self):
         """Establishes a connection to SQL Server."""
