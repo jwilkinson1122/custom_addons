@@ -57,6 +57,20 @@ class Partner(models.Model):
         related="parent_id.name", readonly=True, string="Account Name"
     )
 
+    previous_parent_id = fields.Many2one(
+        "res.partner", string="Previous Parent", help="Stores the last assigned parent."
+    )
+    merged_into_id = fields.Many2one(
+        "res.partner",
+        string="Merged Into",
+        help="If this affiliate was merged, this stores the new parent.",
+    )
+    is_merged = fields.Boolean(
+        string="Merged",
+        default=False,
+        help="Indicates if this partner was merged into another.",
+    )
+
     affiliate_ids = fields.One2many(
         "res.partner",
         "parent_id",
@@ -327,27 +341,24 @@ class Partner(models.Model):
             partner.parent_is_required = partner.partner_type_id.parent_is_required
 
     # # Constraints
-    @api.constrains("parent_id", "partner_type_code", "is_affiliate")
-    def _check_no_circular_reference(self):
-        for partner in self:
-            # Existing circular reference check
-            if partner.parent_id == partner:
-                # if partner.parent_id and partner.parent_id.id == partner.id:
-                raise ValidationError(_("A partner cannot be its own parent."))
+    # @api.constrains("parent_id", "partner_type_code", "is_affiliate")
+    # def _check_no_circular_reference(self):
+    #     for partner in self:
+    #         if partner.parent_id == partner:
+    #             raise ValidationError(_("A partner cannot be its own parent."))
 
-            visited = set()
-            current = partner.parent_id
-            while current:
-                if current.id in visited:
-                    raise ValidationError(
-                        _("Circular reference detected in the hierarchy.")
-                    )
-                visited.add(current.id)
-                current = current.parent_id
+    #         visited = set()
+    #         current = partner.parent_id
+    #         while current:
+    #             if current.id in visited:
+    #                 raise ValidationError(
+    #                     _("Circular reference detected in the hierarchy.")
+    #                 )
+    #             visited.add(current.id)
+    #             current = current.parent_id
 
-            # Additional check for affiliates
-            if partner.is_patient and not partner.parent_id:
-                raise ValidationError(_("Affiliates must have a parent account."))
+    #         if partner.is_patient and not partner.parent_id:
+    #             raise ValidationError(_("Affiliates must have a parent account."))
 
     @api.constrains("parent_id", "is_affiliate")
     def _check_affiliate_parent_constraint(self):
@@ -366,8 +377,6 @@ class Partner(models.Model):
             partner_type_field = "is_patient" if self.is_patient else "is_contact"
         else:
             partner_type_field = "is_contact"  # Default fallback
-
-        # Search for the matching partner type dynamically
         self.partner_type_id = self.env["res.partner.type"].search(
             [(partner_type_field, "=", True)], limit=1
         )
@@ -390,11 +399,17 @@ class Partner(models.Model):
 
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
+        """Handle changes in the parent_id field, updating customer_code if necessary."""
         self.apply_contact_logic()
-        domain = [("is_company", "=", False)]
         if self.parent_id:
-            domain.append(("parent_id", "=", self.parent_id.id))
-        return {"domain": {"responsible_contact_id": domain}}
+            if self.previous_parent_id and self.previous_parent_id != self.parent_id:
+                _logger.info(
+                    f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}"
+                )
+                self.customer_code = self._generate_customer_code()
+                self._update_related_records()
+            self.previous_parent_id = self.parent_id
+            return {"domain": {"responsible_contact_id": [("is_company", "=", False)]}}
 
     def apply_contact_logic(self):
         """Assigns responsible contact based on parent."""
@@ -483,7 +498,7 @@ class Partner(models.Model):
 
         # Generate customer code if it's new
         if vals.get("customer_code", _("New")) == _("New"):
-            vals["customer_code"] = self._generate_reference(vals)
+            vals["customer_code"] = self._generate_customer_code(vals)
             _logger.debug("Generated customer_code: %s", vals["customer_code"])
 
         partner = super(Partner, self).create(vals)
@@ -498,24 +513,36 @@ class Partner(models.Model):
         """Update partner and apply relevant changes, including address inheritance and customer code generation."""
         _logger.info("Updating partner(s) with values: %s", vals)
 
-        needs_code_update = any(
-            key in vals
-            for key in [
-                "parent_id",
-                "is_account",
-                "is_affiliate",
-                "is_contact",
-                "is_patient",
-            ]
-        )
+        # needs_code_update = any(
+        #     key in vals
+        #     for key in [
+        #         "parent_id",
+        #         "is_account",
+        #         "is_affiliate",
+        #         "is_contact",
+        #         "is_patient",
+        #     ]
+        # )
 
-        for partner in self:
-            if needs_code_update or partner.customer_code == _("New"):
-                _logger.info(
-                    "Regenerating customer_code for partner ID: %s", partner.id
-                )
-                vals["customer_code"] = self._generate_reference(vals)
-                _logger.info("Updated customer_code: %s", vals["customer_code"])
+        # for partner in self:
+        #     if needs_code_update or partner.customer_code == _("New"):
+        #         _logger.info("Regenerating customer_code for partner ID: %s", partner.id)
+        #         vals["customer_code"] = partner._generate_reference(vals)
+        #         _logger.info("Updated customer_code: %s", vals["customer_code"])
+
+        if "parent_id" in vals:
+            new_parent = self.env["res.partner"].browse(vals["parent_id"])
+            for partner in self:
+                if new_parent and partner.id == new_parent.id:
+                    raise ValidationError("A partner cannot be its own parent.")
+
+                if partner._is_circular_reference(new_parent):
+                    raise ValidationError(
+                        "Circular reference detected in the hierarchy."
+                    )
+
+                vals["customer_code"] = self._generate_customer_code(vals)
+                partner._update_child_codes()
 
         result = super(Partner, self).write(vals)
 
@@ -533,48 +560,88 @@ class Partner(models.Model):
 
         return result
 
-    def _generate_reference(self, vals):
-        _logger.debug("Generating reference with vals: %s", vals)
+    def _update_related_records(self):
+        """Update contacts, patients, and orders when the parent changes."""
+        for record in self.child_ids | self.patient_ids:
+            _logger.info(f"Updating {record.name}'s parent to {self.parent_id.name}")
+            record.parent_id = self.parent_id
 
-        if isinstance(vals, str):
-            return vals
-
-        if not isinstance(vals, dict):
-            raise ValidationError(_("Invalid data passed for reference generation."))
-
+    def _generate_customer_code(self, vals):
+        """Generate hierarchical customer code based on parent relationship."""
         sequence_map = {
-            "is_patient": ("res.partner.patient", "PT"),
-            "is_account": ("res.partner.account", "AC"),
-            "is_affiliate": ("res.partner.affiliate", "AF"),
-            "is_contact": ("res.partner.contact", "CT"),
+            "is_account": "res.partner.account",
+            "is_affiliate": "res.partner.affiliate",
+            "is_contact": "res.partner.contact",
+            "is_patient": "res.partner.patient",
         }
 
-        new_code = ""
-        for key, (seq_code, prefix) in sequence_map.items():
+        for key, seq_code in sequence_map.items():
             if vals.get(key):
-                # Fetch the last used code with the same prefix
-                last_partner = self.env["res.partner"].search(
-                    [(key, "=", True), ("customer_code", "like", f"{prefix}%")],
-                    order="customer_code desc",
-                    limit=1,
-                )
-                last_code = (
-                    last_partner.customer_code if last_partner else f"{prefix}000"
+                sequence = self.env["ir.sequence"].next_by_code(seq_code)
+                parent = (
+                    self.env["res.partner"].browse(vals.get("parent_id"))
+                    if vals.get("parent_id")
+                    else None
                 )
 
-                # Extract the number and increment
-                number = int(last_code[len(prefix) :]) + 1
+                if parent and parent.customer_code:
+                    return f"{parent.customer_code}-{sequence.split('-')[-1]}"
 
-                # Generate a new code with padding
-                new_code = f"{prefix}{str(number).zfill(4)}"
-                return new_code
+                return sequence
 
-        # Fallback for generic sequence
-        new_code = self.env["ir.sequence"].next_by_code("res.partner.generic")
-        if not new_code:
-            raise ValidationError(_("Unable to generate generic customer code."))
+        return self.env["ir.sequence"].next_by_code("res.partner.generic")
 
-        return new_code
+    def _update_child_codes(self):
+        """Recursively update customer codes for children when a parent changes."""
+        for child in self.child_ids:
+            old_code = child.customer_code
+            child.customer_code = self._generate_customer_code(
+                {"parent_id": self.id, "is_contact": True}
+            )
+            _logger.info(
+                "Updated child customer_code from %s to %s",
+                old_code,
+                child.customer_code,
+            )
+            child._update_child_codes()
+
+    def _is_circular_reference(self, new_parent):
+        """Check if assigning new parent creates a circular reference."""
+        visited = set()
+        while new_parent:
+            if new_parent.id in visited:
+                return True
+            visited.add(new_parent.id)
+            new_parent = new_parent.parent_id
+        return False
+
+    def merge_affiliates(self, target_affiliate):
+        """Merge the current affiliate into another, moving contacts and patients."""
+        self.ensure_one()
+        if not self.is_affiliate or not target_affiliate.is_affiliate:
+            raise ValidationError("Both partners must be affiliates to merge.")
+
+        if self.id == target_affiliate.id:
+            raise ValidationError("Cannot merge an affiliate with itself.")
+
+        try:
+            _logger.info(
+                "Merging affiliate %s into %s", self.name, target_affiliate.name
+            )
+
+            # Move related contacts & patients
+            self.child_ids.write({"parent_id": target_affiliate.id})
+            self.patient_ids.write({"parent_id": target_affiliate.id})
+
+            # Archive old affiliate instead of deleting
+            self.write({"active": False})
+            _logger.info(
+                "Successfully merged %s into %s", self.name, target_affiliate.name
+            )
+
+        except Exception as e:
+            _logger.error("Failed to merge affiliates: %s", str(e))
+            raise ValidationError("An error occurred while merging affiliates.")
 
     def view_affiliates(self):
         return {
