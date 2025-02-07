@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 
 INVOICE = "invoice"
 
+
 class Partner(models.Model):
     _inherit = ["res.partner", "incrementing.sequence.mixin"]
     _name = "res.partner"
@@ -93,7 +94,7 @@ class Partner(models.Model):
         "res.partner",
         string="Responsible Contact",
         domain=[("active", "=", True), ("is_company", "=", False)],
-        context={'responsible_contact_selection': True},
+        context={"responsible_contact_selection": True},
     )
 
     # context={'responsible_contact_selection': True}
@@ -118,20 +119,6 @@ class Partner(models.Model):
         help="Mark as True if this partner acts as its own trading company, even with a parent company.",
     )
 
-    # technical field used for managing commercial fields
-    # commercial_partner_id = fields.Many2one(
-    #     "res.partner",
-    #     string="Commercial Entity",
-    #     compute="_compute_commercial_partner",
-    #     store=True,
-    #     recursive=True,
-    #     index=True,
-    # )
-    # commercial_company_name = fields.Char(
-    #     "Company Name Entity", compute="_compute_commercial_company_name", store=True
-    # )
-    # company_name = fields.Char("Company Name")
-
     fax_number = fields.Char(string="Fax")
     customer_code = fields.Char(
         string="Customer Code", readonly=True, default=lambda self: _("New")
@@ -147,9 +134,12 @@ class Partner(models.Model):
         compute="_compute_parent_types",
     )
 
-    use_parent_invoice_address = fields.Boolean(string="Use Parent Invoice Address", default=False)
-    use_parent_shipping_address = fields.Boolean(string="Use Parent Shipping Address", default=False)
-
+    use_parent_invoice_address = fields.Boolean(
+        string="Use Parent Invoice Address", default=False
+    )
+    use_parent_shipping_address = fields.Boolean(
+        string="Use Parent Shipping Address", default=False
+    )
 
     # use_parent_invoice_address = fields.Boolean()
     # invoice_address_to_use_id = fields.Many2one(
@@ -160,8 +150,6 @@ class Partner(models.Model):
     #     domain="['|', '&', ('type', '=', 'invoice') ,('parent_id', '=', parent_id),"
     #     " ('id', '=', parent_id)]",
     # )
-
-
 
     # use_parent_address = fields.Boolean(string="Use Parent Address", default=False)
 
@@ -216,26 +204,6 @@ class Partner(models.Model):
     companies_label = fields.Char(
         related="partner_type_id.companies_label", readonly=True
     )
-
-    # Address Defaults
-    # partner_invoice_id = fields.Many2one(
-    #     comodel_name="res.partner",
-    #     string="Invoice address",
-    # )
-
-    # partner_delivery_id = fields.Many2one(
-    #     comodel_name="res.partner",
-    #     string="Shipping address",
-    # )
-    # partner_supplier_id = fields.Many2one(
-    #     comodel_name="res.partner",
-    #     string="Supplier address",
-    # )
-
-    # partner_other_id = fields.Many2one(
-    #     comodel_name="res.partner",
-    #     string="Other address",
-    # )
 
     @api.model
     def default_get(self, fields):
@@ -476,50 +444,14 @@ class Partner(models.Model):
             if record.is_affiliate and not record.parent_id:
                 raise ValidationError(_("Affiliates must have a parent account."))
 
-    # Address
-    # @api.onchange("use_parent_invoice_address")
-    # def _onchange_use_parent_invoice_address(self):
-    #     if not any(child.type == "invoice" for child in self.parent_id.child_ids):
-    #         self.invoice_address_to_use_id = self.parent_id
-    #     else:
-    #         self.invoice_address_to_use_id = False
-
-    # def _update_for_specific_invoice_address(self, res):
-    #     if res.get(INVOICE, False):
-    #         res[INVOICE] = self.commercial_partner_id.invoice_address_to_use_id.id
-
-    # def address_get(self, adr_pref=None):
-    #     res = super().address_get(adr_pref)
-
-    #     commercial_partner = self.commercial_partner_id
-
-    #     use_parent_invoice_address = (
-    #         commercial_partner.use_parent_invoice_address
-    #         and commercial_partner.parent_id
-    #     )
-
-    #     if INVOICE in res and use_parent_invoice_address:
-    #         if not self.commercial_partner_id.invoice_address_to_use_id:
-    #             # this case is only if record still empty
-    #             # even "required" managed on view
-    #             res[INVOICE] = self.parent_id.address_get([INVOICE])[INVOICE]
-    #         else:
-    #             # normally, it shoud only use this case :
-    #             # use_parent_invoice_address set to True,
-    #             # invoice_address_to_use_id shoud not be empty
-    #             self._update_for_specific_invoice_address(res)
-
-    #     return res
-
-    # @api.onchange("parent_id")
-    # def _update_use_parent_invoice_address(self):
-    #     if not self.parent_id:
-    #         self.use_parent_invoice_address = False
-
-
-    @api.onchange("parent_id", "use_parent_invoice_address", "use_parent_shipping_address")
+    # Address Flags
+    @api.onchange(
+        "parent_id", "use_parent_invoice_address", "use_parent_shipping_address"
+    )
     def _onchange_parent_address_flags(self):
-        _logger.debug(f"Triggered onchange for parent_id: {self.parent_id}, use_parent_invoice_address: {self.use_parent_invoice_address}, use_parent_shipping_address: {self.use_parent_shipping_address}")
+        _logger.debug(
+            f"Triggered onchange for parent_id: {self.parent_id}, use_parent_invoice_address: {self.use_parent_invoice_address}, use_parent_shipping_address: {self.use_parent_shipping_address}"
+        )
 
         if self.use_parent_invoice_address and self.parent_id:
             self._apply_parent_address(address_type="invoice")
@@ -568,19 +500,31 @@ class Partner(models.Model):
 
         needs_code_update = any(
             key in vals
-            for key in ["parent_id", "is_account", "is_affiliate", "is_contact", "is_patient"]
+            for key in [
+                "parent_id",
+                "is_account",
+                "is_affiliate",
+                "is_contact",
+                "is_patient",
+            ]
         )
 
         for partner in self:
             if needs_code_update or partner.customer_code == _("New"):
-                _logger.info("Regenerating customer_code for partner ID: %s", partner.id)
+                _logger.info(
+                    "Regenerating customer_code for partner ID: %s", partner.id
+                )
                 vals["customer_code"] = self._generate_reference(vals)
                 _logger.info("Updated customer_code: %s", vals["customer_code"])
 
         result = super(Partner, self).write(vals)
 
         # Apply address inheritance logic if necessary
-        if "use_parent_invoice_address" in vals or "use_parent_shipping_address" in vals or "parent_id" in vals:
+        if (
+            "use_parent_invoice_address" in vals
+            or "use_parent_shipping_address" in vals
+            or "parent_id" in vals
+        ):
             self._onchange_parent_address_flags()
 
         self._validate_affiliate_parent()
@@ -588,51 +532,6 @@ class Partner(models.Model):
         _logger.info("Partner(s) updated successfully.")
 
         return result
-
-
-
-
-    # @api.model
-    # def create(self, vals):
-    #     _logger.debug("Received vals for create: %s", vals)
-
-    #     if vals.get("parent_id"):
-    #         vals["parent_id"] = int(vals["parent_id"])
-
-    #     if vals.get("customer_code", _("New")) == _("New"):
-    #         vals["customer_code"] = self._generate_reference(vals)
-    #         _logger.debug("Generated customer_code: %s", vals["customer_code"])
-
-    #     return super(Partner, self).create(vals)
-
-    # def write(self, vals):
-    #     _logger.info("Updating partner(s) with values: %s", vals)
-
-    #     needs_code_update = any(
-    #         key in vals
-    #         for key in [
-    #             "parent_id",
-    #             "is_account",
-    #             "is_affiliate",
-    #             "is_contact",
-    #             "is_patient",
-    #         ]
-    #     )
-
-    #     for partner in self:
-    #         if needs_code_update or partner.customer_code == _("New"):
-    #             _logger.info(
-    #                 "Regenerating customer_code for partner ID: %s", partner.id
-    #             )
-    #             vals["customer_code"] = self._generate_reference(vals)
-    #             _logger.info("Updated customer_code: %s", vals["customer_code"])
-
-    #     result = super(Partner, self).write(vals)
-    #     self._validate_affiliate_parent()
-    #     self._update_children(vals)
-    #     _logger.info("Partner(s) updated successfully.")
-
-    #     return result
 
     def _generate_reference(self, vals):
         _logger.debug("Generating reference with vals: %s", vals)

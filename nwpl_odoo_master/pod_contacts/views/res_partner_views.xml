@@ -39,7 +39,7 @@
         </field>
     </record>
 
-        <!-- <record id="view_partner_tree" model="ir.ui.view">
+    <!-- <record id="view_partner_tree" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
@@ -87,7 +87,7 @@
             <xpath expr="//field[@name='display_name']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='complete_name']" position="after">
+            <xpath expr="//field[@name='display_name']" position="after">
                 <field name="legacy_customer_code"/>
                 <field name='customer_code'/>
                 <field name="parent_id" column_invisible="context.get('default_is_parent_company', False)"/>
@@ -101,7 +101,7 @@
         </field>
     </record>
 
-    
+
 
     <record id="res_partner_view_form" model="ir.ui.view">
         <field name="name">res.partner.view.form</field>
@@ -203,15 +203,15 @@
                 </group>
             </xpath>
             <xpath expr='//page[@name="contact_addresses"]' position="before">
-                    <page string="Affiliates" name="affiliates" invisible="not is_company" autofocus="autofocus">
-                        <separator name="affiliates" string="Affiliates List" />
-                        <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
+                <page string="Affiliates" name="affiliates" invisible="not is_company" autofocus="autofocus">
+                    <separator name="affiliates" string="Affiliates List" />
+                    <div name="alert_no_affiliates" class="oe_read_only alert alert-info mb8" role="alert" invisible="not affiliate_ids">
                             No Affiliates Available
-                        </div>
-                        <!-- <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}"> -->
+                    </div>
+                    <!-- <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}"> -->
 
-                        <field name="affiliate_ids" context="{'default_parent_id': id, 'default_is_affiliate_company': True, 'default_type':''}" mode="kanban,tree"/>
-                    </page>
+                    <field name="affiliate_ids" context="{'default_parent_id': id, 'default_is_affiliate_company': True, 'default_type':''}" mode="kanban,tree"/>
+                </page>
             </xpath>
             <!-- Modify the contact_addresses page attributes -->
             <xpath expr="//page[@name='contact_addresses']" position="attributes">

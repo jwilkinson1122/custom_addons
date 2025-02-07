@@ -69,8 +69,8 @@
                             <group string="Odoo Model">
                                 <field name="res_model_id" options="{'no_create': True}"/>
                                 <field name="model_name" invisible="1"/>
+                                <!-- <field name="filter_domain" widget="domain" options="{'model': 'res_model_id.model', 'in_dialog': True}"/> -->
                                 <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
-                                <!--                                <field name="filter_domain"/>-->
                                 <field name="action_type"/>
                             </group>
                         </group>
@@ -116,13 +116,17 @@ For e.g. [("name","=", data[1])] or [("name","=", data[2])]</li>
                                 <field name="integration_fields">
                                     <tree editable="bottom">
                                         <field name="integration_id" column_invisible="1"/>
+                                        <!-- <field name="res_field_id" domain="[('model', '=', parent.res_model_id.model), ('store', '=', True), ('ttype', 'in', [...])]" /> -->
                                         <field name="res_field_id" domain="[('model', '=', parent.model_name), ('store', '=', True), ('ttype', 'in', ['many2one_reference', 'datetime', 'monetary', 'html', 'date', 'selection', 'many2one', 'float', 'reference', 'boolean', 'char', 'text', 'integer', 'many2many', 'one2many', 'binary'])]" options='{"no_open": True, "no_create": True}'/>
+
                                         <field name="make_readonly" column_invisible="1"/>
                                         <field name="ttype" column_invisible="1"/>
                                         <field name="evaluation_type" readonly="make_readonly" force_save="1"/>
                                         <field name="value" readonly="evaluation_type == 'find'" force_save="1"/>
                                         <field name="model_name" column_invisible="1"/>
+                                        <!-- <field name="value_domain" widget="domain" options="{'model': 'related_model.model', 'in_dialog': True}"/> -->
                                         <field name="value_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" readonly="evaluation_type != 'find'"/>
+
                                         <field name="exclude" column_invisible="parent.action_type != 'update_create_not_exist'"/>
                                     </tree>
                                 </field>
