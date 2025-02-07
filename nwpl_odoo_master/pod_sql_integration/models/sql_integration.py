@@ -326,6 +326,54 @@ class SqlIntegration(models.Model):
 
     #     return None
 
+    def _get_val_string(self, method, data=None):
+        def remove_quotes(match):
+            return match.group(0).replace('"', "")
+
+        non_values = ["", "NULL", "null", "False", "FALSE"]
+        val_string = "{"
+        for i in self.integration_fields:
+            if method != i.exclude:
+                if i.res_field_id.ttype in ["date", "datetime"]:
+                    val_string += f"'{i.res_field_id.name}':"
+                    if data[int(i.value)] in non_values:
+                        val_string += "False,"
+                    else:
+                        if i.evaluation_type == "seq":
+                            val_string += f"data[{i.value}],"
+                        elif i.evaluation_type == "value":
+                            val_string += f"{i.value},"
+                elif i.evaluation_type in ["seq", "value"]:
+                    val_string += f"'{i.res_field_id.name}':"
+                    if (
+                        i.res_field_id.ttype in ["binary"]
+                        and i.evaluation_type == "seq"
+                    ):
+                        val_string += str(base64.b64encode(data[int(i.value)]))
+                    else:
+                        if i.evaluation_type == "seq":
+                            val_string += f"data[{i.value}],"
+                        elif i.evaluation_type == "value":
+                            val_string += f"'{i.value}',"
+                else:
+                    pattern = r'"data\[\d+\]"'
+                    domain = eval(re.sub(pattern, remove_quotes, i.value))
+                    res = self.env[i.res_field_id.relation].search(domain, limit=1)
+                    if res:
+                        val_string += f"'{i.res_field_id.name}':"
+                        if i.res_field_id.ttype in ["many2many", "one2many"]:
+                            val_string += f"{res.ids},"
+                        elif i.res_field_id.ttype in [
+                            "many2one",
+                            "many2one_reference",
+                            "reference",
+                        ]:
+                            val_string += f"{res.id},"
+                    else:
+                        continue
+        val_string += "}"
+        return val_string
+
     def run_now(self):
         """Executes the integration process with detailed debugging."""
         datas = self.fetch_data_from_sql()
