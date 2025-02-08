@@ -75,16 +75,6 @@ class SqlIntegration(models.Model):
         default="days",
     )
 
-    def cron_auto_execution(self):
-        """Automated execution of integrations based on scheduling."""
-        now = fields.Datetime.now()
-        records = self.search(
-            [("enable_automation", "=", True), ("next_call", "<=", now)]
-        )
-        for rec in records:
-            rec.run_now()
-            rec.next_call += relativedelta(**{rec.interval_unit: rec.interval_number})
-
     def make_it_ready(self):
         """Validates integration setup and prepares it for execution."""
         self.ensure_one()
@@ -149,15 +139,80 @@ class SqlIntegration(models.Model):
         """Fetches a unique record based on the provided domain filter."""
         return self.env[self.model_name].search(domain_filter, limit=1)
 
+    ### 🛠️ HELPER METHODS ###
+    def _get_index_value(self, field, data):
+        """Retrieve and validate field index from data list."""
+        try:
+            index = int(field.value) if field.value.lstrip("-").isdigit() else None
+        except ValueError:
+            index = None
+
+        if index is None or index < 0 or index >= len(data):
+            _logger.warning(
+                f"Skipping {field.res_field_id.name}: Index {index} is invalid or out of range (data length={len(data)})"
+            )
+            return None
+        return data[index]
+
+    def _find_state_id(self, state_code):
+        """Find and return the state_id based on the provided state code."""
+        if not state_code or not isinstance(state_code, str):
+            _logger.warning("Skipping state_id: Empty or invalid state code")
+            return None
+
+        state_code = state_code.strip().upper()  # ✅ Standardize formatting
+        _logger.debug(f"Looking up state_id for code: '{state_code}'")
+
+        state_record = self.env["res.country.state"].search(
+            [("code", "=", state_code)], limit=1
+        )
+
+        if state_record:
+            _logger.debug(
+                f"Matched state_id: {state_record.id} for code '{state_code}'"
+            )
+            return state_record.id
+
+        _logger.warning(f"Skipping state_id: No state found for code '{state_code}'")
+        return None
+
+    def _find_related_record(self, field, lookup_value):
+        """Perform a generic dynamic lookup for many2one fields."""
+        if not field.value_domain:
+            _logger.warning(
+                f"Skipping {field.res_field_id.name}: No value_domain provided."
+            )
+            return None
+
+        search_field = field.value_domain[0][0]
+        related_model = self.env[field.res_field_id.relation]
+
+        _logger.debug(
+            f"Searching {related_model._name} for {search_field} = '{lookup_value}'"
+        )
+
+        related_record = related_model.search(
+            [(search_field, "=", lookup_value)], limit=1
+        )
+
+        if related_record:
+            _logger.debug(
+                f"Found match: {related_record.id} for {search_field} = '{lookup_value}'"
+            )
+            return related_record.id
+
+        _logger.warning(
+            f"Skipping {field.res_field_id.name}: No match found for {search_field} = '{lookup_value}'"
+        )
+        return None
+
     def _get_val_dict(self, method, data=None):
         """Constructs a dictionary of values for integration fields dynamically."""
-
         if not isinstance(data, (list, tuple)):
             _logger.warning(f"Expected list/tuple, got {type(data)}: {data}")
             return {}
 
-        _logger.debug(f"Received data: {data}")  # ✅ Log raw data
-
+        _logger.debug(f"Received data: {data}")
         val_dict = {}
 
         for field in self.integration_fields:
@@ -167,28 +222,19 @@ class SqlIntegration(models.Model):
             field_name = field.res_field_id.name
             _logger.debug(f"Processing field: {field_name}, field.value: {field.value}")
 
-            # ✅ Determine Index
-            try:
-                index = int(field.value) if field.value.lstrip("-").isdigit() else None
-            except ValueError:
-                index = None
+            value = self._get_index_value(field, data)
+            if value is None:
+                continue  # Skip if index is invalid
 
-            if index is None or index < 0 or index >= len(data):
-                _logger.warning(
-                    f"Skipping {field_name}: Index {index} is invalid or out of range (data length={len(data)})"
-                )
-                continue  # Skip this field
+            if isinstance(value, str):
+                value = value.strip()
 
-            value = data[index]
-            _logger.debug(
-                f"Extracted raw value for {field_name}: '{value}' (type: {type(value)})"
-            )
+            if value in [None, ""]:
+                _logger.warning(f"Skipping {field_name}: Value is empty or None")
+                continue  # Do not add it to val_dict
 
-            # ✅ Handling Different Field Types Dynamically
             if field.evaluation_type == "seq":
-                val_dict[field_name] = (
-                    value.strip() if isinstance(value, str) else value
-                )
+                val_dict[field_name] = value
 
             elif (
                 field.res_field_id.ttype == "binary" and field.evaluation_type == "seq"
@@ -202,156 +248,55 @@ class SqlIntegration(models.Model):
             elif field.evaluation_type == "value":
                 val_dict[field_name] = field.value
 
+            # elif field.evaluation_type == "find":
+            #     if field_name == "state_id":
+            #         if len(data) > 3 and data[3]:
+            #             state_id = self._find_state_id(data[3].strip())
+            #             if state_id:
+            #                 val_dict[field_name] = state_id
+            #             else:
+            #                 _logger.warning(
+            #                     f"Skipping state_id: No match for '{data[3]}'"
+            #                 )
+            #         else:
+            #             _logger.warning(
+            #                 f"Skipping state_id: Missing or invalid data[3] ({data})"
+            #             )
+            #     else:
+            #         val_dict[field_name] = self._find_related_record(field, value)
+
             elif field.evaluation_type == "find":
-                # ✅ Fixing `state_id` Lookup
                 if field_name == "state_id":
-                    state_code = value.strip() if isinstance(value, str) else None
-
-                    if not state_code:
-                        _logger.warning(f"Skipping {field_name}: Empty state code")
-                        continue
-
-                    _logger.debug(f"Looking up state_id for code: '{state_code}'")
-
-                    state_record = self.env["res.country.state"].search(
-                        [("code", "=", state_code)], limit=1
-                    )
-
-                    if state_record:
-                        val_dict[field_name] = state_record.id
-                        _logger.debug(
-                            f"Matched state_id: {state_record.id} for code '{state_code}'"
-                        )
+                    if (
+                        isinstance(value, str) and value.strip()
+                    ):  # Ensure we have a string
+                        state_id = self._find_state_id(
+                            value.strip()
+                        )  # Use correct value lookup
+                        if state_id:
+                            val_dict[field_name] = state_id
+                        else:
+                            _logger.warning(
+                                f"Skipping state_id: No match for '{value}'"
+                            )
                     else:
                         _logger.warning(
-                            f"Skipping {field_name}: No state found for code '{state_code}'"
+                            f"Skipping state_id: Missing or invalid state code '{value}'"
                         )
-
                 else:
-                    # ✅ Generic Dynamic Lookup for Any Model
-                    search_field, lookup_value = field.value_domain[0][0], value.strip()
-                    related_model = self.env[field.res_field_id.relation]
+                    val_dict[field_name] = self._find_related_record(field, value)
 
-                    _logger.debug(
-                        f"Searching {related_model._name} for {search_field} = '{lookup_value}'"
-                    )
+        # ✅ Move validation **after** processing fields
+        if "city" in val_dict and not val_dict["city"]:
+            _logger.warning("Skipping record: Missing 'city' field.")
+            return {}
 
-                    related_record = related_model.search(
-                        [(search_field, "=", lookup_value)], limit=1
-                    )
-
-                    if related_record:
-                        val_dict[field_name] = related_record.id
-                        _logger.debug(
-                            f"Found match: {related_record.id} for {search_field} = '{lookup_value}'"
-                        )
-                    else:
-                        _logger.warning(
-                            f"Skipping {field_name}: No match found for {search_field} = '{lookup_value}'"
-                        )
+        if "state_id" in val_dict and not val_dict["state_id"]:
+            _logger.warning("Skipping record: Missing 'state_id' field.")
+            return {}
 
         _logger.debug(f"Final generated values: {val_dict}")
         return val_dict
-
-    # def _get_val_dict(self, method, data=None):
-    #     """Constructs a dictionary of values for integration fields dynamically."""
-
-    #     if not isinstance(data, (list, tuple)):
-    #         _logger.warning(f"Expected list/tuple, got {type(data)}: {data}")
-    #         return {}
-
-    #     _logger.debug(f"Received data: {data}")
-
-    #     val_dict = {}
-
-    #     for field in self.integration_fields:
-    #         if method == field.exclude:
-    #             continue
-
-    #         field_name = field.res_field_id.name
-    #         _logger.debug(f"Processing field: {field_name}, field.value: {field.value}")
-
-    #         try:
-    #             index = int(field.value) if field.value.lstrip("-").isdigit() else None
-    #         except ValueError:
-    #             index = None
-
-    #         if index is None or index < 0 or index >= len(data):
-    #             _logger.warning(
-    #                 f"Skipping {field_name}: Index {index} is invalid or out of range (data length={len(data)})"
-    #             )
-    #             continue
-
-    #         value = data[index]
-    #         _logger.debug(
-    #             f"Extracted raw value for {field_name}: '{value}' (type: {type(value)})"
-    #         )
-
-    #         if field.evaluation_type == "seq":
-    #             val_dict[field_name] = (
-    #                 value.strip() if isinstance(value, str) else value
-    #             )
-
-    #         elif (
-    #             field.res_field_id.ttype == "binary" and field.evaluation_type == "seq"
-    #         ):
-    #             val_dict[field_name] = (
-    #                 base64.b64encode(value).decode()
-    #                 if isinstance(value, bytes)
-    #                 else None
-    #             )
-
-    #         elif field.evaluation_type == "value":
-    #             val_dict[field_name] = field.value
-
-    #         elif field.evaluation_type == "find":
-    #             if field_name == "state_id":
-    #                 state_code = value.strip() if isinstance(value, str) else None
-
-    #                 if not state_code:
-    #                     _logger.warning(f"Skipping {field_name}: Empty state code")
-    #                     continue
-
-    #                 _logger.debug(f"Looking up state_id for code: '{state_code}'")
-
-    #                 state_record = self.env["res.country.state"].search(
-    #                     [("code", "=", state_code)], limit=1
-    #                 )
-
-    #                 if state_record:
-    #                     val_dict[field_name] = state_record.id
-    #                     _logger.debug(
-    #                         f"Matched state_id: {state_record.id} for code '{state_code}'"
-    #                     )
-    #                 else:
-    #                     _logger.warning(
-    #                         f"Skipping {field_name}: No state found for code '{state_code}'"
-    #                     )
-
-    #             else:
-    #                 search_field, lookup_value = field.value_domain[0][0], value.strip()
-    #                 related_model = self.env[field.res_field_id.relation]
-
-    #                 _logger.debug(
-    #                     f"Searching {related_model._name} for {search_field} = '{lookup_value}'"
-    #                 )
-
-    #                 related_record = related_model.search(
-    #                     [(search_field, "=", lookup_value)], limit=1
-    #                 )
-
-    #                 if related_record:
-    #                     val_dict[field_name] = related_record.id
-    #                     _logger.debug(
-    #                         f"Found match: {related_record.id} for {search_field} = '{lookup_value}'"
-    #                     )
-    #                 else:
-    #                     _logger.warning(
-    #                         f"Skipping {field_name}: No match found for {search_field} = '{lookup_value}'"
-    #                     )
-
-    #     _logger.debug(f"Final generated values: {val_dict}")
-    #     return val_dict
 
     def _get_val_string(self, method, data=None):
         """Ensures that the function returns a proper dictionary, not a JSON string."""
@@ -361,47 +306,114 @@ class SqlIntegration(models.Model):
             return {}
         return val_dict  # Return dictionary, NOT json.dumps(val_dict)
 
-    def _resolve_related_value(self, field, data):
-        """
-        Resolves 'find' evaluation type by searching for a related record.
-        Ensures placeholders like "data[N]" are correctly replaced with actual values.
-        """
-        try:
-            _logger.debug(
-                f"Raw domain string for {field.res_field_id.name}: {field.value}"
+    ### 🔄 PROCESS RECORD ###
+    def process_record(self, data):
+        """Processes a single record, ensuring that existing records are updated and new ones are created safely."""
+        val_dict = self._get_val_dict(self.action_type, data)
+        if not val_dict:
+            _logger.warning("Skipping record: No valid data extracted")
+            return
+
+        legacy_code = val_dict.get("legacy_customer_code")
+        if not legacy_code:
+            _logger.warning("Skipping record: Missing legacy_customer_code")
+            return
+
+        domain = [("legacy_customer_code", "=", legacy_code)]
+        existing_records = self.env[self.model_name].search(domain)
+
+        # ✅ Ensure only one record is updated
+        if len(existing_records) > 1:
+            _logger.warning(
+                f"Duplicate legacy_customer_code found for '{legacy_code}', skipping update."
             )
+            return
 
-            # ✅ Extract the state code from the correct index (e.g., data[3])
-            pattern = r"data\[(\d+)\]"
+        # ✅ Remove 'False' values from val_dict before writing
+        val_dict = {k: v for k, v in val_dict.items() if v is not False}
 
-            def replace_match(match):
-                idx = int(match.group(1))
-                if idx < len(data) and isinstance(data[idx], str):
-                    return f'"{data[idx].strip()}"'  # Strip spaces to avoid mismatches
-                else:
-                    return '""'  # Return empty string if invalid
+        if self.action_type in ["create", "create_not_exist"]:
+            if existing_records:
+                _logger.warning(
+                    f"Skipping create: Record with legacy_customer_code '{legacy_code}' already exists"
+                )
+            else:
+                val_dict.setdefault(
+                    "customer_code",
+                    self.env["ir.sequence"].next_by_code("customer.company.code")
+                    or _("New"),
+                )
+                _logger.debug(f"Creating new record: {val_dict}")
+                self.env[self.model_name].create(val_dict)
 
-            safe_value = re.sub(pattern, replace_match, field.value)
-
-            # ✅ Convert string to a valid Python list for domain filtering
-            domain = ast.literal_eval(safe_value)
-            _logger.debug(f"Evaluated domain for {field.res_field_id.name}: {domain}")
-
-            # ✅ Ensure correct model lookup
-            if field.res_field_id.relation:
-                res = self.env[field.res_field_id.relation].search(domain, limit=1)
-                return res.id if res else None
+        elif self.action_type in ["update", "update_create_not_exist"]:
+            if existing_records:
+                _logger.debug(
+                    f"Updating existing record ID {existing_records.id}: {val_dict}"
+                )
+                existing_records.write(val_dict)
+            elif self.action_type == "update_create_not_exist":
+                val_dict.setdefault(
+                    "customer_code",
+                    self.env["ir.sequence"].next_by_code("customer.company.code")
+                    or _("New"),
+                )
+                _logger.debug(f"Creating new record: {val_dict}")
+                self.env[self.model_name].create(val_dict)
             else:
                 _logger.warning(
-                    f"No relation found for field: {field.res_field_id.name}"
+                    f"Skipping update: No existing record found for legacy_customer_code '{legacy_code}'"
                 )
-                return None
 
-        except (ValueError, SyntaxError, IndexError) as e:
-            _logger.warning(
-                f"Error evaluating domain for {field.res_field_id.name}: {e}"
-            )
-            return None
+    # def process_record(self, data):
+    #     """Processes a single record, ensuring that existing records are updated and new ones are created safely."""
+    #     val_dict = self._get_val_dict(self.action_type, data)
+    #     if not val_dict:
+    #         _logger.warning("Skipping record: No valid data extracted")
+    #         return
+
+    #     legacy_code = val_dict.get("legacy_customer_code")
+    #     if not legacy_code:
+    #         _logger.warning("Skipping record: Missing legacy_customer_code")
+    #         return
+
+    #     domain = [("legacy_customer_code", "=", legacy_code)]
+    #     existing_record = self.env[self.model_name].search(domain, limit=1)
+
+    #     val_dict = {k: v for k, v in val_dict.items() if v is not False}
+
+    #     if self.action_type in ["create", "create_not_exist"]:
+    #         if existing_record:
+    #             _logger.warning(
+    #                 f"Skipping create: Record with legacy_customer_code '{legacy_code}' already exists"
+    #             )
+    #         else:
+    #             val_dict.setdefault(
+    #                 "customer_code",
+    #                 self.env["ir.sequence"].next_by_code("customer.company.code")
+    #                 or _("New"),
+    #             )
+    #             _logger.debug(f"Creating new record: {val_dict}")
+    #             self.env[self.model_name].create(val_dict)
+
+    #     elif self.action_type in ["update", "update_create_not_exist"]:
+    #         if existing_record:
+    #             _logger.debug(
+    #                 f"Updating existing record ID {existing_record.id}: {val_dict}"
+    #             )
+    #             existing_record.write(val_dict)
+    #         elif self.action_type == "update_create_not_exist":
+    #             val_dict.setdefault(
+    #                 "customer_code",
+    #                 self.env["ir.sequence"].next_by_code("customer.company.code")
+    #                 or _("New"),
+    #             )
+    #             _logger.debug(f"Creating new record: {val_dict}")
+    #             self.env[self.model_name].create(val_dict)
+    #         else:
+    #             _logger.warning(
+    #                 f"Skipping update: No existing record found for legacy_customer_code '{legacy_code}'"
+    #             )
 
     def run_now(self):
         """Executes the integration process with detailed debugging."""
@@ -442,12 +454,23 @@ class SqlIntegration(models.Model):
 
         self.last_call = fields.Datetime.now()
 
+    ### ⏰ AUTOMATION ###
+    def cron_auto_execution(self):
+        """Automated execution of integrations based on scheduling."""
+        now = fields.Datetime.now()
+        records = self.search(
+            [("enable_automation", "=", True), ("next_call", "<=", now)]
+        )
+        for rec in records:
+            rec.run_now()
+            rec.next_call += relativedelta(**{rec.interval_unit: rec.interval_number})
+
     def connect_sql_server(self):
         """Establishes a connection to SQL Server."""
         try:
             return pyodbc.connect(
-                f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={self.server};"
-                f"DATABASE={self.database};UID={self.sql_user};PWD={self.sql_user_password};Trusted_Connection=no;"
+                f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={self.server};DATABASE={self.database};"
+                f"UID={self.sql_user};PWD={self.sql_user_password};Trusted_Connection=no;"
             )
         except Exception as e:
             _logger.error("Failed to connect to SQL Server for %s: %s", self.name, e)
@@ -492,24 +515,42 @@ class SqlIntegration(models.Model):
                 raise UserError(_("Error on Query \n%s" % (e)))
         return header
 
-    def fetch_data_from_sql(self, col=False, query=None):
+    def fetch_data_from_sql(self, col=False, query=None, reconnect_attempts=2):
         """Fetches data from SQL Server and ensures results are lists."""
-        cnxn = self.connect_sql_server()
-        if not cnxn:
-            return {}
 
         query = query or self.query
-        cursor = cnxn.cursor()
-        try:
-            cursor.execute(query)
-            raw_data = cursor.fetchall()  # Returns pyodbc.Row
-            data = {"datas": [list(row) for row in raw_data]}  # Convert rows to lists
-            if col:
-                data["column"] = [column[0] for column in cursor.description]
-            return data
-        except Exception as e:
-            _logger.error(f"SQL Query Error in {self.name}: {e}")
-            return {}
+        attempt = 0
+
+        while attempt < reconnect_attempts:
+            cnxn = self.connect_sql_server()
+            if not cnxn:
+                attempt += 1
+                _logger.warning(
+                    f"SQL connection failed. Retrying {attempt}/{reconnect_attempts}..."
+                )
+                continue
+
+            cursor = cnxn.cursor()
+            try:
+                cursor.execute(query)
+                raw_data = cursor.fetchall()  # Returns pyodbc.Row
+                data = {
+                    "datas": [list(row) for row in raw_data]
+                }  # Convert rows to lists
+
+                if col:
+                    data["column"] = [column[0] for column in cursor.description]
+
+                return data
+
+            except pyodbc.Error as e:
+                _logger.error(f"SQL Query Error in {self.name}: {e}")
+                attempt += 1
+            finally:
+                cnxn.close()
+
+        _logger.error(f"Failed to execute query after {reconnect_attempts} attempts.")
+        return {}
 
 
 class SqlIntegrationField(models.Model):

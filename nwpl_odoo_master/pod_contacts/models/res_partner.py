@@ -111,7 +111,7 @@ class Partner(models.Model):
     is_parent_company = fields.Boolean(string="Parent Company", default=False)
     is_company = fields.Boolean(string="Company", default=False)
     is_affiliate_company = fields.Boolean(string="Affiliate", default=False)
-  
+
     is_commercial_partner = fields.Boolean(
         string="Trading Company",
         help="Set this to True if this contact should be treated as its own trading company, "
@@ -138,11 +138,20 @@ class Partner(models.Model):
         related="parent_id.name", readonly=True, string="Parent name"
     )
 
+    # affiliate_ids = fields.One2many(
+    #     "res.partner",
+    #     compute="_compute_affiliate_ids",
+    #     string="Affiliates",
+    #     readonly=True,
+    # )
+
     affiliate_ids = fields.One2many(
         "res.partner",
         compute="_compute_affiliate_ids",
         string="Affiliates",
+        # store=True,
         readonly=True,
+        index=True,
     )
 
     affiliate_count = fields.Integer(
@@ -163,6 +172,7 @@ class Partner(models.Model):
         "res.partner",
         compute="_compute_contacts",
         string="Contacts",
+        # store=True,
         readonly=True,
         index=True,
     )
@@ -249,9 +259,21 @@ class Partner(models.Model):
             result["res_id"] = self.partner_flag_ids.id
         return result
 
+    # def apply_contact_logic(self):
+    #     """Automatically assign a contact based on the parent_id."""
+    #     if self.parent_id:
+    #         contacts = self.env["res.partner"].search(
+    #             [
+    #                 ("is_contact", "=", True),
+    #                 ("is_patient", "=", False),
+    #                 ("parent_id", "=", self.parent_id.id),
+    #             ]
+    #         )
+    #         if contacts:
+    #             self.contact_id = contacts[0]
+
     def apply_contact_logic(self):
-        """Automatically assign a contact based on the parent_id."""
-        if self.parent_id:
+        if self.parent_id and not self.contact_id:  # ✅ Prevent overriding
             contacts = self.env["res.partner"].search(
                 [
                     ("is_contact", "=", True),
@@ -285,13 +307,23 @@ class Partner(models.Model):
                 }
             }
 
+    # @api.depends("is_commercial_partner", "parent_id")
+    # def _compute_commercial_partner(self):
+    #     """
+    #     Override the computation of commercial_partner_id to allow a contact to be its own trading company.
+    #     """
+    #     for partner in self:
+    #         if partner.is_commercial_partner or not partner.parent_id:
+    #             partner.commercial_partner_id = partner
+    #         else:
+    #             partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+
     @api.depends("is_commercial_partner", "parent_id")
     def _compute_commercial_partner(self):
-        """
-        Override the computation of commercial_partner_id to allow a contact to be its own trading company.
-        """
         for partner in self:
             if partner.is_commercial_partner or not partner.parent_id:
+                partner.commercial_partner_id = partner
+            elif partner.parent_id.id == partner.id:  # Prevent recursion
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
@@ -368,7 +400,7 @@ class Partner(models.Model):
                 [
                     ("parent_id", "=", record.id),
                     ("is_contact", "=", True),
-                    ("is_patient", "=", False),  
+                    ("is_patient", "=", False),
                 ]
             )
 
@@ -529,36 +561,11 @@ class Partner(models.Model):
 
     @api.model
     def create(self, vals):
-        # Use legacy_customer_code if provided
-        if vals.get("legacy_customer_code"):
-            vals["customer_code"] = vals["legacy_customer_code"]
-        else:
-            # Generate sequence code based on type
-            if vals.get("is_company"):
-                if vals.get("is_parent_company"):
-                    vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-                        "parent.company.code"
-                    ) or _("New")
-                elif vals.get("is_affiliate_company"):
-                    vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-                        "affiliate.company.code"
-                    ) or _("New")
-                elif vals.get("is_supplier"):
-                    vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-                        "supplier.company.code"
-                    ) or _("New")
-            elif vals.get("is_contact"):
-                vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-                    "contact.code"
-                ) or _("New")
-            elif vals.get("is_patient"):
-                vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-                    "patient.code"
-                ) or _("New")
+        if not vals.get("customer_code"):
+            if vals.get("legacy_customer_code"):
+                vals["customer_code"] = vals["legacy_customer_code"]
             else:
-                vals["customer_code"] = self.env["ir.sequence"].next_by_code(
-                    "customer.company.code"
-                ) or _("New")
+                vals["customer_code"] = self._generate_customer_code(vals)
 
         partners = super(Partner, self).create(vals)
 
@@ -567,6 +574,68 @@ class Partner(models.Model):
                 partner.customer_rank = 1
 
         return partners
+
+    def _generate_customer_code(self, vals):
+        if vals.get("is_company"):
+            if vals.get("is_parent_company"):
+                return self.env["ir.sequence"].next_by_code("parent.company.code") or _(
+                    "New"
+                )
+            elif vals.get("is_affiliate_company"):
+                return self.env["ir.sequence"].next_by_code(
+                    "affiliate.company.code"
+                ) or _("New")
+            elif vals.get("is_supplier"):
+                return self.env["ir.sequence"].next_by_code(
+                    "supplier.company.code"
+                ) or _("New")
+        elif vals.get("is_contact"):
+            return self.env["ir.sequence"].next_by_code("contact.code") or _("New")
+        elif vals.get("is_patient"):
+            return self.env["ir.sequence"].next_by_code("patient.code") or _("New")
+        else:
+            return self.env["ir.sequence"].next_by_code("customer.company.code") or _(
+                "New"
+            )
+
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get("legacy_customer_code"):
+    #         vals["customer_code"] = vals["legacy_customer_code"]
+    #     else:
+    #         if vals.get("is_company"):
+    #             if vals.get("is_parent_company"):
+    #                 vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                     "parent.company.code"
+    #                 ) or _("New")
+    #             elif vals.get("is_affiliate_company"):
+    #                 vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                     "affiliate.company.code"
+    #                 ) or _("New")
+    #             elif vals.get("is_supplier"):
+    #                 vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                     "supplier.company.code"
+    #                 ) or _("New")
+    #         elif vals.get("is_contact"):
+    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                 "contact.code"
+    #             ) or _("New")
+    #         elif vals.get("is_patient"):
+    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                 "patient.code"
+    #             ) or _("New")
+    #         else:
+    #             vals["customer_code"] = self.env["ir.sequence"].next_by_code(
+    #                 "customer.company.code"
+    #             ) or _("New")
+
+    #     partners = super(Partner, self).create(vals)
+
+    #     for partner in partners:
+    #         if not partner.customer_rank:
+    #             partner.customer_rank = 1
+
+    #     return partners
 
     @api.constrains("legacy_customer_code")
     def _check_unique_legacy_code(self):
@@ -594,9 +663,16 @@ class Partner(models.Model):
         )
 
         # Ensure parent_id is not incorrectly set to False
+        # if "parent_id" in vals and vals["parent_id"] is False:
+        #     _logger.warning("Attempt to set parent_id to False detected and prevented.")
+        #     vals.pop("parent_id")
+
         if "parent_id" in vals and vals["parent_id"] is False:
-            _logger.warning("Attempt to set parent_id to False detected and prevented.")
-            vals.pop("parent_id")
+            if not self.env.user.has_group("base.group_system"):
+                _logger.warning(
+                    "Attempt to set parent_id to False detected and prevented."
+                )
+                vals.pop("parent_id")
 
         # Check and set recursion prevention context
         if self.env.context.get("prevent_recursion", False):

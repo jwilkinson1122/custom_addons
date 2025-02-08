@@ -1,0 +1,153 @@
+<odoo>
+    <data noupdate="1">
+        <record id="automation_sql_integration" model="ir.cron">
+            <field name="name">Automation: SQL Integration</field>
+            <field name="model_id" ref="model_sql_integration"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_auto_execution()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+    <data>
+        <record id="sql_integration_search_view" model="ir.ui.view">
+            <field name="name">sql.integration.search.view</field>
+            <field name="model">sql.integration</field>
+            <field name="arch" type="xml">
+                <search string="SQL Integration">
+                    <field name="name"/>
+                    <field name="server"/>
+                    <field name="database"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="sql_integration_tree_view" model="ir.ui.view">
+            <field name="name">sql.integration.tree.view</field>
+            <field name="model">sql.integration</field>
+            <field name="arch" type="xml">
+                <tree string="SQL Integration">
+                    <field name="name"/>
+                    <field name="last_call"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sql_integration_form_view" model="ir.ui.view">
+            <field name="name">sql.integration.form.view</field>
+            <field name="model">sql.integration</field>
+            <field name="arch" type="xml">
+                <form string="SQL Integration">
+                    <header>
+                        <field name="ready" invisible="1"/>
+                        <button name="run_now" type="object" string="Run Manually" class="oe_highlight" invisible="not ready"/>
+                        <button name="make_it_ready" type="object" string="MAKE IT READY" class="oe_highlight" invisible="ready"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                        <widget name="web_ribbon" title="Ready" bg_color="bg-success" invisible="not ready"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. GP Account Integration"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Server Connection">
+                                <field name="active" invisible="1"/>
+                                <field name="server"/>
+                                <field name="database"/>
+                                <field name="sql_user"/>
+                                <field name="sql_user_password" password="True"/>
+                                <button name="test_sql_connection" type="object" string="Test Connection" icon="fa-television" colspan="2"/>
+                            </group>
+                            <group string="Odoo Model">
+                                <field name="res_model_id" options="{'no_create': True}"/>
+                                <field name="model_name" invisible="1"/>
+                                <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                                <field name="action_type"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Automation">
+                                <field name="enable_automation" widget="boolean_toggle"/>
+                                <label for="interval_number" string="Execute Every" invisible="not enable_automation" required="enable_automation"/>
+                                <div invisible="not enable_automation">
+                                    <field name="interval_number" class="oe_inline" required="enable_automation"/>
+                                    <field name="interval_unit" class="oe_inline" required="enable_automation"/>
+                                </div>
+                                <field name="next_call" invisible="not enable_automation" required="enable_automation"/>
+                            </group>
+                        </group>
+                        <group string="Query">
+                            <group>
+                                <field name="query" nolabel="1" colspan="2" widget="ace" options="{'mode': 'xml'}"/>
+                            </group>
+                            <group>
+                                <button name="run_query" type="object" string="Run Query" icon="fa-play" colspan="2"/>
+                            </group>
+                        </group>
+                        <group string="Query Result" invisible="not query_result">
+                            <field name="query_result" nolabel="1" readonly="1" force_save="1" widget="html" class="sql_query" colspan="2"/>
+                        </group>
+                        <separator string="Help - Mapping"/>
+                        <ul style="color:#666666;">
+                            <li>if Evaluation Type is 'Sequence', Value should be sequence of data which will be shown with data header
+                                <br/>
+For e.g. 1 or 2</li>
+                            <li>if Evaluation Type is 'Value', Value can be anything on string format
+                                <br/>
+For e.g. Book or True</li>
+                            <li>if Evaluation Type is 'Find Record', Value should be domain filter to find the record related to field.
+                                If the value not found, that field will be excluded from integration.<br/>
+For e.g. [("name","=", data[1])] or [("name","=", data[2])]</li>
+                            <li>
+                                Date format should be in 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM:SS'
+                            </li>
+                        </ul>
+                        <notebook>
+                            <page string="Field Mapping">
+                                <field name="integration_fields">
+                                    <tree editable="bottom">
+                                        <field name="integration_id" column_invisible="1"/>
+                                        <field name="res_field_id" domain="[('model', '=', parent.model_name), ('store', '=', True), ('ttype', 'in', ['many2one_reference', 'datetime', 'monetary', 'html', 'date', 'selection', 'many2one', 'float', 'reference', 'boolean', 'char', 'text', 'integer', 'many2many', 'one2many', 'binary'])]" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="make_readonly" column_invisible="1"/>
+                                        <field name="ttype" column_invisible="1"/>
+                                        <field name="evaluation_type" readonly="make_readonly" force_save="1"/>
+                                        <field name="value" readonly="evaluation_type == 'find'" force_save="1"/>
+                                        <field name="model_name" column_invisible="1"/>
+                                        <field name="value_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" readonly="evaluation_type != 'find'"/>
+                                        <field name="exclude" column_invisible="parent.action_type != 'update_create_not_exist'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sql_integration" model="ir.actions.act_window">
+            <field name="name">SQL Integration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sql.integration</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new record for SQL Integration
+                </p>
+            </field>
+        </record>
+
+        <!-- <menuitem id="menu_sql_integration" name="SQL Integration" parent="base.menu_administration" action="action_sql_integration" sequence="10"/> -->
+
+        <menuitem id="menu_sql_integration" name="SQL Integration" web_icon="pod_sql_integration,static/description/icon.png" action="action_sql_integration" sequence="2"/>
+
+
+    </data>
+</odoo>
