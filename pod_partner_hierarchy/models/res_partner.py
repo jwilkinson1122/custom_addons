@@ -229,19 +229,35 @@ class Partner(models.Model):
             filters=lambda r: r.is_affiliate and r.is_company and not r.is_account,
         )
 
+    # def _get_all_sub_affiliates(self):
+    #     sub_affiliates = self.env["res.partner"]
+    #     for affiliate in self.affiliate_ids:
+    #         sub_affiliates |= (
+    #             affiliate.affiliate_ids | affiliate._get_all_sub_affiliates()
+    #         )
+    #     return sub_affiliates
+
+    # @api.depends("affiliate_ids", "affiliate_ids.affiliate_ids")
+    # def _compute_sub_affiliate_ids(self):
+    #     for partner in self:
+    #         all_sub_affiliates = partner._get_all_sub_affiliates()
+    #         partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids
+
     def _get_all_sub_affiliates(self):
+        """Recursively find all indirect affiliates"""
         sub_affiliates = self.env["res.partner"]
         for affiliate in self.affiliate_ids:
-            sub_affiliates |= (
-                affiliate.affiliate_ids | affiliate._get_all_sub_affiliates()
-            )
+            sub_affiliates |= affiliate.affiliate_ids | affiliate._get_all_sub_affiliates()
         return sub_affiliates
 
     @api.depends("affiliate_ids", "affiliate_ids.affiliate_ids")
     def _compute_sub_affiliate_ids(self):
+        """Compute all indirect affiliates"""
         for partner in self:
-            all_sub_affiliates = partner._get_all_sub_affiliates()
-            partner.sub_affiliate_ids = all_sub_affiliates - partner.affiliate_ids
+            direct_affiliates = partner.affiliate_ids  # Direct affiliates
+            all_sub_affiliates = partner._get_all_sub_affiliates()  # Indirect affiliates
+            partner.sub_affiliate_ids = all_sub_affiliates - direct_affiliates
+
 
     # Contacts
     @api.depends("child_ids")
@@ -383,19 +399,38 @@ class Partner(models.Model):
                     else False
                 )
 
+    # @api.onchange("parent_id")
+    # def _onchange_parent_id(self):
+    #     """Handle changes in the parent_id field, updating customer_code if necessary."""
+    #     self.apply_contact_logic()
+    #     if self.parent_id:
+    #         if self.previous_parent_id and self.previous_parent_id != self.parent_id:
+    #             _logger.info(
+    #                 f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}"
+    #             )
+    #             self.customer_code = self._generate_customer_code()
+    #             self._update_related_records()
+    #         self.previous_parent_id = self.parent_id
+    #         return {"domain": {"responsible_contact_id": [("is_company", "=", False)]}}
+
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
-        """Handle changes in the parent_id field, updating customer_code if necessary."""
+        """Track previous parent and update customer_code safely."""
         self.apply_contact_logic()
+        
         if self.parent_id:
             if self.previous_parent_id and self.previous_parent_id != self.parent_id:
-                _logger.info(
-                    f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}"
-                )
+                _logger.info(f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}")
+
+                # Store previous code before updating
+                if self.customer_code and self.customer_code != _("New"):
+                    self.legacy_customer_code = self.customer_code  
+
                 self.customer_code = self._generate_customer_code()
                 self._update_related_records()
+
             self.previous_parent_id = self.parent_id
-            return {"domain": {"responsible_contact_id": [("is_company", "=", False)]}}
+
 
     def apply_contact_logic(self):
         """Assigns responsible contact based on parent."""
@@ -474,26 +509,45 @@ class Partner(models.Model):
                 parent_value = parent_value.id if parent_value else False
             self[field] = parent_value
 
+    # @api.model
+    # def create(self, vals):
+    #     """Create a partner and apply address inheritance logic if needed."""
+    #     _logger.debug("Received vals for create: %s", vals)
+
+    #     if vals.get("parent_id"):
+    #         vals["parent_id"] = int(vals["parent_id"])
+
+    #     if vals.get("customer_code", _("New")) == _("New"):
+    #         vals["customer_code"] = self._generate_customer_code(vals)
+    #         _logger.debug("Generated customer_code: %s", vals["customer_code"])
+
+    #     partner = super(Partner, self).create(vals)
+
+    #     if partner.use_parent_invoice_address or partner.use_parent_shipping_address:
+    #         partner._onchange_parent_address_flags()
+
+    #     return partner
+
     @api.model
     def create(self, vals):
-        """Create a partner and apply address inheritance logic if needed."""
+        """Create a partner and ensure rollback safety."""
         _logger.debug("Received vals for create: %s", vals)
 
         if vals.get("parent_id"):
             vals["parent_id"] = int(vals["parent_id"])
 
-        # Generate customer code if it's new
-        if vals.get("customer_code", _("New")) == _("New"):
-            vals["customer_code"] = self._generate_customer_code(vals)
-            _logger.debug("Generated customer_code: %s", vals["customer_code"])
+        with self.env.cr.savepoint():  # Ensures rollback if any error occurs
+            if vals.get("customer_code", _("New")) == _("New"):
+                vals["customer_code"] = self._generate_customer_code(vals)
+                _logger.debug("Generated customer_code: %s", vals["customer_code"])
 
-        partner = super(Partner, self).create(vals)
+            partner = super(Partner, self).create(vals)
 
-        # Apply address inheritance logic if needed
-        if partner.use_parent_invoice_address or partner.use_parent_shipping_address:
-            partner._onchange_parent_address_flags()
+            if partner.use_parent_invoice_address or partner.use_parent_shipping_address:
+                partner._onchange_parent_address_flags()
 
         return partner
+
 
     def write(self, vals):
         """Update partner and apply relevant changes, including address inheritance and customer code generation."""
@@ -552,8 +606,33 @@ class Partner(models.Model):
             _logger.info(f"Updating {record.name}'s parent to {self.parent_id.name}")
             record.parent_id = self.parent_id
 
+    # def _generate_customer_code(self, vals):
+    #     """Generate hierarchical customer code based on parent relationship."""
+    #     sequence_map = {
+    #         "is_account": "res.partner.account",
+    #         "is_affiliate": "res.partner.affiliate",
+    #         "is_contact": "res.partner.contact",
+    #         "is_patient": "res.partner.patient",
+    #     }
+
+    #     for key, seq_code in sequence_map.items():
+    #         if vals.get(key):
+    #             sequence = self.env["ir.sequence"].next_by_code(seq_code)
+    #             parent = (
+    #                 self.env["res.partner"].browse(vals.get("parent_id"))
+    #                 if vals.get("parent_id")
+    #                 else None
+    #             )
+
+    #             if parent and parent.customer_code:
+    #                 return f"{parent.customer_code}-{sequence.split('-')[-1]}"
+
+    #             return sequence
+
+    #     return self.env["ir.sequence"].next_by_code("res.partner.generic")
+
     def _generate_customer_code(self, vals):
-        """Generate hierarchical customer code based on parent relationship."""
+        """Limit hierarchy depth to improve readability."""
         sequence_map = {
             "is_account": "res.partner.account",
             "is_affiliate": "res.partner.affiliate",
@@ -561,21 +640,22 @@ class Partner(models.Model):
             "is_patient": "res.partner.patient",
         }
 
+        parent = self.env["res.partner"].browse(vals.get("parent_id")) if vals.get("parent_id") else None
+        grandparent = parent.parent_id if parent else None  # Get grandparent
+
         for key, seq_code in sequence_map.items():
             if vals.get(key):
                 sequence = self.env["ir.sequence"].next_by_code(seq_code)
-                parent = (
-                    self.env["res.partner"].browse(vals.get("parent_id"))
-                    if vals.get("parent_id")
-                    else None
-                )
 
                 if parent and parent.customer_code:
-                    return f"{parent.customer_code}-{sequence.split('-')[-1]}"
+                    if grandparent and grandparent.customer_code:
+                        return f"{grandparent.customer_code}-{parent.customer_code.split('-')[-1]}-{sequence[-3:]}"
+                    return f"{parent.customer_code}-{sequence[-3:]}"  # Show last two levels
 
                 return sequence
 
         return self.env["ir.sequence"].next_by_code("res.partner.generic")
+
 
     def _update_child_codes(self):
         """Recursively update customer codes for children when a parent changes."""
@@ -604,31 +684,32 @@ class Partner(models.Model):
     def merge_affiliates(self, target_affiliate):
         """Merge the current affiliate into another, moving contacts and patients."""
         self.ensure_one()
+        
         if not self.is_affiliate or not target_affiliate.is_affiliate:
             raise ValidationError("Both partners must be affiliates to merge.")
 
         if self.id == target_affiliate.id:
             raise ValidationError("Cannot merge an affiliate with itself.")
 
+        if self._is_circular_reference(target_affiliate):
+            raise ValidationError("Merging would create a circular hierarchy.")
+
         try:
-            _logger.info(
-                "Merging affiliate %s into %s", self.name, target_affiliate.name
-            )
+            _logger.info("Merging affiliate %s into %s", self.name, target_affiliate.name)
 
             # Move related contacts & patients
             self.child_ids.write({"parent_id": target_affiliate.id})
             self.patient_ids.write({"parent_id": target_affiliate.id})
 
             # Archive old affiliate instead of deleting
-            self.write({"active": False})
-            _logger.info(
-                "Successfully merged %s into %s", self.name, target_affiliate.name
-            )
+            self.write({"is_merged": True, "merged_into_id": target_affiliate.id, "active": False})
+
+            _logger.info("Successfully merged %s into %s", self.name, target_affiliate.name)
 
         except Exception as e:
             _logger.error("Failed to merge affiliates: %s", str(e))
             raise ValidationError("An error occurred while merging affiliates.")
-
+        
     def view_affiliates(self):
         return {
             "name": _("Affiliates"),

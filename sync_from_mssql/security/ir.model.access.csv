@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_base_db_sync_mssql_group_system,base.db_sync_mssql_group_system,model_base_db_sync_mssql,base.group_system,1,1,1,1
+access_base_db_sync_mssql_table_group_system,base.db_sync_mssql_table_group_system,model_base_db_sync_mssql_table,base.group_system,1,1,1,1
+access_base_db_sync_mssql_relation_group_system,base.db_sync_mssql_relation_group_system,model_base_db_sync_mssql_relation,base.group_system,1,1,1,1
+access_base_db_sync_mssql_field_group_system,base.db_sync_mssql_field_group_system,model_base_db_sync_mssql_field,base.group_system,1,1,1,1
+access_message_wizard_group_system,message_wizard_group_system,model_message_wizard,base.group_system,1,1,1,1

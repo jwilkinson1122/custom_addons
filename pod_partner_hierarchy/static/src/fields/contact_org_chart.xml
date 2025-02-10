@@ -73,6 +73,80 @@
 
 <t t-name="pod_partner_hierarchy.partner_org_chart">
     <t t-set="part_count" t-value="0"/>
+    
+    <!-- Managers Section -->
+    <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
+        <div t-if='managers_more' class="o_org_chart_more pe-3">
+            <a href="#" t-att-data-partner-id="managers[0].id" class="o_partner_more_managers d-block bg-100 px-3"
+               t-on-click.prevent="() => this._onPartnerMoreManager(managers[0].id)">
+                <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
+            </a>
+        </div>
+
+        <t t-foreach="managers" t-as="partner" t-key="partner.id">
+            <t t-set="part_count" t-value="part_count + 1"/>
+            <t t-call="pod_partner_hierarchy.org_chart_partner_hierarchy">
+                <t t-set="partner_type" t-value="'manager'"/>
+            </t>
+        </t>
+    </div>
+
+    <!-- Current Partner (Self) -->
+    <t t-if="children.length or managers.length or affiliates.length" t-call="pod_partner_hierarchy.org_chart_partner_hierarchy">
+        <t t-set="partner_type" t-value="'self'"/>
+        <t t-set="partner" t-value="self"/>
+    </t>
+
+    <!-- No Hierarchy Message -->
+    <t t-if="!children.length and !managers.length and !affiliates.length">
+        <div class="alert alert-info" role="alert">
+            <p><b>No hierarchy position.</b></p>
+            <p>This partner has no parent, affiliates, or child relationships.</p>
+            <p>In order to get an organigram, set a parent, affiliate, or child relationship and save the record.</p>
+        </div>
+    </t>
+
+    <!-- Affiliates Section -->
+    <div t-if="affiliates.length" class="o_org_chart_group_down position-relative">
+        <t t-foreach="affiliates" t-as="partner" t-key="partner.id">
+            <t t-set="part_count" t-value="part_count + 1"/>
+            <t t-if="part_count &lt; 20">
+                <t t-call="pod_partner_hierarchy.org_chart_partner_hierarchy">
+                    <t t-set="partner_type" t-value="'affiliate'"/>
+                </t>
+            </t>
+        </t>
+    </div>
+
+    <!-- Children Section -->
+    <div t-if="children.length" class="o_org_chart_group_down position-relative">
+        <t t-foreach="children" t-as="partner" t-key="partner.id">
+            <t t-set="part_count" t-value="part_count + 1"/>
+            <t t-if="part_count &lt; 20">
+                <t t-call="pod_partner_hierarchy.org_chart_partner_hierarchy">
+                    <t t-set="partner_type" t-value="'sub'"/>
+                </t>
+            </t>
+        </t>
+
+        <!-- "See All" Button for Large Hierarchies -->
+        <t t-if="(children.length + affiliates.length + managers.length) &gt; 19">
+            <div class="o_org_chart_entry o_org_chart_more d-flex overflow-visible">
+                <div class="o_media_left position-relative">
+                    <a href="#"
+                       t-att-data-partner-id="self.id"
+                       t-att-data-partner-name="self.name"
+                       class="o_org_chart_show_more o_partner_sub_redirect btn btn-link ps-2"
+                       t-on-click.prevent="_onPartnerSubRedirect">See All</a>
+                </div>
+            </div>
+        </t>
+    </div>
+</t>
+
+
+<!-- <t t-name="pod_partner_hierarchy.partner_org_chart">
+    <t t-set="part_count" t-value="0"/>
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
         <div t-if='managers_more' class="o_org_chart_more pe-3">
             <a href="#" t-att-data-partner-id="managers[0].id" class="o_partner_more_managers d-block bg-100 px-3" t-on-click.prevent="() => this._onPartnerMoreManager(managers[0].id)">
@@ -123,7 +197,7 @@
             </div>
         </t>
     </div>
-</t>
+</t> -->
 
 <t t-name="pod_partner_hierarchy.partner_org_chart_popover">
     <div class="popover o_org_chart_popup" role="tooltip">

@@ -37,25 +37,55 @@ class PartnerHierarchyController(http.Controller):
             email=partner.email,
             link='/mail/view?model=%s&res_id=%s' % ('res.partner', partner.id,),
             direct_sub_count=len(partner.affiliate_ids - partner),
-            indirect_sub_count=partner.affiliate_all_count,
+            indirect_sub_count=partner.affiliates_count,
         )
 
     @http.route('/partner/get_redirect_model', type='json', auth='user')
     def get_redirect_model(self):
         return 'res.partner'
 
+    # @http.route('/partner/get_partner_hierarchy', type='json', auth='user')
+    # def get_partner_hierarchy(self, partner_id, **kw):
+
+    #     partner = self._check_partner(partner_id, **kw)
+    #     if not partner:  
+    #         return {
+    #             'managers': [],
+    #             'affiliates': [],
+    #             'children': [],
+    #         }
+    #     ancestors, current = request.env['res.partner'].sudo(), partner.sudo()
+    #     while current.parent_id and len(ancestors) < self._managers_level + 1 and current != current.parent_id:
+    #         ancestors += current.parent_id
+    #         current = current.parent_id
+
+    #     values = dict(
+    #         self=self._prepare_partner_data(partner),
+    #         managers=[
+    #             self._prepare_partner_data(ancestor)
+    #             for idx, ancestor in enumerate(ancestors)
+    #             if idx < self._managers_level
+    #         ],
+    #         managers_more=len(ancestors) > self._managers_level,
+    #         affiliates=[self._prepare_partner_data(affiliate) for affiliate in partner.affiliate_ids if affiliate != partner],
+    #         children=[self._prepare_partner_data(child) for child in partner.child_ids if child != partner],
+
+    #     )
+    #     values['managers'].reverse()
+    #     return values
+
     @http.route('/partner/get_partner_hierarchy', type='json', auth='user')
     def get_partner_hierarchy(self, partner_id, **kw):
 
         partner = self._check_partner(partner_id, **kw)
-        if not partner:  # to check
+        if not partner:
             return {
                 'managers': [],
                 'affiliates': [],
                 'children': [],
             }
 
-        # compute partner data for partner hierarchy
+        # Ensure hierarchy starts from the viewed partner
         ancestors, current = request.env['res.partner'].sudo(), partner.sudo()
         while current.parent_id and len(ancestors) < self._managers_level + 1 and current != current.parent_id:
             ancestors += current.parent_id
@@ -63,18 +93,15 @@ class PartnerHierarchyController(http.Controller):
 
         values = dict(
             self=self._prepare_partner_data(partner),
-            managers=[
-                self._prepare_partner_data(ancestor)
-                for idx, ancestor in enumerate(ancestors)
-                if idx < self._managers_level
-            ],
+            managers=[self._prepare_partner_data(ancestor) for idx, ancestor in enumerate(ancestors) if idx < self._managers_level],
             managers_more=len(ancestors) > self._managers_level,
-            affiliates=[self._prepare_partner_data(affiliate) for affiliate in partner.affiliate_ids if affiliate != partner],
-            children=[self._prepare_partner_data(child) for child in partner.child_ids if child != partner],
-
+            affiliates=[self._prepare_partner_data(affiliate) for affiliate in partner.affiliate_ids],
+            children=[self._prepare_partner_data(child) for child in partner.sub_affiliate_ids],
         )
         values['managers'].reverse()
         return values
+
+
 
     # Affiliates
     @http.route('/partner/get_affiliates', type='json', auth='user')

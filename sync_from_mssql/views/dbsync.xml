@@ -1,0 +1,167 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_dbsync_tree">
+            <field name="name">base.db.sync.mssql.tree</field>
+            <field name="model">base.db.sync.mssql</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="(not active)">
+                    <field name="sync_name" />
+                    <field name="source_host" />
+                    <field name="source_db_name" />
+                    <field name="last_updated" />
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_dbsync_form">
+            <field name="name">base.db.sync.mssql.form</field>
+            <field name="model">base.db.sync.mssql</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="base.ir_cron_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//h1[@class='oe_title']" position="replace">
+                    <field name="name" invisible='1' />
+                </xpath>
+                <xpath expr="//button[@name='method_direct_trigger']" position="replace">
+                    <button name="process_sync" type="object" string="Run Manually" class="oe_highlight" invisible= "state!=True"/>
+                </xpath>
+                <xpath expr="//group[@name='action_content']" position="before">
+                    <label for="sync_name"/>
+                    <h1>
+                        <field name="sync_name" />
+                    </h1>
+                    <field name="name" invisible='1' />
+                </xpath>
+
+
+
+                <xpath expr="//group[@name='action_content']" position="before">
+                    <group >
+
+                        <group>
+                            <field name="source_host" />
+                            <field name="source_db_name" />
+                        </group>
+                        <group>
+                            <field name="source_user_id" />
+                            <field name="source_password" password="True" />
+                        </group>
+                        <button name="connection_test" string="Test Connection" type="object" icon="fa-refresh" />
+                        <!-- <button name="process_sync" string="Sync From MSSQL" type="object" icon="fa-refresh" />                                                  -->
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='model_id']" position="replace">
+                    <field name="model_id" invisible="1" />
+                    <field name="last_updated" readonly='true'/>
+                </xpath>
+                <xpath expr="//field[@name='groups_id']" position="replace">
+                    <field name="groups_id" invisible="1" />
+
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id" invisible="1" />
+                </xpath>
+                <!-- <xpath expr="//field[@name='nextcall']" position="replace">           
+                            <field name="nextcall" invisible="1" />         
+             </xpath>              -->
+                <xpath expr="//field[@name='numbercall']" position="replace">
+                    <field name="numbercall" invisible="1" />
+                </xpath>
+                <xpath expr="//field[@name='priority']" position="replace">
+                    <field name="priority" invisible="1" />
+                </xpath>
+                <xpath expr="//field[@name='doall']" position="replace">
+                    <field name="doall" invisible="1" />
+                </xpath>
+                <xpath expr="//notebook" position="replace">
+                    <notebook>
+                        <page name="Tables" string="Table Mapping">
+                            <field name="table_ids" widget="one2many" context="{'default_dt_id':'id'}">
+                                <tree string="Tables" editable="bottom">
+                                    <field name="source_table" />
+                                    <field name="destination_model" options="{'no_create': True}"/>
+                                    <field name="modified_stamp_field" />
+                                    <field name="extra_days" />
+                                    <field name="update_all" widget="boolean_toggle" />
+                                    <field name="exec_pre_action" widget="boolean_toggle" />
+                                    <field name="exec_extra_action" widget="boolean_toggle" />
+                                    <button name="action_show_details" type="object" title="Show Details" icon="fa-list" />
+
+                                </tree>
+                            </field>
+
+                        </page>
+                        <page name="Relations" string="Relation Building">
+                            <field name="relation_ids" widget="one2many">
+                                <tree string="Relations" editable="bottom">
+                                    <field name="father_model" options="{'no_create': True}"/>
+                                    <field name="father_field" options="{'no_create': True}"/>
+                                    <field name="son_model" options="{'no_create': True}"/>
+                                    <field name="son_field" options="{'no_create': True}"/>
+                                    <field name="father_model_id" invisible="1"/>
+                                    <field name="son_model_id" invisible="1"/>
+
+
+                                </tree>
+                            </field>
+
+                        </page>
+
+
+                    </notebook>
+
+                </xpath>
+                <!-- <xpath expr="//page[@name='page_object']" position="replace">            
+            </xpath>    -->
+                <!-- <xpath expr="//page[@name='help_info']" position="replace">            
+            </xpath>                                -->
+
+            </field>
+        </record>
+        <record model="ir.ui.view" id="dbsync_field_tree_editable_view">
+            <field name="name">base.db.sync.mssql.tree.editable</field>
+            <field name="model">base.db.sync.mssql.table</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form string="External DB Source">
+                    <sheet>
+
+                        <notebook>
+                            <page name="Fields" string="Field Mapping">
+                                <field name="field_ids" widget="one2many">
+                                    <tree editable="bottom" multi_edit="1">
+                                        <field name="model_id" invisible="1"/>
+                                        <!-- <field name="dt_id" realonly='true' /> -->
+                                        <field name="table_name" realonly='true' />
+                                        <field name="source_field" />
+                                        <field name="model_name" realonly='true' />
+                                        <field name="destination_field" options="{'no_create': True}"/>
+                                        <field name="is_pk" />
+
+
+                                    </tree>
+                                </field>
+
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_dbsync">
+            <field name="name">Sync From MSSQL</field>
+            <field name="res_model">base.db.sync.mssql</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dbsync_tree" />
+            <field name="context">{'active_test': False}</field>
+        </record>
+
+        <menuitem name="Sync From MSSQL" id="menu_dbsource" parent="base.next_id_9" action="action_dbsync" />
+
+    </data>
+</odoo>

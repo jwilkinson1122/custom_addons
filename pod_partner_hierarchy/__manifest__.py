@@ -4,13 +4,13 @@
     "version": "0.1",
     "depends": [
         "base",
-        "base_setup",
+        # "base_setup",
         # "account",
-        # "mail",
-        # "web",
-        # "web_hierarchy",
-        # "pod_web_chatter",
+        "web",
+        "mail",
+        "web_hierarchy",
         "contacts",
+        "pod_web_chatter",
     ],
     "license": "AGPL-3",
     "sequence": 0,
@@ -25,11 +25,11 @@
     ],
     "assets": {
         "web._assets_primary_variables": [
-            # "pod_partner_hierarchy/static/src/scss/variables.scss",
+            "pod_partner_hierarchy/static/src/scss/variables.scss",
         ],
         "web.assets_backend": [
-            # "pod_partner_hierarchy/static/src/fields/*",
-            # "pod_partner_hierarchy/static/src/views/**/*",
+            "pod_partner_hierarchy/static/src/fields/*",
+            "pod_partner_hierarchy/static/src/views/**/*",
         ],
     },
     "demo": [],
