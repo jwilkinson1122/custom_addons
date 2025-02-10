@@ -146,7 +146,8 @@
                         <div id="o_work_partner_main" class="col-8">
                             <separator string="Direct Affiliates" />
                             <field name="affiliate_ids" mode="kanban" nolabel="1" domain="[('user_ids', '=', False)]">
-                                <kanban create="true">
+                                <!-- <kanban create="true"> -->
+                                <kanban create="false">
                                     <field name="id" />
                                     <field name="color" />
                                     <field name="ref"/>
@@ -358,7 +359,7 @@
                             </field>
                         </div>
                         <div id="o_partner_right" class="col-4">
-                            <separator string="Partner Hierarchy" />
+                            <!-- <separator string="Partner Hierarchy" /> -->
                             <field name="affiliate_ids" class="" widget="partner_org_chart" readonly="1" nolabel="1" />
                         </div>
                     </div>
@@ -378,7 +379,8 @@
                 <label for='child_ids' string="Direct Contacts" class="fw-bolder mb-3 mt-4 small text-uppercase" />
             </xpath>
             <xpath expr="//field[@name='child_ids']" position="inside">
-                <kanban create="true">
+                <!-- <kanban create="true"> -->
+                <kanban create="false">
                     <field name="id" />
                     <field name="color" />
                     <field name="ref"/>
@@ -530,7 +532,8 @@
                         <label for="patient_ids" string="Direct Patients" class="fw-bolder mb-3 mt-4 small text-uppercase" />
                     </group>
                     <field name="patient_ids" mode="kanban" nolabel="1" domain="[('is_patient', '=', True), ('user_ids', '=', False)]" context="{'default_is_patient': True}">
-                        <kanban create="true">
+                        <!-- <kanban create="true"> -->
+                        <kanban create="false">
                             <field name="id" />
                             <field name="ref"/>
                             <field name="customer_code"/>
