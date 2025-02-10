@@ -64,9 +64,10 @@
                         <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" invisible="is_account"/>
                         <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="is_account"/>
                         <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold" options="{'no_create': True}"/>
-                        <!-- <field name="responsible_contact_id" placeholder="Select Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/> -->
+                        <!-- <field name="primary_contact_id" widget="many2one"/> -->
+                        <!-- <field name="default_contact_id" placeholder="Default Contact" context="{'default_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/> -->
 
-                        <field name="responsible_contact_id" placeholder="Select Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
+                        <field name="responsible_contact_id" placeholder="Primary Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
 
                         <label for="commercial_partner" string="Commercial Partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                         <field name="commercial_partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>

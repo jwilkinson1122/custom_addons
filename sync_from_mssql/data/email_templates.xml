@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="email_template_sync_failure" model="mail.template">
+        <field name="name">Database Sync Failure Alert</field>
+        <field name="model_id" ref="base.model_base_db_sync_mssql"/>
+        <field name="subject">Database Sync Failure</field>
+        <field name="email_from">${(object.env.user.email or 'admin@example.com')}</field>
+        <field name="email_to">admin@example.com</field>
+        <field name="body_html">
+            <![CDATA[
+        <p>Hello,</p>
+        <p>The database sync has encountered errors multiple times:</p>
+        <pre>${object.sync_logs}</pre>
+        <p>Please check the sync logs and resolve the issue.</p>
+        <p>Thank you.</p>
+        ]]>
+        </field>
+    </record>
+
+</odoo>

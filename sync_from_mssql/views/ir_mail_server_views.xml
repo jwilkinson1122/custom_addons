@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ir.mail.server -->
+    <record id="mail_server_default" model="ir.mail_server">
+        <field name="name">Default SMTP Server</field>
+        <field name="smtp_host">smtp.yourdomain.com</field>
+        <field name="smtp_port">587</field>
+        <field name="smtp_user">your-email@yourdomain.com</field>
+        <field name="smtp_pass">your-email-password</field>
+        <field name="smtp_encryption">tls</field>
+        <field name="sequence">10</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

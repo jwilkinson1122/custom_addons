@@ -1,1 +1,2 @@
-from . import db_sync,message_wizard
+from . import db_sync
+from . import message_wizard
