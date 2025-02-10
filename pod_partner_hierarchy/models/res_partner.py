@@ -90,12 +90,21 @@ class Partner(models.Model):
     contacts_count = fields.Integer(
         "Number of Contacts", compute="_compute_contacts_count"
     )
+
+    # responsible_contact_id = fields.Many2one(
+    #     "res.partner",
+    #     string="Responsible Contact",
+    #     domain=[("active", "=", True), ("is_company", "=", False)],
+    #     context={"responsible_contact_selection": True},
+    # )
+
     responsible_contact_id = fields.Many2one(
         "res.partner",
         string="Responsible Contact",
-        domain=[("active", "=", True), ("is_company", "=", False)],
+        domain="[('parent_id', '=', parent_id), ('is_contact', '=', True), ('is_company', '=', False)]",
         context={"responsible_contact_selection": True},
     )
+
 
     # context={'responsible_contact_selection': True}
 
@@ -346,12 +355,40 @@ class Partner(models.Model):
                     else False
                 )
 
+    # @api.onchange("parent_id")
+    # def _onchange_parent_id(self):
+    #     """Track previous parent and update customer_code safely."""
+    #     self.apply_contact_logic()
+        
+    #     if self.parent_id:
+    #         if self.previous_parent_id and self.previous_parent_id != self.parent_id:
+    #             _logger.info(f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}")
+
+    #             if self.customer_code and self.customer_code != _("New"):
+    #                 self.legacy_customer_code = self.customer_code  
+
+    #             self.customer_code = self._generate_customer_code()
+    #             self._update_related_records()
+
+    #         self.previous_parent_id = self.parent_id
+
+
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
-        """Track previous parent and update customer_code safely."""
+        """Handles changes in parent_id:
+        - Updates customer_code if parent changes.
+        - Stores previous parent_id for tracking.
+        - Filters responsible_contact_id to only show contacts of the selected parent.
+        """
+        
         self.apply_contact_logic()
         
+        # ✅ Update domain for responsible_contact_id
+        domain = [("is_contact", "=", True), ("is_company", "=", False)]
         if self.parent_id:
+            domain.append(("parent_id", "=", self.parent_id.id))
+
+            # ✅ Update customer_code safely when parent changes
             if self.previous_parent_id and self.previous_parent_id != self.parent_id:
                 _logger.info(f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}")
 
@@ -362,7 +399,10 @@ class Partner(models.Model):
                 self.customer_code = self._generate_customer_code()
                 self._update_related_records()
 
+            # ✅ Store the new parent as previous_parent_id
             self.previous_parent_id = self.parent_id
+
+        return {"domain": {"responsible_contact_id": domain}}
 
 
     def apply_contact_logic(self):

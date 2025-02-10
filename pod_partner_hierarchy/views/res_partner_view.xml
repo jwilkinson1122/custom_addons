@@ -64,7 +64,10 @@
                         <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]" invisible="is_account"/>
                         <field name="parent_relation_label" class="oe_inline" nolabel="1" invisible="is_account"/>
                         <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold" options="{'no_create': True}"/>
-                        <field name="responsible_contact_id" placeholder="Select Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
+                        <!-- <field name="responsible_contact_id" placeholder="Select Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/> -->
+
+                        <field name="responsible_contact_id" placeholder="Select Contact" context="{'responsible_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_patient" required="1" options="{'no_create': True}"/>
+
                         <label for="commercial_partner" string="Commercial Partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                         <field name="commercial_partner" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                     </div>
@@ -79,14 +82,6 @@
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
                             <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
                             <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
-
-
-                            <!-- <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" class="fw-bold"/>
-                            <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" class="fw-bold"/> -->
-
-                            <!-- <field name="company_address_type" placeholder="Address Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/>
-                            <field name="partner_company_type" placeholder="Company Type" widget="selection" invisible="not is_company" required="is_company" class="fw-bold"/> -->
-                            <!-- <field name="partner_company_type" placeholder="Company Type" widget="many2one" class="fw-bold"/> -->
                         </span>
                         <div class="o_address_format">
                             <field name="street" placeholder="Street..." class="o_address_street" />
@@ -102,14 +97,8 @@
                         <!-- <field name="partner_delivery_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'delivery')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
                         <field name="partner_invoice_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'invoice')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/>
                         <field name="partner_supplier_id" domain="[('id', 'child_of', commercial_partner_id), ('company_address_type', '=', 'supplier')]" options="{'no_open': True, 'no_create': True}" invisible="is_account"/> -->
-
-
-                        <field name="use_parent_invoice_address" invisible="not parent_id"/>
+                        <field name="use_parent_invoice_address" invisible="not parent_id" />
                         <field name="use_parent_shipping_address" invisible="not parent_id"/>
-                        <!-- <field name="invoice_address_to_use_id" invisible="not use_parent_invoice_address" required="use_parent_invoice_address"/> -->
-
-
-                        <!-- <newline/> -->
                     </group>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
@@ -670,18 +659,6 @@
             </xpath>
         </field>
     </record>
-
-
-    <!-- <record id="partner_hiarachy_inherit_view_partner_form" model="ir.ui.view">
-        <field name="name">res.partner</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="pod_partner_hierarchy.view_partner_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//div[@id='o_work_partner_main']" position="inside">
-                <xpath expr="//field[@name='affiliate_ids'][@mode='kanban']" position="move" />
-            </xpath>
-        </field>
-    </record> -->
 
 
     <record id="view_partner_address_form" model="ir.ui.view">
