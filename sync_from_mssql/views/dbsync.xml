@@ -66,6 +66,14 @@
             <field name="model">base.db.sync.mssql</field>
             <field name="arch" type="xml">
                 <form string="MSSQL Sync">
+                    <header>
+                        <button name="process_sync" type="object" string="Run Sync Now" class="oe_highlight"/>
+                        <button name="action_resync_all" type="object" string="Re-Sync All Records" class="oe_highlight"/>
+
+                        <!-- <button name="start_wash" class="oe_highlight" string="Start" type="object" states="draft"/>
+                        <button name="set_to_done" class="oe_highlight" string="Set to Done" type="object" states="process"/> -->
+                        <!-- <field name="state" widget="statusbar" statusbar_visible="draft,process,done"/> -->
+                    </header>
                     <sheet>
                         <group>
                             <group>
@@ -77,7 +85,17 @@
                                 <field name="active"/>
                             </group>
                         </group>
-                        <button name="process_sync" type="object" string="Run Sync Now" class="oe_highlight"/>
+                        <!-- <button name="process_sync" type="object" string="Run Sync Now" class="oe_highlight"/>
+                        <button name="action_resync_all" type="object" string="Re-Sync All Records" class="oe_highlight"/> -->
+                        <!-- <div class="oe_button_box" name="button_box" style="margin-bottom: 10px;">
+                            <button name="process_sync" type="object" string="🔄 Run Sync Now" class="oe_stat_button oe_highlight"/>
+                            <button name="action_resync_all" type="object" string="🔁 Re-Sync All Records" class="oe_stat_button btn-primary" style="margin-left: 10px;"/>
+                        </div> -->
+                        <!-- <div>
+                            <button name="process_sync" type="object" string="🔄 Run Sync Now" class="oe_stat_button oe_highlight"/>
+                            <button name="action_resync_all" type="object" string="🔁 Re-Sync All Records" class="oe_stat_button btn-primary" style="margin-left: 10px;"/>
+                        </div> -->
+
                         <notebook>
                             <page string="Tables">
                                 <field name="table_ids" widget="one2many">
@@ -126,12 +144,12 @@
                             <field name="destination_model"/>
                             <field name="modified_stamp_field"/>
                             <field name="update_all"/>
+                            <field name="sync_all" />
                         </group>
                         <notebook>
                             <page string="Field Mappings">
                                 <field name="field_ids" widget="one2many" context="{'default_dt_id': id}" options="{'no_create': False, 'no_delete': False}">
                                     <tree editable="bottom">
-                                        <!-- <field name="sequence" widget="handle" /> -->
                                         <field name="source_field"/>
                                         <field name="destination_field"/>
                                         <field name="is_pk"/>
@@ -139,6 +157,17 @@
                                 </field>
                             </page>
                         </notebook>
+                        <!-- <notebook>
+                            <page string="Field Mappings">
+                                <field name="field_ids" widget="one2many" context="{'default_dt_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="source_field"/>
+                                        <field name="destination_field"/>
+                                        <field name="is_pk"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook> -->
                     </sheet>
                 </form>
             </field>

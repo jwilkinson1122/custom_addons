@@ -114,6 +114,10 @@ class DbSyncTable(models.Model):
     )
     modified_stamp_field = fields.Char("Modified Timestamp Field")
     update_all = fields.Boolean("Update All", default=False)
+    sync_all = fields.Boolean(
+        "Sync All Records",
+        help="If enabled, all records will be retrieved, not just modified ones.",
+    )
     field_ids = fields.One2many(
         "base.db.sync.mssql.field", "dt_id", string="Field Mappings"
     )
@@ -257,6 +261,13 @@ class DbSync(models.Model):
             # self.send_failure_email(errors)
             return self.show_error_message(errors)
 
+    def action_resync_all(self):
+        """Force a full re-sync for all tables."""
+        self.ensure_one()
+        for table in self.table_ids:
+            table.sync_all = True  # ✅ Enable full sync
+        return self.process_sync()
+
     def show_error_message(self, errors):
         """Displays error messages in Odoo UI"""
         error_text = "\n".join(errors)
@@ -269,81 +280,55 @@ class DbSync(models.Model):
             "context": {"default_message": error_text},
         }
 
-    # def send_failure_email(self, errors):
-    #     """Send an email notification if a sync failure occurs multiple times"""
-    #     template = self.env.ref("sync_from_mssql.email_template_sync_failure", raise_if_not_found=False)
-    #     if template:
-    #         template.sudo().send_mail(self.id, force_send=True)
-    #         _logger.info(f"Sync failure email sent for {self.sync_name}")
-    #     else:
-    #         _logger.warning("Email template for sync failure not found.")
-
-    # def send_failure_email(self, errors):
-    #     """Send an email notification if a sync failure occurs multiple times"""
-    #     template = self.env.ref("sync_mssql.email_template_sync_failure")
-    #     if template:
-    #         template.sudo().send_mail(self.id, force_send=True)
-
     def sync_table(self, conn, table):
-        """Fetches only new or modified records and processes them in chunks"""
+        """Fetch records based on user selection (modified only OR all records)."""
+
+        # 🟢 Default to Jan 1, 2000 if no last sync date exists
         last_sync_date = self.last_updated or datetime.datetime(2000, 1, 1)
         formatted_date = last_sync_date.strftime("%Y-%m-%d %H:%M:%S")
 
-        query = f"SELECT * FROM {table.source_table} WHERE {table.modified_stamp_field} >= '{formatted_date}'"
-        _logger.debug(f"Executing query: {query}")  # ✅ Logs query execution
+        # ✅ Determine Query Based on Sync Mode
+        if table.sync_all:
+            query = f"SELECT * FROM {table.source_table}"  # Fetch all records
+        else:
+            if not table.modified_stamp_field:
+                _logger.warning(
+                    f"⚠️ Skipping {table.source_table}: No modified timestamp field set."
+                )
+                return
+
+            query = f"""
+                SELECT * FROM {table.source_table}
+                WHERE {table.modified_stamp_field} >= '{formatted_date}'
+            """
+
+        _logger.debug(f"Executing query: {query}")  # ✅ Log SQL Query
 
         cursor = conn.cursor()
         try:
             cursor.execute(query)
-            rows = cursor.fetchall()
-            _logger.info(
-                f"✅ Retrieved {len(rows)} records from MSSQL."
-            )  # ✅ Logs row count
+            columns = [
+                column[0] for column in cursor.description
+            ]  # ✅ Get column names
+            rows = [
+                dict(zip(columns, row)) for row in cursor.fetchall()
+            ]  # ✅ Convert to dicts
+            _logger.info(f"✅ Retrieved {len(rows)} records from {table.source_table}.")
         except pyodbc.ProgrammingError as e:
-            _logger.error(f"SQL Query Failed: {query}")
+            _logger.error(f"❌ SQL Query Failed: {query}")
             _logger.error(f"SQL Error: {str(e)}")
             raise ValidationError(f"SQL Query Failed: {str(e)}")
 
+        # ⚠️ Exit if No Records Found
         if not rows:
-            _logger.info("⚠️ No new or modified records found, skipping sync.")
+            _logger.info(f"⚠️ No records found in {table.source_table}, skipping sync.")
             return
 
+        # ✅ Process records in batches
         batch_size = 1000
         for i in range(0, len(rows), batch_size):
             batch = rows[i : i + batch_size]
-            self.update_odoo_model(table, batch)  # Process in chunks
-
-    # def sync_table(self, conn, table):
-    #     """Fetches only new or modified records and processes them in chunks"""
-    #     last_sync_date = self.last_updated or datetime.datetime(2000, 1, 1)
-
-    #     formatted_date = last_sync_date.strftime(
-    #         "%Y-%m-%d %H:%M:%S"
-    #     )
-
-    #     query = f"""
-    #         SELECT * FROM {table.source_table}
-    #         WHERE {table.modified_stamp_field} >= '{formatted_date}'
-    #     """
-
-    #     _logger.debug(f"Executing query: {query}")
-
-    #     cursor = conn.cursor()
-    #     try:
-    #         cursor.execute(query)
-    #     except pyodbc.ProgrammingError as e:
-    #         _logger.error(f"SQL Query Failed: {query}")
-    #         _logger.error(f"SQL Error: {str(e)}")
-    #         raise ValidationError(
-    #             f"SQL Query Failed: {str(e)}"
-    #         )
-
-    #     batch_size = 1000
-    #     while True:
-    #         rows = cursor.fetchmany(batch_size)
-    #         if not rows:
-    #             break
-    #         self.update_odoo_model(table, rows)
+            self.update_odoo_model(table, batch)
 
     def update_odoo_model(self, table, rows):
         """Insert or update records in Odoo models (single or batch processing)."""
@@ -359,9 +344,12 @@ class DbSync(models.Model):
             values = {}
 
             for field in table.field_ids:
-                source_value = row[field.source_field]
+                source_field = field.source_field
 
-                # ✅ Apply state mapping when Address1_StateOrProvince is found
+                # ✅ Handle both dictionary-based and index-based row retrieval
+                source_value = row.get(source_field) if isinstance(row, dict) else None
+
+                # Handle State Mapping
                 if field.destination_field.name == "state_id":
                     values["state_id"] = self.env["res.partner"]._get_state_id(
                         source_value
@@ -401,6 +389,21 @@ class DbSync(models.Model):
     def append_log(self, message):
         """Appends log messages to sync_logs"""
         self.sync_logs = f"{self.sync_logs or ''}\n[{datetime.now()}] {message}"
+
+    # def send_failure_email(self, errors):
+    #     """Send an email notification if a sync failure occurs multiple times"""
+    #     template = self.env.ref("sync_from_mssql.email_template_sync_failure", raise_if_not_found=False)
+    #     if template:
+    #         template.sudo().send_mail(self.id, force_send=True)
+    #         _logger.info(f"Sync failure email sent for {self.sync_name}")
+    #     else:
+    #         _logger.warning("Email template for sync failure not found.")
+
+    # def send_failure_email(self, errors):
+    #     """Send an email notification if a sync failure occurs multiple times"""
+    #     template = self.env.ref("sync_mssql.email_template_sync_failure")
+    #     if template:
+    #         template.sudo().send_mail(self.id, force_send=True)
 
 
 class DbSyncLog(models.Model):
