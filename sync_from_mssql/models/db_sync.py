@@ -119,6 +119,14 @@ class DbSyncTable(models.Model):
         "Sync All Records",
         help="If enabled, all records will be retrieved, not just modified ones.",
     )
+    selected_columns = fields.Text(
+        string="Selected Columns",
+        help="Comma-separated column names to fetch. Leave blank for all columns.",
+    )
+    custom_row_filter = fields.Text(
+        string="Custom Row Filter",
+        help="Custom SQL WHERE clause to filter rows. Example: 'Status = Active'",
+    )
     field_ids = fields.One2many(
         "base.db.sync.mssql.field", "dt_id", string="Field Mappings"
     )
@@ -282,28 +290,41 @@ class DbSync(models.Model):
         }
 
     def sync_table(self, conn, table):
-        """Fetch records based on user selection (modified only OR all records)."""
+        """Fetch records based on user selection: Partial Column & Row Sync."""
 
-        # 🟢 Default to Jan 1, 2000 if no last sync date exists
         last_sync_date = self.last_updated or datetime.datetime(2000, 1, 1)
         formatted_date = last_sync_date.strftime("%Y-%m-%d %H:%M:%S")
 
-        # ✅ Determine Query Based on Sync Mode
-        if table.sync_all:
-            query = f"SELECT * FROM {table.source_table}"  # Fetch all records
+        # 🟢 Select specific columns if set
+        if table.selected_columns:
+            column_list = table.selected_columns.replace(" ", "").split(",")
+            column_query = ", ".join(column_list)
         else:
+            column_query = "*"
+
+        # 🟢 Build WHERE conditions
+        where_conditions = []
+        if not table.sync_all:
             if not table.modified_stamp_field:
                 _logger.warning(
                     f"⚠️ Skipping {table.source_table}: No modified timestamp field set."
                 )
                 return
+            where_conditions.append(
+                f"{table.modified_stamp_field} >= '{formatted_date}'"
+            )
 
-            query = f"""
-                SELECT * FROM {table.source_table}
-                WHERE {table.modified_stamp_field} >= '{formatted_date}'
-            """
+        if table.custom_row_filter:
+            where_conditions.append(table.custom_row_filter)
 
-        _logger.debug(f"Executing query: {query}")  # ✅ Log SQL Query
+        where_clause = (
+            f"WHERE {' AND '.join(where_conditions)}" if where_conditions else ""
+        )
+
+        # ✅ Construct Query
+        query = f"SELECT {column_query} FROM {table.source_table} {where_clause}"
+
+        _logger.debug(f"Executing query: {query}")
 
         cursor = conn.cursor()
         try:
@@ -320,12 +341,10 @@ class DbSync(models.Model):
             _logger.error(f"SQL Error: {str(e)}")
             raise ValidationError(f"SQL Query Failed: {str(e)}")
 
-        # ⚠️ Exit if No Records Found
         if not rows:
             _logger.info(f"⚠️ No records found in {table.source_table}, skipping sync.")
             return
 
-        # ✅ Process records in batches
         batch_size = 1000
         for i in range(0, len(rows), batch_size):
             batch = rows[i : i + batch_size]

@@ -157,18 +157,13 @@
                                     </tree>
                                 </field>
                             </page>
-                        </notebook>
-                        <!-- <notebook>
-                            <page string="Field Mappings">
-                                <field name="field_ids" widget="one2many" context="{'default_dt_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="source_field"/>
-                                        <field name="destination_field"/>
-                                        <field name="is_pk"/>
-                                    </tree>
-                                </field>
+                            <page string="Selective Sync">
+                                <group>
+                                    <field name="selected_columns" placeholder="Example: name, email, phone"/>
+                                    <field name="custom_row_filter" placeholder="Example: Status = 'Active'"/>
+                                </group>
                             </page>
-                        </notebook> -->
+                        </notebook>
                     </sheet>
                 </form>
             </field>
