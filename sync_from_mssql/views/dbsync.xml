@@ -102,6 +102,7 @@
                                     <tree editable="bottom">
                                         <field name="source_table"/>
                                         <field name="destination_model" options="{'no_create': True}"/>
+                                        <!-- ModifiedOn -->
                                         <field name="modified_stamp_field"/>
                                         <field name="update_all" widget="boolean_toggle"/>
                                         <button name="action_show_details" type="object" icon="fa-list" title="Show Details"/>

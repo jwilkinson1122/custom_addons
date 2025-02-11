@@ -112,6 +112,7 @@ class DbSyncTable(models.Model):
     destination_model = fields.Many2one(
         "ir.model", string="Destination Model", required=True, ondelete="cascade"
     )
+    # ModifiedOn
     modified_stamp_field = fields.Char("Modified Timestamp Field")
     update_all = fields.Boolean("Update All", default=False)
     sync_all = fields.Boolean(
