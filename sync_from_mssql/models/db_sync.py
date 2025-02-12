@@ -181,9 +181,19 @@ class DbSyncTable(models.Model):
     )
     modified_stamp_field = fields.Char("Modified Timestamp Field")
     update_all = fields.Boolean("Update All", default=False)
+    # sync_all = fields.Boolean("Sync All Records", help="If enabled, all records will be retrieved, not just modified ones.")
     sync_all = fields.Boolean(
         "Sync All Records",
+        default=False,
         help="If enabled, all records will be retrieved, not just modified ones.",
+    )
+    selected_columns = fields.Text(
+        string="Selected Columns",
+        help="Comma-separated column names to fetch. Leave blank for all columns.",
+    )
+    custom_row_filter = fields.Text(
+        string="Custom Row Filter",
+        help="Custom SQL WHERE clause to filter rows. Example: 'Status = Active'",
     )
     field_ids = fields.One2many(
         "base.db.sync.mssql.field", "dt_id", string="Field Mappings"
@@ -314,6 +324,57 @@ class DbSync(models.Model):
             "target": "new",
             "context": {"default_message": error_text},
         }
+
+    # def sync_table(self, conn, table):
+    #     """Fetch records based on user selection: Partial Column & Row Sync."""
+
+    #     last_sync_date = self.last_updated or datetime.datetime(2000, 1, 1)
+    #     formatted_date = last_sync_date.strftime("%Y-%m-%d %H:%M:%S")
+
+    #     if table.selected_columns:
+    #         column_list = table.selected_columns.replace(" ", "").split(",")
+    #         column_query = ", ".join(column_list)
+    #     else:
+    #         column_query = "*"
+
+    #     where_conditions = []
+    #     if not table.sync_all:
+    #         if not table.modified_stamp_field:
+    #             _logger.warning(
+    #                 f"⚠️ Skipping {table.source_table}: No modified timestamp field set."
+    #             )
+    #             return
+    #         where_conditions.append(f"{table.modified_stamp_field} >= '{formatted_date}'")
+
+    #     if table.custom_row_filter:
+    #         where_conditions.append(table.custom_row_filter)
+
+    #     where_clause = f"WHERE {' AND '.join(where_conditions)}" if where_conditions else ""
+    #     query = f"SELECT {column_query} FROM {table.source_table} {where_clause}"
+
+    #     _logger.debug(f"Executing query: {query}")
+
+    #     cursor = conn.cursor()
+    #     try:
+    #         cursor.execute(query)
+    #         columns = [column[0] for column in cursor.description]
+    #         rows = [
+    #             dict(zip(columns, row)) for row in cursor.fetchall()
+    #         ]
+    #         _logger.info(f"✅ Retrieved {len(rows)} records from {table.source_table}.")
+    #     except pyodbc.ProgrammingError as e:
+    #         _logger.error(f"❌ SQL Query Failed: {query}")
+    #         _logger.error(f"SQL Error: {str(e)}")
+    #         raise ValidationError(f"SQL Query Failed: {str(e)}")
+
+    #     if not rows:
+    #         _logger.info(f"⚠️ No records found in {table.source_table}, skipping sync.")
+    #         return
+
+    #     batch_size = 1000
+    #     for i in range(0, len(rows), batch_size):
+    #         batch = rows[i : i + batch_size]
+    #         self.update_odoo_model(table, batch)
 
     def sync_table(self, conn, table):
         """Fetch records based on user selection: Partial Column & Row Sync."""

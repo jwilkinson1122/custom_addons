@@ -1,9 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_res_partner,access_res_partner,model_res_partner,base.group_system,1,1,1,1
 access_base_db_source,access_base_db_source,model_base_db_source,base.group_system,1,1,1,1
-access_base_db_sync_mssql_group_system,access_base_db_sync_mssql_group_system,model_base_db_sync_mssql,base.group_system,1,1,1,1
-access_base_db_sync_mssql_table_group_system,access_base_db_sync_mssql_table_group_system,model_base_db_sync_mssql_table,base.group_system,1,1,1,1
+access_base_db_sync_mssql,access_base_db_sync_mssql,model_base_db_sync_mssql,base.group_system,1,1,1,1
+access_base_db_sync_mssql_table,access_base_db_sync_mssql_table,model_base_db_sync_mssql_table,base.group_system,1,1,1,1
 access_base_db_sync_mssql_field,access_base_db_sync_mssql_field,model_base_db_sync_mssql_field,base.group_system,1,1,1,1
 access_base_db_sync_log,access_base_db_sync_log,model_base_db_sync_log,base.group_system,1,1,1,1
-access_message_wizard_group_system,access_message_wizard_group_system,model_message_wizard,base.group_system,1,1,1,1
-
+access_message_wizard,access_message_wizard,model_message_wizard,base.group_system,1,1,1,1

@@ -118,7 +118,45 @@
             </field>
         </record>
 
+
+
         <!-- Form View for Table Mapping - This is used when opening an individual table record. -->
+
+        <!-- <record model="ir.ui.view" id="view_dbsync_table_form">
+            <field name="name">base.db.sync.mssql.table.form</field>
+            <field name="model">base.db.sync.mssql.table</field>
+            <field name="arch" type="xml">
+                <form string="MSSQL Table Mapping">
+                    <sheet>
+                        <group>
+                            <field name="source_table"/>
+                            <field name="destination_model"/>
+                            <field name="modified_stamp_field"/>
+                            <field name="update_all"/>
+                            <field name="sync_all"/>
+                        </group>
+                        <notebook>
+                            <page string="Field Mappings">
+                                <field name="field_ids" widget="one2many">
+                                    <tree editable="bottom">
+                                        <field name="source_field"/>
+                                        <field name="destination_field"/>
+                                        <field name="is_pk"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Selective Sync">
+                                <group>
+                                    <field name="selected_columns" placeholder="Example: name, email, phone"/>
+                                    <field name="custom_row_filter" placeholder="Example: Status = 'Active'"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record> -->
+
         <record model="ir.ui.view" id="view_dbsync_table_form">
             <field name="name">base.db.sync.mssql.table.form</field>
             <field name="model">base.db.sync.mssql.table</field>
@@ -137,44 +175,17 @@
                             <page string="Field Mappings">
                                 <field name="field_ids" widget="one2many" context="{'default_dt_id': active_id}" />
                             </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- <record model="ir.ui.view" id="view_dbsync_table_form">
-            <field name="name">base.db.sync.mssql.table.form</field>
-            <field name="model">base.db.sync.mssql.table</field>
-            <field name="arch" type="xml">
-                <form string="MSSQL Table Mapping">
-                    <sheet>
-                        <group>
-                            <field name="source_table"/>
-                            <field name="destination_model"/>
-                            <field name="modified_stamp_field"/>
-                            <field name="update_all"/>
-                            <field name="sync_all"/>
-                        </group>
-                        <notebook>
-                            <page string="Field Mappings">
-                                <field name="field_ids" widget="one2many" context="{'default_dt_id': id}" options="{'no_create': False, 'no_delete': False}">
-                                    <tree editable="bottom">
-                                        <field name="sequence"/>
-                                        <field name="source_field"/>
-                                        <field name="destination_field"/>
-                                        <field name="is_pk"/>
-                                    </tree>
-                                </field>
+                            <page string="Selective Sync">
+                                <group>
+                                    <field name="selected_columns" placeholder="Example: name, email, phone"/>
+                                    <field name="custom_row_filter" placeholder="Example: Status = 'Active'"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
-        </record> -->
-
-
-
+        </record>
 
         <!-- Tree View for Field Mapping - This will be used inside the One2many field (field_ids) in MSSQL Table Mapping.-->
         <record model="ir.ui.view" id="view_dbsync_field_tree">
