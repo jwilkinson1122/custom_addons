@@ -165,11 +165,10 @@ class DbSyncField(models.Model):
 
     @api.model
     def create(self, vals):
-        """Ensure `dt_id` is set when creating a new field mapping."""
+        """Ensure `dt_id` is always set when creating a new field mapping."""
         _logger.debug(f"Creating Field Mapping: {vals}")
         _logger.debug(f"Context at creation: {self.env.context}")
 
-        # If dt_id is missing, try to get it from context or parent
         if not vals.get("dt_id"):
             if self.env.context.get("default_dt_id"):
                 vals["dt_id"] = self.env.context["default_dt_id"]
@@ -178,7 +177,6 @@ class DbSyncField(models.Model):
                 vals["dt_id"] = self.env.context["active_id"]
                 _logger.debug(f"Setting dt_id from active_id: {vals['dt_id']}")
             else:
-                # Fallback: Get the last used table mapping (Might not always be accurate)
                 last_table = self.env["base.db.sync.mssql.table"].search([], limit=1)
                 if last_table:
                     vals["dt_id"] = last_table.id
