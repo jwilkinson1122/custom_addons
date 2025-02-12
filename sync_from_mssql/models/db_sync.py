@@ -201,7 +201,7 @@ class DbSyncTable(models.Model):
 
     def action_show_details(self):
         """Opens a detailed field mapping form."""
-        view = self.env.ref("sync_from_mssql.view_dbsync_field_tree")
+        view = self.env.ref("sync_from_mssql.view_db_sync_field_tree")
         return {
             "name": "Field Mapping",
             "type": "ir.actions.act_window",
