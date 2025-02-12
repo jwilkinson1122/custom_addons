@@ -98,53 +98,6 @@ class OutDbSource(models.Model):
             }
 
 
-class DbSyncTable(models.Model):
-    _name = "base.db.sync.mssql.table"
-    _description = "Database Sync Table Mapping"
-
-    ds_id = fields.Many2one(
-        "base.db.sync.mssql",
-        string="Database Sync Reference",
-        required=True,
-        ondelete="cascade",
-    )
-    source_table = fields.Char(string="Source Table", required=True)
-    destination_model = fields.Many2one(
-        "ir.model", string="Destination Model", required=True, ondelete="cascade"
-    )
-    # ModifiedOn
-    modified_stamp_field = fields.Char("Modified Timestamp Field")
-    update_all = fields.Boolean("Update All", default=False)
-    sync_all = fields.Boolean(
-        "Sync All Records",
-        help="If enabled, all records will be retrieved, not just modified ones.",
-    )
-    selected_columns = fields.Text(
-        string="Selected Columns",
-        help="Comma-separated column names to fetch. Leave blank for all columns.",
-    )
-    custom_row_filter = fields.Text(
-        string="Custom Row Filter",
-        help="Custom SQL WHERE clause to filter rows. Example: 'Status = Active'",
-    )
-    field_ids = fields.One2many(
-        "base.db.sync.mssql.field", "dt_id", string="Field Mappings"
-    )
-
-    def action_show_details(self):
-        """Opens a detailed field mapping form."""
-        view = self.env.ref("sync_from_mssql.view_dbsync_field_tree")
-        return {
-            "name": "Field Mapping",
-            "type": "ir.actions.act_window",
-            "view_mode": "tree",
-            "res_model": "base.db.sync.mssql.field",
-            "view_id": view.id,
-            "domain": [("dt_id", "=", self.id)],
-            "target": "new",
-        }
-
-
 class DbSyncField(models.Model):
     _name = "base.db.sync.mssql.field"
     _description = "Database Sync Field Mapping"
@@ -165,46 +118,121 @@ class DbSyncField(models.Model):
 
     @api.model
     def create(self, vals):
-        """Ensure `dt_id` is always set when creating a new field mapping."""
-        _logger.debug(f"Creating Field Mapping: {vals}")
-        _logger.debug(f"Context at creation: {self.env.context}")
+        """Ensure dt_id is always set when creating a new field mapping."""
+        _logger.debug(f"🔍 Creating Field Mapping with values: {vals}")
+        _logger.debug(f"🔍 Context at creation: {self.env.context}")
 
         if not vals.get("dt_id"):
-            if self.env.context.get("default_dt_id"):
-                vals["dt_id"] = self.env.context["default_dt_id"]
-                _logger.debug(f"Setting dt_id from default_dt_id: {vals['dt_id']}")
-            elif self.env.context.get("active_id"):
-                vals["dt_id"] = self.env.context["active_id"]
-                _logger.debug(f"Setting dt_id from active_id: {vals['dt_id']}")
+            context_dt_id = self.env.context.get("default_dt_id")
+            active_id = self.env.context.get("active_id")
+
+            if context_dt_id:
+                vals["dt_id"] = context_dt_id
+                _logger.debug(f"✅ Setting dt_id from default_dt_id: {context_dt_id}")
+            elif active_id:
+                vals["dt_id"] = active_id
+                _logger.debug(f"✅ Setting dt_id from active_id: {active_id}")
             else:
                 last_table = self.env["base.db.sync.mssql.table"].search([], limit=1)
                 if last_table:
                     vals["dt_id"] = last_table.id
                     _logger.debug(
-                        f"Setting dt_id from last table mapping: {vals['dt_id']}"
+                        f"✅ Setting dt_id from last table mapping: {last_table.id}"
+                    )
+                else:
+                    _logger.error("🚨 dt_id is missing! Cannot proceed.")
+                    raise ValidationError(
+                        "Table Mapping (dt_id) is required for Field Mappings."
                     )
 
-        if not vals.get("dt_id"):
-            raise ValidationError(
-                "Table Mapping (dt_id) is required for Field Mappings."
-            )
-
-        return super(DbSyncField, self).create(vals)
+        _logger.info(f"✅ Final dt_id used: {vals.get('dt_id')}")
+        record = super().create(vals)
+        _logger.info(f"✅ Successfully created Field Mapping: {record.id}")
+        return record
 
     @api.onchange("dt_id")
     def _onchange_dt_id(self):
         """Ensure `dt_id` is always set when adding a field mapping."""
         _logger.debug(
-            f"Onchange Triggered: Context = {self.env.context}, dt_id = {self.dt_id}"
+            f"🛠 Onchange Triggered: Context = {self.env.context}, dt_id = {self.dt_id}"
         )
-
         if not self.dt_id:
             if self.env.context.get("default_dt_id"):
                 self.dt_id = self.env.context["default_dt_id"]
-                _logger.debug(f"dt_id set from default_dt_id: {self.dt_id}")
+                _logger.debug(f"🛠 dt_id set from default_dt_id: {self.dt_id}")
             elif self.env.context.get("active_id"):
                 self.dt_id = self.env.context["active_id"]
-                _logger.debug(f"dt_id set from active_id: {self.dt_id}")
+                _logger.debug(f"🛠 dt_id set from active_id: {self.dt_id}")
+
+
+class DbSyncTable(models.Model):
+    _name = "base.db.sync.mssql.table"
+    _description = "Database Sync Table Mapping"
+
+    ds_id = fields.Many2one(
+        "base.db.sync.mssql",
+        string="Database Sync Reference",
+        required=True,
+        ondelete="cascade",
+    )
+    source_table = fields.Char(string="Source Table", required=True)
+    destination_model = fields.Many2one(
+        "ir.model", string="Destination Model", required=True, ondelete="cascade"
+    )
+    modified_stamp_field = fields.Char("Modified Timestamp Field")
+    update_all = fields.Boolean("Update All", default=False)
+    sync_all = fields.Boolean(
+        "Sync All Records",
+        help="If enabled, all records will be retrieved, not just modified ones.",
+    )
+    field_ids = fields.One2many(
+        "base.db.sync.mssql.field", "dt_id", string="Field Mappings"
+    )
+
+    def action_show_details(self):
+        """Opens a detailed field mapping form."""
+        view = self.env.ref("sync_from_mssql.view_dbsync_field_tree")
+        return {
+            "name": "Field Mapping",
+            "type": "ir.actions.act_window",
+            "view_mode": "tree",
+            "res_model": "base.db.sync.mssql.field",
+            "view_id": view.id,
+            "domain": [("dt_id", "=", self.id)],
+            "target": "new",
+        }
+
+    @api.model
+    def create(self, vals):
+        """Ensure ds_id is always set when creating a new table mapping."""
+        _logger.debug(f"🔍 Creating Table Mapping with values: {vals}")
+        _logger.debug(f"🔍 Context at creation: {self.env.context}")
+
+        if not vals.get("ds_id"):
+            context_ds_id = self.env.context.get("default_ds_id")
+            active_id = self.env.context.get("active_id")
+
+            if context_ds_id:
+                vals["ds_id"] = context_ds_id
+                _logger.debug(f"✅ Setting ds_id from default_ds_id: {context_ds_id}")
+            elif active_id:
+                vals["ds_id"] = active_id
+                _logger.debug(f"✅ Setting ds_id from active_id: {active_id}")
+            else:
+                last_sync = self.env["base.db.sync.mssql"].search([], limit=1)
+                if last_sync:
+                    vals["ds_id"] = last_sync.id
+                    _logger.debug(f"✅ Setting ds_id from last sync: {last_sync.id}")
+                else:
+                    _logger.error("🚨 ds_id is missing! Cannot proceed.")
+                    raise ValidationError(
+                        "Sync Reference (ds_id) is required for Table Mappings."
+                    )
+
+        _logger.info(f"✅ Final ds_id used: {vals.get('ds_id')}")
+        record = super().create(vals)
+        _logger.info(f"✅ Successfully created Table Mapping: {record.id}")
+        return record
 
 
 class DbSync(models.Model):

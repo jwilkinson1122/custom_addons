@@ -69,10 +69,6 @@
                     <header>
                         <button name="process_sync" type="object" string="Run Sync Now" class="oe_highlight"/>
                         <button name="action_resync_all" type="object" string="Re-Sync All Records" class="oe_highlight"/>
-
-                        <!-- <button name="start_wash" class="oe_highlight" string="Start" type="object" states="draft"/>
-                        <button name="set_to_done" class="oe_highlight" string="Set to Done" type="object" states="process"/> -->
-                        <!-- <field name="state" widget="statusbar" statusbar_visible="draft,process,done"/> -->
                     </header>
                     <sheet>
                         <group>
@@ -85,17 +81,6 @@
                                 <field name="active"/>
                             </group>
                         </group>
-                        <!-- <button name="process_sync" type="object" string="Run Sync Now" class="oe_highlight"/>
-                        <button name="action_resync_all" type="object" string="Re-Sync All Records" class="oe_highlight"/> -->
-                        <!-- <div class="oe_button_box" name="button_box" style="margin-bottom: 10px;">
-                            <button name="process_sync" type="object" string="🔄 Run Sync Now" class="oe_stat_button oe_highlight"/>
-                            <button name="action_resync_all" type="object" string="🔁 Re-Sync All Records" class="oe_stat_button btn-primary" style="margin-left: 10px;"/>
-                        </div> -->
-                        <!-- <div>
-                            <button name="process_sync" type="object" string="🔄 Run Sync Now" class="oe_stat_button oe_highlight"/>
-                            <button name="action_resync_all" type="object" string="🔁 Re-Sync All Records" class="oe_stat_button btn-primary" style="margin-left: 10px;"/>
-                        </div> -->
-
                         <notebook>
                             <page string="Tables">
                                 <field name="table_ids" widget="one2many">
@@ -141,42 +126,54 @@
                 <form string="MSSQL Table Mapping">
                     <sheet>
                         <group>
+                            <field name="ds_id" context="{'default_ds_id': active_id}" />
                             <field name="source_table"/>
                             <field name="destination_model"/>
                             <field name="modified_stamp_field"/>
                             <field name="update_all"/>
-                            <field name="sync_all" />
+                            <field name="sync_all"/>
                         </group>
                         <notebook>
                             <page string="Field Mappings">
-                                <!-- <field name="field_ids" widget="one2many" context="{'default_dt_id': active_id}" options="{'no_create': False, 'no_delete': False}">
-                                    <tree editable="bottom">
-                                        <field name="source_field"/>
-                                        <field name="destination_field"/>
-                                        <field name="is_pk"/>
-                                    </tree>
-                                </field> -->
-                                <field name="field_ids" widget="one2many" context="{'default_dt_id': id}" options="{'no_create': False, 'no_delete': False}">
-                                    <tree editable="bottom">
-                                        <field name="source_field"/>
-                                        <field name="destination_field"/>
-                                        <field name="is_pk"/>
-                                    </tree>
-                                </field>
-
-
-                            </page>
-                            <page string="Selective Sync">
-                                <group>
-                                    <field name="selected_columns" placeholder="Example: name, email, phone"/>
-                                    <field name="custom_row_filter" placeholder="Example: Status = 'Active'"/>
-                                </group>
+                                <field name="field_ids" widget="one2many" context="{'default_dt_id': active_id}" />
                             </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <!-- <record model="ir.ui.view" id="view_dbsync_table_form">
+            <field name="name">base.db.sync.mssql.table.form</field>
+            <field name="model">base.db.sync.mssql.table</field>
+            <field name="arch" type="xml">
+                <form string="MSSQL Table Mapping">
+                    <sheet>
+                        <group>
+                            <field name="source_table"/>
+                            <field name="destination_model"/>
+                            <field name="modified_stamp_field"/>
+                            <field name="update_all"/>
+                            <field name="sync_all"/>
+                        </group>
+                        <notebook>
+                            <page string="Field Mappings">
+                                <field name="field_ids" widget="one2many" context="{'default_dt_id': id}" options="{'no_create': False, 'no_delete': False}">
+                                    <tree editable="bottom">
+                                        <field name="sequence"/>
+                                        <field name="source_field"/>
+                                        <field name="destination_field"/>
+                                        <field name="is_pk"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record> -->
+
+
 
 
         <!-- Tree View for Field Mapping - This will be used inside the One2many field (field_ids) in MSSQL Table Mapping.-->
@@ -201,9 +198,8 @@
                 <form string="MSSQL Field Mapping">
                     <sheet>
                         <group>
-                            <!-- <field name="dt_id" context="{'default_dt_id': active_id}" invisible="1"/> -->
-                            <field name="dt_id" context="{'default_dt_id': dt_id}" invisible="1"/>
-
+                            <!-- <field name="dt_id" context="{'default_dt_id': id}" options="{'no_create': False, 'no_delete': False}" invisible="1"/> -->
+                            <field name="dt_id" invisible="1"/>
                             <field name="source_field"/>
                             <field name="destination_field"/>
                             <field name="is_pk"/>
@@ -212,39 +208,6 @@
                 </form>
             </field>
         </record>
-
-
-
-
-
-        <!-- <record model="ir.ui.view" id="view_dbsync_search">
-        <field name="name">base.db.sync.mssql.search</field>
-        <field name="model">base.db.sync.mssql</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="sync_name"/>
-                <field name="source"/>
-                <field name="last_updated"/>
-                <filter string="Active" domain="[('active', '=', True)]"/>
-                <filter string="Inactive" domain="[('active', '=', False)]"/>
-            </search>
-        </field>
-    </record> -->
-
-
-        <!-- <record model="ir.ui.view" id="view_dbsync_log_search">
-        <field name="name">base.db.sync.log.search</field>
-        <field name="model">base.db.sync.log</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="log_time"/>
-                <field name="log_type"/>
-                <field name="sync_id"/>
-                <filter string="Errors Only" domain="[('log_type', '=', 'error')]"/>
-                <filter string="Info Only" domain="[('log_type', '=', 'info')]"/>
-            </search>
-        </field>
-    </record> -->
 
         <!-- Action for MSSQL Sync -->
         <record id="action_dbsync" model="ir.actions.act_window">
