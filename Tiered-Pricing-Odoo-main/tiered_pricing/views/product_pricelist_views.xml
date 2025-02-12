@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="product_pricelist_item_inherit_id" model="ir.ui.view">
+            <field name="name">product.price.list.item</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[3]" position="attributes">
+                    <attribute name="invisible">compute_price == 'tiered'</attribute>
+                    <attribute name="groups">product.group_sale_pricelist</attribute>
+                </xpath>
+                <xpath expr="//group[3]" position="after">
+                    <group id="price_list_product_id_id">
+                        <field name="price_list_product_id"
+                               invisible="compute_price != 'tiered'"
+                               required="compute_price == 'tiered'"
+                               groups="product.group_sale_pricelist"
+                               class="oe_inline"/>
+                    </group>
+                </xpath>
+                <xpath expr="//group[@id='price_list_product_id_id']" position="after">
+                    <group id="price_tire_ids_id">
+                        <field name="price_tire_ids"
+                               invisible="compute_price != 'tiered'"
+                               required="compute_price == 'tiered'"
+                               groups="product.group_sale_pricelist"
+                               class="oe_inline">
+                            <tree editable="bottom" class="oe_inline">
+                                <field name="tire_id" string="Tire ID"/>
+                                <field name="tire_quantity_from" string="Tire From"/>
+                                <field name="tire_quantity_to" string="Tire To"/>
+                                <field name="list_price" string="List Price" widget="monetary"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

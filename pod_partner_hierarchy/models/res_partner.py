@@ -750,6 +750,18 @@ class Partner(models.Model):
             "target": "current",
         }
 
+    def action_open_affiliate_selection(self):
+        """Opens a window to select an Affiliate for this Partner."""
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Select Affiliate",
+            "res_model": "res.partner",
+            "view_mode": "tree,form",
+            "target": "new",
+            "domain": [("is_affiliate", "=", True), ("parent_id", "=", self.id)],
+            "context": {"default_parent_id": self.id},
+        }
+
     def _update_fields_view_get_result(self, result, view_type="form"):
         if view_type == "form" and not self._context.get("display_original_view"):
             doc = etree.XML(result["arch"])
