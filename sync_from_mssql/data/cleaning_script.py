@@ -9,12 +9,14 @@ BASE_DIR = r"C:\odoo17\server\odoo\custom_addons\sync_from_mssql\data"
 FILES = [
     "crm_all_active_accounts.csv",
     "crm_active_parent_accounts.csv",
-    "crm_active_child_accounts.csv"
+    "crm_active_child_accounts.csv",
 ]
+
 
 def clean_nulls(value):
     """Convert NULL, N/A, and empty strings to None."""
     return None if pd.isna(value) or value in ["NULL", "N/A", ""] else value.strip()
+
 
 def clean_phone_number(phone):
     """Normalize phone numbers."""
@@ -23,10 +25,13 @@ def clean_phone_number(phone):
     try:
         parsed = phonenumbers.parse(phone, "US")  # Change country if needed
         if phonenumbers.is_valid_number(parsed):
-            return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
+            return phonenumbers.format_number(
+                parsed, phonenumbers.PhoneNumberFormat.E164
+            )
     except phonenumbers.NumberParseException:
         return None
     return None
+
 
 def clean_email(email):
     """Normalize email addresses."""
@@ -35,30 +40,54 @@ def clean_email(email):
         return email if re.match(r"[^@]+@[^@]+\.[^@]+", email) else None
     return None
 
+
+# def fix_timestamp(timestamp):
+#     """Convert 'HH:MM.SS' format timestamps to 'YYYY-MM-DD HH:MM:SS'."""
+#     if not timestamp or pd.isna(timestamp):
+#         return None
+#     try:
+#         return datetime.strptime(timestamp, "%H:%M.%S").strftime("%Y-%m-%d %H:%M:%S")
+#     except ValueError:
+#         return None
+
+
 def fix_timestamp(timestamp):
-    """Convert 'HH:MM.SS' format timestamps to 'YYYY-MM-DD HH:MM:SS'."""
     if not timestamp or pd.isna(timestamp):
         return None
     try:
-        return datetime.strptime(timestamp, "%H:%M.%S").strftime("%Y-%m-%d %H:%M:%S")
+        # If Excel changed it to a time-only format, assume base date
+        if len(timestamp) <= 8:  # Example: "03:00.0"
+            return f"1900-01-01 {timestamp}"
+        return datetime.strptime(timestamp, "%m/%d/%Y %H:%M").strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
     except ValueError:
-        return None  # Invalid format
+        return timestamp  # Return original if unable to parse
+
 
 def clean_address(value):
     """Trim address fields."""
     return value.strip() if value and isinstance(value, str) else None
 
+
 def clean_data(file_path):
     """Process and clean a CSV file."""
     try:
-        df = pd.read_csv(file_path, dtype=str)  # Load as string to prevent data type issues
+        df = pd.read_csv(
+            file_path, dtype=str
+        )  # Load as string to prevent data type issues
         print(f"Processing: {os.path.basename(file_path)}")
 
         # Strip spaces, replace NULLs
         df = df.applymap(clean_nulls)
 
         # Clean phone numbers
-        phone_columns = ["address1_telephone1", "telephone1", "telephone2", "telephone3"]
+        phone_columns = [
+            "address1_telephone1",
+            "telephone1",
+            "telephone2",
+            "telephone3",
+        ]
         for col in phone_columns:
             if col in df.columns:
                 df[col] = df[col].apply(clean_phone_number)
@@ -89,6 +118,7 @@ def clean_data(file_path):
 
     except Exception as e:
         print(f"❌ Error processing {file_path}: {e}")
+
 
 if __name__ == "__main__":
     for file_name in FILES:
