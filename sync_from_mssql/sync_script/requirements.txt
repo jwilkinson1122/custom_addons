@@ -1,0 +1,7 @@
+pyodbc
+pandas
+pymssql
+odoorpc
+requests
+retry
+logging

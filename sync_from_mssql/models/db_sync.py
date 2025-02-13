@@ -18,7 +18,11 @@ class ImportCRMAccounts(models.Model):
 
     def _normalize_phone(self, phone):
         """Normalize phone number format"""
-        return phone.replace("(", "").replace(")", "").replace(" ", "").replace("-", "") if phone else ""
+        return (
+            phone.replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
+            if phone
+            else ""
+        )
 
     def _normalize_email(self, email):
         """Convert email to lowercase"""
@@ -87,9 +91,13 @@ class ImportCRMAccounts(models.Model):
                     "street": row.get("address1_line1", "").strip(),
                     "street2": row.get("address1_line2", "").strip(),
                     "city": row.get("address1_city", "").strip(),
-                    "state_id": self._get_state_id(row.get("address1_stateorprovince", "").strip()),
+                    "state_id": self._get_state_id(
+                        row.get("address1_stateorprovince", "").strip()
+                    ),
                     "zip": row.get("address1_postalcode", "").strip(),
-                    "country_id": self._get_country_id(row.get("address1_country", "").strip()),
+                    "country_id": self._get_country_id(
+                        row.get("address1_country", "").strip()
+                    ),
                     "phone": self._normalize_phone(row.get("address1_telephone1")),
                     "email": self._normalize_email(row.get("emailaddress1")),
                     "website": row.get("websiteurl", "").strip(),
@@ -106,18 +114,18 @@ class ImportCRMAccounts(models.Model):
                 if not is_parent and parent_account_id:
                     parent = parent_mapping.get(parent_account_id)
                     if not parent:
-                        parent = self.env["res.partner"].search([
-                            ("legacy_customer_code", "=", parent_account_id)
-                        ], limit=1)
+                        parent = self.env["res.partner"].search(
+                            [("legacy_customer_code", "=", parent_account_id)], limit=1
+                        )
                         if parent:
                             parent_mapping[parent_account_id] = parent.id
                     if parent:
                         account_vals["parent_id"] = parent.id
 
                 # Check if account already exists
-                existing_partner = self.env["res.partner"].search([
-                    ("legacy_customer_code", "=", account_number)
-                ], limit=1)
+                existing_partner = self.env["res.partner"].search(
+                    [("legacy_customer_code", "=", account_number)], limit=1
+                )
 
                 if existing_partner:
                     existing_partner.write(account_vals)
@@ -129,125 +137,12 @@ class ImportCRMAccounts(models.Model):
         _logger.info("Import completed.")
 
 
-
-# class ImportCRMAccounts(models.Model):
-#     _name = "crm.account.import"
-#     _description = "Import CRM Accounts from CSV"
-
-#     def _get_state_id(self, state_name, country_code="US"):
-#         """Get or create state ID from name"""
-#         if not state_name:
-#             return False
-
-#         country = self.env["res.country"].search([("code", "=", country_code)], limit=1)
-#         if not country:
-#             return False 
-
-#         state = self.env["res.country.state"].search(
-#             [("name", "=", state_name), ("country_id", "=", country.id)], limit=1
-#         )
-#         if not state:
- 
-#             state = self.env["res.country.state"].create(
-#                 {
-#                     "name": state_name,
-#                     "code": state_name[:3].upper(), 
-#                     "country_id": country.id,
-#                 }
-#             )
-#             _logger.info(f"Created new state: {state.name} ({state.code})")
-
-#         return state.id
-
-#     def _get_country_id(self, country_name):
-#         """Get or create country ID from name"""
-#         if not country_name:
-#             return False
-
-#         country = self.env["res.country"].search([("name", "=", country_name)], limit=1)
-#         if not country:
-#             country = self.env["res.country"].create(
-#                 {"name": country_name, "code": country_name[:2].upper()}
-#             )
-#             _logger.info(f"Created new country: {country.name} ({country.code})")
-
-#         return country.id
-
-#     def import_parent_accounts(self, file_path):
-#         """Import Parent Accounts FIRST"""
-#         with open(file_path, mode="r", encoding="utf-8") as file:
-#             reader = csv.DictReader(file)
-#             for row in reader:
-#                 vals = {
-#                     "name": row["name"],
-#                     "legacy_customer_code": row["accountnumber"],
-#                     "sql_guid": row["accountnumber"],  
-#                     "street": row.get("address1_line1", ""),
-#                     "city": row.get("address1_city", ""),
-#                     "state_id": self._get_state_id(
-#                         row.get("address1_stateorprovince", "")
-#                     ),
-#                     "zip": row.get("address1_postalcode", ""),
-#                     "country_id": self._get_country_id(row.get("address1_country", "")),
-#                     "phone": row.get("address1_telephone1", ""),
-#                     "email": row.get("emailaddress1", ""),
-#                     "website": row.get("websiteurl", ""),
-#                     "is_company": True,
-#                     "is_account": True,
-#                     "is_affiliate": False,
-#                     "parent_id": None,  
-#                 }
-
-#                 existing_partner = self.env["res.partner"].search(
-#                     [("legacy_customer_code", "=", row["accountnumber"])], limit=1
-#                 )
-#                 if existing_partner:
-#                     existing_partner.write(vals)
-#                 else:
-#                     self.env["res.partner"].create(vals)
-
-#     def import_child_accounts(self, file_path):
-#         """Import Child Accounts and Link to Parent"""
-#         with open(file_path, mode="r", encoding="utf-8") as file:
-#             reader = csv.DictReader(file)
-#             for row in reader:
-#                 parent = self.env["res.partner"].search(
-#                     [("sql_guid", "=", row["parentaccountid"])], limit=1
-#                 )
-
-#                 vals = {
-#                     "name": row["name"],
-#                     "legacy_customer_code": row["accountnumber"],
-#                     "sql_guid": row["accountnumber"], 
-#                     "street": row.get("address1_line1", ""),
-#                     "city": row.get("address1_city", ""),
-#                     "state_id": self._get_state_id(
-#                         row.get("address1_stateorprovince", "")
-#                     ),
-#                     "zip": row.get("address1_postalcode", ""),
-#                     "country_id": self._get_country_id(row.get("address1_country", "")),
-#                     "phone": row.get("address1_telephone1", ""),
-#                     "email": row.get("emailaddress1", ""),
-#                     "website": row.get("websiteurl", ""),
-#                     "is_company": True,
-#                     "is_account": False,
-#                     "is_affiliate": True,
-#                     "parent_id": parent.id if parent else None, 
-#                 }
-
-#                 existing_partner = self.env["res.partner"].search(
-#                     [("legacy_customer_code", "=", row["accountnumber"])], limit=1
-#                 )
-#                 if existing_partner:
-#                     existing_partner.write(vals)
-#                 else:
-#                     self.env["res.partner"].create(vals)
-
-
 class Partner(models.Model):
     _inherit = "res.partner"
 
-    legacy_customer_code = fields.Char(string="Legacy Customer Code", index=True, help="Stores old CRM account number")
+    legacy_customer_code = fields.Char(
+        string="Legacy Customer Code", index=True, help="Stores old CRM account number"
+    )
 
     # search parent accounts using their GUID when importing child accounts.
     sql_guid = fields.Char(
@@ -283,7 +178,7 @@ class Partner(models.Model):
             _logger.info(f"Created new state: {state.name} ({state.code})")
 
         return state.id
-    
+
     def import_parent_accounts(self, file_path):
         """Import Parent Accounts"""
         self.env["crm.account.import"].import_accounts(file_path, is_parent=True)
@@ -291,57 +186,6 @@ class Partner(models.Model):
     def import_child_accounts(self, file_path):
         """Import Child Accounts and Link to Parent"""
         self.env["crm.account.import"].import_accounts(file_path, is_parent=False)
-
-
-    # def import_parent_accounts(self, file_path):
-    #     """Import Parent Accounts"""
-    #     with open(file_path, mode="r", encoding="utf-8") as file:
-    #         reader = csv.DictReader(file)
-    #         for row in reader:
-    #             vals = {
-    #                 "name": row["name"],
-    #                 "legacy_customer_code": row["accountnumber"],
-    #                 "sql_guid": row["parentaccountid"],   
-    #                 "is_company": True,
-    #                 "is_account": True,
-    #                 "is_affiliate": False,
-    #                 "parent_id": None,  
-    #             }
-
-    #             existing_partner = self.env["res.partner"].search(
-    #                 [("legacy_customer_code", "=", row["accountnumber"])], limit=1
-    #             )
-    #             if existing_partner:
-    #                 existing_partner.write(vals)
-    #             else:
-    #                 self.env["res.partner"].create(vals)
-
-    # def import_child_accounts(self, file_path):
-    #     """Import Child Accounts and Link to Parent"""
-    #     with open(file_path, mode="r", encoding="utf-8") as file:
-    #         reader = csv.DictReader(file)
-    #         for row in reader:
-    #             parent = self.env["res.partner"].search(
-    #                 [("sql_guid", "=", row["parentaccountid"])], limit=1
-    #             )
-
-    #             vals = {
-    #                 "name": row["name"],
-    #                 "legacy_customer_code": row["accountnumber"],
-    #                 "sql_guid": row["parentaccountid"],
-    #                 "is_company": True,
-    #                 "is_account": False,
-    #                 "is_affiliate": True,
-    #                 "parent_id": parent.id if parent else None, 
-    #             }
-
-    #             existing_partner = self.env["res.partner"].search(
-    #                 [("legacy_customer_code", "=", row["accountnumber"])], limit=1
-    #             )
-    #             if existing_partner:
-    #                 existing_partner.write(vals)
-    #             else:
-    #                 self.env["res.partner"].create(vals)
 
 
 class OutDbSource(models.Model):
@@ -626,57 +470,6 @@ class DbSync(models.Model):
             "target": "new",
             "context": {"default_message": error_text},
         }
-
-    # def sync_table(self, conn, table):
-    #     """Fetch records based on user selection: Partial Column & Row Sync."""
-
-    #     last_sync_date = self.last_updated or datetime.datetime(2000, 1, 1)
-    #     formatted_date = last_sync_date.strftime("%Y-%m-%d %H:%M:%S")
-
-    #     if table.selected_columns:
-    #         column_list = table.selected_columns.replace(" ", "").split(",")
-    #         column_query = ", ".join(column_list)
-    #     else:
-    #         column_query = "*"
-
-    #     where_conditions = []
-    #     if not table.sync_all:
-    #         if not table.modified_stamp_field:
-    #             _logger.warning(
-    #                 f"⚠️ Skipping {table.source_table}: No modified timestamp field set."
-    #             )
-    #             return
-    #         where_conditions.append(f"{table.modified_stamp_field} >= '{formatted_date}'")
-
-    #     if table.custom_row_filter:
-    #         where_conditions.append(table.custom_row_filter)
-
-    #     where_clause = f"WHERE {' AND '.join(where_conditions)}" if where_conditions else ""
-    #     query = f"SELECT {column_query} FROM {table.source_table} {where_clause}"
-
-    #     _logger.debug(f"Executing query: {query}")
-
-    #     cursor = conn.cursor()
-    #     try:
-    #         cursor.execute(query)
-    #         columns = [column[0] for column in cursor.description]
-    #         rows = [
-    #             dict(zip(columns, row)) for row in cursor.fetchall()
-    #         ]
-    #         _logger.info(f"✅ Retrieved {len(rows)} records from {table.source_table}.")
-    #     except pyodbc.ProgrammingError as e:
-    #         _logger.error(f"❌ SQL Query Failed: {query}")
-    #         _logger.error(f"SQL Error: {str(e)}")
-    #         raise ValidationError(f"SQL Query Failed: {str(e)}")
-
-    #     if not rows:
-    #         _logger.info(f"⚠️ No records found in {table.source_table}, skipping sync.")
-    #         return
-
-    #     batch_size = 1000
-    #     for i in range(0, len(rows), batch_size):
-    #         batch = rows[i : i + batch_size]
-    #         self.update_odoo_model(table, batch)
 
     def sync_table(self, conn, table):
         """Fetch records based on user selection: Partial Column & Row Sync."""

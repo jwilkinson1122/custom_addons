@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  odoo:
+    image: odoo:17
+    container_name: odoo
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - ./config:/etc/odoo
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+
+  db:
+    image: postgres:15
+    container_name: odoo-db
+    restart: always
+    environment:
+      POSTGRES_DB: odoo
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+
+  sync_script:
+    build: ./sync_script
+    container_name: sync_script
+    depends_on:
+      - odoo
+      - mssql
+    volumes:
+      - ./data:/app/data
+    environment:
+      MSSQL_SERVER: "mssql"
+      MSSQL_DATABASE: "your_database"
+      MSSQL_USER: "sa"
+      MSSQL_PASSWORD: "YourStrong!Passw0rd"
+      ODOO_URL: "http://odoo:8069"
+      ODOO_DB: "odoo"
+      ODOO_USER: "admin"
+      ODOO_PASSWORD: "admin"
+    command: ["/bin/bash", "-c", "cron && tail -f /var/log/cron.log"]
+
+volumes:
+  odoo-db-data:
