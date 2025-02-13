@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 class TestCRMImport(TransactionCase):
+    
     def setUp(self):
         """Set up the test environment before each test."""
         super(TestCRMImport, self).setUp()
