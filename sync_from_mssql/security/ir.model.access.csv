@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_account_import,access_crm_account_import,model_crm_account_import,base.group_system,1,1,1,1
 access_res_partner,access_res_partner,model_res_partner,base.group_system,1,1,1,1
 access_base_db_source,access_base_db_source,model_base_db_source,base.group_system,1,1,1,1
 access_base_db_sync_mssql,access_base_db_sync_mssql,model_base_db_sync_mssql,base.group_system,1,1,1,1
