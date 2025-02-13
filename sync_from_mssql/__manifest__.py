@@ -9,7 +9,7 @@
         "views/message_wizard.xml",
         "views/dbsync.xml",
         "data/ir_cron.xml",
-        "data/crm_active_accounts.csv",
+        "data/crm_all_active_accounts.csv",
         "data/crm_active_parent_accounts.csv",
         "data/crm_active_child_accounts.csv",
         # "data/email_templates.xml",
