@@ -4,4 +4,4 @@ pymssql
 odoorpc
 requests
 retry
-logging
+

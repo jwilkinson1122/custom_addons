@@ -1,0 +1,1 @@
+0 0 * * * python3 /app/sync.py >> /var/log/sync_cron.log 2>&1

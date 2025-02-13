@@ -13,17 +13,17 @@ services:
       - ./config:/etc/odoo
     environment:
       - HOST=db
-      - USER=odoo
-      - PASSWORD=odoo
+      - USER=odoo # ✅ Odoo database user (matches POSTGRES_USER)
+      - PASSWORD=odoo # ✅ Odoo database password (matches POSTGRES_PASSWORD)
 
   db:
     image: postgres:15
     container_name: odoo-db
     restart: always
     environment:
-      POSTGRES_DB: odoo
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: odoo # ✅ Name of the Odoo database
+      POSTGRES_USER: odoo # ✅ PostgreSQL user
+      POSTGRES_PASSWORD: myodoo_password # ✅ Set a secure password
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
 
@@ -33,7 +33,7 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "YourStrong!Passw0rd"
+      SA_PASSWORD: "MyStrongMSSQLPass!" # ✅ MSSQL system admin password
       ACCEPT_EULA: "Y"
 
   sync_script:
@@ -45,14 +45,14 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      MSSQL_SERVER: "mssql"
-      MSSQL_DATABASE: "your_database"
-      MSSQL_USER: "sa"
-      MSSQL_PASSWORD: "YourStrong!Passw0rd"
+      MSSQL_SERVER: "mssql" # ✅ Name of the MSSQL service (Docker networking)
+      MSSQL_DATABASE: "my_mssql_db" # ✅ Name of your database inside MSSQL
+      MSSQL_USER: "sa" # ✅ Use "sa" for MSSQL system admin
+      MSSQL_PASSWORD: "MyStrongMSSQLPass!" # ✅ Must match the SA_PASSWORD above
       ODOO_URL: "http://odoo:8069"
-      ODOO_DB: "odoo"
-      ODOO_USER: "admin"
-      ODOO_PASSWORD: "admin"
+      ODOO_DB: "odoo" # ✅ Odoo database name
+      ODOO_USER: "admin" # ✅ Odoo login user
+      ODOO_PASSWORD: "admin" # ✅ Odoo login password
     command: ["/bin/bash", "-c", "cron && tail -f /var/log/cron.log"]
 
 volumes:
