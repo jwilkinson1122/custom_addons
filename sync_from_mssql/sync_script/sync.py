@@ -13,15 +13,16 @@ logging.basicConfig(
 )
 
 # Environment Variables for Configurations
-MSSQL_HOST = os.getenv("MSSQL_SERVER", "mssql")
-MSSQL_DATABASE = os.getenv("MSSQL_DATABASE", "your_database")
+# MSSQL_HOST = os.getenv("MSSQL_SERVER", "mssql")
+MSSQL_HOST = os.getenv("MSSQL_SERVER", "localhost")
+MSSQL_DATABASE = os.getenv("MSSQL_DATABASE", "nwplcrm_mscrm")
 MSSQL_USER = os.getenv("MSSQL_USER", "sa")
-MSSQL_PASSWORD = os.getenv("MSSQL_PASSWORD", "YourStrong!Passw0rd")
+MSSQL_PASSWORD = os.getenv("MSSQL_PASSWORD", "Nwpod11!!")
 
 ODOO_URL = os.getenv("ODOO_URL", "http://odoo:8069")
-ODOO_DB = os.getenv("ODOO_DB", "odoo")
-ODOO_USER = os.getenv("ODOO_USER", "admin")
-ODOO_PASSWORD = os.getenv("ODOO_PASSWORD", "admin")
+ODOO_DB = os.getenv("ODOO_DB", "pod_test")
+ODOO_USER = os.getenv("ODOO_USER", "jeff@nwpodiatric.com")
+ODOO_PASSWORD = os.getenv("ODOO_PASSWORD", "Jwilky020616")
 
 # Retry settings
 MAX_RETRIES = 5
@@ -32,12 +33,20 @@ RETRY_DELAY = 10  # seconds
 def connect_to_mssql():
     """Establish a connection to MSSQL with retry mechanism."""
     try:
+        # conn = pymssql.connect(
+        #     server=MSSQL_HOST,
+        #     user=MSSQL_USER,
+        #     password=MSSQL_PASSWORD,
+        #     database=MSSQL_DATABASE,
+        # )
         conn = pymssql.connect(
-            server=MSSQL_HOST,
-            user=MSSQL_USER,
-            password=MSSQL_PASSWORD,
-            database=MSSQL_DATABASE,
+            server="mssql",
+            port="1433",
+            user="sa",
+            password="Nwpod11!!",
+            database="nwplcrm_mscrm",
         )
+
         logging.info("✅ Connected to MSSQL successfully.")
         return conn
     except pymssql.DatabaseError as e:
@@ -72,9 +81,13 @@ def fetch_mssql_data():
     try:
         conn = connect_to_mssql()
         cursor = conn.cursor(as_dict=True)
+        # cursor.execute(
+        #     "SELECT accountnumber, name, emailaddress1 FROM dbo.FilteredAccount WHERE statuscode = 1"
+        # )
         cursor.execute(
-            "SELECT accountnumber, name, emailaddress1 FROM crm_all_active_accounts WHERE statuscode = 1"
+            "SELECT accountnumber, accountname, emailaddress1 FROM nwplcrm_mscrm.dbo.Accounts WHERE statuscode = 1"
         )
+
         data = cursor.fetchall()
         conn.close()
         logging.info(f"✅ Fetched {len(data)} records from MSSQL.")

@@ -200,6 +200,17 @@ class OutDbSource(models.Model):
     source_password = fields.Char(string="Source Password", required=True)
     state = fields.Boolean("State")
 
+    # def connect_sql_server(self):
+    #     """Establishes a connection to SQL Server."""
+    #     try:
+    #         return pyodbc.connect(
+    #             f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={self.server};DATABASE={self.database};"
+    #             f"UID={self.sql_user};PWD={self.sql_user_password};Trusted_Connection=no;"
+    #         )
+    #     except Exception as e:
+    #         _logger.error("Failed to connect to SQL Server for %s: %s", self.name, e)
+    #         return None
+
     @contextmanager
     def get_connection(self):
         """Context manager for handling MSSQL database connections"""

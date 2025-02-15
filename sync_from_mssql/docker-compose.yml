@@ -12,20 +12,25 @@ services:
       - ./addons:/mnt/extra-addons
       - ./config:/etc/odoo
     environment:
-      - HOST=db
-      - USER=odoo # ✅ Odoo database user (matches POSTGRES_USER)
-      - PASSWORD=odoo # ✅ Odoo database password (matches POSTGRES_PASSWORD)
-
+      - HOST=odoo-db
+      - ODOO_DB=pod_test
+      - USER=odoo
+      - PASSWORD=Jwilky020616
   db:
-    image: postgres:15
+    image: postgres:17
     container_name: odoo-db
     restart: always
     environment:
-      POSTGRES_DB: odoo # ✅ Name of the Odoo database
-      POSTGRES_USER: odoo # ✅ PostgreSQL user
-      POSTGRES_PASSWORD: myodoo_password # ✅ Set a secure password
+      POSTGRES_DB: pod_test
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: Jwilky020616
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -33,8 +38,25 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "MyStrongMSSQLPass!" # ✅ MSSQL system admin password
+      SA_PASSWORD: "Nwpod11!!"
       ACCEPT_EULA: "Y"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/opt/mssql-tools/bin/sqlcmd",
+          "-S",
+          "localhost",
+          "-U",
+          "sa",
+          "-P",
+          "Nwpod11!!",
+          "-Q",
+          "SELECT 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   sync_script:
     build: ./sync_script
@@ -45,14 +67,14 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      MSSQL_SERVER: "mssql" # ✅ Name of the MSSQL service (Docker networking)
-      MSSQL_DATABASE: "my_mssql_db" # ✅ Name of your database inside MSSQL
-      MSSQL_USER: "sa" # ✅ Use "sa" for MSSQL system admin
-      MSSQL_PASSWORD: "MyStrongMSSQLPass!" # ✅ Must match the SA_PASSWORD above
+      MSSQL_SERVER: "localhost"
+      MSSQL_DATABASE: "nwplcrm_mscrm"
+      MSSQL_USER: "sa"
+      MSSQL_PASSWORD: "Nwpod11!!"
       ODOO_URL: "http://odoo:8069"
-      ODOO_DB: "odoo" # ✅ Odoo database name
-      ODOO_USER: "admin" # ✅ Odoo login user
-      ODOO_PASSWORD: "admin" # ✅ Odoo login password
+      ODOO_DB: "pod_test"
+      ODOO_USER: "jeff@nwpodiatric.com"
+      ODOO_PASSWORD: "Jwilky020616"
     command: ["/bin/bash", "-c", "cron && tail -f /var/log/cron.log"]
 
 volumes:
