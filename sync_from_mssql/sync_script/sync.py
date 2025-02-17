@@ -15,14 +15,14 @@ logging.basicConfig(
 # Environment Variables for Configurations
 # MSSQL_HOST = os.getenv("MSSQL_SERVER", "mssql")
 MSSQL_HOST = os.getenv("MSSQL_SERVER", "localhost")
-MSSQL_DATABASE = os.getenv("MSSQL_DATABASE", "nwplcrm_mscrm")
+MSSQL_DATABASE = os.getenv("MSSQL_DATABASE", "my_mssql_db")
 MSSQL_USER = os.getenv("MSSQL_USER", "sa")
-MSSQL_PASSWORD = os.getenv("MSSQL_PASSWORD", "Nwpod11!!")
+MSSQL_PASSWORD = os.getenv("MSSQL_PASSWORD", "MyStrongMSSQLPass!")
 
 ODOO_URL = os.getenv("ODOO_URL", "http://odoo:8069")
-ODOO_DB = os.getenv("ODOO_DB", "pod_test")
-ODOO_USER = os.getenv("ODOO_USER", "jeff@nwpodiatric.com")
-ODOO_PASSWORD = os.getenv("ODOO_PASSWORD", "Jwilky020616")
+ODOO_DB = os.getenv("ODOO_DB", "odoo")
+ODOO_USER = os.getenv("ODOO_USER", "admin")
+ODOO_PASSWORD = os.getenv("ODOO_PASSWORD", "admin")
 
 # Retry settings
 MAX_RETRIES = 5
@@ -33,19 +33,19 @@ RETRY_DELAY = 10  # seconds
 def connect_to_mssql():
     """Establish a connection to MSSQL with retry mechanism."""
     try:
-        # conn = pymssql.connect(
-        #     server=MSSQL_HOST,
-        #     user=MSSQL_USER,
-        #     password=MSSQL_PASSWORD,
-        #     database=MSSQL_DATABASE,
-        # )
         conn = pymssql.connect(
-            server="mssql",
-            port="1433",
-            user="sa",
-            password="Nwpod11!!",
-            database="nwplcrm_mscrm",
+            server=MSSQL_HOST,
+            user=MSSQL_USER,
+            password=MSSQL_PASSWORD,
+            database=MSSQL_DATABASE,
         )
+        # conn = pymssql.connect(
+        #     server="mssql",
+        #     port="1433",
+        #     user="sa",
+        #     password="MyStrongMSSQLPass!",
+        #     database="my_mssql_db",
+        # )
 
         logging.info("✅ Connected to MSSQL successfully.")
         return conn
@@ -81,12 +81,12 @@ def fetch_mssql_data():
     try:
         conn = connect_to_mssql()
         cursor = conn.cursor(as_dict=True)
-        # cursor.execute(
-        #     "SELECT accountnumber, name, emailaddress1 FROM dbo.FilteredAccount WHERE statuscode = 1"
-        # )
         cursor.execute(
-            "SELECT accountnumber, accountname, emailaddress1 FROM nwplcrm_mscrm.dbo.Accounts WHERE statuscode = 1"
+            "SELECT accountnumber, name, emailaddress1 FROM dbo.FilteredAccount WHERE statuscode = 1"
         )
+        # cursor.execute(
+        #     "SELECT accountnumber, accountname, emailaddress1 FROM my_mssql_db.dbo.FilteredAccount WHERE statuscode = 1"
+        # )
 
         data = cursor.fetchall()
         conn.close()
@@ -180,17 +180,3 @@ if __name__ == "__main__":
     logging.info("✅ Sync Completed.")
 
 
-# ✅ What’s Improved?
-# Better Error Handling: Retry mechanisms prevent crashes.
-# Better MSSQL Queries: Uses explicit column selection.
-# Automated cron Scheduling: Runs inside Docker every 15 minutes.
-
-
-# 🔄 Next Steps
-# Test the sync manually:
-
-# docker exec -it sync_script bash
-# python3 /app/sync.py
-
-# Check logs:
-# docker logs -f sync_script
