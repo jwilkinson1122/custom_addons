@@ -6,7 +6,7 @@
         <!-- Parent Company -->
         <record id="parent_company_1" model="res.partner">
             <field name="name">Fab Foot Clinic</field>
-            <field name="is_parent_company" eval="True"/>
+            <field name="is_account" eval="True"/>
             <field name="is_company" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
@@ -25,7 +25,7 @@
         <record id="child_affiliate_1" model="res.partner">
             <field name="name">Fab Foot Clinic - C1</field>
             <field name="is_company" eval="True"/>
-            <field name="is_affiliate_company" eval="True"/>
+            <field name="is_affiliate" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="parent_company_1"/>
@@ -43,7 +43,7 @@
         <record id="child_affiliate_2" model="res.partner">
             <field name="name">Fab Foot Clinic - C2</field>
             <field name="is_company" eval="True"/>
-            <field name="is_affiliate_company" eval="True"/>
+            <field name="is_affiliate" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="parent_company_1"/>
@@ -61,7 +61,7 @@
         <record id="grand_child_affiliate_1" model="res.partner">
             <field name="name">Fab Foot Clinic - GC1</field>
             <field name="is_company" eval="True"/>
-            <field name="is_affiliate_company" eval="True"/>
+            <field name="is_affiliate" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="child_affiliate_1"/>
@@ -79,7 +79,7 @@
         <record id="grand_child_affiliate_2" model="res.partner">
             <field name="name">Fab Foot Clinic - GC2</field>
             <field name="is_company" eval="True"/>
-            <field name="is_affiliate_company" eval="True"/>
+            <field name="is_affiliate" eval="True"/>
             <field name="is_partner" eval="True"/>
             <field name="partner_type" ref="clinic"/>
             <field name="parent_id" ref="child_affiliate_2"/>

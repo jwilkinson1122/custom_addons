@@ -1,0 +1,70 @@
+
+#o_partner_right {
+    @include media-breakpoint-up(lg) {
+        border-left: $border-width solid $o-form-separator-color;
+    }
+
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the chart horizontally */
+    justify-content: center; /* Centers the chart vertically */
+    text-align: center;
+
+    .o_org_chart_entry {
+        .o_media_object {
+            width: $o-part-org-chart-entry-pic-small-size;
+            height: $o-part-org-chart-entry-pic-small-size;
+            background-size: cover;
+            background-position: center center;
+        }
+
+        &.o_org_chart_entry_self .o_media_object {
+            width: $o-part-org-chart-entry-pic-size;
+            height: $o-part-org-chart-entry-pic-size;
+        }
+
+        &:not(.o_org_chart_entry_self):hover .o_media_object {
+            box-shadow: 0 0 0 $border-width*2 $info;
+        }
+    }
+
+    // Center the partner org chart inside
+    .o_org_chart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .o_org_chart_entry_self_container.o_org_chart_has_managers {
+        margin-left: $o-part-org-chart-entry-pic-small-size * .25;
+    }
+
+    .o_org_chart_group_down.o_org_chart_has_managers {
+        padding-left: $o-part-org-chart-entry-pic-size * .6;
+    }
+
+    .o_org_chart_group_up .o_treeEntry {
+        --treeEntry-padding-h: 0px;
+        --treeEntry--before-top: 50%;
+        --treeEntry--after-display: none;
+        --treeEntry--beforeAfter-left: #{$o-part-org-chart-entry-pic-small-size * .5};
+    }
+
+    .o_org_chart_entry_self_container .o_treeEntry {
+        --treeEntry-padding-h: #{$o-part-org-chart-entry-pic-small-size * .5};
+        --treeEntry-padding-v: #{$o-part-org-chart-entry-pic-size * .25};
+    }
+
+    .o_org_chart_group_down .o_treeEntry {
+        --treeEntry-padding-h: #{$o-part-org-chart-entry-pic-size};
+        --treeEntry-padding-v: #{$o-part-org-chart-entry-pic-small-size * .5};
+    }
+}
+
+// Right to Left specific style to flip the popover arrow
+.o_rtl .o_org_chart_popup.popover .arrow {
+    left: 100%;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}
