@@ -35,7 +35,7 @@
         "web_hierarchy",
         "website",
         "web_studio",
-        "pod_web_chatter",
+        # "pod_web_chatter",
     ],
     "data": [
         # "data/ir_attachment.xml",
@@ -87,10 +87,12 @@
         # "views/res_partner_view.xml",
         "pod_contacts/views/res_partner_type_view.xml",
         "pod_contacts/views/partner_company_type_view.xml",
-
         "pod_contacts/views/contact_menu.xml",
         "pod_contacts/views/sale_order_views.xml",
         # "pod_contacts/views/sale_order_views.xml",
+
+        # web_chatter
+        "pod_web_chatter/views/res_users.xml",
 
         # reorder
         # "pod_sale_reorder/security/ir.model.access.csv",
@@ -198,16 +200,30 @@
     ],
     "assets": {
         "web._assets_primary_variables": [
+            (
+                "after", 
+                "web/static/src/scss/primary_variables.scss", 
+                "nwpl_odoo_master/static/pod_web_chatter/static/src/scss/variables.scss",
+            ),
             "nwpl_odoo_master/static/pod_contacts/static/src/scss/variables.scss",
         ],
         "web.assets_frontend": [
             "nwpl_odoo_master/static/pod_customer_statement/static/src/js/portal.js",
         ],
         "web.assets_backend": [
+            "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.js",
+            "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.xml",
+            "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.scss",
+            (
+                "after", 
+                "mail/static/src/views/web/form/form_compiler.js", 
+                "nwpl_odoo_master/static/pod_web_chatter/static/src/views/form/form_compiler.js"
+            ),
+            "nwpl_odoo_master/static/pod_web_chatter/static/src/views/form/form_renderer.js",
             "nwpl_odoo_master/static/pod_contacts/static/src/scss/*",
             "nwpl_odoo_master/static/pod_contacts/static/src/fields/*",
             "nwpl_odoo_master/static/pod_contacts/static/src/views/*",
-
+            
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/**/*",
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/css/tree_recursive_styles.css",
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/js/list_renderer.js",

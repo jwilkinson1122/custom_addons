@@ -626,7 +626,6 @@
                     <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_ids or patient_ids == ''">
                         No Patients Available
                     </div>
-             
                 </page>
             </xpath>
             <xpath expr='//page[@name="contact_addresses"]' position="after">
