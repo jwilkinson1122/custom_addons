@@ -211,6 +211,7 @@
             "nwpl_odoo_master/static/pod_customer_statement/static/src/js/portal.js",
         ],
         "web.assets_backend": [
+            # 'nwpl_odoo_master/static/src/css/styles.css',
             "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.js",
             "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.xml",
             "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.scss",
