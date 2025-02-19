@@ -1,65 +1,242 @@
-// Styling for bold placeholder text
-.o_bold_placeholder::placeholder {
-    font-weight: bold;
-}
+/***********************************************************
+        Variables
+************************************************************/
 
-// Below one for blue box
+// Dark Text
+// #0e616e
 
-.o_required_modifier {
+// Background Color
+// #d1ecf1
 
-    &.o_input,
-    .o_input {
-        background-color: #D2D2FF !important;
-        border-radius: 5px; // Rounded corners for a softer look
-        padding: 10px 12px; // Adjust padding (vertical and horizontal)
-        height: 40px; // Set a consistent height for input fields
-    }
-}
+// Border Color
+// #b9e3ea
 
-
-// .o_input {
-//     border: $input-border-width solid var(--o-input-border-color);
-//     border-width: 100 100 $input-border-width 0;
-//     padding: $o-input-padding-y $o-input-padding-x;
-//     background-color: var(--o-input-background-color, #{$input-bg});
-
-//     .o_input {
-//         border: 0;
-//         padding: 0;
-//     }
+// .alert-info {
+//   color: #055160;
+//   background-color: #cff4fc;
+//   border-color: #b6effb;
 // }
 
-.o_input {
-    border: $input-border-width solid var(--o-input-border-color);
-    padding: 10px 14px; // Padding for better spacing
-    height: 40px; // Set a consistent height
-    background-color: var(--o-input-background-color, #{$input-bg});
+$input-border-color: #b6effb;
+$input-border-color-focus: #055160;
+$input-background-color-required: #cff4fc;
+$input-color-placeholder-required: #055160;
 
-    // Nested input fields (e.g., compound widgets like address fields)
-    .o_input {
-        border: 0;
-        padding: 0;
-        height: auto; // Let nested inputs adapt naturally
-    }
-}
+$button-border-color: #dee2e6;
 
-// .o_input {
-//     border: none; 
-//     border-bottom: 2px solid #5353ff;
-//     padding: 8px 12px; 
-//     background-color: transparent; 
-//     transition: border-color 0.3s ease; 
+/***********************************************************
+        Form View : Handle Fields Borders
+************************************************************/
 
-//     &:focus {
-//         outline: none; 
-//         border-bottom-color: #FF0000; 
-//     }
-
-//     &:hover {
-//         border-bottom-color: #007bff; 
-//     }
+// .o_required_modifier {
+//   &.o_input,
+//   .o_input {
+//     background-color: #d2d2ff !important;
+//     border-radius: 5px;
+//     padding: 10px 12px;
+//     height: 40px;
+//   }
 // }
 
-.o_list_renderer .o_data_row.o_selected_row>.o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
-    background-color: #D2D2FF !important
+.o_form_view {
+  .o_input,
+  .o_field_html > .note-editable {
+    /* Add border for all editable fields */
+    border: 1px solid $input-border-color !important;
+    border-radius: 5px;
+
+    /* add darker border on focus */
+    &:focus {
+      border-color: $input-border-color-focus !important;
+    }
+  }
+
+  .o_field_many2many_selection {
+    .o_input {
+      /* Prevent to have double border for many2many tags input fields */
+      border: 0px solid !important;
+    }
+  }
 }
+/***********************************************************
+        Form View : Handle Button Borders
+************************************************************/
+
+.o_form_view {
+  .btn-light {
+    border-color: $button-border-color;
+  }
+
+  .btn-light {
+    &:hover {
+      border-color: $button-border-color;
+    }
+  }
+
+  .o_input {
+    padding-left: 4px;
+    padding-right: 2px;
+  }
+}
+/***********************************************************
+        Form View : Handle Background for required fields
+************************************************************/
+
+.o_form_view {
+  .o_required_modifier:not(.o_readonly_modifier) {
+    .o_input {
+      /* Add background for all editable and required fields */
+      background-color: $input-background-color-required !important;
+
+      /* darker placeholder as the background is darker */
+      &::placeholder {
+        color: $input-color-placeholder-required;
+      }
+    }
+  }
+
+  .o_required_modifier.o_field_selection:not(.o_readonly_modifier) {
+    /* Specific case for field selection */
+    background-color: $input-background-color-required !important;
+  }
+}
+
+/***********************************************************
+        Tree View : Handle style for required fields
+************************************************************/
+.o_list_renderer
+  .o_data_row.o_selected_row
+  > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+  /* Disable border bottom as the field has now a background */
+  border-bottom: 0px solid;
+}
+
+.o_form_view .o_notebook {
+  padding-top: 28px;
+}
+
+.o_form_view .o_horizontal_separator:not(:empty) {
+  border-bottom-color: cadetblue;
+  border-bottom-style: double;
+}
+
+// .o_bold_placeholder::placeholder {
+//   font-weight: bold;
+// }
+
+// .o_input::placeholder {
+//   padding-left: 14px;
+// }
+
+// .o_required_modifier {
+//   &.o_input,
+//   .o_input {
+//     background-color: #d2d2ff !important;
+//     border-radius: 5px;
+//     padding: 10px 12px;
+//     height: 40px;
+//   }
+// }
+
+// .o_input {
+//   border: $input-border-width solid var(--o-input-border-color);
+//   padding-left: 14px;
+//   height: 40px;
+//   background-color: var(--o-input-background-color, #{$input-bg});
+
+//   .o_input {
+//     height: auto;
+//   }
+// }
+
+// .form-check-input:checked[type="radio"] {
+//   box-shadow: 0 0 0 1px #b3bac2;
+//   border: 3px solid #fff;
+//   background: #1e90ff;
+// }
+
+// .form-check:not(:disabled):not(.disabled):hover .form-check-input:checked {
+//   border-color: #ffffff;
+// }
+
+// .o_list_renderer
+//   .o_data_row.o_selected_row
+//   > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+//   background-color: #d2d2ff !important;
+// }
+
+// .o_field_widget .o_input_dropdown .o_input,
+// .o_field_widget .o_input_dropdown > input,
+// .o_field_widget .o_datepicker .o_input,
+// .o_field_widget .o_datepicker > input {
+//   border: 1px solid #dee2e6 !important;
+//   border-radius: 5px;
+// }
+// .o_field_widget input.o_input {
+//   border: 1px solid #dee2e6 !important;
+//   border-radius: 5px;
+// }
+// .o_form_view .o_input {
+//   border: 1px solid #dee2e6 !important;
+//   border-radius: 5px;
+// }
+// .o_field_widget.o_field_many2many_tags .o_field_many2many_selection .o_input {
+//   border: none !important;
+// }
+
+// .o_list_renderer
+//   .o_list_table
+//   .o_data_row.o_selected_row
+//   > .o_data_cell
+//   > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier)
+//   .o_input {
+//   border: none !important;
+// }
+
+// .o_form_label {
+//   display: flex;
+//   align-items: center;
+//   height: 40px;
+// }
+
+// Avatar
+// .oe_avatar {
+//         float: right;
+//         margin-bottom: 10px;
+
+//         .img {
+//             max-width: $o-form-picture-size;
+//             max-height: $o-form-picture-size;
+//             vertical-align: top;
+//             border: 1px solid $o-gray-300;
+//         }
+
+//         @include media-breakpoint-down(sm) {
+//             + .oe_title {
+//                 max-width: calc(100% - #{$o-form-picture-size} - #{map-get($spacers, 2)});
+//             }
+//         }
+//     }
+
+// .o_form_view {
+//     .o_address_format {
+//         &.o_zip_state_city {
+//             .o_address_zip {
+//                 margin-right: 2%;
+//             }
+//             .o_address_city {
+//                 margin-right: 0;
+//             }
+//         }
+//     }
+
+//     &.o_form_editable .o_address_format {
+//         &.o_zip_state_city {
+//             .o_address_zip,
+//             .o_address_state,
+//             .o_address_city {
+//                 width: 32%;
+//             }
+//         }
+//     }
+// }

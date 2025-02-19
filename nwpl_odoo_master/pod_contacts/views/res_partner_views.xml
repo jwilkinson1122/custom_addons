@@ -84,11 +84,13 @@
                 <h2>
                     <field name='customer_code' readonly="1"/>
                 </h2>
-                <div class="oe_title mb24">
+                <!-- <div class="oe_title mb24">
                     <h1>
-                        <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company"/>
-                        <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company"/>
+                        <field id="company" options="{'line_breaks': False}" widget="text" class="oe_inline text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company"/>
+                        <field id="individual" options="{'line_breaks': False}" widget="text" class="oe_inline text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company"/>
                     </h1>
+                    <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="oe_inline fw-bold" options="{'no_create': True}"/>
+
                     <div class="o_row">
                         <field name="is_company" invisible="1"/>
                         <field name="is_account" invisible="1"/>
@@ -104,7 +106,73 @@
                         <field name="parent_type_ids" invisible="1"/>
                         <field name="partner_type_code" invisible="1"/>
                     </div>
+                </div> -->
+                <!-- <div class="oe_title mb24">
+                    <h1 class="d-flex align-items-center">
+                        <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company"/>
+                        <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company"/>
+                        <span class="mx-2 text-muted" invisible="not is_new_record">Attach To</span>
+                        <span class="mx-2 text-muted" invisible="is_new_record">Attached To</span>
+                        <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="oe_inline fw-bold" options="{'no_create': True}"/>
+                    </h1>
+                    <div class="o_row">
+                        <field name="is_new_record" invisible="1"/>
+                        <field name="is_company" invisible="1"/>
+                        <field name="is_account" invisible="1"/>
+                        <field name="is_affiliate" invisible="1"/>
+                        <field name="is_contact" invisible="1"/>
+                        <field name="is_patient" invisible="1"/>
+                        <field name="is_supplier" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="can_have_parent" invisible="1"/>
+                        <field name="parent_is_required" invisible="1"/>
+                        <field name="company_type" invisible="1"/>
+                        <field name="parent_type_ids" invisible="1"/>
+                        <field name="partner_type_code" invisible="1"/>
+                    </div>
+                </div> -->
+
+                <div class="oe_title mb24">
+                    <!-- Name Field Stays Inside H1 -->
+                    <h1 class="d-flex align-items-center">
+                        <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company"/>
+                        <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company"/>
+                    </h1>
+
+                    <!-- Attach To / Attached To + Parent ID Section (Smaller Text) -->
+                    <div class="d-flex align-items-center mt-2" invisible="is_account">
+                        <span class="mx-2 text-muted fs-6" invisible="not is_new_record">Attach To</span>
+                        <span class="mx-2 text-muted fs-6" invisible="is_new_record">Attached To</span>
+                        <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold fs-6" options="{'no_create': True}"/>
+
+                        <!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="oe_inline fw-bold fs-6" options="{'no_create': True}"/> -->
+                    </div>
+
+                    <!-- <field name="partner_type_id" class="oe_inline" widget="selection" domain="[('company_type', '=', company_type)]"/>
+                    <field name="parent_relation_label" class="oe_inline" nolabel="1" attrs="{'invisible': ['|', ('can_have_parent', '=', False), ('partner_type_id', '=', False)]}"/>
+ -->
+
+                    <!-- Invisible Fields -->
+                    <div class="o_row">
+                        <field name="is_new_record" invisible="1"/>
+                        <field name="is_company" invisible="1"/>
+                        <field name="is_account" invisible="1"/>
+                        <field name="is_affiliate" invisible="1"/>
+                        <field name="is_contact" invisible="1"/>
+                        <field name="is_patient" invisible="1"/>
+                        <field name="is_supplier" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="can_have_parent" invisible="1"/>
+                        <field name="parent_is_required" invisible="1"/>
+                        <field name="company_type" invisible="1"/>
+                        <field name="parent_type_ids" invisible="1"/>
+                        <field name="partner_type_code" invisible="1"/>
+                    </div>
                 </div>
+
+
             </xpath>
             <xpath expr="//group" position="replace">
                 <div class="o_address_format card p-3 shadow-sm bg-light" style="margin-bottom:10px">
@@ -113,15 +181,22 @@
                             <field name="ref" invisible="1"/>
                             <field name="customer_code" readonly="1"/>
                             <field name="legacy_customer_code" invisible="not is_company"/>
+                            <!-- <field name="partner_type_id" class="oe_inline fw-bold" widget="selection" domain="[('company_type', '=', company_type)]" invisible="1" readonly="1"/>
+                            <label for="partner_company_type" string="Company Type" invisible="not is_company"/>
+                            <field name="partner_company_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/> -->
+                        </group>
+                        <group string="Section Name">
+                            <!-- <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="oe_inline fw-bold o_field_highlight" options="{'no_create': True}"/> -->
+                            <!-- <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline o_field_highlight" invisible="not is_account" options="{'no_create': True}"/>
+                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline o_field_highlight" invisible="not is_affiliate" options="{'no_create': True}"/>
+                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline o_field_highlight" invisible="not is_patient" options="{'no_create': True}"/>
+                         -->
                             <field name="partner_type_id" class="oe_inline fw-bold" widget="selection" domain="[('company_type', '=', company_type)]" invisible="1" readonly="1"/>
                             <label for="partner_company_type" string="Company Type" invisible="not is_company"/>
                             <field name="partner_company_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
-                        </group>
-                        <group string="Section Name">
-                            <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold" options="{'no_create': True}"/>
-                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_account" options="{'no_create': True}"/>
-                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_affiliate" options="{'no_create': True}"/>
-                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" class="oe_inline" invisible="not is_patient" options="{'no_create': True}"/>
+
+
+
                         </group>
                     </group>
                     <group name="address">
@@ -147,6 +222,9 @@
                             <field name="use_parent_shipping_address" invisible="not parent_id"/>
                         </group>
                         <group string="Section Name">
+                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
+                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
+                            <field name="primary_contact_id" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/>
                             <field name="function" placeholder="e.g. Sales Director" invisible="context.get('default_partner_type_code') != 'CONTACT'"/>
                             <field name="phone" placeholder='Phone' widget="phone"/>
                             <field name="mobile" placeholder='Mobile' widget="phone"/>
@@ -768,7 +846,7 @@
                 <field name="is_contact" invisible="1"/>
                 <field name="is_patient" invisible="1"/>
             </xpath>
-   
+
         </field>
     </record>
 

@@ -3,13 +3,203 @@ import re
 import ast
 import base64
 import json
-from odoo import api, fields, models, _
+import csv
+import os
+import time
+import datetime
+from datetime import datetime
 import pyodbc
-from odoo.exceptions import UserError
+from contextlib import contextmanager
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError, ValidationError
 import logging
 from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
+
+
+# Run imports
+
+# env["crm.account.import"].import_accounts(
+#     "/mnt/data/crm_all_active_accounts.csv"
+# )
+
+
+class ImportCRMAccounts(models.Model):
+    _name = "crm.account.import"
+    _description = "Import CRM Accounts from CSV"
+
+    def _normalize_phone(self, phone):
+        """Normalize phone number format"""
+        return (
+            phone.replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
+            if phone
+            else ""
+        )
+
+    def _normalize_email(self, email):
+        """Convert email to lowercase"""
+        return email.strip().lower() if email else ""
+
+    def _get_state_id(self, state_name, country_code="US"):
+        """Find or create state ID from name"""
+        if not state_name:
+            return False
+
+        country = self.env["res.country"].search([("code", "=", country_code)], limit=1)
+        if not country:
+            return False  # Country not found
+
+        state = self.env["res.country.state"].search(
+            [("name", "=", state_name), ("country_id", "=", country.id)], limit=1
+        )
+        if not state:
+            # Create missing state automatically
+            state = self.env["res.country.state"].create(
+                {
+                    "name": state_name,
+                    "code": state_name[:3].upper(),  # Generate a short code
+                    "country_id": country.id,
+                }
+            )
+            _logger.info(f"Created new state: {state.name} ({state.code})")
+
+        return state.id
+
+    def _get_country_id(self, country_name):
+        """Get or create country ID from name"""
+        if not country_name:
+            return False
+
+        country = self.env["res.country"].search([("name", "=", country_name)], limit=1)
+        if not country:
+            country = self.env["res.country"].create(
+                {"name": country_name, "code": country_name[:2].upper()}
+            )
+            _logger.info(f"Created new country: {country.name} ({country.code})")
+
+        return country.id
+
+    def import_accounts(self, file_path, is_parent=True):
+        """Import accounts from CSV"""
+        if not os.path.exists(file_path):
+            raise ValidationError(f"File not found: {file_path}")
+
+        # Caching parent account mapping
+        parent_mapping = {}
+
+        with open(file_path, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                account_number = row.get("accountnumber", "").strip()
+                parent_account_id = row.get("parentaccountid", "").strip()
+
+                if not account_number:
+                    _logger.warning("Skipping row due to missing account number.")
+                    continue  # Skip rows with no account number
+
+                account_vals = {
+                    "name": row.get("name", "").strip(),
+                    "legacy_customer_code": account_number,
+                    "street": row.get("address1_line1", "").strip(),
+                    "street2": row.get("address1_line2", "").strip(),
+                    "city": row.get("address1_city", "").strip(),
+                    "state_id": self._get_state_id(
+                        row.get("address1_stateorprovince", "").strip()
+                    ),
+                    "zip": row.get("address1_postalcode", "").strip(),
+                    "country_id": self._get_country_id(
+                        row.get("address1_country", "").strip()
+                    ),
+                    "phone": self._normalize_phone(row.get("address1_telephone1")),
+                    "email": self._normalize_email(row.get("emailaddress1")),
+                    "website": row.get("websiteurl", "").strip(),
+                    "is_company": True,
+                    "is_account": is_parent,
+                    "is_affiliate": not is_parent,
+                }
+
+                # Cache parent accounts
+                if is_parent:
+                    parent_mapping[account_number] = None  # Initialize parent cache
+
+                # Handle parent linking if this is a child account
+                if not is_parent and parent_account_id:
+                    parent = parent_mapping.get(parent_account_id)
+                    if not parent:
+                        parent = self.env["res.partner"].search(
+                            [("legacy_customer_code", "=", parent_account_id)], limit=1
+                        )
+                        if parent:
+                            parent_mapping[parent_account_id] = parent.id
+                    if parent:
+                        account_vals["parent_id"] = parent.id
+
+                # Check if account already exists
+                existing_partner = self.env["res.partner"].search(
+                    [("legacy_customer_code", "=", account_number)], limit=1
+                )
+
+                if existing_partner:
+                    existing_partner.write(account_vals)
+                    _logger.info(f"Updated Partner: {existing_partner.name}")
+                else:
+                    new_partner = self.env["res.partner"].create(account_vals)
+                    _logger.info(f"Created New Partner: {new_partner.name}")
+
+        _logger.info("Import completed.")
+
+
+class Partner(models.Model):
+    _inherit = "res.partner"
+
+    legacy_customer_code = fields.Char(
+        string="Legacy Customer Code", index=True, help="Stores old CRM account number"
+    )
+
+    # search parent accounts using their GUID when importing child accounts.
+    sql_guid = fields.Char(
+        string="SQL GUID",
+        index=True,
+        help="Stores the GUID from SQL data for reference",
+    )
+
+    @api.model
+    def _get_state_id(self, state_code, country_code="US"):
+        """Find or create the state based on state code."""
+        if not state_code:
+            return False  # Return None if no state is provided
+
+        country = self.env["res.country"].search([("code", "=", country_code)], limit=1)
+        if not country:
+            return False  # No country found
+
+        state = self.env["res.country.state"].search(
+            [("code", "=", state_code.upper()), ("country_id", "=", country.id)],
+            limit=1,
+        )
+
+        if not state:
+            # Optionally create the state if it doesn't exist
+            state = self.env["res.country.state"].create(
+                {
+                    "name": state_code.upper(),  # Use the state code as a name if no full name is available
+                    "code": state_code.upper(),
+                    "country_id": country.id,
+                }
+            )
+            _logger.info(f"Created new state: {state.name} ({state.code})")
+
+        return state.id
+
+    def import_parent_accounts(self, file_path):
+        """Import Parent Accounts"""
+        self.env["crm.account.import"].import_accounts(file_path, is_parent=True)
+
+    def import_child_accounts(self, file_path):
+        """Import Child Accounts and Link to Parent"""
+        self.env["crm.account.import"].import_accounts(file_path, is_parent=False)
+
 
 ACCEPTED_FIELDS = {
     "many2many",

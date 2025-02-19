@@ -22,6 +22,7 @@ class Partner(models.Model):
     # _inherit = "res.partner"
 
     # Boolean Fields
+    is_new_record = fields.Boolean(compute="_compute_is_new_record", store=False)
     is_supplier = fields.Boolean(string="Supplier", default=False)
     is_partner = fields.Boolean(string="Partner", default=False)
     is_account = fields.Boolean(string="Account", default=False)
@@ -41,21 +42,29 @@ class Partner(models.Model):
     )
     can_have_parent = fields.Boolean(compute="_compute_partner_type_infos")
     parent_is_required = fields.Boolean(compute="_compute_partner_type_infos")
-    
-    use_parent_invoice_address = fields.Boolean(string="Use Parent Invoice Address", default=False)
-    use_parent_shipping_address = fields.Boolean(string="Use Parent Shipping Address", default=False)
+
+    use_parent_invoice_address = fields.Boolean(
+        string="Use Parent Invoice Address", default=False
+    )
+    use_parent_shipping_address = fields.Boolean(
+        string="Use Parent Shipping Address", default=False
+    )
 
     fax_number = fields.Char(string="Fax")
 
     ref = fields.Char(string="Ref", index=True)
-    customer_code = fields.Char(string="Customer Code", readonly=True, default=lambda self: _("New"))
+    customer_code = fields.Char(
+        string="Customer Code", readonly=True, default=lambda self: _("New")
+    )
     legacy_customer_code = fields.Char("Legacy ID", readonly=True)
-    
+
     partner_company_type = fields.Many2one(
         comodel_name="partner.company.type",
         help="Specify the type of company this belongs to.",
     )
-    partner_relation_label = fields.Char("Partner relation label", translate=True, default="Attached To:", readonly=True)
+    partner_relation_label = fields.Char(
+        "Partner relation label", translate=True, default="Attached To:", readonly=True
+    )
     parent_type_ids = fields.Many2many(
         "res.partner.type",
         string="Company types authorized for parent",
@@ -67,9 +76,15 @@ class Partner(models.Model):
     partner_type_code = fields.Char(
         related="partner_type_id.code", store=True, readonly=True
     )
-    parent_relation_label = fields.Char(related="partner_type_id.parent_relation_label", readonly=True)
-    companies_label = fields.Char(related="partner_type_id.companies_label", readonly=True)
-    contacts_label = fields.Char(related="partner_type_id.contacts_label", readonly=True)
+    parent_relation_label = fields.Char(
+        related="partner_type_id.parent_relation_label", readonly=True
+    )
+    companies_label = fields.Char(
+        related="partner_type_id.companies_label", readonly=True
+    )
+    contacts_label = fields.Char(
+        related="partner_type_id.contacts_label", readonly=True
+    )
 
     type = fields.Selection(
         [
@@ -95,7 +110,7 @@ class Partner(models.Model):
         string="Type",
         compute="_compute_company_address_type",
         inverse="_inverse_company_address_type",
-        store=True, 
+        store=True,
     )
 
     parent_id = fields.Many2one(
@@ -125,7 +140,6 @@ class Partner(models.Model):
         help="If this affiliate was merged, this stores the new parent.",
     )
 
-    
     affiliate_ids = fields.One2many(
         "res.partner",
         "parent_id",
@@ -145,7 +159,9 @@ class Partner(models.Model):
     )
 
     sub_affiliates_count = fields.Integer(
-        "Number of Sub-Affiliates", compute="_compute_sub_affiliates_count", compute_sudo=True
+        "Number of Sub-Affiliates",
+        compute="_compute_sub_affiliates_count",
+        compute_sudo=True,
     )
 
     child_ids = fields.One2many(
@@ -192,7 +208,7 @@ class Partner(models.Model):
         domain=[("is_patient", "=", True)],
         help="Link to the related patient.",
     )
-    
+
     patient_ids = fields.One2many(
         "res.partner", "parent_id", domain=[("is_patient", "=", True)]
     )
@@ -202,9 +218,16 @@ class Partner(models.Model):
         compute="_compute_sub_patient_ids",
     )
 
-    patients_count = fields.Integer("Number of Patients", compute="_compute_patients_count")
+    patients_count = fields.Integer(
+        "Number of Patients", compute="_compute_patients_count"
+    )
     patient_text = fields.Char(compute="_compute_patient_text")
 
+    def _compute_is_new_record(self):
+        for record in self:
+            record.is_new_record = not bool(
+                record._origin.id
+            )  # Check if the record has an ID
 
     @api.model
     def default_get(self, fields):
@@ -793,7 +816,6 @@ class Partner(models.Model):
             args, offset=offset, limit=limit, order=order
         )
 
-    
     # Roles
     is_role_required = fields.Boolean(
         compute="_compute_is_role_required",
@@ -864,7 +886,7 @@ class Partner(models.Model):
         res = sync_children.write(sync_vals)
         sync_children._compute_commercial_partner()
         return res
- 
+
     # Partner Flags
     partner_flag_ids = fields.One2many("partner.flag", inverse_name="partner_id")
     partner_flag_count = fields.Integer(compute="_compute_partner_flag_count")
@@ -934,7 +956,7 @@ class Partner(models.Model):
                 "default_groups_id": [(6, 0, group_ids)],
             },
         }
-    
+
     def open_parent(self):
         """Utility method used to add an "Open Parent" button in partner
         views"""
@@ -984,7 +1006,6 @@ class Partner(models.Model):
         action["res_id"] = partner.id
         return action
 
-    
     # Sales Orders
     sale_order_ids = fields.One2many(
         "sale.order",
@@ -1049,5 +1070,3 @@ class Partner(models.Model):
             ("is_reorder", "=", True),
         ]
         return action
-
-
