@@ -38,13 +38,33 @@ $button-border-color: #dee2e6;
 //   }
 // }
 
+// .o_input {
+//   border: $input-border-width solid var(--o-input-border-color);
+//   padding-left: 14px;
+//   height: 40px;
+//   background-color: var(--o-input-background-color, #{$input-bg});
+
+//   .o_input {
+//     height: auto;
+//   }
+// }
+
+// .o_form_label {
+//   display: flex;
+//   align-items: center;
+//   height: 40px;
+// }
+
+
 .o_form_view {
   .o_input,
   .o_field_html > .note-editable {
     /* Add border for all editable fields */
-    border: 1px solid $input-border-color !important;
+    // border: 1px solid $input-border-color !important;
+    border: 1px solid #dee2e6 !important;
+    // border: $input-border-width solid var(--o-input-border-color);
     border-radius: 5px;
-
+    height: 40px;
     /* add darker border on focus */
     &:focus {
       border-color: $input-border-color-focus !important;
