@@ -1,22 +1,6 @@
 /***********************************************************
         Variables
 ************************************************************/
-
-// Dark Text
-// #0e616e
-
-// Background Color
-// #d1ecf1
-
-// Border Color
-// #b9e3ea
-
-// .alert-info {
-//   color: #055160;
-//   background-color: #cff4fc;
-//   border-color: #b6effb;
-// }
-
 $input-border-color: #b6effb;
 $input-border-color-focus: #055160;
 $input-background-color-required: #cff4fc;
@@ -25,37 +9,18 @@ $input-color-placeholder-required: #055160;
 $button-border-color: #dee2e6;
 
 /***********************************************************
+        Form View : Input Fields
+************************************************************/
+.o_form_view {
+  .o_input {
+    padding-left: 4px;
+    padding-right: 2px;
+  }
+}
+
+/***********************************************************
         Form View : Handle Fields Borders
 ************************************************************/
-
-// .o_required_modifier {
-//   &.o_input,
-//   .o_input {
-//     background-color: #d2d2ff !important;
-//     border-radius: 5px;
-//     padding: 10px 12px;
-//     height: 40px;
-//   }
-// }
-
-// .o_input {
-//   border: $input-border-width solid var(--o-input-border-color);
-//   padding-left: 14px;
-//   height: 40px;
-//   background-color: var(--o-input-background-color, #{$input-bg});
-
-//   .o_input {
-//     height: auto;
-//   }
-// }
-
-// .o_form_label {
-//   display: flex;
-//   align-items: center;
-//   height: 40px;
-// }
-
-
 .o_form_view {
   .o_input,
   .o_field_html > .note-editable {
@@ -81,7 +46,6 @@ $button-border-color: #dee2e6;
 /***********************************************************
         Form View : Handle Button Borders
 ************************************************************/
-
 .o_form_view {
   .btn-light {
     border-color: $button-border-color;
@@ -92,16 +56,11 @@ $button-border-color: #dee2e6;
       border-color: $button-border-color;
     }
   }
-
-  .o_input {
-    padding-left: 4px;
-    padding-right: 2px;
-  }
 }
+
 /***********************************************************
         Form View : Handle Background for required fields
 ************************************************************/
-
 .o_form_view {
   .o_required_modifier:not(.o_readonly_modifier) {
     .o_input {
@@ -140,123 +99,143 @@ $button-border-color: #dee2e6;
   border-bottom-style: double;
 }
 
-// .o_bold_placeholder::placeholder {
-//   font-weight: bold;
-// }
+/***********************************************************
+        Form View : Custom address_info / contact_info groups
+************************************************************/
 
-// .o_input::placeholder {
-//   padding-left: 14px;
-// }
+.o_form_view {
+  .o_contact_format {
+    width: 100%;
 
-// .o_required_modifier {
-//   &.o_input,
-//   .o_input {
-//     background-color: #d2d2ff !important;
-//     border-radius: 5px;
-//     padding: 10px 12px;
-//     height: 40px;
-//   }
-// }
+    .o_contact_phone,
+    .o_contact_mobile,
+    .o_contact_fax {
+      display: inline-block;
+      width: 33%; // Ensure equal width for all three fields
+      margin-right: 1.5%; // Add spacing between fields
+    }
 
-// .o_input {
-//   border: $input-border-width solid var(--o-input-border-color);
-//   padding-left: 14px;
-//   height: 40px;
-//   background-color: var(--o-input-background-color, #{$input-bg});
+    .o_contact_fax:last-child {
+      margin-right: 0; // Remove right margin for the last element
+    }
+  }
 
-//   .o_input {
-//     height: auto;
-//   }
-// }
+  /* 🔹 Edit Mode Adjustments */
+  .o_form_editable .o_contact_format {
+    .o_contact_phone,
+    .o_contact_mobile,
+    .o_contact_fax {
+      width: 33%;
+      margin-right: 1.5%;
+    }
 
-// .form-check-input:checked[type="radio"] {
-//   box-shadow: 0 0 0 1px #b3bac2;
-//   border: 3px solid #fff;
-//   background: #1e90ff;
-// }
-
-// .form-check:not(:disabled):not(.disabled):hover .form-check-input:checked {
-//   border-color: #ffffff;
-// }
-
-// .o_list_renderer
-//   .o_data_row.o_selected_row
-//   > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
-//   background-color: #d2d2ff !important;
-// }
-
-// .o_field_widget .o_input_dropdown .o_input,
-// .o_field_widget .o_input_dropdown > input,
-// .o_field_widget .o_datepicker .o_input,
-// .o_field_widget .o_datepicker > input {
-//   border: 1px solid #dee2e6 !important;
-//   border-radius: 5px;
-// }
-// .o_field_widget input.o_input {
-//   border: 1px solid #dee2e6 !important;
-//   border-radius: 5px;
-// }
-// .o_form_view .o_input {
-//   border: 1px solid #dee2e6 !important;
-//   border-radius: 5px;
-// }
-// .o_field_widget.o_field_many2many_tags .o_field_many2many_selection .o_input {
-//   border: none !important;
-// }
-
-// .o_list_renderer
-//   .o_list_table
-//   .o_data_row.o_selected_row
-//   > .o_data_cell
-//   > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier)
-//   .o_input {
-//   border: none !important;
-// }
-
-// .o_form_label {
-//   display: flex;
-//   align-items: center;
-//   height: 40px;
-// }
-
-// Avatar
-// .oe_avatar {
-//         float: right;
-//         margin-bottom: 10px;
-
-//         .img {
-//             max-width: $o-form-picture-size;
-//             max-height: $o-form-picture-size;
-//             vertical-align: top;
-//             border: 1px solid $o-gray-300;
-//         }
-
-//         @include media-breakpoint-down(sm) {
-//             + .oe_title {
-//                 max-width: calc(100% - #{$o-form-picture-size} - #{map-get($spacers, 2)});
-//             }
-//         }
-//     }
+    .o_contact_fax:last-child {
+      margin-right: 0;
+    }
+  }
+}
 
 // .o_form_view {
-//     .o_address_format {
-//         &.o_zip_state_city {
-//             .o_address_zip {
-//                 margin-right: 2%;
-//             }
-//             .o_address_city {
-//                 margin-right: 0;
-//             }
-//         }
+//   .o_contact_format {
+//     width: 100%;
+
+//     .o_contact_person,
+//     .o_contact_function,
+//     .o_contact_email,
+//     .o_contact_website,
+//     .o_contact_title,
+//     .o_contact_lang,
+//     .o_contact_category {
+//       display: flex;
 //     }
 
-//     &.o_form_editable .o_address_format {
-//         &.o_zip_state_city {
-//             .o_address_zip,
-//             .o_address_state,
-//             .o_address_city {
-//                 width: 32%;
-//             }
-//         }
+//     .o_contact_phone span {
+//       margin-right: 2%;
 //     }
+
+//     .o_contact_mobile span {
+//       margin-right: 2%;
+//     }
+
+//     &.o_contact_fax_phone {
+//       .o_contact_fax span {
+//         margin-right: 2%;
+//       }
+
+//       .o_contact_phone span {
+//         margin-right: 0;
+//       }
+
+//       .o_contact_mobile span {
+//         display: block;
+//         margin-right: 0;
+//       }
+//     }
+
+//     &.o_phone_mobile {
+//       .o_contact_mobile span {
+//         margin-right: 0;
+//       }
+
+//       .o_contact_fax span {
+//         display: block;
+//         margin-right: 0;
+//       }
+//     }
+
+//     > .o_field_widget span {
+//       width: auto;
+//     }
+//   }
+
+//   .o_form_editable .o_contact_format {
+//     .o_contact_phone {
+//       display: inline-block;
+//       width: 38%;
+//       margin-right: 2%;
+//     }
+
+//     .o_contact_mobile {
+//       display: inline-block;
+//       width: 33%;
+//       margin-right: 2%;
+//     }
+
+//     .o_contact_fax {
+//       display: inline-block;
+//       width: 25%;
+//     }
+
+//     &.o_contact_fax_phone {
+//       .o_contact_fax {
+//         width: 38%;
+//         margin-right: 2%;
+//       }
+
+//       .o_contact_phone {
+//         width: 60%;
+//         margin-right: 0;
+//       }
+
+//       .o_contact_mobile {
+//         width: 100%;
+//         margin-right: 0;
+//       }
+//     }
+
+//     &.o_phone_mobile {
+//       .o_contact_phone {
+//         width: 50%;
+//       }
+
+//       .o_contact_mobile {
+//         width: 48%;
+//         margin-right: 0;
+//       }
+
+//       .o_contact_fax {
+//         width: 100%;
+//       }
+//     }
+//   }
 // }
