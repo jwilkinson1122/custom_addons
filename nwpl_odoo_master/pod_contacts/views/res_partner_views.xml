@@ -151,11 +151,10 @@
                             <field name="use_parent_shipping_address" invisible="not parent_id"/>
                         </group>
                         <group name="contact_info" string="Contact Info">
-                            <label for="company_address_type" string="Address Type" invisible="not is_company"/>
-                            <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
-                            <span class="o_form_label o_td_label" name="address_name">
-                                <label for="type" string="Address" />
-                                <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
+                            <!-- <label for="company_address_type" string="Address Type" invisible="not is_company"/>
+                            <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/> -->
+                            <span class="o_form_label o_td_label" name="contact_name">
+                                <label for="primary_contact_id" string="Contact" />
                             </span>
                             <div class="o_contact_format">
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
