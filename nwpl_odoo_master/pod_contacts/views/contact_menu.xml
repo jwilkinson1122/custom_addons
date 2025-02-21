@@ -28,8 +28,29 @@
     <menuitem id="partner_suppliers_menu" name="Suppliers" parent="contacts.menu_contacts" action="partner_supplier_action" sequence="5"/>
     <menuitem id="partner_scan_menu" name="Scan" parent="contacts.menu_contacts" action="res_partner_find" sequence="6"/>
 
+    <!-- <menuitem id="partner_contact_points_menu" name="Contact Points" parent="contacts.menu_contacts" sequence="6"/>
+    <menuitem id="menu_res_partner_contact_point" name="Contact Points" parent="menu_contact_points" action="action_res_partner_contact_point" />
+    <menuitem id="menu_res_partner_contact_point_tag" name="Contact Point Tags" parent="menu_contact_points" action="action_res_partner_contact_point_tag" /> -->
+
+
     <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="10"/>
     <menuitem id="company_types_menu" name="Company Types" parent="contacts.res_partner_menu_config" sequence="0" action="partner_company_type_action" />
     <menuitem id="partner_roles_menu" name="Partner Roles" parent="contacts.res_partner_menu_config" sequence="1" action="contact_role_action" />
+
+    <menuitem id="contact_points_menu" name="Contact Points" parent="contacts.res_partner_menu_config" sequence="2"/>
+    <menuitem id="partner_contact_point" name="Contact Points" parent="contact_points_menu" action="action_res_partner_contact_point" />
+    <menuitem id="partner_contact_point_tag" name="Contact Point Tags" parent="contact_points_menu" action="action_res_partner_contact_point_tag" />
+
+
+    <!-- <menuitem id="menu_contact_points" name="Contact Points" sequence="2" parent="contacts.menu_contacts" />
+    <record model="ir.ui.menu" id="contacts.res_partner_menu_config">
+        <field name="sequence">10</field>
+    </record>
+
+
+    <menuitem id="menu_res_partner_contact_point" name="Contact Points" parent="menu_contact_points" action="action_res_partner_contact_point" />
+
+    <menuitem id="menu_res_partner_contact_point_tag" name="Contact Point Tags" parent="menu_contact_points" action="action_res_partner_contact_point_tag" />
+ -->
 
 </odoo>

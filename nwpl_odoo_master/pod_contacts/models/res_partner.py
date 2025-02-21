@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.module import get_module_resource
 from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
+from .res_partner_contact_point_mixin import CONTACT_POINT_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +51,19 @@ class Partner(models.Model):
         string="Use Parent Shipping Address", default=False
     )
 
-    fax_number = fields.Char(string="Fax")
+    # contact_point_ids = fields.One2many(
+    #     "res.partner.contact_point", "partner_id", "Contact Points"
+    # )
+    # email = fields.Char(
+    #     compute="_compute_contact_points", inverse="_set_email", store=True
+    # )
+    # phone = fields.Char(
+    #     compute="_compute_contact_points", inverse="_set_phone", store=True
+    # )
+    # mobile = fields.Char(
+    #     compute="_compute_contact_points", inverse="_set_mobile", store=True
+    # )
+    # fax_number = fields.Char(string="Fax")
 
     ref = fields.Char(string="Ref", index=True)
     customer_code = fields.Char(
@@ -87,7 +100,7 @@ class Partner(models.Model):
     )
 
     type = fields.Selection(
-        [
+        selection_add=[
             ("contact", "Contact Address"),
             ("patient", "Patient Address"),
             ("invoice", "Invoice Address"),
@@ -99,6 +112,19 @@ class Partner(models.Model):
         store=True,
         default=False,
     )
+
+    # type = fields.Selection(
+    #     selection_add=[
+    #         ("account", "Account Address"),
+    #         ("affiliate", "Affiliate Address"),
+    #         ("supplier", "Supplier Address"),
+    #         ("patient", "Patient Address"),
+    #         ("other",),
+    #     ],
+    #     string="Address Type",
+    #     store=True,
+    #     default=False,
+    # )
 
     company_address_type = fields.Selection(
         selection=[
@@ -112,6 +138,8 @@ class Partner(models.Model):
         inverse="_inverse_company_address_type",
         store=True,
     )
+
+    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
 
     parent_id = fields.Many2one(
         "res.partner",
@@ -201,6 +229,49 @@ class Partner(models.Model):
     )
 
     contact_role_ids = fields.Many2many(string="Roles", comodel_name="contact.role")
+
+    contact_point_ids = fields.One2many(
+        "res.partner.contact_point", "partner_id", "Contact Points"
+    )
+    email = fields.Char(
+        compute="_compute_contact_points", inverse="_set_email", store=True
+    )
+    phone = fields.Char(
+        compute="_compute_contact_points", inverse="_set_phone", store=True
+    )
+    mobile = fields.Char(
+        compute="_compute_contact_points", inverse="_set_mobile", store=True
+    )
+    fax_number = fields.Char(string="Fax")
+
+    @api.depends("contact_point_ids.name", "contact_point_ids.is_default")
+    def _compute_contact_points(self):
+        for partner in self:
+            for cptype, label in CONTACT_POINT_TYPES:
+                partner[cptype] = partner.contact_point_ids.filtered(
+                    lambda cp: cp.contact_point_type == cptype and cp.is_default
+                ).name
+
+    def _set_contact_point(self, contact_point_type):
+        if self[contact_point_type]:
+            contact_point = self.contact_point_ids.filtered(
+                lambda cp: cp.name == self[contact_point_type]
+                and cp.contact_point_type == contact_point_type
+            )
+            if not contact_point:
+                self.contact_point_ids.create(
+                    {
+                        "name": self[contact_point_type],
+                        "partner_id": self.id,
+                        "contact_point_type": contact_point_type,
+                        "is_default": True,
+                    }
+                )
+            elif not contact_point.is_default:
+                contact_point.is_default = True
+
+    def get_fields_contact_points(self):
+        return {"phone", "mobile", "email"}
 
     patient_id = fields.Many2one(
         "res.partner",
@@ -362,6 +433,36 @@ class Partner(models.Model):
                 if record.create_date:  # Ensure the record has been saved
                     raise ValidationError(_("Affiliates must have a parent account."))
 
+    # Billing Address Fields
+    # billing_street = fields.Char("Billing Street")
+    # billing_street2 = fields.Char("Billing Street 2")
+    # billing_city = fields.Char("Billing City")
+    # billing_state_id = fields.Many2one("res.country.state", "Billing State")
+    # billing_zip = fields.Char("Billing ZIP")
+    # billing_country_id = fields.Many2one("res.country", "Billing Country")
+
+    # Shipping Address Fields
+    # shipping_street = fields.Char("Shipping Street")
+    # shipping_street2 = fields.Char("Shipping Street 2")
+    # shipping_city = fields.Char("Shipping City")
+    # shipping_state_id = fields.Many2one("res.country.state", "Shipping State")
+    # shipping_zip = fields.Char("Shipping ZIP")
+    # shipping_country_id = fields.Many2one("res.country", "Shipping Country")
+
+    # Boolean Field to Copy Billing Address to Shipping
+    # same_as_billing = fields.Boolean("Same As Billing Address?", default=False)
+
+    # Onchange Methods
+    # @api.onchange("same_as_billing")
+    # def _onchange_same_as_billing(self):
+    #     if self.same_as_billing:
+    #         self.shipping_street = self.billing_street
+    #         self.shipping_street2 = self.billing_street2
+    #         self.shipping_city = self.billing_city
+    #         self.shipping_state_id = self.billing_state_id
+    #         self.shipping_zip = self.billing_zip
+    #         self.shipping_country_id = self.billing_country_id
+
     # Onchange Methods
     @api.onchange("company_type")
     def _onchange_company_type(self):
@@ -504,12 +605,12 @@ class Partner(models.Model):
 
     @api.model
     def create(self, vals):
-        """Create a partner and ensure rollback safety."""
+        """Create a partner with validations, rollback safety, and address handling."""
         _logger.debug("Received vals for create: %s", vals)
 
-        # ✅ Ensure `is_contact` is NOT set when creating an Account or Affiliate
+        # Ensure `is_contact` is NOT set when creating an Account or Affiliate
         if vals.get("is_account") or vals.get("is_affiliate"):
-            vals["is_contact"] = False  # ❌ Prevent incorrect `is_contact=True`
+            vals["is_contact"] = False  # Prevent incorrect `is_contact=True`
 
         if vals.get("parent_id"):
             vals["parent_id"] = int(vals["parent_id"])
@@ -519,13 +620,22 @@ class Partner(models.Model):
                 vals["customer_code"] = self._generate_customer_code(vals)
                 _logger.debug("Generated customer_code: %s", vals["customer_code"])
 
-            partner = super(Partner, self).create(vals)
+            partner = super().create(vals)
 
+            # Handle address inheritance
             if (
                 partner.use_parent_invoice_address
                 or partner.use_parent_shipping_address
             ):
                 partner._onchange_parent_address_flags()
+
+            # Force recompute contact points for phone, mobile, and email
+            if self.get_fields_contact_points().intersection(
+                vals.keys()
+            ) and not self._context.get("compute_contact_points"):
+                partner.with_context(
+                    compute_contact_points=True
+                )._compute_contact_points()
 
         return partner
 
@@ -547,7 +657,7 @@ class Partner(models.Model):
                 vals["customer_code"] = self._generate_customer_code(vals)
                 partner._update_child_codes()
 
-        result = super(Partner, self).write(vals)
+        result = super().write(vals)
 
         # Apply address inheritance logic if necessary
         if (
@@ -559,9 +669,43 @@ class Partner(models.Model):
 
         self._validate_affiliate_parent()
         self._update_children(vals)
-        _logger.info("Partner(s) updated successfully.")
 
+        # Force recompute contact points when relevant fields change
+        if self.get_fields_contact_points().intersection(
+            vals.keys()
+        ) and not self._context.get("compute_contact_points"):
+            for partner in self:
+                partner.with_context(
+                    compute_contact_points=True
+                )._compute_contact_points()
+
+        _logger.info("Partner(s) updated successfully.")
         return result
+
+    def _set_email(self):
+        self._set_contact_point("email")
+
+    def _set_phone(self):
+        self._set_contact_point("phone")
+
+    def _set_mobile(self):
+        self._set_contact_point("mobile")
+
+    def action_show_contact_points(self):
+        contact_point_type = self._context.get("default_contact_point_type")
+        partner_id = self._context.get("default_partner_id")
+        return {
+            "name": "%ss" % dict(CONTACT_POINT_TYPES).get(contact_point_type),
+            "type": "ir.actions.act_window",
+            "res_model": "res.partner.contact_point",
+            "view_mode": "tree",
+            "view_id": False,
+            "domain": [
+                ("contact_point_type", "=", contact_point_type),
+                ("partner_id", "=", partner_id),
+            ],
+            "context": dict(self._context),
+        }
 
     def _update_related_records(self):
         """Update contacts, patients, and orders when the parent changes."""

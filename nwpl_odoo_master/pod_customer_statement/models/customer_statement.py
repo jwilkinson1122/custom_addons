@@ -173,8 +173,8 @@ class CustomerStatementConfig(models.Model):
         return {
             "name": _("Mail Log History"),
             "type": "ir.actions.act_window",
-            "view_type": "list",
-            "view_mode": "list,form",
+            "view_type": "tree",
+            "view_mode": "tree,form",
             "res_model": "customer.mail.history",
             "domain": [("id", "in", search)],
         }

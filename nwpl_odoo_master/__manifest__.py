@@ -17,7 +17,9 @@
         "base_sparse_field",
         "barcodes",
         "contacts",
+        "partner_autocomplete",
         # "helpdesk",
+        "phone_validation",
         "mail",
         "mrp",
         "knowledge",
@@ -69,6 +71,7 @@
         "data/pod_contacts/data/company_type_data.xml",
         "data/pod_contacts/data/partner_type_data.xml",
         "data/pod_contacts/data/contact_role_data.xml",
+        "data/pod_contacts/data/res_partner_contact_point_tag_data.xml",
         # "pod_contacts/views/res_config_settings_views.xml",
         "pod_contacts/views/barcode_action_view.xml",
         "pod_contacts/views/contact_role_views.xml",
@@ -83,6 +86,8 @@
         "pod_contacts/views/contact_portal_templates.xml",
         "pod_contacts/views/create_portal_user_view.xml",
         "pod_contacts/wizard/res_config_settings_views.xml",
+        "pod_contacts/views/res_partner_contact_point_tag_views.xml",
+        "pod_contacts/views/res_partner_contact_point_views.xml",
         "pod_contacts/views/res_partner_views.xml",
         # "views/res_partner_view.xml",
         "pod_contacts/views/res_partner_type_view.xml",
@@ -90,17 +95,13 @@
         "pod_contacts/views/contact_menu.xml",
         "pod_contacts/views/sale_order_views.xml",
         # "pod_contacts/views/sale_order_views.xml",
-
         # web_chatter
         "pod_web_chatter/views/res_users.xml",
-
         # reorder
         # "pod_sale_reorder/security/ir.model.access.csv",
         # "pod_sale_reorder/wizard/res_config_settings_views.xml",
         # "pod_sale_reorder/views/res_partner_views.xml",
         # "pod_sale_reorder/views/sale_order_views.xml",
-
-
         "amazon_s3_connector/security/ir.model.access.csv",
         "amazon_s3_connector/views/amazon_dashboard_views.xml",
         "amazon_s3_connector/views/res_config_settings_views.xml",
@@ -201,8 +202,8 @@
     "assets": {
         "web._assets_primary_variables": [
             (
-                "after", 
-                "web/static/src/scss/primary_variables.scss", 
+                "after",
+                "web/static/src/scss/primary_variables.scss",
                 "nwpl_odoo_master/static/pod_web_chatter/static/src/scss/variables.scss",
             ),
             "nwpl_odoo_master/static/pod_contacts/static/src/scss/variables.scss",
@@ -216,15 +217,14 @@
             "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.xml",
             "nwpl_odoo_master/static/pod_web_chatter/static/src/core/**/*.scss",
             (
-                "after", 
-                "mail/static/src/views/web/form/form_compiler.js", 
-                "nwpl_odoo_master/static/pod_web_chatter/static/src/views/form/form_compiler.js"
+                "after",
+                "mail/static/src/views/web/form/form_compiler.js",
+                "nwpl_odoo_master/static/pod_web_chatter/static/src/views/form/form_compiler.js",
             ),
             "nwpl_odoo_master/static/pod_web_chatter/static/src/views/form/form_renderer.js",
             "nwpl_odoo_master/static/pod_contacts/static/src/scss/*",
             "nwpl_odoo_master/static/pod_contacts/static/src/fields/*",
             "nwpl_odoo_master/static/pod_contacts/static/src/views/*",
-            
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/**/*",
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/css/tree_recursive_styles.css",
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/js/list_renderer.js",
@@ -232,7 +232,6 @@
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/js/list_controller.js",
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/js/relational_model.js",
             # "nwpl_odoo_master/static/pod_hierarchy/static/src/xml/recursive_tree_templates.xml",
-
             "nwpl_odoo_master/static/pod_sql_integration/static/src/scss/custom.scss",
             "nwpl_odoo_master/static/amazon_s3_connector/static/src/js/amazon.js",
             "nwpl_odoo_master/static/amazon_s3_connector/static/src/xml/amazon_dashboard_template.xml",
@@ -254,7 +253,9 @@
         "point_of_sale._assets_pos": [],
     },
     "images": ["static/description/icon.png"],
-    "external_dependencies": {"python": ["fsspec", "pyodbc", "python_slugify", "boto3", "mako"]},
+    "external_dependencies": {
+        "python": ["fsspec", "pyodbc", "python_slugify", "boto3", "mako"]
+    },
     "pre_init_hook": "pre_init_hook",
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
