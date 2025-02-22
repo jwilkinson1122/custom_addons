@@ -1,0 +1,81 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Odoo Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "redirectOutput": false,
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "program": "/usr/bin/odoo-bin",
+            "args": [
+                "--dev=qweb,xml",
+                "--workers=0",
+                "--limit-time-real=100000"
+            ]
+        },
+        {
+            "name": "Odoo Command",
+            "type": "debugpy",
+            "request": "launch",
+            "redirectOutput": false,
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "program": "/usr/bin/odoo-bin",
+            "args": [
+                "${input:odoo_command}",
+                "--workers=0",
+                "--limit-time-real=100000"
+            ]
+        },
+        {
+            "name": "Odoo Test",
+            "type": "debugpy",
+            "request": "launch",
+            "redirectOutput": false,
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true,
+            "program": "/usr/bin/odoo-bin",
+            "args": [
+                "--workers=0",
+                "--stop-after-init",
+                "-i", "${input:odoo_module}",
+                "--test-enable",
+                "--test-tags", "${input:test_tags}",
+                "--limit-time-real=100000"
+            ]
+        },
+        {
+            "name": "pytest debug",
+            "type": "debugpy",
+            "request": "launch",
+            "redirectOutput": false,
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "program": "/usr/local/bin/pytest",
+            "args": [
+                "${file}"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "odoo_command",
+            "type": "promptString",
+            "description": "Odoo command to run",
+            "default": "shell"
+        },
+        {
+            "id": "odoo_module",
+            "type": "promptString",
+            "description": "Odoo module to test"
+        },
+        {
+            "id": "test_tags",
+            "type": "promptString",
+            "description": "Odoo test tag selector",
+            "default": "standard"
+        }
+    ]
+}

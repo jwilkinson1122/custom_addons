@@ -1,0 +1,44 @@
+// workspace template to use if you want to run with your local odoo sources
+{
+	"folders": [
+		{
+			"name": "project",
+			"path": ".."
+		},
+		{
+			"name": "odoo",
+			"path": "../../odoo"
+		},
+		{
+			"name": "odoo-addons",
+			"path": "../../odoo-addons"
+		}
+	],
+	"launch": {
+		"configurations": [
+			{
+				"name": "Python Attach 41234",
+				"type": "debugpy",
+				"request": "attach",
+				"connect": {
+					"host": "127.0.0.1",
+					"port": 41234
+				},
+				"pathMappings": [
+					{
+						"localRoot": "${workspaceFolder:project}/addons",
+						"remoteRoot": "/mnt/extra-addons"
+					},
+					{
+						"localRoot": "${workspaceFolder:odoo}",
+						"remoteRoot": "/opt/odoo"
+					},
+					{
+						"localRoot": "${workspaceFolder:odoo-addons}",
+						"remoteRoot": "/opt/odoo-addons"
+					}
+				]
+			}
+		]
+	}
+}

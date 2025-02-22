@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="estate.root_menu" name="Real Estate" web_icon="estate,static/description/icon.png">
+        <menuitem id="estate.properties_menu" name="Properties" sequence="10" action="estate.views_properties_action" />
+        <menuitem id="estate.configuration_menu" name="Configuration" sequence="20">
+            <menuitem id="estate.property_types_menu" name="Property Types" action="estate.views_property_types_action" />
+            <menuitem id="estate.tags_menu" name="Tags" action="estate.views_tags_action" />
+        </menuitem>
+    </menuitem>
+
+</odoo>

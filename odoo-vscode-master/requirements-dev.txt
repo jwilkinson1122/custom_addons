@@ -1,0 +1,15 @@
+# linting and formatting
+pylint-odoo>=9
+ruff>=0.5
+
+# debugging and tools
+debugpy
+py-spy
+
+# investigation
+ipython
+prompt-toolkit==3.0.28; python_version <= '3.10.6'  # fix version
+
+# unit testing
+pytest-odoo>=1
+websocket-client  # for chrome

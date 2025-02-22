@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <t t-name="custom_sale.ViewLastSoldBtn">
+        <a t-attf-class="fa fa-eye cursor-pointer" t-on-click="showPopover" attrs="{'class': 'btn btn-danger'}" />
+    </t>
+
+    <t t-name="custom_sale.ViewLastSoldPopover">
+        <div class="p-2">
+            <h6><b>Last Sold Detail</b></h6>
+            <table class="table table-sm">
+                <tbody>
+                    <tr>
+                        <td class="px-0">
+                            <strong>Invoice Date</strong>
+                        </td>
+                        <td class="text-end">
+                            <b t-out="props.record.data.last_invoice_date"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-0">
+                            <strong>Invoice #</strong>
+                        </td>
+                        <td class="text-end">
+                            <b t-out="props.record.data.last_invoice_num"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-0">
+                            <strong>Sold Price</strong>
+                        </td>
+                        <td class="text-end">
+                            <b t-esc="props.record.data.last_sold_price.toFixed(3)" class="pe-1"/>
+                            <b t-esc="props.record.data.currency_symbol"/>
+                        </td>
+                    </tr>
+                    <tr class="text-success" t-if="props.record.data.last_sold_discount > 0">
+                        <td class="px-0">
+                            <strong>Discount</strong>
+                        </td>
+                        <td class="text-end">
+                            <b class="text-success"> ( Disc: <span t-out="props.record.data.last_sold_discount" />% )</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</template>

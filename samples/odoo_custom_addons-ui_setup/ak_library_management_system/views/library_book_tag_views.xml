@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+    <!--book tag form view-->
+        <record model="ir.ui.view" id="view_library_book_tag_form">
+            <field name="name">Library Book Tag</field>
+            <field name="model">library.book.tag</field>
+            <field name="arch" type="xml">
+                <form string="Books Tag">
+                    <sheet>
+                        <group>
+                            <field name="name" required="True"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--book tag list view-->
+        <record model="ir.ui.view" id="view_library_book_tag_tree">
+            <field name="name">Library Book tag List</field>
+            <field name="model">library.book.tag</field>
+            <field name="arch" type="xml">
+                <list string="Books Tag">
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+        <!--action -->
+        <record model="ir.actions.act_window" id="action_library_book_tag">
+                <field name="name">Book Tag</field>
+                <field name="res_model">library.book.tag</field>
+        </record>
+        <!--config menu-->
+        <menuitem
+            name="Book Tag"
+            id="menu_library_book_tag"
+            action="action_library_book_tag"
+            parent="menu_configuration"
+            sequence='8'/>
+    </data>
+</odoo>

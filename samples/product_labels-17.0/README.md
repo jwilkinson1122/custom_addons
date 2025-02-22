@@ -1,0 +1,1 @@
+## Custom Product Label for Odoo v.17

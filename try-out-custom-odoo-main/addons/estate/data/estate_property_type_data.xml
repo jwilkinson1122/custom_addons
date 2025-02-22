@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="estate.type_house" model="estate.property.type">
+        <field name="name">House</field>
+    </record>
+
+    <record id="estate.type_apartment" model="estate.property.type">
+        <field name="name">Apartment</field>
+    </record>
+
+    <record id="estate.type_office" model="estate.property.type">
+        <field name="name">Office Building</field>
+    </record>
+
+    <record id="estate.type_retail" model="estate.property.type">
+        <field name="name">Retail Space</field>
+    </record>
+
+    <record id="estate.type_warehouse" model="estate.property.type">
+        <field name="name">Warehouse</field>
+    </record>
+
+</odoo>

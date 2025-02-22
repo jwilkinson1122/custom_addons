@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--  View Form  -->
+    <record id="print_product_label_form" model="ir.ui.view">
+        <field name="name">print.product.label.form</field>
+        <field name="model">print.product.label</field>
+        <field name="arch" type="xml">
+            <form string="Product Label Form">
+                <header>
+                    <button
+                        name="action_print"
+                        type="object"
+                        string="Print PDF"
+                        class="btn btn-primary"
+                        icon="fa-print"
+                    />
+                    <button
+                        name="action_print"
+                        type="object"
+                        context="{'print_mode':'html'}"
+                        string="Preview"
+                        class="btn btn-secondary"
+                        icon="fa-barcode"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="format_ids" widget="radio"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products" name="product_labels">
+                            <field name="product_ids" mode="tree">
+                                <tree>
+                                    <field name="barcode"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+<!--  Action View for Product Variants  -->
+    <record id="action_print_product_variant_label" model="ir.actions.act_window">
+        <field name="name">Custom Variant Label</field>
+        <field name="res_model">print.product.label</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="binding_type">report</field>
+    </record>
+<!--  Action View for Products-->
+    <record id="action_print_product_label" model="ir.actions.act_window">
+        <field name="name">Custom Product Label</field>
+        <field name="res_model">print.product.label</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

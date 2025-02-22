@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="estate.bafien_carpink" model="res.partner">
+        <field name="name">Bafien Carpink</field>
+    </record>
+
+    <record id="estate.antony_petisuix" model="res.partner">
+        <field name="name">Antony Petisuix</field>
+    </record>
+
+    <record id="estate.amyfromthevideos" model="res.partner">
+        <field name="name">AmyFromTheVideos</field>
+    </record>
+
+</odoo>

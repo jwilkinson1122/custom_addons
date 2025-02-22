@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the customer tree view -->
+        <record id="view_res_partner_tree_inherit_total_due" model="ir.ui.view">
+            <field name="name">res.partner.tree.inherit.total.due</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree" />
+            <field name="arch" type="xml">
+                <!-- Add the 'total_due' field to the tree view -->
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="custom_total_due" />
+                    <field name="custom_total_over_due" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_sale_order_form_custom" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+
+                <!-- Round Off Button -->
+                <xpath expr="//button[@name='action_open_discount_wizard']" position="before">
+                    <button name="apply_round_off" string="Round Off" type="object"
+                        class="btn-primary" />
+                </xpath>
+
+                <!-- Show Last Sold Price Icon-->
+                <xpath expr="//*[@name='order_line']//list//field[@name='price_unit']"
+                    position="after">
+                    <field name="last_sold_price" column_invisible="True" />
+                    <field name="last_sold_discount" column_invisible="True" />
+                    <field name="last_invoice_date" column_invisible="True" />
+                    <field name="last_invoice_num" column_invisible="True" />
+                    <field name="currency_symbol" column_invisible="True" />
+
+                    <widget name="view_last_sold_widget" />
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_account_move_form_custom" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group[contains(@class, 'oe_invoice_lines_tab')]" position="before">
+                    <div class="row">
+                        <div class="col mb-2 text-end">
+                            <button name="apply_round_off" string="Round Off" type="object"
+                                class="btn-primary" />
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

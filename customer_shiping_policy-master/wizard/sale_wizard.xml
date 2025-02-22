@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_order_shipping_policy_wizard" model="ir.ui.view">
+        <field name="name">sale.order.shipping.policy.wizard.form</field>
+        <field name="model">sale.order.shipping.policy.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Shipping Confirmation">
+                <group>
+                    <field name="message" widget="html"/>
+                </group>
+                <footer>
+                    <button string="Confirm" type="object" name="confirm" class="btn-primary"/>
+                    <button string="Cancel" type="object" name="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sale_order_shipping_policy_wizard" model="ir.actions.act_window">
+        <field name="name">Shipping Policy Confirmation</field>
+        <field name="res_model">sale.order.shipping.policy.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+
+</odoo>

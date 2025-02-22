@@ -138,7 +138,7 @@
                                 <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
                             </span> -->
                             <span class="o_form_label o_td_label" name="address_name">
-                                <label for="street" string="Company Address" />
+                                <label for="street" string="Address" />
                                 <!-- <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/> -->
                             </span>
                             <div class="o_address_format">
@@ -160,25 +160,36 @@
                                 <label for="primary_contact_id" string="Contact" />
                             </span>
                             <div class="o_contact_format">
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
+                                <!-- <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/>
-                                <div class="d-flex">
-                                    <!-- <button name="action_show_contact_points" type="object" icon="fa-plus-circle" class="text-primary" title="Add secondary phone numbers" invisible="not phone" context="{'default_contact_point_type': 'phone', 'default_partner_id': id, 'default_country_id': country_id}"/> -->
+                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/> -->
+                                <!-- <div class="d-flex">
                                     <field name="phone" placeholder='Phone' widget="phone" class="o_contact_phone"/>
-                                    <!-- <button name="action_show_contact_points" type="object" icon="fa-plus-circle" class="text-primary" title="Add secondary phone numbers" invisible="not mobile" context="{'default_contact_point_type': 'mobile', 'default_partner_id': id, 'default_country_id': country_id}"/> -->
+                                    <field name="mobile" placeholder='Mobile' widget="phone" class="o_contact_mobile"/>
+                                    <field name="fax_number" placeholder='Fax' widget="phone" invisible="is_patient" class="o_contact_fax"/>
+                                </div> -->
+                                <div class="d-flex phone-group">
+                                    <field name="phone" placeholder='Phone' widget="phone" class="o_contact_phone"/>
                                     <field name="mobile" placeholder='Mobile' widget="phone" class="o_contact_mobile"/>
                                     <field name="fax_number" placeholder='Fax' widget="phone" invisible="is_patient" class="o_contact_fax"/>
                                 </div>
-                                <div class="d-flex">
-                                    <field name="user_ids" placeholder='User' invisible="1"/>
-                                    <!-- <button name="action_show_contact_points" type="object" icon="fa-plus-circle" class="text-primary" title="Add secondary email addresses" invisible="not email" context="{'default_contact_point_type': 'email', 'default_partner_id': id}"/> -->
+
+                                <div class="d-flex email-group">
                                     <field name="email" class="o_contact_email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                                     <field name="website" class="o_contact_website" placeholder="Website Address" string="Website" widget="url" invisible="not is_company"/>
-                                    <field name="title" class="o_contact_title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company"/>
-                                    <field name="active_lang_count" placeholder="Active Language" invisible="1"/>
-                                    <field name="lang" class="o_contact_lang" placeholder="Language" invisible="active_lang_count &lt;= 1"/>
                                 </div>
+
+
+                                <field name="user_ids" placeholder='User' invisible="1"/>
+                                <!-- <field name="email" class="o_contact_email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids"/>
+                                    <field name="website" class="o_contact_website" placeholder="Website Address" string="Website" widget="url" invisible="not is_company"/> -->
+                                <field name="title" class="o_contact_title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company"/>
+                                <field name="active_lang_count" placeholder="Active Language" invisible="1"/>
+                                <field name="lang" class="o_contact_lang" placeholder="Language" invisible="active_lang_count &lt;= 1"/>
+                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
+                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
+                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/>
+
                                 <div name="partner_contact_category" class="d-flex justify-content-between">
                                     <field name="category_id" placeholder='Tags' class="o_contact_category" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </div>
@@ -187,6 +198,17 @@
                     </group>
                 </div>
             </xpath>
+            <!-- <record id="view_res_partner_form_inherit" model="ir.ui.view">
+                <field name="name">res.partner.form.inherit</field>
+                <field name="model">res.partner</field>
+                <field name="inherit_id" ref="base.view_partner_form"/>
+                <field name="arch" type="xml">
+                    <field name="category_id" position="after">
+                        <field name="group_id"/>
+                    </field>
+                </field>
+            </record> -->
+
             <!-- <xpath expr="//group" position="replace">
                 <div class="o_address_format card p-3 shadow-sm bg-light" style="margin-bottom:10px">
                     <group name="company_details">

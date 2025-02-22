@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="estate.country_house" model="estate.property">
+        <field name="name">Country house</field>
+        <field name="description">In the charming village of Grand-Rosière-Hottomont, 5 minutes from all facilities (shops, schools, public transport, ...), we offer this superb newly renovated country house!</field>
+        <field name="image" type="base64" file="estate/static/img/country_house.png"/>
+        <field name="type_id" ref="estate.type_house"/>
+        <field name="expected_price">745000</field>
+        <field name="selling_price">745000</field>
+        <field name="floor_area">416</field>
+        <field name="bedrooms">5</field>
+        <field name="has_garden">True</field>
+        <field name="has_garage">True</field>
+        <field name="seller_id" ref="estate.amyfromthevideos"/>
+    </record>
+
+    <record id="estate.loft" model="estate.property">
+        <field name="name">Loft</field>
+        <field name="description">Located on the 1st floor of a small, fully renovated building, magnificent 195 m² three-bedroom apartment with parking space.</field>
+        <field name="image" type="base64" file="estate/static/img/loft.png"/>
+        <field name="type_id" ref="estate.type_apartment"/>
+        <field name="selling_price">745000</field>
+        <field name="expected_price">745000</field>
+        <field name="availability_date">2025-01-01</field>
+        <field name="floor_area">195</field>
+        <field name="bedrooms">3</field>
+        <field name="has_garden">False</field>
+        <field name="has_garage">True</field>
+        <field name="seller_id" ref="estate.antony_petisuix"/>
+    </record>
+
+    <record id="estate.mixed_use_commercial" model="estate.property">
+        <field name="name">Mixed use commercial building</field>
+        <field name="description">The property is a former bank agency which consists of a retail ground floor, a basement and 2 extra office floors.</field>
+        <field name="image" type="base64" file="estate/static/img/mixed_use_commercial.png"/>
+        <field name="type_id" ref="estate.type_retail"/>
+        <field name="selling_price">745000</field>
+        <field name="expected_price">745000</field>
+        <field name="availability_date">2024-10-02</field>
+        <field name="floor_area">370</field>
+        <field name="bedrooms">0</field>
+        <field name="has_garden">False</field>
+        <field name="has_garage">False</field>
+        <field name="seller_id" ref="estate.bafien_carpink"/>
+    </record>
+
+</odoo>

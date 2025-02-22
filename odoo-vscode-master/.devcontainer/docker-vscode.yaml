@@ -1,0 +1,17 @@
+# Docker target vscode
+volumes:
+  vscode_home:
+
+services:
+  odoo:
+    build:
+      target: vscode
+    hostname: odoo.localhost
+    volumes:
+      - .:/odoo-workspace
+      - vscode_home:/home/vscode
+    environment:
+      - ODOO_EXTRA_ADDONS=/odoo-workspace/addons
+      - ODOO_STAGE=devcontainer
+      - PIP_AUTO_INSTALL=1
+    command: /bin/sh -c "while sleep 1000; do :; done"

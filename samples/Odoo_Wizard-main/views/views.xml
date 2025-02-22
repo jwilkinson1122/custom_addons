@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="student_update_tree" model="ir.ui.view">
+            <field name="name">student.update.tree</field>
+            <field name="model">student.profile</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="student_name"/>
+                    <field name="branch_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="student_update_form" model="ir.ui.view">
+            <field name="name">student.update.form</field>
+            <field name="model">student.profile</field>
+            <field name="arch" type="xml">
+                <form>
+                    <button name="wiz_open" string="Wizard (custom method)" type="object"/>
+                    <button name="wiz_mod.student_update_action_wizard" string="Wizard (action method)" type="action"/>
+                    <group>
+                        <group>
+                            <field name="student_name"/>
+                            <field name="branch_name"/>
+                            <field name="total_fees"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="wizard_student_action">
+            <field name="name">Students</field>
+            <field name="res_model">student.profile</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Add_Wizard" id="wizard_menu_root"/>
+        <menuitem name="Students" id="wizard_details_menu" parent="wizard_menu_root"/>
+        <menuitem name="Add Details" id="wizard_student_details" parent="wizard_details_menu" action="wizard_student_action"/>
+    </data>
+</odoo>

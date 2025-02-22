@@ -1,0 +1,47 @@
+name: Run test
+
+on:
+  workflow_dispatch:
+    inputs: {}
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  # cancel already in progress jobs
+  group: ${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  test_run:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    - name: Generate config
+      run: bash ./scripts/setup.py compose
+
+    - name: Login to GitHub Packages
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build image
+      run: docker compose -f "docker-compose.yaml" build
+
+    - name: Run test container
+      run: docker compose -f "docker-compose.yaml" -f "docker-compose.test.yaml" run --rm odoo
+
+    - name: Stop containers
+      if: always()
+      run: docker compose -f "docker-compose.yaml" down

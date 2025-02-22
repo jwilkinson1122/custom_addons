@@ -1,0 +1,38 @@
+# docker-compose: base for running docker
+
+volumes:
+  odoo_data:
+  postgres_odoo:
+
+services:
+  odoo:
+    build:
+      context: .
+      target: dev
+      args:
+        ODOO_VERSION: "${ODOO_VERSION}"
+        DEV_UID: "${DEV_UID}"
+    env_file: .env
+    environment:
+      PGHOST: db
+      PGPORT: 5432
+    restart: unless-stopped
+    ports:
+      - "8069"
+    volumes:
+      - odoo_data:${ODOO_DATA_DIR}
+      - ./addons:${ODOO_EXTRA_ADDONS}:cached
+    command: ["odoo-bin", "--dev", "xml"]
+    depends_on:
+      - db
+
+  db:
+    image: postgres:${POSTGRES_VERSION}
+    restart: unless-stopped
+    volumes:
+      - postgres_odoo:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_USER: ${PGUSER}
+      PGDATA: /var/lib/postgresql/data

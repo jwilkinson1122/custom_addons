@@ -1,0 +1,12 @@
+# Local files
+/.env
+/.venv
+/.vscode/launch.json
+*.override.yaml
+*.local.*
+
+# Python and temporary files
+*.py[cod]
+__pycache__
+.*_cache
+*~

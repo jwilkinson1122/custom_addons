@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+	    <!--book form view-->
+        <record model="ir.ui.view" id="view_library_book_form">
+            <field name="name">Library Book</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <form string="Books">
+                    <!--add header section for buttons-->
+                    <header>
+                    	<!--button for set state available-->
+                        <button name="action_state_available" string="Set to Available" class="oe_highlight" type="object" invisible="state !='borrowed'"/>
+                        <!--button for set state borrowed-->
+                        <button name="action_change_state" string="Borrowed" class="oe_highlight" type="object" invisible="state !='available'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="available, borrowed"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="True"/>
+                                <field name="author"/>
+                                <field name="isbn"/>
+                            </group>
+                            <group>
+                                <field name="category_id"/>
+                                <field name="publication_date"/>
+                                <field name="description"/>
+                             </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	    <!--book list view-->
+        <record model="ir.ui.view" id="view_library_book_tree">
+            <field name="name">Library Book List</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <list string="Books">
+                    <field name="name"/>
+                    <field name="author"/>
+                    <field name="isbn"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+	    <!--action-->
+        <record model="ir.actions.act_window" id="action_library_book">
+                <field name="name">Library Book</field>
+                <field name="res_model">library.book</field>
+        </record>
+	    <!--main menu and submenu-->
+        <menuitem id="menu_library" name="Library Management" sequence='3'/>
+        <menuitem
+            name="Books"
+            id="menu_book_library"
+            action="action_library_book"
+            parent="menu_library"
+            sequence='5'/>
+    </data>
+</odoo>
