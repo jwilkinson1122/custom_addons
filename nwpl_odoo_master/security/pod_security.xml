@@ -3,18 +3,6 @@
     <record id="ir_module_category_contacts" model="ir.module.category">
         <field name="name">Podiatry Contacts</field>
     </record>
-    <!-- Group: Contact Managers -->
-    <!-- <record id="group_contact_manager" model="res.groups">
-        <field name="name">Contact Managers</field>
-        <field name="category_id" ref="base.module_category_contacts"/>
-        <field name="implied_ids" eval="[(4, ref('contact_extend.group_contact_user'))]"/>
-    </record> -->
-
-    <!-- Group: Contact Users -->
-    <!-- <record id="group_contact_user" model="res.groups">
-        <field name="name">Contact Users</field>
-        <field name="category_id" ref="base.module_category_contacts"/>
-    </record> -->
     <record id="group_contacts_user" model="res.groups">
         <field name="name">User: Own Documents Only</field>
         <field name="category_id" ref="base.module_category_hidden" />

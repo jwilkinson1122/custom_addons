@@ -11,12 +11,76 @@ $input-color-placeholder-required: #055160;
 $button-border-color: #dee2e6;
 
 /***********************************************************
+        Form View : Title
+************************************************************/
+.o_form_view {
+  .oe_title input.o_input {
+    height: 42px !important; /* Ensure the input has enough height */
+    line-height: 42px !important; /* Match text height */
+    padding-top: 8px; /* Adjust padding to prevent text clipping */
+    padding-bottom: 12px;
+    // font-size: 16px;
+  }
+
+  /* Ensure placeholder text is fully visible */
+  .oe_title input::placeholder {
+    line-height: normal !important;
+  }
+}
+
+/***********************************************************
         Form View : Input Fields
 ************************************************************/
 .o_form_view {
   .o_input {
     padding-left: 4px;
     padding-right: 2px;
+  }
+}
+
+/***********************************************************
+        Form View : Input Dropdowns
+************************************************************/
+.o_form_view {
+  .o_input_dropdown .o_dropdown_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 40px;
+    margin-left: 5px;
+    visibility: visible;
+  }
+}
+
+/***********************************************************
+        Form View : Arrow Line
+************************************************************/
+.o_form_view {
+  .parent-id-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 60%;
+  }
+
+  .attach-label {
+    flex-grow: 0;
+    white-space: nowrap;
+  }
+
+  .arrow-container {
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .parent-id-field {
+    flex-grow: 2;
+    min-width: 30%;
+  }
+
+  .arrow-container i {
+    font-size: 20px;
   }
 }
 
@@ -104,6 +168,32 @@ $button-border-color: #dee2e6;
 /***********************************************************
         Form View : Custom address_info / contact_info groups
 ************************************************************/
+
+.o_form_view {
+  .o_address_format {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; // Adds space between row groups
+
+    // City, State, Zip (3 equal widths)
+    .d-flex.city-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px; // Ensure spacing between phone fields
+    }
+  }
+
+  /* 🔹 Edit Mode Adjustments */
+  .o_form_editable {
+    .o_address_format {
+      .city-group {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+      }
+    }
+  }
+}
 
 .o_form_view {
   .o_contact_format {

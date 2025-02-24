@@ -85,33 +85,52 @@
                     <field name='customer_code' readonly="1"/>
                 </h2>
                 <div class="oe_title mb24">
-                    <h1 class="d-flex align-items-center">
-                        <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company"/>
-                        <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company"/>
-                    </h1>
-                    <div class="d-flex align-items-center mt-2" invisible="is_account">
-                        <span class="mx-2 text-muted fs-6" invisible="not is_new_record">Attach To</span>
-                        <span class="mx-2 text-muted fs-6" invisible="is_new_record">Attached To</span>
-                        <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold fs-6" options="{'no_create': True}"/>
+                    <field name="is_new_record" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="is_account" invisible="1"/>
+                    <field name="is_affiliate" invisible="1"/>
+                    <field name="is_contact" invisible="1"/>
+                    <field name="is_patient" invisible="1"/>
+                    <field name="is_supplier" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="commercial_partner_id" invisible="1"/>
+                    <field name="can_have_parent" invisible="1"/>
+                    <field name="parent_is_required" invisible="1"/>
+                    <field name="company_type" widget="radio" options="{'horizontal': true}" invisible="1"/>
+                    <field name="parent_type_ids" invisible="1"/>
+                    <field name="partner_type_code" invisible="1"/>
+
+                    <!-- Name Field -->
+                    <div class="d-flex align-items-center w-100">
+                        <div class="flex-grow-1" style="max-width: 60%;">
+                            <h1 class="mb-0">
+                                <field id="company" options="{'line_breaks': False}" widget="text" class="text-break w-100" name="name" default_focus="1" placeholder="e.g. Fab Foot Clinic" invisible="not is_company" required="is_company"/>
+                                <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break w-100" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="not is_company"/>
+                            </h1>
+                        </div>
                     </div>
-                    <div class="o_row">
-                        <field name="is_new_record" invisible="1"/>
-                        <field name="is_company" invisible="1"/>
-                        <field name="is_account" invisible="1"/>
-                        <field name="is_affiliate" invisible="1"/>
-                        <field name="is_contact" invisible="1"/>
-                        <field name="is_patient" invisible="1"/>
-                        <field name="is_supplier" invisible="1"/>
-                        <field name="active" invisible="1"/>
-                        <field name="commercial_partner_id" invisible="1"/>
-                        <field name="can_have_parent" invisible="1"/>
-                        <field name="parent_is_required" invisible="1"/>
-                        <field name="company_type" invisible="1"/>
-                        <field name="parent_type_ids" invisible="1"/>
-                        <field name="partner_type_code" invisible="1"/>
+
+                    <!-- Attach To Label + Arrow + Parent ID Field -->
+                    <div class="d-flex align-items-center w-100 mt-2 parent-id-container" invisible="is_account">
+                        <!-- "Attach To" or "Attached To" Label -->
+                        <div class="fw-bold text-muted fs-5 attach-label">
+                            <span invisible="not is_new_record">Attached To:</span>
+                            <span invisible="is_new_record">Attach To:</span>
+                        </div>
+
+                        <!-- Arrow (Centered) -->
+                        <div class="arrow-container">
+                            <i class="fa fa-long-arrow-right text-primary"></i>
+                        </div>
+
+                        <!-- Parent ID Field (Expanding to the end of the name field) -->
+                        <div class="parent-id-field">
+                            <field name="parent_id" widget="res_partner_many2one" placeholder="Parent Company" invisible="is_account" required="1" domain="[('is_company', '=', True), ('id', '!=', 1)]" context="{'default_is_company': True}" class="fw-bold fs-6 w-100" options="{'no_create': True}"/>
+                        </div>
                     </div>
                 </div>
             </xpath>
+
             <xpath expr="//group" position="replace">
                 <div class="o_address_format card p-3 shadow-sm bg-light" style="margin-bottom:10px">
                     <group name="company_details">
@@ -129,24 +148,25 @@
                     </group>
                     <group name="address">
                         <group name="address_info" string="Address Info">
-                            <label for="company_address_type" string="Address Type" invisible="not is_company"/>
-                            <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
-
-                            <!-- <span class="o_form_label o_td_label" name="address_name">
-                                <label for="type" string="Address" />
-                                <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
-                            </span> -->
+                            <!-- <label for="company_address_type" string="Address Type" invisible="not is_company"/>
+                            <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
+                            <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/> -->
                             <span class="o_form_label o_td_label" name="address_name">
-                                <label for="street" string="Address" />
-                                <!-- <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/> -->
+                                <label for="street" string="Address" invisible="not is_company"/>
+                                <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street" />
                                 <field name="street2" placeholder="Street 2..." class="o_address_street" />
-                                <field name="city" placeholder="City" class="o_address_city" />
+                                <!-- <field name="city" placeholder="City" class="o_address_city" />
                                 <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" /> -->
+                                <div class="d-flex city-group">
+                                    <field name="city" placeholder="City"/>
+                                    <field name="state_id" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                    <field name="zip" placeholder="ZIP"/>
+                                </div>
                                 <div name="partner_address_country" class="d-flex justify-content-between">
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
@@ -160,36 +180,22 @@
                                 <label for="primary_contact_id" string="Contact" />
                             </span>
                             <div class="o_contact_format">
-                                <!-- <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/> -->
-                                <!-- <div class="d-flex">
-                                    <field name="phone" placeholder='Phone' widget="phone" class="o_contact_phone"/>
-                                    <field name="mobile" placeholder='Mobile' widget="phone" class="o_contact_mobile"/>
-                                    <field name="fax_number" placeholder='Fax' widget="phone" invisible="is_patient" class="o_contact_fax"/>
-                                </div> -->
                                 <div class="d-flex phone-group">
                                     <field name="phone" placeholder='Phone' widget="phone" class="o_contact_phone"/>
                                     <field name="mobile" placeholder='Mobile' widget="phone" class="o_contact_mobile"/>
                                     <field name="fax_number" placeholder='Fax' widget="phone" invisible="is_patient" class="o_contact_fax"/>
                                 </div>
-
                                 <div class="d-flex email-group">
                                     <field name="email" class="o_contact_email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                                     <field name="website" class="o_contact_website" placeholder="Website Address" string="Website" widget="url" invisible="not is_company"/>
                                 </div>
-
-
                                 <field name="user_ids" placeholder='User' invisible="1"/>
-                                <!-- <field name="email" class="o_contact_email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids"/>
-                                    <field name="website" class="o_contact_website" placeholder="Website Address" string="Website" widget="url" invisible="not is_company"/> -->
                                 <field name="title" class="o_contact_title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company"/>
                                 <field name="active_lang_count" placeholder="Active Language" invisible="1"/>
                                 <field name="lang" class="o_contact_lang" placeholder="Language" invisible="active_lang_count &lt;= 1"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/>
-
                                 <div name="partner_contact_category" class="d-flex justify-content-between">
                                     <field name="category_id" placeholder='Tags' class="o_contact_category" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </div>
@@ -198,92 +204,13 @@
                     </group>
                 </div>
             </xpath>
-            <!-- <record id="view_res_partner_form_inherit" model="ir.ui.view">
-                <field name="name">res.partner.form.inherit</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_partner_form"/>
-                <field name="arch" type="xml">
-                    <field name="category_id" position="after">
-                        <field name="group_id"/>
-                    </field>
-                </field>
-            </record> -->
-
-            <!-- <xpath expr="//group" position="replace">
-                <div class="o_address_format card p-3 shadow-sm bg-light" style="margin-bottom:10px">
-                    <group name="company_details">
-                        <group string="Section Name">
-                            <field name="ref" invisible="1"/>
-                            <field name="customer_code" readonly="1"/>
-                            <field name="legacy_customer_code" invisible="not is_company"/>
-                        </group>
-                        <group string="Section Name">
-                            <field name="partner_type_id" class="oe_inline fw-bold" widget="selection" domain="[('company_type', '=', company_type)]" invisible="1" readonly="1"/>
-                            <label for="partner_company_type" string="Account Type" invisible="not is_account"/>
-                            <label for="partner_company_type" string="Affiliate Type" invisible="not is_affiliate"/>
-                            <field name="partner_company_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
-                        </group>
-                    </group>
-                    <group name="address">
-                        <group name="address_info" string="Address Info">
-                            <label for="company_address_type" string="Address Type" invisible="not is_company"/>
-                            <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
-                            <span class="o_form_label o_td_label" name="address_name">
-                                <label for="type" string="Address" />
-                                <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
-                            </span>
-                            <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street" />
-                                <field name="street2" placeholder="Street 2..." class="o_address_street" />
-                                <field name="city" placeholder="City" class="o_address_city" />
-                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" />
-                                <div name="partner_address_country" class="d-flex justify-content-between">
-                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                </div>
-                            </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
-                            <field name="use_parent_invoice_address" invisible="not parent_id" />
-                            <field name="use_parent_shipping_address" invisible="not parent_id"/>
-                        </group>
-                        <group name="contact_info" string="Contact Info">
-                            <span class="o_form_label o_td_label" name="contact_name">
-                                <label for="primary_contact_id" string="Contact" />
-                            </span>
-                            <div class="o_contact_format">
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
-                                <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/>
-                                <div class="d-flex">
-                                    <field name="phone" placeholder='Phone' widget="phone" class="o_contact_phone"/>
-                                    <field name="mobile" placeholder='Mobile' widget="phone" class="o_contact_mobile"/>
-                                    <field name="fax_number" placeholder='Fax' widget="phone" invisible="is_patient" class="o_contact_fax"/>
-                                </div>
-                                <div class="d-flex">
-                                    <field name="user_ids" placeholder='User' invisible="1"/>
-                                    <field name="email" class="o_contact_email" placeholder='Email' widget="email" context="{'gravatar_image': True}" required="user_ids"/>
-                                    <field name="website" class="o_contact_website" placeholder="Website Address" string="Website" widget="url" invisible="not is_company"/>
-                                    <field name="title" class="o_contact_title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company"/>
-                                    <field name="active_lang_count" placeholder="Active Language" invisible="1"/>
-                                    <field name="lang" class="o_contact_lang" placeholder="Language" invisible="active_lang_count &lt;= 1"/>
-                                </div>
-                                <div name="partner_contact_category" class="d-flex justify-content-between">
-                                    <field name="category_id" placeholder='Tags' class="o_contact_category" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                                </div>
-                            </div>
-                        </group>
-                    </group>
-                </div>
-            </xpath> -->
 
             <xpath expr="//field[@name='phone']" position="before">
                 <button name="action_show_contact_points" type="object" icon="fa-plus-circle" class="text-primary" title="Add secondary phone numbers" invisible="not phone" context="{'default_contact_point_type': 'phone', 'default_partner_id': id, 'default_country_id': country_id}"/>
             </xpath>
-
             <xpath expr="//field[@name='mobile']" position="before">
                 <button name="action_show_contact_points" type="object" icon="fa-plus-circle" class="text-primary" title="Add secondary phone numbers" invisible="not mobile" context="{'default_contact_point_type': 'mobile', 'default_partner_id': id, 'default_country_id': country_id}"/>
             </xpath>
-
             <xpath expr="//field[@name='email']" position="before">
                 <button name="action_show_contact_points" type="object" icon="fa-plus-circle" class="text-primary" title="Add secondary email addresses" invisible="not email" context="{'default_contact_point_type': 'email', 'default_partner_id': id}"/>
             </xpath>

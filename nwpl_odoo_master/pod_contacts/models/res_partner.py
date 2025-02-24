@@ -15,55 +15,6 @@ _logger = logging.getLogger(__name__)
 
 INVOICE = "invoice"
 
-# class ResPartner(models.Model):
-#     _inherit = "res.partner"
-
-#     group_id = fields.Many2one("res.partner.groups", string="Group")
-
-#     def write(self, vals):
-#         user_has_contact_user_group = self.env.user.has_group(
-#             'contact_extend.group_contact_user')
-#         user_has_contact_manager_group = self.env.user.has_group(
-#             'contact_extend.group_contact_manager')
-
-#         if user_has_contact_user_group and not user_has_contact_manager_group:
-#             for record in self:
-#                 current_state_id = vals.get("state_id", record.state_id.id)
-
-#                 if record.group_id:
-#                     group_state_id = record.group_id.state_id.id
-#                     if current_state_id != group_state_id:
-#                         raise ValidationError(
-#                             "Users in the Contact Users group can only edit "
-#                             " res.partner records if state_id matches the "
-#                             "state_id of the group's state.")
-#                 else:
-#                     raise ValidationError(
-#                         "This record does not belong to any group, so it "
-#                         "cannot be edited by users in the Contact Users group."
-#                     )
-
-#         result = super(ResPartner, self).write(vals)
-#         return result
-
-# class ResPartnerGroups(models.Model):
-#     _name = 'res.partner.groups'
-#     _description = 'Contact Groups'
-
-#     name = fields.Char(required=True)
-#     code = fields.Char(size=3, required=True)
-#     state_id = fields.Many2one('res.country.state')
-#     country_id = fields.Many2one('res.country', related='state_id.country_id')
-#     contact_count = fields.Integer(compute='_compute_contact_count',
-#                                    store=True)
-#     partner_ids = fields.One2many('res.partner', 'group_id', string='Partners')
-
-#     @api.depends('partner_ids')
-#     def _compute_contact_count(self):
-#         for group in self:
-#             group.contact_count = self.env['res.partner'].search_count(
-#                 [('group_id', '=', group.id)])
-
 
 class Partner(models.Model):
     _inherit = ["res.partner", "incrementing.sequence.mixin"]
@@ -147,6 +98,8 @@ class Partner(models.Model):
     contacts_label = fields.Char(
         related="partner_type_id.contacts_label", readonly=True
     )
+
+    group_id = fields.Many2one("res.partner.groups", string="Group")
 
     type = fields.Selection(
         selection_add=[
