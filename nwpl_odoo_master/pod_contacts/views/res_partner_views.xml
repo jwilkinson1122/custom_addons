@@ -149,19 +149,24 @@
                     <group name="address">
                         <group name="address_info" string="Address Info">
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
-                            <!-- <label for="company_address_type" string="Address Type" invisible="not is_company"/>
-                            <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
-                            <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/> -->
                             <span class="o_form_label o_td_label" name="address_name">
-                                <label for="street" string="Address" invisible="not is_company"/>
-                                <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/>
+                                <div class="address-type-box p-2 border rounded">
+                                    <label for="company_address_type" string="Type" invisible="not is_company"/>
+                                    <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/>
+
+                                </div>
+                                <!-- <label for="company_address_type" string="Address" invisible="not is_company"/>
+                                <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/> -->
                             </span>
+                            <!-- <div class="address-type-box p-2 border rounded">
+                                <span class="o_form_label o_td_label" name="address_name">
+                                    <label for="company_address_type" string="Type" invisible="not is_company"/>
+                                    <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/>
+                                </span>
+                            </div> -->
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street" />
                                 <field name="street2" placeholder="Street 2..." class="o_address_street" />
-                                <!-- <field name="city" placeholder="City" class="o_address_city" />
-                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" /> -->
                                 <div class="d-flex city-group">
                                     <field name="city" placeholder="City"/>
                                     <field name="state_id" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>

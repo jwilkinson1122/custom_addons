@@ -233,6 +233,13 @@ $button-border-color: #dee2e6;
   }
 }
 
+.address-type-box {
+  border: 1px solid #dee2e6; // Light gray border
+  border-radius: 5px; // Rounded corners
+  padding: 8px; // Inner spacing
+  // background-color: #f8f9fa;
+}
+
 // .o_form_view {
 //   .o_contact_format {
 //     width: 100%;
