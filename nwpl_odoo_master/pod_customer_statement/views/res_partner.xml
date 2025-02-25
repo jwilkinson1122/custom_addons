@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
     <record id="partner_tree_view" model="ir.ui.view">
         <field name="name">res.partner</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="phone" position="after">
-                <!-- <field name="customer_compute_boolean" invisible="1"/> -->
                 <field name="customer_compute_boolean" column_invisible="1"/>
             </field>
+            <xpath expr="//field[@name='customer_code']" position="after">
+                <field name="is_overdue" widget="boolean" string="Overdue?" />
+            </xpath>
         </field>
     </record>
-    <record id="partner_kanban_view" model="ir.ui.view">
+
+    <!-- <record id="partner_kanban_view" model="ir.ui.view">
         <field name="name">res.partner</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.res_partner_kanban_view"/>
@@ -19,17 +23,69 @@
             <field name="phone" position="after">
                 <field name="customer_compute_boolean" invisible="1"/>
             </field>
+ 
+            <xpath expr="//kanban//ul" position="inside">
+                <li t-if="record.is_overdue.raw_value" class="badge badge-danger">
+                    <field name=""/>
+                </li>
+            </xpath>
+        </field>
+    </record> -->
+
+
+
+    <record id="partner_kanban_view" model="ir.ui.view">
+        <field name="name">res.partner.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Ensuring 'customer_compute_boolean' is after 'phone' -->
+            <field name="phone" position="after">
+                <field name="customer_compute_boolean" invisible="1"/>
+                <field name="is_overdue" invisible="1"/>
+
+            </field>
+
+            <!-- Hidden Field to Store Overdue Status -->
+            <!-- <field name="is_overdue" invisible="1"/> -->
+
+            <!-- Overdue Badge Inside Kanban View -->
+            <xpath expr="//div[contains(@class, 'oe_kanban_details')]" position="inside">
+                <div class="badge badge-danger" invisible="not is_overdue">
+                    <i class="fa fa-exclamation-circle"/>
+ Overdue
+                </div>
+            </xpath>
+
+            <!-- Overdue Indicator in List -->
+            <xpath expr="//kanban//ul" position="inside">
+                <li class="badge badge-danger" invisible="not is_overdue">
+                    <i class="fa fa-exclamation-circle"/>
+ Overdue
+                </li>
+            </xpath>
+
         </field>
     </record>
+
+
+
     <record id="customer_view" model="ir.ui.view">
         <field name="name">res.partner</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="is_overdue" invisible="1"/>
+                <div class="alert alert-danger" invisible="not is_overdue">
+                    <i class="fa fa-exclamation-triangle"/>
+ This customer has overdue balances!
+                </div>
+            </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="customer_statement_config" widget='many2many_tags' invisible="customer_rank == 0 or is_patient"/>
             </xpath>
-
             <xpath expr="//page[last()]" position="after">
                 <page string="Customer Statement" invisible="customer_rank == 0 or is_patient">
                     <field name="supplier_rank" invisible="1" />
@@ -213,6 +269,7 @@
             </xpath>
         </field>
     </record>
+
     <record id="res_partner_search_view" model="ir.ui.view">
         <field name="name">res.partner</field>
         <field name="model">res.partner</field>

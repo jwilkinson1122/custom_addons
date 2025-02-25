@@ -92,6 +92,21 @@ class ResPartner(models.Model):
 
     payment_state = fields.Selection(PAYMENT_STATE_SELECTION, string="Payment Status")
 
+    is_overdue = fields.Boolean(
+        string="Overdue Status",
+        compute="_compute_is_overdue",
+        store=True,
+    )
+
+    @api.depends("customer_due_statement_ids.due_customer_balance")
+    def _compute_is_overdue(self):
+        """Set overdue status based on balance in due statements."""
+        for partner in self:
+            overdue_balance = sum(
+                partner.customer_due_statement_ids.mapped("due_customer_balance")
+            )
+            partner.is_overdue = overdue_balance > 0.0
+
     def _compute_statement_portal_url_wp(self):
         for rec in self:
             rec.portal_statement_url_wp = False

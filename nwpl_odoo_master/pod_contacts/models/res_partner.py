@@ -218,6 +218,16 @@ class Partner(models.Model):
 
     contact_role_ids = fields.Many2many(string="Roles", comodel_name="contact.role")
 
+    # contact_role_ids = fields.Many2many(
+    #     string="Roles",
+    #     comodel_name="contact.role",
+    #     relation="res_partner_contact_role_rel",
+    #     column1="partner_id",
+    #     column2="role_id"
+    # )
+
+    department_id = fields.Many2one("res.partner.contact.department", "Department")
+
     contact_point_ids = fields.One2many(
         "res.partner.contact_point", "partner_id", "Contact Points"
     )
@@ -231,6 +241,36 @@ class Partner(models.Model):
         compute="_compute_contact_points", inverse="_set_mobile", store=True
     )
     fax_number = fields.Char(string="Fax")
+
+    document_ids = fields.One2many(
+        "res.partner.document", "partner_id", string="Documents"
+    )
+
+    documents_count = fields.Integer(
+        compute="_compute_total_documents_count",
+        string="Document Count",
+        help="Get the documents count",
+    )
+
+    @api.depends("document_ids")
+    def _compute_total_documents_count(self):
+        """Get the document count on smart tab"""
+        for record in self:
+            record.documents_count = self.env["ir.attachment"].search_count(
+                [("res_id", "=", record.id), ("res_model", "=", "res.partner")]
+            )
+
+    def action_partner_documents(self):
+        """Return the documents of corresponding partner in the smart tab"""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Documents",
+            "view_mode": "kanban,form",
+            "res_model": "ir.attachment",
+            "domain": [("res_id", "=", self.id), ("res_model", "=", "res.partner")],
+            "context": {"create": False},
+        }
 
     @api.depends("contact_point_ids.name", "contact_point_ids.is_default")
     def _compute_contact_points(self):
@@ -596,11 +636,14 @@ class Partner(models.Model):
         """Create a partner with validations, rollback safety, and address handling."""
         _logger.debug("Received vals for create: %s", vals)
 
-        # Ensure `is_contact` is NOT set when creating an Account or Affiliate
-        if vals.get("is_account") or vals.get("is_affiliate"):
-            vals["is_contact"] = False  # Prevent incorrect `is_contact=True`
+        # Ensure `is_contact` is NOT set when creating an Account, Affiliate, or Patient
+        if vals.get("is_account") or vals.get("is_affiliate") or vals.get("is_patient"):
+            vals.pop(
+                "is_contact", None
+            )  # Completely remove is_contact to avoid conflicts
 
-        if vals.get("parent_id"):
+        # Ensure parent_id is an integer if provided as a string
+        if vals.get("parent_id") and isinstance(vals["parent_id"], str):
             vals["parent_id"] = int(vals["parent_id"])
 
         with self.env.cr.savepoint():  # Ensures rollback if any error occurs
@@ -631,6 +674,10 @@ class Partner(models.Model):
         """Update partner and apply relevant changes, including address inheritance and customer code generation."""
         _logger.info("Updating partner(s) with values: %s", vals)
 
+        # Ensure patients are NOT misclassified as contacts
+        if vals.get("is_patient"):
+            vals.pop("is_contact", None)  # Remove `is_contact` key completely
+
         if "parent_id" in vals:
             new_parent = self.env["res.partner"].browse(vals["parent_id"])
             for partner in self:
@@ -642,8 +689,10 @@ class Partner(models.Model):
                         "Circular reference detected in the hierarchy."
                     )
 
-                vals["customer_code"] = self._generate_customer_code(vals)
-                partner._update_child_codes()
+                # Only regenerate customer_code when the parent is changed
+                if partner.parent_id and partner.parent_id != new_parent:
+                    vals["customer_code"] = self._generate_customer_code(vals)
+                    partner._update_child_codes()
 
         result = super().write(vals)
 
@@ -669,6 +718,80 @@ class Partner(models.Model):
 
         _logger.info("Partner(s) updated successfully.")
         return result
+
+    # @api.model
+    # def create(self, vals):
+    #     """Create a partner with validations, rollback safety, and address handling."""
+    #     _logger.debug("Received vals for create: %s", vals)
+
+    #     if vals.get("is_account") or vals.get("is_affiliate"):
+    #         vals["is_contact"] = False
+
+    #     if vals.get("parent_id"):
+    #         vals["parent_id"] = int(vals["parent_id"])
+
+    #     with self.env.cr.savepoint():
+    #         if vals.get("customer_code", _("New")) == _("New"):
+    #             vals["customer_code"] = self._generate_customer_code(vals)
+    #             _logger.debug("Generated customer_code: %s", vals["customer_code"])
+
+    #         partner = super().create(vals)
+
+    #         if (
+    #             partner.use_parent_invoice_address
+    #             or partner.use_parent_shipping_address
+    #         ):
+    #             partner._onchange_parent_address_flags()
+
+    #         if self.get_fields_contact_points().intersection(
+    #             vals.keys()
+    #         ) and not self._context.get("compute_contact_points"):
+    #             partner.with_context(
+    #                 compute_contact_points=True
+    #             )._compute_contact_points()
+
+    #     return partner
+
+    # def write(self, vals):
+    #     """Update partner and apply relevant changes, including address inheritance and customer code generation."""
+    #     _logger.info("Updating partner(s) with values: %s", vals)
+
+    #     if "parent_id" in vals:
+    #         new_parent = self.env["res.partner"].browse(vals["parent_id"])
+    #         for partner in self:
+    #             if new_parent and partner.id == new_parent.id:
+    #                 raise ValidationError("A partner cannot be its own parent.")
+
+    #             if partner._is_circular_reference(new_parent):
+    #                 raise ValidationError(
+    #                     "Circular reference detected in the hierarchy."
+    #                 )
+
+    #             vals["customer_code"] = self._generate_customer_code(vals)
+    #             partner._update_child_codes()
+
+    #     result = super().write(vals)
+
+    #     if (
+    #         "use_parent_invoice_address" in vals
+    #         or "use_parent_shipping_address" in vals
+    #         or "parent_id" in vals
+    #     ):
+    #         self._onchange_parent_address_flags()
+
+    #     self._validate_affiliate_parent()
+    #     self._update_children(vals)
+
+    #     if self.get_fields_contact_points().intersection(
+    #         vals.keys()
+    #     ) and not self._context.get("compute_contact_points"):
+    #         for partner in self:
+    #             partner.with_context(
+    #                 compute_contact_points=True
+    #             )._compute_contact_points()
+
+    #     _logger.info("Partner(s) updated successfully.")
+    #     return result
 
     def _set_email(self):
         self._set_contact_point("email")
@@ -703,13 +826,6 @@ class Partner(models.Model):
 
     def _generate_customer_code(self, vals):
         """Generate customer codes ensuring that each Account's Affiliates increment independently."""
-
-        sequence_map = {
-            "is_account": "res.partner.account",
-            "is_affiliate": "res.partner.affiliate",
-            "is_contact": "res.partner.contact",
-            "is_patient": "res.partner.patient",
-        }
 
         # ✅ Ensure `is_contact` is NOT set when creating an Account or Affiliate
         if vals.get("is_account") or vals.get("is_affiliate"):
@@ -759,12 +875,73 @@ class Partner(models.Model):
 
             return f"{base_code}-{new_number}"
 
-        # ✅ Ensure contacts & patients always get a unique sequence
-        for key, seq_code in sequence_map.items():
-            if vals.get(key):
-                return self.env["ir.sequence"].next_by_code(seq_code)
+        # ✅ Ensure correct sequence assignment for Patients and Contacts
+        if vals.get("is_patient"):
+            return self.env["ir.sequence"].next_by_code("res.partner.patient")
 
+        if vals.get("is_contact"):
+            return self.env["ir.sequence"].next_by_code("res.partner.contact")
+
+        # ✅ Default fallback if no specific type is found
         return self.env["ir.sequence"].next_by_code("res.partner.generic")
+
+    # def _generate_customer_code(self, vals):
+    #     """Generate customer codes ensuring that each Account's Affiliates increment independently."""
+
+    #     sequence_map = {
+    #         "is_account": "res.partner.account",
+    #         "is_affiliate": "res.partner.affiliate",
+    #         "is_contact": "res.partner.contact",
+    #         "is_patient": "res.partner.patient",
+    #     }
+
+    #     if vals.get("is_account") or vals.get("is_affiliate"):
+    #         vals["is_contact"] = False
+
+    #     if vals.get("is_account"):
+    #         return f"ID{self.env['ir.sequence'].next_by_code('res.partner.account').zfill(4)}"
+
+    #     parent = (
+    #         self.env["res.partner"].browse(vals.get("parent_id"))
+    #         if vals.get("parent_id")
+    #         else None
+    #     )
+
+    #     if vals.get("is_affiliate") and parent and parent.customer_code:
+    #         existing_affiliates = self.env["res.partner"].search(
+    #             [
+    #                 ("parent_id", "=", parent.id),
+    #                 ("is_affiliate", "=", True),
+    #                 ("customer_code", "!=", False),
+    #             ],
+    #             order="customer_code DESC",
+    #             limit=1,
+    #         )
+
+    #         if existing_affiliates:
+    #             last_code_parts = existing_affiliates.customer_code.split("-")
+    #             last_number = (
+    #                 int(last_code_parts[-1]) if last_code_parts[-1].isdigit() else 0
+    #             )
+    #             new_number = f"{last_number + 1:02d}"
+    #         else:
+    #             new_number = "01"
+
+    #         max_depth = 2
+    #         code_parts = parent.customer_code.split("-")
+
+    #         if len(code_parts) >= max_depth + 1:
+    #             base_code = "-".join(code_parts[:max_depth])
+    #         else:
+    #             base_code = parent.customer_code
+
+    #         return f"{base_code}-{new_number}"
+
+    #     for key, seq_code in sequence_map.items():
+    #         if vals.get(key):
+    #             return self.env["ir.sequence"].next_by_code(seq_code)
+
+    #     return self.env["ir.sequence"].next_by_code("res.partner.generic")
 
     def _update_child_codes(self):
         """Recursively update customer codes for children when a parent changes."""

@@ -8,7 +8,8 @@ class ContactRole(models.Model):
     name = fields.Char(required=True)
     description = fields.Char(required=True)
     active = fields.Boolean(default=True)
-
+    # color = fields.Integer(string="Color")
+    color = fields.Integer(string="Color Index", default=0)
     # parent_id = fields.Many2one(
     #     "contact.role", string="Parent Role", help="Parent role for hierarchy."
     # )

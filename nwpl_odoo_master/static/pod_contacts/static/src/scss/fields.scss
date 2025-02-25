@@ -240,6 +240,12 @@ $button-border-color: #dee2e6;
   // background-color: #f8f9fa;
 }
 
+.o_parent_address {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Ensures address checkboxes align properly */
+  gap: 10px;
+}
+
 // .o_form_view {
 //   .o_contact_format {
 //     width: 100%;

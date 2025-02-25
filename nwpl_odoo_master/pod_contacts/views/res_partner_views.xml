@@ -74,6 +74,10 @@
                         <field name="companies_label"/>
                     </span>
                 </button>
+                <button class="oe_stat_button" type="object" name="action_partner_documents" string="Documents" icon="fa-file-text-o">
+                    <field string="Documents" name="documents_count" widget="statinfo"/>
+                </button>
+
             </div>
             <xpath expr="//button[@name='action_view_sale_order']" position="before">
                 <button class="oe_stat_button" type="object" name="open_sale_from_view_action" icon="fa-pencil-square-o" invisible="reorder_count == 0">
@@ -144,26 +148,23 @@
                             <label for="partner_company_type" string="Account Type" invisible="not is_account"/>
                             <label for="partner_company_type" string="Affiliate Type" invisible="not is_affiliate"/>
                             <field name="partner_company_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" options="{'horizontal': true}" class="fw-bold"/>
+
+                            <field name="use_parent_invoice_address" invisible="not parent_id" />
+                            <field name="use_parent_shipping_address" invisible="not parent_id"/>
+
                         </group>
+
                     </group>
                     <group name="address">
                         <group name="address_info" string="Address Info">
                             <field name="type" placeholder="Address Type" invisible="1" class="fw-bold"/>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <div class="address-type-box p-2 border rounded">
+                                <div class="address-type-box p-2 border rounded" invisible="not is_company">
                                     <label for="company_address_type" string="Type" invisible="not is_company"/>
                                     <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/>
-
                                 </div>
-                                <!-- <label for="company_address_type" string="Address" invisible="not is_company"/>
-                                <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/> -->
+                                <label for="company_address_type" string="Address" invisible="is_company"/>
                             </span>
-                            <!-- <div class="address-type-box p-2 border rounded">
-                                <span class="o_form_label o_td_label" name="address_name">
-                                    <label for="company_address_type" string="Type" invisible="not is_company"/>
-                                    <field name="company_address_type" invisible="not is_company" nolabel="1" required="is_company" widget="radio" class="fw-bold"/>
-                                </span>
-                            </div> -->
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street" />
                                 <field name="street2" placeholder="Street 2..." class="o_address_street" />
@@ -177,8 +178,12 @@
                                 </div>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" invisible="1"/>
-                            <field name="use_parent_invoice_address" invisible="not parent_id" />
-                            <field name="use_parent_shipping_address" invisible="not parent_id"/>
+                            <!-- <field name="use_parent_invoice_address" invisible="not parent_id" />
+                            <field name="use_parent_shipping_address" invisible="not parent_id"/> -->
+                            <!-- <div class="o_parent_address grid-2">
+                                <field name="use_parent_invoice_address" invisible="not parent_id"/>
+                                <field name="use_parent_shipping_address" invisible="not parent_id"/>
+                            </div> -->
                         </group>
                         <group name="contact_info" string="Contact Info">
                             <span class="o_form_label o_td_label" name="contact_name">
@@ -195,12 +200,18 @@
                                     <field name="website" class="o_contact_website" placeholder="Website Address" string="Website" widget="url" invisible="not is_company"/>
                                 </div>
                                 <field name="user_ids" placeholder='User' invisible="1"/>
+                                <field name="contact_role_ids" widget="many2many_tags" placeholder="Role" options="{'color_field': 'color'}" class="fw-bold" invisible="is_company or is_patient"/>
+
                                 <field name="title" class="o_contact_title" options='{"no_open": True}' placeholder="e.g. Mister" invisible="is_company"/>
+                                <field name="function" placeholder="e.g. Sales Director" invisible="is_company or is_patient"/>
+                                <field name="department_id" placeholder="Department" invisible="is_company or is_patient" options='{"no_open": True}'/>
                                 <field name="active_lang_count" placeholder="Active Language" invisible="1"/>
                                 <field name="lang" class="o_contact_lang" placeholder="Language" invisible="active_lang_count &lt;= 1"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_account" options="{'no_create': True}"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_affiliate" options="{'no_create': True}"/>
                                 <field name="primary_contact_id" class="o_contact_person" placeholder="Primary Contact" context="{'primary_contact_selection': True}" domain="[('is_contact', '=', True), ('is_company', '=', False), ('parent_id', '=', parent_id)]" invisible="not is_patient" options="{'no_create': True}"/>
+                                <!-- <field name="contact_role_ids" widget="many2many_tags" placeholder="Role" options="{'color_field': 'color'}" class="fw-bold" invisible="is_company or is_patient"/> -->
+
                                 <div name="partner_contact_category" class="d-flex justify-content-between">
                                     <field name="category_id" placeholder='Tags' class="o_contact_category" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </div>
@@ -461,8 +472,13 @@
             <xpath expr="//field[@name='child_ids']" position="attributes">
                 <attribute name="mode">kanban</attribute>
                 <attribute name="nolabel">1</attribute>
-                <attribute name="domain">[('is_contact', '=', True), ('user_ids', '=', False)]</attribute>
+                <attribute name="domain">[('is_contact', '=', True), ('is_patient', '=', False), ('is_company', '=', False), ('parent_id', '=', active_id), ('user_ids', '=', False)]</attribute>
             </xpath>
+
+            <!-- <field name="child_ids" mode="kanban" nolabel="1" domain="[('is_contact', '=', True), ('is_patient', '=', False), ('is_company', '=', False), ('parent_id', '=', active_id)]"/>
+ -->
+
+
             <!-- <xpath expr="//page[@name='contact_addresses']//field[@name='child_ids']" position="attributes">
                 <attribute name="context">{'default_parent_id': id, 'default_is_contact': True, 'default_type':'contact', 'search_default_parent_id': id}</attribute>
                 <attribute name="options">{'kanban_view': {'create': True}}</attribute>
@@ -630,14 +646,14 @@
 
 
             <!-- Patients -->
-            <xpath expr='//page[@name="contact_addresses"]' position="after">
+            <!-- <xpath expr='//page[@name="contact_addresses"]' position="after">
                 <page string="Patients" invisible="is_supplier or is_patient">
                     <separator name="patients" string="Patients List"/>
                     <div name="alert_no_patients" class="oe_read_only alert alert-info mb8" role="alert" invisible="not patient_ids or patient_ids == ''">
                         No Patients Available
                     </div>
                 </page>
-            </xpath>
+            </xpath> -->
             <xpath expr='//page[@name="contact_addresses"]' position="after">
                 <page name="patients" string="Patients" invisible="is_patient">
                     <separator string="Direct Patients" />
@@ -817,6 +833,24 @@
                     </group>
                 </page>
             </xpath>
+            <xpath expr="//notebook/page[@name='internal_notes']" position="before">
+                <page name="documents" string="Documents">
+                    <field name="document_ids">
+                        <tree>
+                            <field name="name" />
+                            <field name="file" />
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="name" />
+                            </group>
+                            <group>
+                                <field name="file" />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='parent_id']" position="after">
                 <field name="is_partner" invisible="1"/>
                 <field name="is_company" invisible="1"/>
@@ -854,6 +888,9 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="department_id" />
+            </field>
             <filter name="type_person" position="before">
                 <filter name="accounts_filter" string="Accounts" domain="[('is_account', '=', True), ('user_ids', '=', False)]" help="Filter Accounts"/>
                 <filter name="affiliates_filter" string="Affiliates" domain="[('is_affiliate', '=', True), ('user_ids', '=', False)]" help="Filter Affiliates"/>
@@ -861,7 +898,12 @@
             <filter name="type_person" position="after">
                 <filter name="contacts_filter" string="Contacts" domain="[('is_contact', '=', True), ('user_ids', '=', False)]" help="Filter Contacts"/>
                 <filter name="patients_filter" string="Patients" domain="[('is_patient', '=', True), ('user_ids', '=', False)]" help="Filter Patients"/>
+                <filter name="department" string="Department" domain="[('is_company', '=', False)]" context="{'group_by': 'department_id'}" />
+
             </filter>
+            <!-- <filter name="salesperson" position="after">
+                <filter name="department" string="Department" domain="[('is_company', '=', False)]" context="{'group_by': 'department_id'}" />
+            </filter> -->
         </field>
     </record>
 

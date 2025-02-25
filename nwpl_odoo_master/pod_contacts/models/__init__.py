@@ -12,6 +12,7 @@ from . import partner_flag_category
 from . import customer_credit
 from . import sale_order
 from . import order_history
+from . import res_partner_contact_department
 from . import res_partner_contact_point_mixin
 from . import res_partner_contact_point_tag
 from . import res_partner_contact_point
@@ -19,4 +20,5 @@ from . import res_partner
 from . import res_partner_type
 from . import partner_company_type
 from . import res_users
+from . import res_partner_document
 from . import ir_actions
