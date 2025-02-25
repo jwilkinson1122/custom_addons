@@ -51,20 +51,6 @@ class Partner(models.Model):
         string="Use Parent Shipping Address", default=False
     )
 
-    # contact_point_ids = fields.One2many(
-    #     "res.partner.contact_point", "partner_id", "Contact Points"
-    # )
-    # email = fields.Char(
-    #     compute="_compute_contact_points", inverse="_set_email", store=True
-    # )
-    # phone = fields.Char(
-    #     compute="_compute_contact_points", inverse="_set_phone", store=True
-    # )
-    # mobile = fields.Char(
-    #     compute="_compute_contact_points", inverse="_set_mobile", store=True
-    # )
-    # fax_number = fields.Char(string="Fax")
-
     ref = fields.Char(string="Ref", index=True)
     customer_code = fields.Char(
         string="Customer Code", readonly=True, default=lambda self: _("New")
