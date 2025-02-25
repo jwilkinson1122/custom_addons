@@ -1,8 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_version_wizard_id,access_version_wizard,model_version_wizard,base.group_user,1,1,1,1
-access_sale_order_line_wizard_id,access_sale_order_line_wizard,model_sale_order_line_wizard,base.group_user,1,1,1,1
-access_sale_order_line_version_id,access_sale_order_line_version,model_sale_order_line_version,base.group_user,1,1,1,1
-access_sale_order_version_id,access_sale_order_version,model_sale_order_version,base.group_user,1,1,1,1
-access_sale_order_version_restore_wizard_id,access_sale_order_version_restore_wizard,model_sale_order_version_restore_wizard,base.group_user,1,1,1,1
-
-

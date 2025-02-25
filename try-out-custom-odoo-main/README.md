@@ -1,2 +1,0 @@
-# try-out-custom-odoo
- 

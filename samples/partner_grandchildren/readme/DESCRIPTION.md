@@ -1,1 +1,0 @@
-This moduel adds a notebook tag with computed partner grandchildrens and more successors in the res partner form.
