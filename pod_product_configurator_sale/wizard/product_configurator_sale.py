@@ -6,6 +6,14 @@ class ProductConfiguratorSale(models.TransientModel):
     _inherit = "product.configurator"
     _description = "Product Configurator Sale"
 
+    customize_step_ids = fields.Many2many(
+        comodel_name="product.config.step.line",
+        relation="product_configurator_sale_customize_step_rel",  # Different table!
+        column1="wizard_id",
+        column2="step_id",
+        string="Customized Steps",
+    )
+
     order_id = fields.Many2one(comodel_name="sale.order", required=True, readonly=True)
     order_line_id = fields.Many2one(comodel_name="sale.order.line", readonly=True)
 

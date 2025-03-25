@@ -461,6 +461,12 @@ class ProductConfigSession(models.Model):
     config_step_name = fields.Char(
         compute="_compute_config_step_name", string="Configuration Step"
     )
+    laterality = fields.Selection([
+        ('left', 'Left Only'),
+        ('right', 'Right Only'),
+        ('bilateral', 'Bilateral')
+    ], string="Laterality", required=True, default='bilateral')
+
     product_id = fields.Many2one(
         comodel_name="product.product",
         name="Configured Variant",

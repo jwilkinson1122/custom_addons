@@ -22,6 +22,36 @@ class ProductConfigurator(models.TransientModel):
     _inherits = {"product.config.session": "config_session_id"}
     _description = "Product configuration Wizard"
 
+    # customize_step_ids = fields.Many2many(
+    #     comodel_name="product.config.step.line",
+    #     relation="configurator_customize_step_rel",
+    #     column1="wizard_id",
+    #     column2="step_id",
+    #     string="Customized Steps",
+    #     help="Steps where user opted to configure left and right independently",
+    # )
+
+    customize_step_ids = fields.Many2many(
+        comodel_name="product.config.step.line",
+        relation="product_configurator_customize_step_rel",
+        column1="wizard_id",
+        column2="step_id",
+        string="Customized Steps",
+        help="Steps where user opted to configure left and right independently",
+    )
+
+
+    def toggle_customize_step(self):
+        self.ensure_one()
+        step_id = int(self.env.context.get("step_id"))
+        if step_id in self.customize_step_ids.ids:
+            self.customize_step_ids = [(3, step_id)]  # Remove
+        else:
+            self.customize_step_ids = [(4, step_id)]  # Add
+        # Refresh the view to re-render left/right fields
+        return self.get_wizard_action(wizard=self)
+
+
     def _find_wizard_context(self):
         # TODO: For more ref. https://github.com/odoo/odoo/pull/135145
         wizard_id = (
@@ -473,106 +503,189 @@ class ProductConfigurator(models.TransientModel):
             "store": False,
             "translate": False,
         }
-
+    
+    # New fields_get method  
     @api.model
-    def fields_get(self, allfields=None, write_access=True, attributes=None):
-        """Artificially inject fields which are dynamically created using the
-        attribute_ids on the product.template as reference"""
-
-        field_prefix = self._prefixes.get("field_prefix")
-        custom_field_prefix = self._prefixes.get("custom_field_prefix")
-
+    def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields=allfields, attributes=attributes)
+
         wizard_id = self._find_wizard_context()
-        # If wizard_id is not defined in the context then the wizard was just
-        # launched and is not stored in the database yet
         if not wizard_id:
             return res
 
-        # Get the wizard object from the database
         wiz = self.browse(wizard_id)
-        active_step_id = wiz.state
+        laterality = wiz.laterality
+        customized_step_ids = set(wiz.customize_step_ids.ids)
 
-        # If the product template is not set it is still at the 1st step
-        if not wiz.product_tmpl_id:
-            return res
+        field_prefix = self._prefixes.get("field_prefix")
+        custom_field_prefix = self._prefixes.get("custom_field_prefix")
+        domain_field_prefix = self._prefixes.get("domain_field_prefix")
 
-        cfg_step_lines = wiz.product_tmpl_id.config_step_line_ids
-
-        try:
-            # Get only the attribute lines for the next step if defined
-            active_step_line = cfg_step_lines.filtered(
-                lambda line: line.id == int(active_step_id)
-            )
-            if active_step_line:
-                attribute_lines = active_step_line.attribute_line_ids
-            else:
-                attribute_lines = wiz.product_tmpl_id.attribute_line_ids
-        except Exception:
-            # If no configuration steps exist then get all attribute lines
-            attribute_lines = wiz.product_tmpl_id.attribute_line_ids
-
-        attribute_lines = wiz.product_tmpl_id.attribute_line_ids
-
-        # Generate relational fields with domains restricting values to
-        # the corresponding attributes
-
-        # Default field attributes
         default_attrs = self.get_field_default_attrs()
+        config_session_obj = self.env["product.config.session"]
+        custom_val = config_session_obj.get_custom_value_id()
 
-        for line in attribute_lines:
+        for line in wiz.product_tmpl_id.attribute_line_ids:
             attribute = line.attribute_id
-            value_ids = line.value_ids.ids
+            attr_id = attribute.id
+            attr_name = attribute.name
+            is_multi = line.multi
+            is_custom = line.custom
+            attr_values = line.value_ids.ids
+            attr_values = wiz.config_session_id.values_available(check_val_ids=attr_values)
 
-            value_ids = wiz.config_session_id.values_available(check_val_ids=value_ids)
+            if is_custom:
+                attr_values.append(custom_val.id)
 
-            # If attribute lines allows custom values add the
-            # generic "Custom" attribute.value to the list of options
-            if line.custom:
-                config_session_obj = self.env["product.config.session"]
-                custom_val = config_session_obj.get_custom_value_id()
-                value_ids.append(custom_val.id)
-
-                # Set default field type
-                field_type = "char"
-
-                if attribute.custom_type:
-                    field_types = FIELD_TYPES
-                    custom_type = line.attribute_id.custom_type
-                    # TODO: Rename int to integer in values
-                    if custom_type == "integer":
-                        field_type = "integer"
-                    elif custom_type in [f[0] for f in field_types]:
-                        field_type = custom_type
-
-                # TODO: Implement custom string on custom attribute
-                res[custom_field_prefix + str(attribute.id)] = dict(
+            def create_field_dict(suffix=None, domain_field=None):
+                return dict(
                     default_attrs,
-                    string="Custom",
-                    type=field_type,
-                    sequence=line.sequence,
+                    type="many2many" if is_multi else "many2one",
+                    string=f"{attr_name} ({suffix})" if suffix else attr_name,
+                    relation="product.attribute.value",
+                    domain=f"[('id', 'in', {attr_values})]" if not domain_field else domain_field,
                 )
-            domain_field_prefix = self._prefixes.get("domain_field_prefix")
-            domain_field = domain_field_prefix + str(attribute.id)
-            res[domain_field] = dict(
+
+            def create_custom_field_dict(suffix=None, custom_type=None):
+                ftype = "char"
+                if custom_type:
+                    if custom_type == "integer":
+                        ftype = "integer"
+                    elif custom_type in dict(FIELD_TYPES):
+                        ftype = custom_type
+                return dict(
+                    default_attrs,
+                    string=f"Custom ({suffix})" if suffix else "Custom",
+                    type=ftype,
+                )
+
+            # Add a hidden binary domain field (used in frontend domain logic)
+            domain_field_name = f"{domain_field_prefix}{attr_id}"
+            res[domain_field_name] = dict(
                 default_attrs,
                 type="binary",
-                string="Domain %s" % line.attribute_id.name,
+                string=f"Domain {attr_name}",
                 change_default=True,
             )
 
-            # Add the dynamic field to the result set using the convention
-            # "__attribute_DBID" to later identify and extract it
-            res[field_prefix + str(attribute.id)] = dict(
-                default_attrs,
-                type="many2many" if line.multi else "many2one",
-                domain="%s" % domain_field,
-                string=line.attribute_id.name,
-                relation="product.attribute.value",
-                change_default=True,
-                # sequence=line.sequence,
+            # Determine if this attribute is part of a customized step
+            step_lines = wiz.product_tmpl_id.config_step_line_ids.filtered(
+                lambda step: line in step.attribute_line_ids
             )
+            is_customized_step = bool(set(step_lines.ids) & customized_step_ids)
+
+            # FIELD LOGIC
+            if laterality in ("left", "right"):
+                # Single field only
+                field_name = f"{field_prefix}{attr_id}"
+                res[field_name] = create_field_dict(domain_field=domain_field_name)
+                if is_custom:
+                    res[f"{custom_field_prefix}{attr_id}"] = create_custom_field_dict(
+                        custom_type=attribute.custom_type
+                    )
+
+            elif laterality == "bilateral":
+                if is_customized_step:
+                    for side in ("left", "right"):
+                        field_name = f"{field_prefix}{side}_{attr_id}"
+                        res[field_name] = create_field_dict(suffix=side.capitalize(), domain_field=domain_field_name)
+                        if is_custom:
+                            res[f"{custom_field_prefix}{side}_{attr_id}"] = create_custom_field_dict(
+                                suffix=side, custom_type=attribute.custom_type
+                            )
+                else:
+                    field_name = f"{field_prefix}{attr_id}"
+                    res[field_name] = create_field_dict(domain_field=domain_field_name)
+                    if is_custom:
+                        res[f"{custom_field_prefix}{attr_id}"] = create_custom_field_dict(
+                            custom_type=attribute.custom_type
+                        )
+
         return res
+
+  
+    # Old fields_get method 
+    # @api.model
+    # def fields_get(self, allfields=None, write_access=True, attributes=None):
+    #     """Artificially inject fields which are dynamically created using the
+    #     attribute_ids on the product.template as reference"""
+
+    #     field_prefix = self._prefixes.get("field_prefix")
+    #     custom_field_prefix = self._prefixes.get("custom_field_prefix")
+
+    #     res = super().fields_get(allfields=allfields, attributes=attributes)
+    #     wizard_id = self._find_wizard_context()
+
+    #     if not wizard_id:
+    #         return res
+
+    #     wiz = self.browse(wizard_id)
+    #     active_step_id = wiz.state
+
+    #     if not wiz.product_tmpl_id:
+    #         return res
+
+    #     cfg_step_lines = wiz.product_tmpl_id.config_step_line_ids
+
+    #     try:
+    #         active_step_line = cfg_step_lines.filtered(
+    #             lambda line: line.id == int(active_step_id)
+    #         )
+    #         if active_step_line:
+    #             attribute_lines = active_step_line.attribute_line_ids
+    #         else:
+    #             attribute_lines = wiz.product_tmpl_id.attribute_line_ids
+    #     except Exception:
+    #         attribute_lines = wiz.product_tmpl_id.attribute_line_ids
+
+    #     attribute_lines = wiz.product_tmpl_id.attribute_line_ids
+
+    #     default_attrs = self.get_field_default_attrs()
+
+    #     for line in attribute_lines:
+    #         attribute = line.attribute_id
+    #         value_ids = line.value_ids.ids
+
+    #         value_ids = wiz.config_session_id.values_available(check_val_ids=value_ids)
+
+    #         if line.custom:
+    #             config_session_obj = self.env["product.config.session"]
+    #             custom_val = config_session_obj.get_custom_value_id()
+    #             value_ids.append(custom_val.id)
+
+    #             field_type = "char"
+
+    #             if attribute.custom_type:
+    #                 field_types = FIELD_TYPES
+    #                 custom_type = line.attribute_id.custom_type
+    #                 if custom_type == "integer":
+    #                     field_type = "integer"
+    #                 elif custom_type in [f[0] for f in field_types]:
+    #                     field_type = custom_type
+
+    #             res[custom_field_prefix + str(attribute.id)] = dict(
+    #                 default_attrs,
+    #                 string="Custom",
+    #                 type=field_type,
+    #                 sequence=line.sequence,
+    #             )
+    #         domain_field_prefix = self._prefixes.get("domain_field_prefix")
+    #         domain_field = domain_field_prefix + str(attribute.id)
+    #         res[domain_field] = dict(
+    #             default_attrs,
+    #             type="binary",
+    #             string="Domain %s" % line.attribute_id.name,
+    #             change_default=True,
+    #         )
+    #         res[field_prefix + str(attribute.id)] = dict(
+    #             default_attrs,
+    #             type="many2many" if line.multi else "many2one",
+    #             domain="%s" % domain_field,
+    #             string=line.attribute_id.name,
+    #             relation="product.attribute.value",
+    #             change_default=True,
+    #         )
+    #     return res
 
     @api.model
     def get_view(self, view_id=None, view_type="form", **options):
@@ -610,9 +723,7 @@ class ProductConfigurator(models.TransientModel):
         res.update({"arch": etree.tostring(mod_view)})
         return res
 
-    def prepare_attrs_initial(
-        self, attr_lines, field_prefix, custom_field_prefix, dynamic_fields, wiz
-    ):
+    def prepare_attrs_initial(self, attr_lines, field_prefix, custom_field_prefix, dynamic_fields, wiz):
         cfg_step_ids = []
         for attr_line in attr_lines:
             attribute_id = attr_line.attribute_id.id
@@ -697,14 +808,8 @@ class ProductConfigurator(models.TransientModel):
                 "invisible": invisible_str,
             }
 
-        return (
-            attrs,
-            field_name,
-            custom_field,
-            config_steps,
-            cfg_step_ids,
-            domain_field_name,
-        )
+        return (attrs, field_name, custom_field, config_steps, cfg_step_ids, domain_field_name)
+
 
     def _generate_dependency_attributes(
         self, attr_line, attr_depends, dynamic_fields, readonly_str, required_str
@@ -728,18 +833,18 @@ class ProductConfigurator(models.TransientModel):
                 required_str += f" and {dependee_field} in {str(list(val_ids))}"
 
         return readonly_str, required_str
-
+    
+    # New add_dynamic_fields method
     @api.model
     def add_dynamic_fields(self, res, dynamic_fields, wiz):
-        """Create the configuration view using the dynamically generated
-        fields in fields_get()
-        """
-
         field_prefix = self._prefixes.get("field_prefix")
         custom_field_prefix = self._prefixes.get("custom_field_prefix")
+        domain_field_prefix = self._prefixes.get("domain_field_prefix")
+
+        laterality = wiz.laterality
+        customized_step_ids = set(wiz.customize_step_ids.ids)
 
         try:
-            # Search for view container hook and add dynamic view and fields
             xml_view = etree.fromstring(res["arch"])
             xml_static_form = xml_view.xpath("//group[@name='static_form']")[0]
             xml_dynamic_form = etree.Element("group", colspan="2", name="dynamic_form")
@@ -747,54 +852,45 @@ class ProductConfigurator(models.TransientModel):
             xml_parent.insert(xml_parent.index(xml_static_form) + 1, xml_dynamic_form)
             xml_dynamic_form = xml_view.xpath("//group[@name='dynamic_form']")[0]
         except Exception as exc:
-            raise UserError(
-                _("There was a problem rendering the view " "(dynamic_form not found)")
-            ) from exc
+            raise UserError(_("Could not render dynamic form group")) from exc
 
-        # Get all dynamic fields inserted via fields_get method
         attr_lines = wiz.product_tmpl_id.attribute_line_ids.sorted()
 
-        # Loop over the dynamic fields and add them to the view one by one
         for attr_line in attr_lines:
-            (
-                attrs,
-                field_name,
-                custom_field,
-                config_steps,
-                cfg_step_ids,
-                domain_field_name,
-            ) = self.prepare_attrs_initial(
-                attr_line, field_prefix, custom_field_prefix, dynamic_fields, wiz
-            )
+            # Reuse the same helper to generate smart field metadata
+            attrs, field_name, custom_field, config_steps, cfg_step_ids, domain_field_name = \
+                self.prepare_attrs_initial(attr_line, field_prefix, custom_field_prefix, dynamic_fields, wiz)
 
-            # Create the new field in the view
+            is_custom = attr_line.custom
+            field_type = dynamic_fields.get(field_name, {}).get("type")
+
+            # Add main attribute value field
             node = etree.Element(
                 "field",
                 name=field_name,
                 on_change="1",
                 default_focus="1" if attr_line == attr_lines[0] else "0",
                 attrib=attrs,
-                context=str(
-                    {
-                        "show_attribute": False,
-                        "show_price_extra": True,
-                        "active_id": wiz.product_tmpl_id.id,
-                        "wizard_id": wiz.id,
-                        "field_name": field_name,
-                        "is_m2m": attr_line.multi,
-                        "value_ids": attr_line.value_ids.ids,
-                    }
-                ),
-                options=str(
-                    {
-                        "no_create": True,
-                        "no_create_edit": True,
-                        "no_open": True,
-                    }
-                ),
+                context=str({
+                    "show_attribute": False,
+                    "show_price_extra": True,
+                    "active_id": wiz.product_tmpl_id.id,
+                    "wizard_id": wiz.id,
+                    "field_name": field_name,
+                    "is_m2m": attr_line.multi,
+                    "value_ids": attr_line.value_ids.ids,
+                }),
+                options=str({
+                    "no_create": True,
+                    "no_create_edit": True,
+                    "no_open": True,
+                }),
             )
-
+            if field_type == "many2many":
+                node.attrib["widget"] = "many2many_tags"
             xml_dynamic_form.append(node)
+
+            # Add corresponding domain field for dynamic filtering
             domain_node = etree.Element(
                 "field",
                 name=domain_field_name,
@@ -804,57 +900,163 @@ class ProductConfigurator(models.TransientModel):
             )
             xml_dynamic_form.append(domain_node)
 
-            field_type = dynamic_fields[field_name].get("type")
-            if field_type == "many2many":
-                node.attrib["widget"] = "many2many_tags"
-            # Apply the modifiers (attrs) on the newly inserted field in the
-            # arch and add it to the view
-            if attr_line.custom and custom_field in dynamic_fields:
+            # Add custom input field (if custom toggle is on)
+            if is_custom and custom_field in dynamic_fields:
                 widget = ""
-                config_session_obj = self.env["product.config.session"]
-                custom_option_id = config_session_obj.get_custom_value_id().id
+                custom_option_id = self.env["product.config.session"].get_custom_value_id().id
 
+                # Determine if field value triggers the custom input
                 if field_type == "many2many":
                     field_val = [(6, False, [custom_option_id])]
                 else:
                     field_val = custom_option_id
 
-                attrs.update(
-                    {
-                        "readonly": attrs.get("readonly")
-                        + f" or {field_name} != {field_val}"
-                    }
-                )
-                attrs.update(
-                    {
-                        "invisible": attrs.get("invisible")
-                        + f" or {field_name} != {field_val}"
-                    }
-                )
-                attrs.update(
-                    {
-                        "required": attrs.get("required")
-                        + f" or {field_name} != {field_val}"
-                    }
-                )
+                # Customize attribute visibility based on selected value
+                attrs.update({
+                    "readonly": attrs.get("readonly") + f" or {field_name} != {field_val}",
+                    "invisible": attrs.get("invisible") + f" or {field_name} != {field_val}",
+                    "required": attrs.get("required") + f" or {field_name} != {field_val}",
+                })
 
                 if config_steps:
-                    attrs.update(
-                        {
-                            "required": attrs.get("required")
-                            + f" or 'state' in {cfg_step_ids}"
-                        }
-                    )
+                    attrs.update({
+                        "required": attrs.get("required") + f" or 'state' in {cfg_step_ids}",
+                    })
 
-                # TODO: Add a field2widget mapper
+                # Set widget for special types
                 if attr_line.attribute_id.custom_type == "color":
                     widget = "color"
 
-                node = etree.Element(
-                    "field", name=custom_field, attrib=attrs, widget=widget
+                custom_node = etree.Element(
+                    "field", name=custom_field, attrib=attrs
                 )
-                xml_dynamic_form.append(node)
+                if widget:
+                    custom_node.set("widget", widget)
+                xml_dynamic_form.append(custom_node)
+
         return xml_view
+
+
+    # Old add_dynamic_fields method
+    # @api.model
+    # def add_dynamic_fields(self, res, dynamic_fields, wiz):
+    #     """Create the configuration view using the dynamically generated
+    #     fields in fields_get()
+    #     """
+
+    #     field_prefix = self._prefixes.get("field_prefix")
+    #     custom_field_prefix = self._prefixes.get("custom_field_prefix")
+
+    #     try:
+    #         xml_view = etree.fromstring(res["arch"])
+    #         xml_static_form = xml_view.xpath("//group[@name='static_form']")[0]
+    #         xml_dynamic_form = etree.Element("group", colspan="2", name="dynamic_form")
+    #         xml_parent = xml_static_form.getparent()
+    #         xml_parent.insert(xml_parent.index(xml_static_form) + 1, xml_dynamic_form)
+    #         xml_dynamic_form = xml_view.xpath("//group[@name='dynamic_form']")[0]
+    #     except Exception as exc:
+    #         raise UserError(
+    #             _("There was a problem rendering the view " "(dynamic_form not found)")
+    #         ) from exc
+
+    #     attr_lines = wiz.product_tmpl_id.attribute_line_ids.sorted()
+
+    #     for attr_line in attr_lines:
+    #         (
+    #             attrs,
+    #             field_name,
+    #             custom_field,
+    #             config_steps,
+    #             cfg_step_ids,
+    #             domain_field_name,
+    #         ) = self.prepare_attrs_initial(
+    #             attr_line, field_prefix, custom_field_prefix, dynamic_fields, wiz
+    #         )
+
+    #         node = etree.Element(
+    #             "field",
+    #             name=field_name,
+    #             on_change="1",
+    #             default_focus="1" if attr_line == attr_lines[0] else "0",
+    #             attrib=attrs,
+    #             context=str(
+    #                 {
+    #                     "show_attribute": False,
+    #                     "show_price_extra": True,
+    #                     "active_id": wiz.product_tmpl_id.id,
+    #                     "wizard_id": wiz.id,
+    #                     "field_name": field_name,
+    #                     "is_m2m": attr_line.multi,
+    #                     "value_ids": attr_line.value_ids.ids,
+    #                 }
+    #             ),
+    #             options=str(
+    #                 {
+    #                     "no_create": True,
+    #                     "no_create_edit": True,
+    #                     "no_open": True,
+    #                 }
+    #             ),
+    #         )
+
+    #         xml_dynamic_form.append(node)
+    #         domain_node = etree.Element(
+    #             "field",
+    #             name=domain_field_name,
+    #             on_change="1",
+    #             readonly="1",
+    #             invisible="1",
+    #         )
+    #         xml_dynamic_form.append(domain_node)
+
+    #         field_type = dynamic_fields[field_name].get("type")
+    #         if field_type == "many2many":
+    #             node.attrib["widget"] = "many2many_tags"
+    #         if attr_line.custom and custom_field in dynamic_fields:
+    #             widget = ""
+    #             config_session_obj = self.env["product.config.session"]
+    #             custom_option_id = config_session_obj.get_custom_value_id().id
+
+    #             if field_type == "many2many":
+    #                 field_val = [(6, False, [custom_option_id])]
+    #             else:
+    #                 field_val = custom_option_id
+
+    #             attrs.update(
+    #                 {
+    #                     "readonly": attrs.get("readonly")
+    #                     + f" or {field_name} != {field_val}"
+    #                 }
+    #             )
+    #             attrs.update(
+    #                 {
+    #                     "invisible": attrs.get("invisible")
+    #                     + f" or {field_name} != {field_val}"
+    #                 }
+    #             )
+    #             attrs.update(
+    #                 {
+    #                     "required": attrs.get("required")
+    #                     + f" or {field_name} != {field_val}"
+    #                 }
+    #             )
+
+    #             if config_steps:
+    #                 attrs.update(
+    #                     {
+    #                         "required": attrs.get("required")
+    #                         + f" or 'state' in {cfg_step_ids}"
+    #                     }
+    #                 )
+
+    #             if attr_line.attribute_id.custom_type == "color":
+    #                 widget = "color"
+
+    #             node = etree.Element(
+    #                 "field", name=custom_field, attrib=attrs, widget=widget
+    #             )
+    #             xml_dynamic_form.append(node)
+    #     return xml_view
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -884,108 +1086,246 @@ class ProductConfigurator(models.TransientModel):
                 vals.update({"value_ids": [(6, 0, session.value_ids.ids)]})
         return super().create(vals_list)
 
+    # New read method
     def read(self, fields=None, load="_classic_read"):
-        """Remove dynamic fields from the fields list and update the
-        returned values with the dynamic data stored in value_ids"""
+        res = super().read(self._remove_dynamic_fields(fields or []), load=load)
 
-        field_prefix = self._prefixes.get("field_prefix")
-        custom_field_prefix = self._prefixes.get("custom_field_prefix")
-        domain_field_prefix = self._prefixes.get("domain_field_prefix")
-        attr_vals = [f for f in fields if f.startswith(field_prefix)]
-        custom_attr_vals = [f for f in fields if f.startswith(custom_field_prefix)]
-        domain_attr_vals = [f for f in fields if f.startswith(domain_field_prefix)]
-        dynamic_fields = attr_vals + custom_attr_vals + domain_attr_vals
-        fields = self._remove_dynamic_fields(fields)
-
-        custom_val = self.env["product.config.session"].get_custom_value_id()
-        dynamic_vals = {}
-
-        res = super().read(fields=fields, load=load)
-
-        if not load:
-            load = "_classic_read"
-
-        if not dynamic_fields:
+        if not fields:
             return res
 
-        for attr_line in self.product_tmpl_id.attribute_line_ids:
-            attr_id = attr_line.attribute_id.id
-            field_name = field_prefix + str(attr_id)
-            if field_name not in dynamic_fields:
-                continue
+        field_prefix = self._prefixes.get("field_prefix")
+        custom_prefix = self._prefixes.get("custom_field_prefix")
 
-            custom_field_name = custom_field_prefix + str(attr_id)
-            domain_field_name = domain_field_prefix + str(attr_id)
-            available_value_ids = self.config_session_id.values_available(
+        wiz = self
+        laterality = wiz.laterality
+        customized_steps = set(wiz.customize_step_ids.ids)
+        value_ids = {v.id: v for v in wiz.value_ids}
+        custom_vals = {v.attribute_id.id: v for v in wiz.custom_value_ids}
+
+        result = res[0]
+
+        for attr_line in wiz.product_tmpl_id.attribute_line_ids:
+            attr = attr_line.attribute_id
+            attr_id = attr.id
+            attr_name = attr.name
+            is_custom = attr_line.custom
+            is_multi = attr_line.multi
+
+            step_lines = wiz.product_tmpl_id.config_step_line_ids.filtered(
+                lambda s: attr_line in s.attribute_line_ids
+            )
+            customized = bool(set(step_lines.ids) & customized_steps)
+
+            # Left/Right Split
+            if laterality == "bilateral" and customized:
+                for side in ("left", "right"):
+                    field_name = f"{field_prefix}{side}_{attr_id}"
+                    custom_name = f"{custom_prefix}{side}_{attr_id}"
+                    # key = f"{attr_id}_{side}"   
+
+                    val = [
+                        v.id for v in value_ids.values()
+                        if v.attribute_id.id == attr_id and v.name.lower().endswith(f"({side})")
+                    ]
+
+                    result[field_name] = val if is_multi else (val[0] if val else False)
+
+                    if is_custom:
+                        try:
+                            result[custom_name] = custom_vals.get(attr_id).eval() if custom_vals.get(attr_id) else False
+                        except Exception:
+                            result[custom_name] = False
+            else:
+                # Shared
+                field_name = f"{field_prefix}{attr_id}"
+                custom_name = f"{custom_prefix}{attr_id}"
+
+                val = [
+                    v.id for v in value_ids.values()
+                    if v.attribute_id.id == attr_id
+                ]
+                result[field_name] = val if is_multi else (val[0] if val else False)
+
+                if is_custom:
+                        try:
+                            result[custom_name] = custom_vals.get(attr_id).eval() if custom_vals.get(attr_id) else False
+                        except Exception:
+                            result[custom_name] = False
+
+            # Always inject domain field for frontend filtering
+            domain_field_name = f"__domain_{attr_id}"
+            available_value_ids = wiz.config_session_id.values_available(
                 check_val_ids=attr_line.value_ids.ids,
                 product_template_attribute_line_id=attr_line.id,
             )
-            if attr_line.custom:
-                config_session_obj = self.env["product.config.session"]
-                custom_val = config_session_obj.get_custom_value_id()
-                available_value_ids.append(custom_val.id)
-            # Handle default values for dynamic fields on Odoo frontend
-            res[0].update(
-                {
-                    field_name: [] if attr_line.multi else False,
-                    custom_field_name: False,
-                    domain_field_name: [("id", "in", available_value_ids)],
-                }
-            )
-            custom_vals = self.custom_value_ids.filtered(
-                lambda x, attr_id=attr_id: x.attribute_id.id == attr_id
-            ).with_context(show_attribute=False)
-            vals = attr_line.value_ids.filtered(
-                lambda v: v in self.value_ids
-            ).with_context(
-                show_attribute=False,
-                show_price_extra=True,
-                active_id=self.product_tmpl_id.id,
-            )
+            result[domain_field_name] = [("id", "in", available_value_ids)]
 
-            if not attr_line.custom and not vals:
-                continue
 
-            if attr_line.custom and custom_vals:
-                custom_field_val = custom_val.id
-                if load == "_classic_read":
-                    custom_field_val = (custom_val.id, custom_val.display_name or "")
-                dynamic_vals.update(
-                    {
-                        field_name: custom_field_val,
-                        custom_field_name: custom_vals.eval(),
-                    }
-                )
-            elif attr_line.multi:
-                dynamic_vals = {field_name: vals.ids}
-                dynamic_vals = {
-                    field_name: [
-                        {"id": v.id, "display_name": v.display_name} for v in vals
-                    ]
-                }
-            else:
-                try:
-                    vals.ensure_one()
-                    field_value = vals.id
-                    if load == "_classic_read":
-                        field_value = (vals.id, vals.display_name or "")
-                    dynamic_vals = {field_name: field_value}
-                except Exception:
-                    continue
-            res[0].update(dynamic_vals)
-        return res
+        return [result]
 
+    # Old read method
+    # def read(self, fields=None, load="_classic_read"):
+    #     """Remove dynamic fields from the fields list and update the
+    #     returned values with the dynamic data stored in value_ids"""
+
+    #     field_prefix = self._prefixes.get("field_prefix")
+    #     custom_field_prefix = self._prefixes.get("custom_field_prefix")
+    #     domain_field_prefix = self._prefixes.get("domain_field_prefix")
+    #     attr_vals = [f for f in fields if f.startswith(field_prefix)]
+    #     custom_attr_vals = [f for f in fields if f.startswith(custom_field_prefix)]
+    #     domain_attr_vals = [f for f in fields if f.startswith(domain_field_prefix)]
+    #     dynamic_fields = attr_vals + custom_attr_vals + domain_attr_vals
+    #     fields = self._remove_dynamic_fields(fields)
+
+    #     custom_val = self.env["product.config.session"].get_custom_value_id()
+    #     dynamic_vals = {}
+
+    #     res = super().read(fields=fields, load=load)
+
+    #     if not load:
+    #         load = "_classic_read"
+
+    #     if not dynamic_fields:
+    #         return res
+
+    #     for attr_line in self.product_tmpl_id.attribute_line_ids:
+    #         attr_id = attr_line.attribute_id.id
+    #         field_name = field_prefix + str(attr_id)
+    #         if field_name not in dynamic_fields:
+    #             continue
+
+    #         custom_field_name = custom_field_prefix + str(attr_id)
+    #         domain_field_name = domain_field_prefix + str(attr_id)
+    #         available_value_ids = self.config_session_id.values_available(
+    #             check_val_ids=attr_line.value_ids.ids,
+    #             product_template_attribute_line_id=attr_line.id,
+    #         )
+    #         if attr_line.custom:
+    #             config_session_obj = self.env["product.config.session"]
+    #             custom_val = config_session_obj.get_custom_value_id()
+    #             available_value_ids.append(custom_val.id)
+    #         res[0].update(
+    #             {
+    #                 field_name: [] if attr_line.multi else False,
+    #                 custom_field_name: False,
+    #                 domain_field_name: [("id", "in", available_value_ids)],
+    #             }
+    #         )
+    #         custom_vals = self.custom_value_ids.filtered(
+    #             lambda x, attr_id=attr_id: x.attribute_id.id == attr_id
+    #         ).with_context(show_attribute=False)
+    #         vals = attr_line.value_ids.filtered(
+    #             lambda v: v in self.value_ids
+    #         ).with_context(
+    #             show_attribute=False,
+    #             show_price_extra=True,
+    #             active_id=self.product_tmpl_id.id,
+    #         )
+
+    #         if not attr_line.custom and not vals:
+    #             continue
+
+    #         if attr_line.custom and custom_vals:
+    #             custom_field_val = custom_val.id
+    #             if load == "_classic_read":
+    #                 custom_field_val = (custom_val.id, custom_val.display_name or "")
+    #             dynamic_vals.update(
+    #                 {
+    #                     field_name: custom_field_val,
+    #                     custom_field_name: custom_vals.eval(),
+    #                 }
+    #             )
+    #         elif attr_line.multi:
+    #             dynamic_vals = {field_name: vals.ids}
+    #             dynamic_vals = {
+    #                 field_name: [
+    #                     {"id": v.id, "display_name": v.display_name} for v in vals
+    #                 ]
+    #             }
+    #         else:
+    #             try:
+    #                 vals.ensure_one()
+    #                 field_value = vals.id
+    #                 if load == "_classic_read":
+    #                     field_value = (vals.id, vals.display_name or "")
+    #                 dynamic_vals = {field_name: field_value}
+    #             except Exception:
+    #                 continue
+    #         res[0].update(dynamic_vals)
+    #     return res
+
+    # New write method
     def write(self, vals):
-        """Prevent database storage of dynamic fields and instead write values
-        to database persistent value_ids field"""
+        vals = self._remove_dynamic_fields(vals)  # First, remove old dynamic fields
 
-        # Remove all dynamic fields from write values
-        self.config_session_id.update_session_configuration_value(
-            vals=vals, product_tmpl_id=self.product_tmpl_id
-        )
-        vals = self._remove_dynamic_fields(vals)
+        wiz = self
+        laterality = wiz.laterality
+        customized_steps = set(wiz.customize_step_ids.ids)
+
+        attr_val_dict = {}
+        custom_val_dict = {}
+
+        # Dynamic prefixes
+        field_prefix = self._prefixes.get("field_prefix")
+        custom_prefix = self._prefixes.get("custom_field_prefix")
+
+        for attr_line in wiz.product_tmpl_id.attribute_line_ids:
+            attr = attr_line.attribute_id
+            attr_id = attr.id
+            is_multi = attr_line.multi
+            is_custom = attr_line.custom
+
+            step_lines = wiz.product_tmpl_id.config_step_line_ids.filtered(
+                lambda s: attr_line in s.attribute_line_ids
+            )
+            customized = bool(set(step_lines.ids) & customized_steps)
+
+            # Handle split laterality
+            if laterality == "bilateral" and customized:
+                for side in ("left", "right"):
+                    field_name = f"{field_prefix}{side}_{attr_id}"
+                    custom_name = f"{custom_prefix}{side}_{attr_id}"
+
+                    val = vals.get(field_name)
+                    if val:
+                        attr_val_dict.setdefault(attr_id, []).append(val if is_multi else [val])
+
+                    if is_custom and custom_name in vals:
+                        custom_val_dict[attr_id] = vals[custom_name]
+
+            else:
+                field_name = f"{field_prefix}{attr_id}"
+                custom_name = f"{custom_prefix}{attr_id}"
+
+                val = vals.get(field_name)
+                if val:
+                    attr_val_dict[attr_id] = val if is_multi else [val]
+
+                if is_custom and custom_name in vals:
+                    custom_val_dict[attr_id] = vals[custom_name]
+
+        # Flatten multi-vals and remove duplicates
+        final_attr_vals = {}
+        for k, v in attr_val_dict.items():
+            flattened = [x for sub in v for x in (sub if isinstance(sub, list) else [sub])]
+            final_attr_vals[k] = list(set(flattened))
+
+        self.config_session_id.update_config(attr_val_dict=final_attr_vals, custom_val_dict=custom_val_dict)
 
         return super().write(vals)
+
+    # Old write method
+    # def write(self, vals):
+    #     """Prevent database storage of dynamic fields and instead write values
+    #     to database persistent value_ids field"""
+
+    #     # Remove all dynamic fields from write values
+    #     self.config_session_id.update_session_configuration_value(
+    #         vals=vals, product_tmpl_id=self.product_tmpl_id
+    #     )
+    #     vals = self._remove_dynamic_fields(vals)
+
+    #     return super().write(vals)
 
     def action_next_step(self):
         """Proceeds to the next step of the configuration process. This usually

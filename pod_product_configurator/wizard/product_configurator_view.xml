@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <!-- <xpath expr="//group[@name='dynamic_form']" position="inside">
+        <button name="toggle_customize_step" type="object" string="Customize Section" class="btn-primary" attrs="{'invisible': [('laterality', '!=', 'bilateral')]}" context="{'step_id': state}" />
+    </xpath> -->
 
     <record id="product_configurator_form" model="ir.ui.view">
         <field name="name">product.configurator</field>
@@ -7,8 +10,11 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    
+
                     <field name="state" widget="statusbar" clickable="True" />
                     <button string="Reset" type="object" name="action_reset" confirm="Are you sure? This will remove your current configuration for this template!" special="no_save" class="oe_highlight" invisible="not product_tmpl_id or state == 'select'" />
+                    <button string="Customize Section" name="toggle_customize_step" type="object" class="btn-primary" invisible="laterality != 'bilateral' or state == 'select'" context="{'step_id': state}"/>
                 </header>
                 <sheet>
                     <field invisible="not product_img" name="product_img" readonly="1" nolabel="1" widget="image" />
@@ -18,7 +24,10 @@
 
                             <field name="product_id" invisible="1" />
                             <field name="currency_id" invisible="1" />
+                            <!-- <field name="laterality" invisible="1"/> -->
                             <field name="product_tmpl_id" readonly="context.get('product_tmpl_id_readonly', False)" required="True" invisible="state != 'select'" options="{'no_create': True}" force_save="1" />
+                            <field name="laterality" widget="radio" required="True" options="{'horizontal': true}" invisible="state != 'select'"/>
+
                             <field name="product_preset_id" invisible="not context.get('allow_preset_selection')" options="{'no_create': True}" />
                             <separator string="To reset/change the Preset Please close and start the configuration again" invisible="context.get('allow_preset_selection') or state != 'select'" colspan="2" />
                             <field invisible="state != 'select' or not attribute_line_ids" name="attribute_line_ids">
@@ -34,6 +43,8 @@
                             <field name="price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" />
                         </group>
                     </group>
+                    <!-- <group name="dynamic_form" colspan="2">
+                    </group> -->
                 </sheet>
                 <footer>
                     <field name="value_ids" readonly="1" force_save="1" invisible="1" />
@@ -42,6 +53,7 @@
                 </footer>
             </form>
         </field>
+
     </record>
 
 </odoo>
