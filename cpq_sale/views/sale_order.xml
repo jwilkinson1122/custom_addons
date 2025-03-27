@@ -5,11 +5,22 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath
-                expr="//field[@name='order_line']//tree/field[@name='product_template_id']"
-                position="before"
-            >
+            <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
                 <field name="product_template_id_cpq_ok" column_invisible="1" />
+            </xpath>
+        </field>
+    </record>
+    <record id="inherit_cpq_view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.cpq</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="cpq_laterality" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group" position="inside">
+                <field name="cpq_laterality" readonly="1"/>
+                <field name="cpq_configuration_json" widget="json"/>
             </xpath>
         </field>
     </record>

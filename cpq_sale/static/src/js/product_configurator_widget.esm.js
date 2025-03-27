@@ -34,27 +34,52 @@ patch(SaleOrderLineProductField.prototype, {
         super._openProductConfigurator(...arguments);
     },
 
+    // _cpqConfigureDialog() {
+    //     this.dialogService.add(ConfigureDialog, {
+    //         productTmplId: this.props.record.data.product_template_id[0],
+    //         edit: true,
+            
+    //         save: async (productTmplId, productId) => {
+    //             const result = await this.orm.call(
+    //                 "product.template",
+    //                 "get_single_product_variant",
+    //                 [this.props.record.data.product_template_id[0]],
+    //                 {
+    //                     context: this.context,
+    //                 }
+    //             );
+    //             await this.props.record.update({
+    //                 product_id: [productId, result.product_name],
+    //             });
+    //         },
+    //         discard: () => {
+    //             this.props.record.update({product_id: false, name: false});
+    //         },
+    //     });
+    // },
+
     _cpqConfigureDialog() {
         this.dialogService.add(ConfigureDialog, {
             productTmplId: this.props.record.data.product_template_id[0],
             edit: true,
-            save: async (productTmplId, productId) => {
-                const result = await this.orm.call(
-                    "product.template",
-                    "get_single_product_variant",
-                    [this.props.record.data.product_template_id[0]],
-                    {
-                        context: this.context,
-                    }
-                );
-                // Persist updated product_id and name
+            save: async (productTmplId, result) => {
+                const config = result.configuration;
+    
                 await this.props.record.update({
-                    product_id: [productId, result.product_name],
+                    product_id: [config.product_id, config.name],
+                    name: config.name,
+                    cpq_configuration_json: config.cpq_configuration_json,
                 });
             },
             discard: () => {
-                this.props.record.update({product_id: false, name: false});
+                this.props.record.update({
+                    product_id: false,
+                    name: false,
+                    cpq_configuration_json: false,
+                });
             },
         });
-    },
+    }
+    
+
 });

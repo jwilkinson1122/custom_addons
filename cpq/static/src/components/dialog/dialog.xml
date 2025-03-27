@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <templates xml:space="preserve">
-
     <t t-name="cpq.ConfigureDialogDialog" owl="1">
         <Dialog size="size" title="title">
             <div class="row">
@@ -8,20 +7,110 @@
                     <img t-attf-src="/web/image/product.template/{{ props.productTmplId }}/image_128" />
                 </div>
                 <div class="col">
-
-                    <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
+                    <!-- ⚠️ Error Display -->
+                    <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0"
+                         class="alert alert-warning" role="alert">
                         <ul t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]" class="list-unstyled mb-0">
                             <li t-esc="e[1]" />
                         </ul>
                     </div>
 
-                    <div t-if="state.productTmplId.description_sale" t-esc="state.productTmplId.description_sale" class="mb-3" />
+                    <!-- 📄 Product Description -->
+                    <div t-if="state.productTmplId.description_sale"
+                         t-esc="state.productTmplId.description_sale" class="mb-3" />
 
+                    <!-- 👣 Laterality Selection -->
+                    <div class="mb-3">
+                        <strong>Laterality:</strong><br/>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="laterality" class="form-check-input" value="left"
+                                   t-att-checked="state.laterality === 'left' ? 'checked' : undefined"
+                                   t-on-change="onLateralityChange"/>
+                            <label class="form-check-label">Left Only</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="laterality" class="form-check-input" value="right"
+                                   t-att-checked="state.laterality === 'right' ? 'checked' : undefined"
+                                   t-on-change="onLateralityChange"/>
+                            <label class="form-check-label">Right Only</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="laterality" class="form-check-input" value="bilateral"
+                                   t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined"
+                                   t-on-change="onLateralityChange"/>
+                            <label class="form-check-label">Bilateral</label>
+                        </div>
+                    </div>
+
+                    <!-- 🛠️ Customize Toggle -->
+                    <div t-if="state.laterality === 'bilateral'" class="mb-3">
+                        <input type="checkbox"
+                               t-att-checked="state.split ? 'checked' : undefined"
+                               t-on-click="() => state.split = !state.split"/>
+                        <label>Customize Left / Right Separately</label>
+                    </div>
+
+                    <!-- 🧩 Attribute Configuration -->
                     <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                        <ProductTmplAttrib id="i.id" attribute="i" onSelect="(ev) =&gt; this._addOrUpdateSelected(i.id, ev.target.value)" onCustom="(v, ev) =&gt; this._addOrUpdateSelected(i.id, v, ev.target.value)" selected="state.selected" />
+                        <!-- <t t-if="state.laterality === 'bilateral' and state.split">
+                            <div class="row mb-2">
+                                <div class="col-4">
+                                    <strong t-esc="i.name" />
+                                </div>
+                                <div class="col">
+                                    <ProductTmplAttrib id="i.id" attribute="i"
+                                        selected="state.selected.left || {}"
+                                        onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
+                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)" />
+                                </div>
+                                <div class="col">
+                                    <ProductTmplAttrib id="i.id" attribute="i"
+                                        selected="state.selected.right || {}"
+                                        onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
+                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)" />
+                                </div>
+                            </div>
+                        </t> -->
+                        <t t-if="state.laterality === 'bilateral' and state.split">
+                            <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
+                                <div class="col-4"></div>
+                                <div class="col">Left</div>
+                                <div class="col">Right</div>
+                            </div>
+
+                            <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
+                                <div class="row align-items-center mb-2">
+                                    <div class="col-4">
+                                        <strong t-esc="i.name"/>
+                                    </div>
+                                    <div class="col">
+                                        <ProductTmplAttrib id="i.id" attribute="i"
+                                            selected="state.selected.left || {}"
+                                            onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
+                                            onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)"/>
+                                    </div>
+                                    <div class="col">
+                                        <ProductTmplAttrib id="i.id" attribute="i"
+                                            selected="state.selected.right || {}"
+                                            onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
+                                            onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-elif="state.laterality !== 'bilateral' or !state.split">
+                            <div class="mb-2">
+                                <ProductTmplAttrib id="i.id" attribute="i"
+                                    selected="state.selected"
+                                    onSelect="(ev) => this._addOrUpdateSelected(i.id, ev.target.value)"
+                                    onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, ptavId, ev.target.value)" />
+                            </div>
+                        </t>
                     </t>
                 </div>
             </div>
+
+            <!-- ✅ Footer -->
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onCreate" t-att-disabled="!state.valid">
                     Confirm
@@ -32,6 +121,4 @@
             </t>
         </Dialog>
     </t>
-
-
 </templates>

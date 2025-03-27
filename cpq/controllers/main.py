@@ -1,6 +1,7 @@
 from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
+import json
 
 
 class ProductConfiguratorController(Controller):
@@ -69,25 +70,67 @@ class ProductConfiguratorController(Controller):
         }
 
     @route("/cpq/<int:product_tmpl_id>/configure", type="json", auth="user")
-    def cpq_configure(
-        self,
-        product_tmpl_id,
-        combination,
-    ):
-        product_tmpl_id = request.env["product.template"].sudo().browse(product_tmpl_id)
-        if not product_tmpl_id.cpq_ok:
+    def cpq_configure(self, product_tmpl_id, configuration):
+        product_tmpl = request.env["product.template"].sudo().browse(product_tmpl_id)
+        if not product_tmpl or not product_tmpl.exists():
+            raise UserError(_("Product template not found."))
+
+        if not product_tmpl.cpq_ok:
             raise UserError(_("Not a CPQ enabled product!"))
 
-        (ptav_ids, custom_dict) = self._cpq_extract_from_combination(
-            product_tmpl_id, combination
-        )
+        # Use default variant or fallback to the first available product
+        product_id = product_tmpl.product_variant_id.id or request.env["product.product"].search([], limit=1).id
 
-        variant_id = product_tmpl_id._cpq_get_create_variant(
-            ptav_ids,
-            custom_dict,
-        )
+        # Extract configuration safely
+        laterality = (configuration or {}).get("laterality", "unspecified")
+        selected = (configuration or {}).get("selected", {})
+        split = (configuration or {}).get("split", False)
+
+        # Create user-friendly label
+        laterality_label = laterality.capitalize()
+
+        try:
+            config_json = json.dumps({
+                "laterality": laterality,
+                "split": split,
+                "selected": selected,
+            })
+        except Exception as e:
+            raise UserError(_("Unable to serialize configuration: %s") % str(e))
+
+        # Prepare configuration block for use in sale.order.line
+        config_data = {
+            "product_id": product_id,
+            "name": f"{product_tmpl.name} - {laterality_label}",
+            "cpq_configuration_json": config_json,
+        }
 
         return {
-            "product_tmpl_id": product_tmpl_id.id,
-            "product_id": variant_id.id,
+            "product_tmpl_id": product_tmpl.id,
+            "sale_order_line_id": None,
+            "configuration": config_data,
         }
+
+    # @route("/cpq/<int:product_tmpl_id>/configure", type="json", auth="user")
+    # def cpq_configure(
+    #     self,
+    #     product_tmpl_id,
+    #     combination,
+    # ):
+    #     product_tmpl_id = request.env["product.template"].sudo().browse(product_tmpl_id)
+    #     if not product_tmpl_id.cpq_ok:
+    #         raise UserError(_("Not a CPQ enabled product!"))
+
+    #     (ptav_ids, custom_dict) = self._cpq_extract_from_combination(
+    #         product_tmpl_id, combination
+    #     )
+
+    #     variant_id = product_tmpl_id._cpq_get_create_variant(
+    #         ptav_ids,
+    #         custom_dict,
+    #     )
+
+    #     return {
+    #         "product_tmpl_id": product_tmpl_id.id,
+    #         "product_id": variant_id.id,
+    #     }
