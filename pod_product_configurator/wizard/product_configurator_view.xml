@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- <xpath expr="//group[@name='dynamic_form']" position="inside">
-        <button name="toggle_customize_step" type="object" string="Customize Section" class="btn-primary" attrs="{'invisible': [('laterality', '!=', 'bilateral')]}" context="{'step_id': state}" />
-    </xpath> -->
-
     <record id="product_configurator_form" model="ir.ui.view">
         <field name="name">product.configurator</field>
         <field name="model">product.configurator</field>
         <field name="arch" type="xml">
             <form>
                 <header>
-                    
-
                     <field name="state" widget="statusbar" clickable="True" />
                     <button string="Reset" type="object" name="action_reset" confirm="Are you sure? This will remove your current configuration for this template!" special="no_save" class="oe_highlight" invisible="not product_tmpl_id or state == 'select'" />
-                    <button string="Customize Section" name="toggle_customize_step" type="object" class="btn-primary" invisible="laterality != 'bilateral' or state == 'select'" context="{'step_id': state}"/>
+                    <!-- <button string="Customize Section" name="toggle_customize_step" type="object" class="btn-primary" invisible="laterality != 'bilateral' or state == 'select'" context="{'step_id': state}"/> -->
+                    <button string="Customize Step" name="toggle_customize_step" type="object" class="btn-primary" context="{'step_id': step_id}" invisible="laterality != 'bilateral' or state == 'select'" js_class="oe_toggle_customize_step"/>
+
                 </header>
                 <sheet>
                     <field invisible="not product_img" name="product_img" readonly="1" nolabel="1" widget="image" />
@@ -43,8 +39,8 @@
                             <field name="price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" />
                         </group>
                     </group>
-                    <!-- <group name="dynamic_form" colspan="2">
-                    </group> -->
+                    <group name="dynamic_form" colspan="2">
+                    </group>
                 </sheet>
                 <footer>
                     <field name="value_ids" readonly="1" force_save="1" invisible="1" />

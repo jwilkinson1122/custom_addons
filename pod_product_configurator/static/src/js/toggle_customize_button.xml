@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="pod_product_configurator.ToggleCustomizeButton" owl="1">
+        <button t-ref="button" class="btn btn-secondary o_toggle_customize_step" t-on-click="onClick" type="button">
+            <t t-esc="props.record.data.step_id ? 'Customize Step' : 'Missing Step ID'"/>
+        </button>
+    </t>
+</templates>
+

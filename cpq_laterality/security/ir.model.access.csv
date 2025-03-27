@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cpq_laterality,access_cpq_laterality,model_cpq_laterality,base.group_user,1,1,1,1
+access_cpq_laterality_public,access_cpq_laterality_public,model_cpq_laterality,,1,0,0,0

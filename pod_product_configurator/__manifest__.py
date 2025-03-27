@@ -27,6 +27,8 @@
         "web.assets_backend": [
             "/pod_product_configurator/static/src/scss/form_widget.scss",
             "/pod_product_configurator/static/src/js/form_widgets.esm.js",
+            '/pod_product_configurator/static/src/js/toggle_customize_button.js',
+            "/pod_product_configurator/static/src/js/toggle_customize_button.xml",
             "/pod_product_configurator/static/src/js/boolean_button_widget.esm.js",
             "/pod_product_configurator/static/src/js/boolean_button_widget.xml",
             "/pod_product_configurator/static/src/js/kanban_widgets.esm.js",
