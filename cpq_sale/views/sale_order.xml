@@ -20,7 +20,10 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group" position="inside">
                 <field name="cpq_laterality" readonly="1"/>
-                <field name="cpq_configuration_json" widget="json"/>
+                <field name="cpq_configuration_json" invisible="1"/>
+                <!-- <field name="cpq_configuration_json" widget="json"/> -->
+                <!-- <field name="cpq_configuration_json" widget="json" readonly="1"/> -->
+
             </xpath>
         </field>
     </record>

@@ -1,8 +1,29 @@
 /** @odoo-module */
 
+import { onWillStart } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 const {Component} = owl;
 
 class ProductTmplAttrib extends Component {
+
+    setup() {
+        super.setup(...arguments);
+        this.user = useService("user");
+
+        onWillStart(this.onWillStart);
+    }
+
+ 
+
+    // willStart() {
+    //     console.log("🔄 Rendering attribute", this.props.attribute.name, "with selected:", this.props.selected);
+    // }
+
+    async onWillStart() {
+        console.log("🔄 Rendering attribute", this.props.attribute.name, "with selected:", this.props.selected);
+    }
+
+    
     // --------------------------------------------------------------------------
     // Handlers
     // --------------------------------------------------------------------------
@@ -33,26 +54,41 @@ class ProductTmplAttrib extends Component {
                 return "cpq.ProductTmplAttrib-color";
             case "pills":
             case "radio":
+            default:
                 return "cpq.ProductTmplAttrib-radio";
-            case "select":
-                return "cpq.ProductTmplAttrib-select";
         }
     }
+    
+    // getPTAVTemplate() {
+    //     switch (this.props.attribute.display_type) {
+    //         case "color":
+    //             return "cpq.ProductTmplAttrib-color";
+    //         case "pills":
+    //         case "radio":
+    //             return "cpq.ProductTmplAttrib-radio";
+    //         case "select":
+    //             return "cpq.ProductTmplAttrib-select";
+    //     }
+    // }
+
+    // getPTAVTemplate() {
+    //     return "cpq.ProductTmplAttrib-radio";
+    // }
 
     isSelectedPTAVCustom() {
-        if (!this.props.attribute || !this.props.selected) {
-            return false;
-        }
-
-        if (!this.props.attribute.ptav_ids) {
-            return false;
-        }
-
-        return false;
+        return false;   
     }
+
+    // isSelectedPTAVCustom() {
+    //     return this.props.attribute.ptav_ids.some(
+    //         (ptav) => ptav.is_custom && this.props.selected?.hasOwnProperty(ptav.id)
+    //     );
+    // }
+    
 }
 
 ProductTmplAttrib.template = "cpq.ProductTmplAttrib";
+
 ProductTmplAttrib.props = {
     id: Number,
     attribute: {
@@ -72,30 +108,25 @@ ProductTmplAttrib.props = {
                     shape: {
                         id: Number,
                         name: String,
-                        // Backend sends 'false' when there is no color
                         html_color: [Boolean, String],
                         is_custom: Boolean,
                         price_extra: Number,
-                        excluded: {type: Boolean, optional: true},
+                        excluded: { type: Boolean, optional: true },
                         cpq_custom_type: [Boolean, String],
                         cpq_selection_values: {
                             optional: true,
                             type: Array,
-                            element: {
-                                type: Array,
-                            },
+                            element: { type: Array },
                         },
                     },
                 },
             },
         },
     },
-    selected: {
-        type: Object,
-        optional: true,
-    },
-    onSelect: {type: "function"},
-    onCustom: {type: "function"},
+    selected: { type: Object, optional: true },
+    hideLabel: { type: Boolean, optional: true },
+    onSelect: { type: "function" },
+    onCustom: { type: "function" },
 };
 
 export default ProductTmplAttrib;

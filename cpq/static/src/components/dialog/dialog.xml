@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8' ?>
+<?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
     <t t-name="cpq.ConfigureDialogDialog" owl="1">
         <Dialog size="size" title="title">
@@ -17,9 +17,10 @@
 
                     <!-- 📄 Product Description -->
                     <div t-if="state.productTmplId.description_sale"
-                         t-esc="state.productTmplId.description_sale" class="mb-3" />
+                         t-esc="state.productTmplId.description_sale"
+                         class="mb-3" />
 
-                    <!-- 👣 Laterality Selection -->
+                    <!-- 👣 Laterality -->
                     <div class="mb-3">
                         <strong>Laterality:</strong><br/>
                         <div class="form-check form-check-inline">
@@ -42,75 +43,83 @@
                         </div>
                     </div>
 
-                    <!-- 🛠️ Customize Toggle -->
-                    <div t-if="state.laterality === 'bilateral'" class="mb-3">
-                        <input type="checkbox"
-                               t-att-checked="state.split ? 'checked' : undefined"
-                               t-on-click="() => state.split = !state.split"/>
-                        <label>Customize Left / Right Separately</label>
-                    </div>
+                    <!-- 🛠️ Split Toggle and Controls -->
+                    <t t-if="state.laterality === 'bilateral'" class="mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="checkbox"
+                                   t-att-checked="state.split ? 'checked' : undefined"
+                                   t-on-click="onSplitToggle"/>
+                            <label>Customize Left / Right Separately</label>
+                            <t t-if="state.split">
+                                <button type="button" class="btn btn-sm btn-outline-primary" t-on-click="copyLeftToRight">
+                                    ⬅️ Copy Left → Right
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" t-on-click="copyRightToLeft">
+                                    ➡️ Copy Right → Left
+                                </button>
+                                <t t-if="state.undoCache.left or state.undoCache.right">
+                                    <button type="button" class="btn btn-sm btn-outline-warning" t-on-click="_restoreUndoCache">
+                                        ↩️ Undo Last Split
+                                    </button>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
 
                     <!-- 🧩 Attribute Configuration -->
                     <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                        <!-- <t t-if="state.laterality === 'bilateral' and state.split">
-                            <div class="row mb-2">
-                                <div class="col-4">
-                                    <strong t-esc="i.name" />
-                                </div>
-                                <div class="col">
-                                    <ProductTmplAttrib id="i.id" attribute="i"
-                                        selected="state.selected.left || {}"
-                                        onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
-                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)" />
-                                </div>
-                                <div class="col">
-                                    <ProductTmplAttrib id="i.id" attribute="i"
-                                        selected="state.selected.right || {}"
-                                        onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
-                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)" />
-                                </div>
-                            </div>
-                        </t> -->
+                        <!-- Bilateral Split View -->
                         <t t-if="state.laterality === 'bilateral' and state.split">
                             <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
-                                <div class="col-4"></div>
-                                <div class="col">Left</div>
-                                <div class="col">Right</div>
-                            </div>
-
-                            <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                                <div class="row align-items-center mb-2">
-                                    <div class="col-4">
-                                        <strong t-esc="i.name"/>
-                                    </div>
-                                    <div class="col">
-                                        <ProductTmplAttrib id="i.id" attribute="i"
-                                            selected="state.selected.left || {}"
-                                            onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
-                                            onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)"/>
-                                    </div>
-                                    <div class="col">
-                                        <ProductTmplAttrib id="i.id" attribute="i"
-                                            selected="state.selected.right || {}"
-                                            onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
-                                            onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)"/>
-                                    </div>
+                                <div class="col-4">
+                                    <strong t-esc="i.name"/>
                                 </div>
-                            </t>
+                                <div class="col text-muted"><small><strong>Left</strong></small></div>
+                                <div class="col text-muted"><small><strong>Right</strong></small></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-4"/>
+                                <div class="col">
+                                    <ProductTmplAttrib
+                                        t-att-id="'ptav-%s-left' % i.id"
+                                        attribute="i"
+                                        selected="state.selected.left || {}"
+                                        hideLabel="true"
+                                        onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
+                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)"
+                                    />
+                                </div>
+                                <div class="col">
+                                    <ProductTmplAttrib
+                                        t-att-id="'ptav-%s-right' % i.id"
+                                        attribute="i"
+                                        selected="state.selected.right || {}"
+                                        hideLabel="true"
+                                        onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
+                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)"
+                                    />
+                                </div>
+                            </div>
                         </t>
-                        <t t-elif="state.laterality !== 'bilateral' or !state.split">
-                            <div class="mb-2">
-                                <ProductTmplAttrib id="i.id" attribute="i"
+
+                        <!-- Shared Configuration -->
+                        <t t-if="!(state.laterality === 'bilateral' and state.split)">
+                            <div class="mb-3">
+                                <strong t-esc="i.name"/>
+                                <ProductTmplAttrib
+                                    t-att-id="'ptav-%s-shared' % i.id"
+                                    attribute="i"
                                     selected="state.selected"
+                                    hideLabel="true"
                                     onSelect="(ev) => this._addOrUpdateSelected(i.id, ev.target.value)"
-                                    onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, ptavId, ev.target.value)" />
+                                    onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, ptavId, ev.target.value)"
+                                />
                             </div>
                         </t>
                     </t>
                 </div>
             </div>
 
-            <!-- ✅ Footer -->
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onCreate" t-att-disabled="!state.valid">
                     Confirm
