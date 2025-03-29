@@ -178,6 +178,9 @@ export class ConfigureDialog extends Component {
         }
     }
 
+    // console.log(`[${side || 'shared'}] updated ${attr.name}:`, this.state.selected);
+
+
     _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         const isBilateralSplit = ["left", "right"].includes(sideOrId);
         const side = isBilateralSplit ? sideOrId : null;
@@ -204,6 +207,8 @@ export class ConfigureDialog extends Component {
             }
             this.state.selected = newSelected;
         }
+
+        console.log(`[${side || 'shared'}] updated ${attr.name}:`, this.state.selected);
 
         this._validate();
     }

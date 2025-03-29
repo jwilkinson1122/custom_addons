@@ -81,9 +81,10 @@
                                 <div class="col-4"/>
                                 <div class="col">
                                     <ProductTmplAttrib
-                                        t-att-id="'ptav-%s-left' % i.id"
+                                        id="'ptav_%s_left' % i.id"
                                         attribute="i"
                                         selected="state.selected.left || {}"
+                                        side="'left'"
                                         hideLabel="true"
                                         onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
                                         onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)"
@@ -91,9 +92,10 @@
                                 </div>
                                 <div class="col">
                                     <ProductTmplAttrib
-                                        t-att-id="'ptav-%s-right' % i.id"
+                                        id="'ptav_%s_right' % i.id"
                                         attribute="i"
                                         selected="state.selected.right || {}"
+                                        side="'right'"
                                         hideLabel="true"
                                         onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
                                         onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)"
@@ -107,9 +109,10 @@
                             <div class="mb-3">
                                 <strong t-esc="i.name"/>
                                 <ProductTmplAttrib
-                                    t-att-id="'ptav-%s-shared' % i.id"
+                                    id="'ptav_%s_shared' % i.id"
                                     attribute="i"
                                     selected="state.selected"
+                                    side="'shared'"
                                     hideLabel="true"
                                     onSelect="(ev) => this._addOrUpdateSelected(i.id, ev.target.value)"
                                     onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, ptavId, ev.target.value)"

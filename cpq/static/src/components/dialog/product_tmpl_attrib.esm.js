@@ -11,6 +11,7 @@ class ProductTmplAttrib extends Component {
         this.user = useService("user");
 
         onWillStart(this.onWillStart);
+
     }
 
  
@@ -20,7 +21,10 @@ class ProductTmplAttrib extends Component {
     // }
 
     async onWillStart() {
+        console.log("🔍 Rendering", this.props.side, this.props.attribute.name, "with selected:", this.props.selected);
+
         console.log("🔄 Rendering attribute", this.props.attribute.name, "with selected:", this.props.selected);
+        
     }
 
     
@@ -124,6 +128,7 @@ ProductTmplAttrib.props = {
         },
     },
     selected: { type: Object, optional: true },
+    side: { type: String, optional: true },
     hideLabel: { type: Boolean, optional: true },
     onSelect: { type: "function" },
     onCustom: { type: "function" },
