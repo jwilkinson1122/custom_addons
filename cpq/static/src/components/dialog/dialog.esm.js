@@ -8,9 +8,16 @@ import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
 import {WarningDialog} from "@web/core/errors/error_dialogs";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
+import SummaryPanel from "./configurator_summary_panel.esm";
+
+// Curent ConfigureDialog
 
 export class ConfigureDialog extends Component {
-    static components = {Dialog, ProductTmplAttrib};
+    static components = {
+        Dialog, 
+        ProductTmplAttrib,
+        SummaryPanel,
+    };
     static props = {
         productTmplId: Number,
         save: Function,
@@ -135,7 +142,11 @@ export class ConfigureDialog extends Component {
     }
 
     canCreate() {
-        return this.state.ptalIds && this.state.valid;
+        if (!this.state.ptalIds) {
+            return false;
+        }
+
+        return this.state.valid;
     }
 
     onCreate() {
@@ -144,15 +155,18 @@ export class ConfigureDialog extends Component {
             split: this.state.split,
             selected: this.state.selected,
         };
+    
         return this.rpc(`/cpq/${this.state.productTmplId}/configure`, {
             configuration: config,
         }).then((res) => {
             if (this.props.save) {
-                this.props.save(res.product_tmpl_id, res.sale_order_line_id);
+                // Flexible: pass all returned values
+                this.props.save(res);
             }
             this.onClose();
         });
     }
+    
 
     onClose() {
         this.state.ptalIds = [];
@@ -169,18 +183,27 @@ export class ConfigureDialog extends Component {
     }
 
     async _validate() {
-        if (this.state.selected) {
+        if (!this.state.selected) return;
+    
+        try {
             const res = await this.rpc(`/cpq/${this.props.productTmplId}/validate`, {
                 combination: this.state.selected,
             });
             this.state.valid = res.valid;
             this.state.errors = res.errors;
+        } catch (error) {
+            console.error("🚨 Validation RPC failed:", error);
+            this.state.valid = false;
+            this.state.errors = { general: "Validation failed due to a server error." };
+    
+            if (this.notification) {
+                this.notification.add("⚠️ Failed to validate configuration. Please try again.", {
+                    type: "danger",
+                });
+            }
         }
     }
-
-    // console.log(`[${side || 'shared'}] updated ${attr.name}:`, this.state.selected);
-
-
+    
     _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         const isBilateralSplit = ["left", "right"].includes(sideOrId);
         const side = isBilateralSplit ? sideOrId : null;
@@ -243,26 +266,50 @@ export class ConfigureDialog extends Component {
 }
 
 export function ConfigureDialogAction(env, action) {
-    if (action.context.active_model !== "product.template" || !action.context.active_id) {
+    const { context } = action;
+    const isFromSaleOrder = context.from_sale_order === true;
+    
+    if (context.active_model !== "product.template" || !context.active_id) {
         env.services.dialog.add(WarningDialog, {
             body: _t("The product configurator was executed on an invalid model. Contact support."),
             confirm: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
         });
+        return;
     }
 
     env.services.dialog.add(ConfigureDialog, {
-        productTmplId: action.context.active_id,
+        productTmplId: context.active_id,
         edit: true,
-        save: (productTmplId, productId) =>
-            env.services.action.doAction({
-                type: "ir.actions.act_window",
-                res_model: "product.product",
-                views: [[false, "form"]],
-                res_id: productId,
-            }),
+
+        save: (res) => {
+            if (context.from_sale_order && res.sale_order_line_id) {
+                return env.services.action.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: "sale.order.line",
+                    views: [[false, "form"]],
+                    res_id: res.sale_order_line_id,
+                    target: "current",
+                });
+            }
+
+            // fallback: just open the product variant
+            if (res.product_id) {
+                return env.services.action.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: "product.product",
+                    views: [[false, "form"]],
+                    res_id: res.product_id,
+                    target: "current",
+                });
+            }
+
+            return env.services.action.doAction({ type: "ir.actions.act_window_close" });
+        },
+
         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
     });
 }
 
 registry.category("actions").add("cpq.ConfigureDialogAction", ConfigureDialogAction);
+

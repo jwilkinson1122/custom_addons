@@ -33,26 +33,6 @@
         </div>
     </t>
 
-    <!-- Select Dropdown Template -->
-    <!-- <t t-name="cpq.ProductTmplAttrib-select" owl="1">
-        <t t-if="!props.hideLabel">
-            <label t-att-for="'ptal-' + props.attribute.id" class="form-label font-weight-bold">
-                <t t-esc="props.attribute.name" />
-            </label>
-        </t>
-        <select class="form-control"
-            t-on-change="props.onSelect"
-            t-att-name="'ptal-' + props.attribute.id"
-            t-att-id="'ptal-' + props.attribute.id">
-            <option />
-            <option t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id"
-                t-att-value="ptav.id"
-                t-att-selected="props.selected[ptav.id] !== undefined"
-                t-att-class="{ 'css_not_available': ptav.excluded }"
-                t-esc="ptav.name" />
-        </select>
-    </t> -->
-    
     <t t-name="cpq.ProductTmplAttrib-select" owl="1">
         <t t-if="!props.hideLabel">
             <label t-att-for="'ptal-' + props.attribute.id + '-' + (props.side || 'shared')" class="form-label font-weight-bold">
