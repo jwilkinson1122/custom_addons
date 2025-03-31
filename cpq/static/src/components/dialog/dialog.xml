@@ -123,14 +123,6 @@
                             productTmplId="state.productTmplId"
                             t-key="summaryKey()"
                         />
-                           <!-- <SummaryPanel
-                            ptalIds="state.ptalIds"
-                            selected="state.selected"
-                            laterality="state.laterality"
-                            split="state.split"
-                            productTmplId="state.productTmplId"
-                        /> -->
-
                     </div>
                 </div>
             </div>
