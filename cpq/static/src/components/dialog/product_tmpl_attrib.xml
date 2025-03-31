@@ -9,27 +9,6 @@
             </div>
 
             <!-- Custom Value Input Section -->
-            <!-- <div class="mb-3" t-if="props.attribute.ptav_ids.some(e =>
-                    e.is_custom and
-                    ['char', 'float', 'integer'].includes(e.cpq_custom_type)
-                )">
-                <div t-foreach="props.attribute.ptav_ids.filter(e =>
-                    e.is_custom and
-                    ['char', 'float', 'integer'].includes(e.cpq_custom_type)
-                )" t-as="ptav" t-key="ptav.id">
-
-                    <t t-if="typeof props.selected[ptav.id] === 'string' and props.selected[ptav.id].trim()">
-                        <strong t-esc="ptav.name" class="form-label" />
-                        <t t-if="[false, 'char'].includes(ptav.cpq_custom_type)">
-                            <input type="text" class="form-control o_input" t-on-input="(ev) => props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]" />
-                        </t>
-                        <t t-elif="['float', 'integer'].includes(ptav.cpq_custom_type)">
-                            <input type="number" class="form-control o_input" t-att-step="ptav.cpq_custom_type === 'float' ? 0.01 : 1" t-on-input="(ev) => props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]" />
-                        </t>
-                    </t>
-                </div>
-            </div> -->
-
             <div class="mb-3"
                 t-if="props.attribute.ptav_ids.some(e => e.is_custom and ['char', 'float', 'integer'].includes(e.cpq_custom_type))">
                 <div t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id">
@@ -52,24 +31,6 @@
                     </t>
                 </div>
             </div>
-
-
-            <!-- <div class="mb-3" t-if="props.attribute.ptav_ids.some(e => e.is_custom)">
-                <div t-foreach="props.attribute.ptav_ids.filter(e => e.is_custom)" t-as="ptav" t-key="ptav.id">
-                    <t t-if="ptav.is_custom and typeof props.selected[ptav.id] === 'string' and props.selected[ptav.id].trim()">
-                        <strong t-esc="ptav.name" class="form-label" />
-                        <t t-if="[false, 'char'].includes(ptav.cpq_custom_type)">
-                            <input type="text" class="form-control o_input" t-on-input="(ev) => props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]" />
-                        </t>
-                        <t t-elif="['float', 'integer'].includes(ptav.cpq_custom_type)">
-                            <input type="number" class="form-control o_input" t-att-step="ptav.cpq_custom_type === 'float' ? 0.01 : 1" t-on-input="(ev) => props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]" />
-                        </t>
-                        <t t-elif="ptav.cpq_custom_type === 'many2one'">
-                            <b>unsupported</b>
-                        </t>
-                    </t>
-                </div>
-            </div> -->
         </div>
     </t>
 
