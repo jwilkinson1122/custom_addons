@@ -14,12 +14,6 @@ class ProductTmplAttrib extends Component {
 
     }
 
- 
-
-    // willStart() {
-    //     console.log("🔄 Rendering attribute", this.props.attribute.name, "with selected:", this.props.selected);
-    // }
-
     async onWillStart() {
         console.log("🔍 Rendering", this.props.side, this.props.attribute.name, "with selected:", this.props.selected);
 
@@ -27,31 +21,10 @@ class ProductTmplAttrib extends Component {
         
     }
 
-    
-    // --------------------------------------------------------------------------
-    // Handlers
-    // --------------------------------------------------------------------------
-    //
-
     stringify() {
         return JSON.stringify(this.props.attribute);
     }
 
-    // --------------------------------------------------------------------------
-    // Private
-    // --------------------------------------------------------------------------
-
-    /**
-     * Return template name to use by checking the display type in the props.
-     *
-     * Each attribute line can have one of this four display types:
-     *      - 'Color'  : Display each attribute as a circle filled with said color.
-     *      - 'Pills'  : Display each attribute as a rectangle-shaped element.
-     *      - 'Radio'  : Display each attribute as a radio element.
-     *      - 'Select' : Display each attribute in a selection tag.
-     *
-     * @returns {String} - The template name to use.
-     */
     getPTAVTemplate() {
         switch (this.props.attribute.display_type) {
             case "color":
@@ -62,33 +35,11 @@ class ProductTmplAttrib extends Component {
                 return "cpq.ProductTmplAttrib-radio";
         }
     }
-    
-    // getPTAVTemplate() {
-    //     switch (this.props.attribute.display_type) {
-    //         case "color":
-    //             return "cpq.ProductTmplAttrib-color";
-    //         case "pills":
-    //         case "radio":
-    //             return "cpq.ProductTmplAttrib-radio";
-    //         case "select":
-    //             return "cpq.ProductTmplAttrib-select";
-    //     }
-    // }
-
-    // getPTAVTemplate() {
-    //     return "cpq.ProductTmplAttrib-radio";
-    // }
 
     isSelectedPTAVCustom() {
         return false;   
     }
 
-    // isSelectedPTAVCustom() {
-    //     return this.props.attribute.ptav_ids.some(
-    //         (ptav) => ptav.is_custom && this.props.selected?.hasOwnProperty(ptav.id)
-    //     );
-    // }
-    
 }
 
 ProductTmplAttrib.template = "cpq.ProductTmplAttrib";

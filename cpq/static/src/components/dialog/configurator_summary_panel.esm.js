@@ -8,7 +8,7 @@ export default class ConfiguratorSummaryPanel extends Component {
 
         this.state = useState({
             summary: [],
-            priceSummary: { left: 0, right: 0, total: 0 }, 
+            priceSummary: { left: 0, right: 0, total: 0 },
             expanded: false,
             height: 0,
         });
@@ -19,13 +19,14 @@ export default class ConfiguratorSummaryPanel extends Component {
         });
 
         onWillUpdateProps(() => {
-            console.log("🌀 DOM patched → computing summary...");
+            console.log("🌀 Props updated → recomputing summary...");
             this.computeSummary();
         });
 
         this.computeSummary();
     }
 
+    // Max visible attributes in collapsed mode
     get visibleAttributes() {
         const MAX_VISIBLE = 5;
         return this.state.expanded ? this.props.ptalIds : this.props.ptalIds.slice(0, MAX_VISIBLE);
@@ -54,44 +55,78 @@ export default class ConfiguratorSummaryPanel extends Component {
     }
 
     computeSummary() {
-        console.log("🧠 Computing summary:");
+        console.log("🧠 Computing summary...");
         const { ptalIds = [], selected = {}, laterality, split } = this.props;
     
         const selectedLeft = selected.left || {};
         const selectedRight = selected.right || {};
         const sharedSelected = selected;
     
+        console.log("📦 selected:", JSON.stringify(selected));
+        console.log("🧩 selected raw:", sharedSelected);
+        console.log("📦 selected.left:", JSON.stringify(selectedLeft));
+        console.log("🧩 selected.left raw:", selectedLeft);
+        console.log("📦 selected.right:", JSON.stringify(selectedRight));
+        console.log("🧩 selected.right raw:", selectedRight);
+    
         let leftTotal = 0;
         let rightTotal = 0;
     
-        const result = ptalIds.map((attr) => {
+        const getSelectedPtav = (ptavs, selectedDict, side) => {
+            for (const ptav of ptavs) {
+                if (Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) {
+                    console.log(`✅ Found PTAV match for ${side} → ${ptav.name} (ID ${ptav.id})`);
+                    return ptav;
+                }
+            }
+            console.warn(`❌ No PTAV match found for ${side}`);
+            return null;
+        };
+        
+    
+        const result = ptalIds.map((attr, index) => {
+            if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
+                console.warn(`⚠️ Skipping invalid attribute at index ${index}`, attr);
+                return {
+                    key: `summary-invalid-${index}`,
+                    label: "⚠️ Invalid Attribute",
+                    left: "-",
+                    right: "-",
+                    shared: "-",
+                    priceExtra: 0,
+                };
+            }
+        
+            const ptavs = attr.ptav_ids;
+            console.log(`🔎 Attribute: ${attr.name} (ID ${attr.id}) → PTAVs:`, ptavs);
+        
+            // 🧪 Insert this block here 👇
+            console.log(`🧪 [DEBUG] Attribute "${attr.name}" selections:`);
+            console.log(`  left selected keys:`, Object.keys(selectedLeft));
+            console.log(`  right selected keys:`, Object.keys(selectedRight));
+            console.log(`  PTAV ids:`, ptavs.map((p) => p.id));
+        
             let left = "-", right = "-", shared = "-";
             let priceExtra = 0;
-    
+        
             if (laterality === "bilateral" && split) {
-                left = selectedLeft[attr.id] ?? "-";
-                right = selectedRight[attr.id] ?? "-";
-    
-                const leftPTAV = attr.ptav_ids.find(v => v.id === parseInt(Object.keys(selectedLeft).find(id => parseInt(id) === attr.id)));
-                const rightPTAV = attr.ptav_ids.find(v => v.id === parseInt(Object.keys(selectedRight).find(id => parseInt(id) === attr.id)));
-    
-                if (leftPTAV?.price_extra) leftTotal += leftPTAV.price_extra;
-                if (rightPTAV?.price_extra) rightTotal += rightPTAV.price_extra;
-    
-                console.log(`↔️ [${attr.name}] Left: ${left} | Right: ${right}`);
+                const leftPtav = getSelectedPtav(ptavs, selectedLeft, "left");
+                const rightPtav = getSelectedPtav(ptavs, selectedRight, "right");
+        
+                left = leftPtav?.name || "-";
+                right = rightPtav?.name || "-";
+        
+                leftTotal += leftPtav?.price_extra || 0;
+                rightTotal += rightPtav?.price_extra || 0;
             } else {
-                shared = sharedSelected[attr.id] ?? "-";
-    
-                const sharedPTAV = attr.ptav_ids.find(v => v.id === parseInt(Object.keys(sharedSelected).find(id => parseInt(id) === attr.id)));
-    
-                if (sharedPTAV?.price_extra) {
-                    priceExtra = sharedPTAV.price_extra;
-                    leftTotal += priceExtra;
-                }
-    
-                console.log(`🧩 [${attr.name}] Shared: ${shared}`);
+                const sharedPtav = getSelectedPtav(ptavs, sharedSelected, "shared");
+        
+                shared = sharedPtav?.name || "-";
+                priceExtra = sharedPtav?.price_extra || 0;
+        
+                leftTotal += priceExtra;
             }
-    
+        
             return {
                 key: `summary-${attr.id}`,
                 label: attr.name,
@@ -108,6 +143,7 @@ export default class ConfiguratorSummaryPanel extends Component {
             right: rightTotal,
             total: leftTotal + rightTotal,
         };
+        console.log("🔍 Summary Check:", JSON.stringify(this.state.summary, null, 2));
     
         console.log("✅ Final summary:", result);
         console.log("💰 Price summary:", this.state.priceSummary);
@@ -144,20 +180,11 @@ export default class ConfiguratorSummaryPanel extends Component {
 }
 
 ConfiguratorSummaryPanel.template = "cpq.ConfiguratorSummaryPanel";
+
 ConfiguratorSummaryPanel.props = {
     ptalIds: Array,
     selected: Object,
     laterality: String,
     split: Boolean,
-    productTmplId: Object,  
+    productTmplId: Object,
 };
-
-// ConfiguratorSummaryPanel.props = {
-//     ptalIds: Array,
-//     selected: Object,
-//     laterality: String,
-//     split: Boolean,
-//     productTmplId: Number,
-// };
-
-

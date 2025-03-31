@@ -55,7 +55,8 @@ export class ConfigureDialog extends Component {
             const data = await this._loadData();
             this.title = _t("Configure: %s", data.product_tmpl_id.display_name);
             this.state.ptalIds = data.ptal_ids;
-            this.state.productTmplId = data.product_tmpl_id;
+            this.state.productTmplId = data.product_tmpl_id.id;
+            // this.state.productTmplId = data.product_tmpl_id;
         });
 
         this.onSplitToggle = async () => {
@@ -155,8 +156,9 @@ export class ConfigureDialog extends Component {
             split: this.state.split,
             selected: this.state.selected,
         };
-    
-        return this.rpc(`/cpq/${this.state.productTmplId}/configure`, {
+        return this.rpc(`/cpq/${this.props.productTmplId}/configure`, {
+
+        // return this.rpc(`/cpq/${this.state.productTmplId}/configure`, {
             configuration: config,
         }).then((res) => {
             if (this.props.save) {
@@ -209,33 +211,55 @@ export class ConfigureDialog extends Component {
         const side = isBilateralSplit ? sideOrId : null;
         const attrId = isBilateralSplit ? attributeId : sideOrId;
         const ptavId = parseInt(valueIdOrPtavId, 10);
-
+    
         const attr = this.state.ptalIds.find((a) => a.id === attrId);
         if (!attr) return;
+    
+        const val = attr.ptav_ids.find((v) => v.id === ptavId);
+        if (!val) return;
 
         if (isBilateralSplit) {
-            const sideSelected = { ...(this.state.selected[side] || {}) };
-            for (const v of attr.ptav_ids) delete sideSelected[v.id];
+            const selected = { ...this.state.selected };
+            const sideSelected = { ...(selected[side] || {}) };
+        
+            // Remove all existing ptav.id keys for this attribute
+            for (const v of attr.ptav_ids) {
+                delete sideSelected[v.id];
+            }
+        
             const val = attr.ptav_ids.find((v) => v.id === ptavId);
             if (val) {
                 sideSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
             }
-            this.state.selected[side] = sideSelected;
-        } else {
-            const newSelected = { ...this.state.selected };
-            for (const v of attr.ptav_ids) delete newSelected[v.id];
-            const val = attr.ptav_ids.find((v) => v.id === ptavId);
-            if (val) {
-                newSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
-            }
-            this.state.selected = newSelected;
+        
+            selected[side] = sideSelected;
+            this.state.selected = selected;
         }
-
+    
+        // if (isBilateralSplit) {
+        //     if (!this.state.selected[side]) {this.state.selected[side] = {};}
+    
+        //     const sideSelected = { ...this.state.selected[side] };
+    
+        //     for (const v of attr.ptav_ids) {delete sideSelected[v.id];}
+    
+        //     sideSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
+        //     this.state.selected[side] = sideSelected;
+        // } else {
+        //     const newSelected = { ...this.state.selected };
+    
+        //     for (const v of attr.ptav_ids) {
+        //         delete newSelected[v.id];
+        //     }
+    
+        //     newSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
+        //     this.state.selected = newSelected;
+        // }
+    
         console.log(`[${side || 'shared'}] updated ${attr.name}:`, this.state.selected);
-
         this._validate();
     }
-
+    
     _cleanSide(side) {
         if (this.state.selected?.[side]) {
             delete this.state.selected[side];
