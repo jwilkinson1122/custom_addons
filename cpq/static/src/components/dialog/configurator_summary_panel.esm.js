@@ -60,40 +60,29 @@ export default class ConfiguratorSummaryPanel extends Component {
             }
         }, 20); // debounce: wait 1 frame to stabilize layout
     }
-    
+
     computeSummary() {
         console.log("🧠 Computing summary...");
         const { ptalIds = [], selected = {}, laterality, split } = this.props;
     
         const selectedLeft = selected.left || {};
         const selectedRight = selected.right || {};
-        const sharedSelected = selected;
-    
-        console.log("📦 selected:", JSON.stringify(selected));
-        console.log("🧩 selected raw:", sharedSelected);
-        console.log("📦 selected.left:", JSON.stringify(selectedLeft));
-        console.log("🧩 selected.left raw:", selectedLeft);
-        console.log("📦 selected.right:", JSON.stringify(selectedRight));
-        console.log("🧩 selected.right raw:", selectedRight);
+        const isSplit = laterality === "bilateral" && split;
     
         let leftTotal = 0;
         let rightTotal = 0;
     
-        const getSelectedPtav = (ptavs, selectedDict, side) => {
+        const getSelectedPtav = (ptavs, selectedDict) => {
             for (const ptav of ptavs) {
                 if (Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) {
-                    console.log(`✅ Found PTAV match for ${side} → ${ptav.name} (ID ${ptav.id})`);
                     return ptav;
                 }
             }
-            console.warn(`❌ No PTAV match found for ${side}`);
             return null;
         };
-        
     
         const result = ptalIds.map((attr, index) => {
             if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
-                console.warn(`⚠️ Skipping invalid attribute at index ${index}`, attr);
                 return {
                     key: `summary-invalid-${index}`,
                     label: "⚠️ Invalid Attribute",
@@ -103,37 +92,40 @@ export default class ConfiguratorSummaryPanel extends Component {
                     priceExtra: 0,
                 };
             }
-        
+    
             const ptavs = attr.ptav_ids;
-            console.log(`🔎 Attribute: ${attr.name} (ID ${attr.id}) → PTAVs:`, ptavs);
-        
-            // 🧪 Insert this block here 👇
-            console.log(`🧪 [DEBUG] Attribute "${attr.name}" selections:`);
-            console.log(`  left selected keys:`, Object.keys(selectedLeft));
-            console.log(`  right selected keys:`, Object.keys(selectedRight));
-            console.log(`  PTAV ids:`, ptavs.map((p) => p.id));
-        
             let left = "-", right = "-", shared = "-";
             let priceExtra = 0;
-        
-            if (laterality === "bilateral" && split) {
-                const leftPtav = getSelectedPtav(ptavs, selectedLeft, "left");
-                const rightPtav = getSelectedPtav(ptavs, selectedRight, "right");
-        
+    
+            if (isSplit) {
+                const leftPtav = getSelectedPtav(ptavs, selectedLeft);
+                const rightPtav = getSelectedPtav(ptavs, selectedRight);
+    
                 left = leftPtav?.name || "-";
                 right = rightPtav?.name || "-";
-        
+    
                 leftTotal += leftPtav?.price_extra || 0;
                 rightTotal += rightPtav?.price_extra || 0;
             } else {
-                const sharedPtav = getSelectedPtav(ptavs, sharedSelected, "shared");
-        
+                const sharedPtav = getSelectedPtav(ptavs, selected);
                 shared = sharedPtav?.name || "-";
                 priceExtra = sharedPtav?.price_extra || 0;
-        
-                leftTotal += priceExtra;
+    
+                // Apply shared selection to both sides if not in split mode
+                if (laterality === "left") {
+                    left = shared;
+                    leftTotal += priceExtra;
+                } else if (laterality === "right") {
+                    right = shared;
+                    rightTotal += priceExtra;
+                } else if (laterality === "bilateral" && !split) {
+                    left = shared;
+                    right = shared;
+                    leftTotal += priceExtra;
+                    rightTotal += priceExtra;
+                }
             }
-        
+    
             return {
                 key: `summary-${attr.id}`,
                 label: attr.name,
@@ -150,11 +142,106 @@ export default class ConfiguratorSummaryPanel extends Component {
             right: rightTotal,
             total: leftTotal + rightTotal,
         };
-        console.log("🔍 Summary Check:", JSON.stringify(this.state.summary, null, 2));
     
         console.log("✅ Final summary:", result);
         console.log("💰 Price summary:", this.state.priceSummary);
     }
+    
+    
+    
+    // computeSummary() {
+    //     console.log("🧠 Computing summary...");
+    //     const { ptalIds = [], selected = {}, laterality, split } = this.props;
+    
+    //     const selectedLeft = selected.left || {};
+    //     const selectedRight = selected.right || {};
+    //     const sharedSelected = selected;
+    
+    //     console.log("📦 selected:", JSON.stringify(selected));
+    //     console.log("🧩 selected raw:", sharedSelected);
+    //     console.log("📦 selected.left:", JSON.stringify(selectedLeft));
+    //     console.log("🧩 selected.left raw:", selectedLeft);
+    //     console.log("📦 selected.right:", JSON.stringify(selectedRight));
+    //     console.log("🧩 selected.right raw:", selectedRight);
+    
+    //     let leftTotal = 0;
+    //     let rightTotal = 0;
+    
+    //     const getSelectedPtav = (ptavs, selectedDict, side) => {
+    //         for (const ptav of ptavs) {
+    //             if (Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) {
+    //                 console.log(`✅ Found PTAV match for ${side} → ${ptav.name} (ID ${ptav.id})`);
+    //                 return ptav;
+    //             }
+    //         }
+    //         console.warn(`❌ No PTAV match found for ${side}`);
+    //         return null;
+    //     };
+        
+    
+    //     const result = ptalIds.map((attr, index) => {
+    //         if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
+    //             console.warn(`⚠️ Skipping invalid attribute at index ${index}`, attr);
+    //             return {
+    //                 key: `summary-invalid-${index}`,
+    //                 label: "⚠️ Invalid Attribute",
+    //                 left: "-",
+    //                 right: "-",
+    //                 shared: "-",
+    //                 priceExtra: 0,
+    //             };
+    //         }
+        
+    //         const ptavs = attr.ptav_ids;
+    //         console.log(`🔎 Attribute: ${attr.name} (ID ${attr.id}) → PTAVs:`, ptavs);
+        
+    //         console.log(`🧪 [DEBUG] Attribute "${attr.name}" selections:`);
+    //         console.log(`  left selected keys:`, Object.keys(selectedLeft));
+    //         console.log(`  right selected keys:`, Object.keys(selectedRight));
+    //         console.log(`  PTAV ids:`, ptavs.map((p) => p.id));
+        
+    //         let left = "-", right = "-", shared = "-";
+    //         let priceExtra = 0;
+        
+    //         if (laterality === "bilateral" && split) {
+    //             const leftPtav = getSelectedPtav(ptavs, selectedLeft, "left");
+    //             const rightPtav = getSelectedPtav(ptavs, selectedRight, "right");
+        
+    //             left = leftPtav?.name || "-";
+    //             right = rightPtav?.name || "-";
+        
+    //             leftTotal += leftPtav?.price_extra || 0;
+    //             rightTotal += rightPtav?.price_extra || 0;
+    //         } else {
+    //             const sharedPtav = getSelectedPtav(ptavs, sharedSelected, "shared");
+        
+    //             shared = sharedPtav?.name || "-";
+    //             priceExtra = sharedPtav?.price_extra || 0;
+        
+    //             leftTotal += priceExtra;
+    //         }
+        
+    //         return {
+    //             key: `summary-${attr.id}`,
+    //             label: attr.name,
+    //             left,
+    //             right,
+    //             shared,
+    //             priceExtra,
+    //         };
+    //     });
+    
+    //     this.state.summary = result;
+    //     this.state.priceSummary = {
+    //         left: leftTotal,
+    //         right: rightTotal,
+    //         total: leftTotal + rightTotal,
+    //     };
+    //     console.log("🔍 Summary Check:", JSON.stringify(this.state.summary, null, 2));
+    
+    //     console.log("✅ Final summary:", result);
+    //     console.log("💰 Price summary:", this.state.priceSummary);
+    // }
     
     printSummary() {
         const printContents = this.summaryWrapper.el?.outerHTML;

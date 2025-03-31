@@ -226,6 +226,8 @@ export class ConfigureDialog extends Component {
         }
     }
 
+    
+
     // async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
     //     const isBilateralSplit = ["left", "right"].includes(sideOrId);
     //     const side = isBilateralSplit ? sideOrId : null;
@@ -265,6 +267,10 @@ export class ConfigureDialog extends Component {
         const side = isBilateralSplit ? sideOrId : null;
         const attrId = isBilateralSplit ? attributeId : sideOrId;
         const ptavId = parseInt(valueIdOrPtavId, 10);
+        if (isNaN(ptavId)) {
+            console.warn("❌ Skipping update: Invalid ptavId from value:", valueIdOrPtavId);
+            return;
+        }
     
         console.log("🔄 _addOrUpdateSelected called with:");
         console.log("   ↳ sideOrId:", sideOrId);
@@ -313,6 +319,25 @@ export class ConfigureDialog extends Component {
         console.log("✅ Running validation and summary update...");
         this._validate();
         this.computeSummary?.();
+    }
+
+    // _handleSharedSelect(attributeId, ev) {
+    //     const ptavId = parseInt(ev.target.value, 10);
+    //     if (isNaN(ptavId)) {
+    //         console.warn("❌ Skipping update: Invalid ptavId from value:", ev.target.value);
+    //         return;
+    //     }
+    //     this._addOrUpdateSelected(attributeId, null, ptavId);
+    // }
+
+
+    _handleSharedSelect(attributeId, ev) {
+        const ptavId = parseInt(ev.target.value, 10);
+        if (isNaN(ptavId)) {
+            console.warn("❌ Skipping update: Invalid ptavId from value:", ev.target.value);
+            return;
+        }
+        this._addOrUpdateSelected(attributeId, null, ptavId);  // ✅ Correct param order
     }
     
     

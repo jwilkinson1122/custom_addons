@@ -97,7 +97,7 @@
                             </div>
                         </t>
                         <!-- Shared Configuration -->
-                        <t t-if="!(state.laterality === 'bilateral' and state.split)">
+                        <!-- <t t-if="!(state.laterality === 'bilateral' and state.split)">
                             <div class="mb-3">
                                 <strong t-esc="i.name"/>
                                 <ProductTmplAttrib
@@ -110,7 +110,23 @@
                                     onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, ptavId, ev.target.value)"
                                 />
                             </div>
+                        </t> -->
+                        <t t-if="!(state.laterality === 'bilateral' and state.split)">
+                            <div class="mb-3">
+                                <strong t-esc="i.name"/>
+                                <ProductTmplAttrib
+                                    id="'ptav_%s_shared' % i.id"
+                                    attribute="i"
+                                    selected="state.selected"
+                                    side="'shared'"
+                                    hideLabel="true"
+                                    onSelect="(ev) => this._handleSharedSelect(i.id, ev)"
+                                    onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, null, ptavId, ev.target.value)"
+                                />
+                            </div>
                         </t>
+
+
                     </t>
                 </div>
                 <div class="col-md-4 border-start ps-3">
