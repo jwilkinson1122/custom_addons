@@ -3,16 +3,17 @@
 
 import {_t} from "@web/core/l10n/translation";
 import {Dialog} from "@web/core/dialog/dialog";
-import {Component, onWillStart, useState} from "@odoo/owl";
+import {Component, onWillStart, useState, useEffect} from "@odoo/owl";
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
 import {WarningDialog} from "@web/core/errors/error_dialogs";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
 import SummaryPanel from "./configurator_summary_panel.esm";
+import { nextTick } from "./utils.esm";  
 
-// Curent ConfigureDialog
 
 export class ConfigureDialog extends Component {
+
     static components = {
         Dialog, 
         ProductTmplAttrib,
@@ -27,10 +28,15 @@ export class ConfigureDialog extends Component {
     };
     static template = "cpq.ConfigureDialogDialog";
 
+
+
     setup() {
+        super.setup();
+
         this.size = "xl";
         this.rpc = useService("rpc");
         this.notification = useService("notification");
+
         this.state = useState({
             ptalIds: [],
             selected: {},
@@ -45,6 +51,24 @@ export class ConfigureDialog extends Component {
             },
         });
 
+        // this.summaryKey = () => JSON.stringify(this.state.selected || {});
+        this.summaryKey = () => {
+            try {
+                return JSON.stringify(this.state.selected || {});
+            } catch (e) {
+                console.warn("⚠️ Failed to stringify selected:", e);
+                return "invalid-key";
+            }
+        };
+        
+
+        // 🧠 Reactively recompute summary whenever left/right selection changes
+        useEffect(() => {
+            if (this.computeSummary) {
+                this.computeSummary();
+            }
+        }, () => [this.state.selected.left, this.state.selected.right]);
+
         this.onLateralityChange = (ev) => {
             this.state.laterality = ev.target.value;
             this.state.split = false;
@@ -56,7 +80,6 @@ export class ConfigureDialog extends Component {
             this.title = _t("Configure: %s", data.product_tmpl_id.display_name);
             this.state.ptalIds = data.ptal_ids;
             this.state.productTmplId = data.product_tmpl_id.id;
-            // this.state.productTmplId = data.product_tmpl_id;
         });
 
         this.onSplitToggle = async () => {
@@ -157,8 +180,6 @@ export class ConfigureDialog extends Component {
             selected: this.state.selected,
         };
         return this.rpc(`/cpq/${this.props.productTmplId}/configure`, {
-
-        // return this.rpc(`/cpq/${this.state.productTmplId}/configure`, {
             configuration: config,
         }).then((res) => {
             if (this.props.save) {
@@ -169,7 +190,6 @@ export class ConfigureDialog extends Component {
         });
     }
     
-
     onClose() {
         this.state.ptalIds = [];
         this.state.selected = {};
@@ -205,60 +225,96 @@ export class ConfigureDialog extends Component {
             }
         }
     }
+
+    // async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
+    //     const isBilateralSplit = ["left", "right"].includes(sideOrId);
+    //     const side = isBilateralSplit ? sideOrId : null;
+    //     const attrId = isBilateralSplit ? attributeId : sideOrId;
+    //     const ptavId = parseInt(valueIdOrPtavId, 10);
     
-    _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
+    //     const attr = this.state.ptalIds.find((a) => a.id === attrId);
+    //     if (!attr) return;
+    
+    //     const val = attr.ptav_ids.find((v) => v.id === ptavId);
+    //     if (!val) return;
+    
+    //     const clonedSelected = JSON.parse(JSON.stringify(this.state.selected));
+    
+    //     if (isBilateralSplit) {
+    //         clonedSelected[side] = clonedSelected[side] || {};
+    //         for (const v of attr.ptav_ids) delete clonedSelected[side][v.id];
+    //         clonedSelected[side][ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
+    //     } else {
+    //         for (const v of attr.ptav_ids) delete clonedSelected[v.id];
+    //         clonedSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
+    //     }
+    
+    //     this.state.selected = clonedSelected;
+    
+    //     console.log(`[${side || "shared"}] updated ${attr.name}:`, this.state.selected);
+    
+    //     await nextTick();
+    //     await new Promise(resolve => setTimeout(resolve, 0)); 
+    
+    //     this._validate();
+    //     this.computeSummary?.();
+    // }
+
+    async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         const isBilateralSplit = ["left", "right"].includes(sideOrId);
         const side = isBilateralSplit ? sideOrId : null;
         const attrId = isBilateralSplit ? attributeId : sideOrId;
         const ptavId = parseInt(valueIdOrPtavId, 10);
     
-        const attr = this.state.ptalIds.find((a) => a.id === attrId);
-        if (!attr) return;
+        console.log("🔄 _addOrUpdateSelected called with:");
+        console.log("   ↳ sideOrId:", sideOrId);
+        console.log("   ↳ attributeId:", attributeId);
+        console.log("   ↳ valueIdOrPtavId:", valueIdOrPtavId);
+        console.log("   ↳ customValue:", customValue);
+        console.log("   → interpreted as side:", side, "attrId:", attrId, "ptavId:", ptavId);
     
-        const val = attr.ptav_ids.find((v) => v.id === ptavId);
-        if (!val) return;
-
-        if (isBilateralSplit) {
-            const selected = { ...this.state.selected };
-            const sideSelected = { ...(selected[side] || {}) };
-        
-            // Remove all existing ptav.id keys for this attribute
-            for (const v of attr.ptav_ids) {
-                delete sideSelected[v.id];
-            }
-        
-            const val = attr.ptav_ids.find((v) => v.id === ptavId);
-            if (val) {
-                sideSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
-            }
-        
-            selected[side] = sideSelected;
-            this.state.selected = selected;
+        const attr = this.state.ptalIds.find((a) => a.id === attrId);
+        if (!attr) {
+            console.warn("⚠️ No matching attribute found for ID:", attrId);
+            return;
         }
     
-        // if (isBilateralSplit) {
-        //     if (!this.state.selected[side]) {this.state.selected[side] = {};}
+        const val = attr.ptav_ids.find((v) => v.id === ptavId);
+        if (!val) {
+            console.warn("⚠️ No matching PTAV found for ID:", ptavId, "in attribute:", attr.name);
+            return;
+        }
     
-        //     const sideSelected = { ...this.state.selected[side] };
+        console.log(`✅ Attribute matched: "${attr.name}"`);
+        console.log(`   ↳ Selected PTAV: ${val.name} (custom? ${val.is_custom})`);
     
-        //     for (const v of attr.ptav_ids) {delete sideSelected[v.id];}
+        // Clone to ensure reactivity
+        const clonedSelected = JSON.parse(JSON.stringify(this.state.selected));
     
-        //     sideSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
-        //     this.state.selected[side] = sideSelected;
-        // } else {
-        //     const newSelected = { ...this.state.selected };
+        if (isBilateralSplit) {
+            clonedSelected[side] = clonedSelected[side] || {};
+            for (const v of attr.ptav_ids) delete clonedSelected[side][v.id];
+            clonedSelected[side][ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
+            console.log(`🦶 Updated ${side} selection for "${attr.name}":`, clonedSelected[side]);
+        } else {
+            for (const v of attr.ptav_ids) delete clonedSelected[v.id];
+            clonedSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
+            console.log(`🧩 Updated shared selection for "${attr.name}":`, clonedSelected);
+        }
     
-        //     for (const v of attr.ptav_ids) {
-        //         delete newSelected[v.id];
-        //     }
+        this.state.selected = clonedSelected;
     
-        //     newSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
-        //     this.state.selected = newSelected;
-        // }
+        console.log("🧠 New selected state:", JSON.stringify(this.state.selected, null, 2));
     
-        console.log(`[${side || 'shared'}] updated ${attr.name}:`, this.state.selected);
+        // Force UI reactivity to complete before summary
+        await nextTick();
+        await new Promise(resolve => setTimeout(resolve, 0));  // 💥 Critical: ensures full task cycle flush
+    
+        console.log("✅ Running validation and summary update...");
         this._validate();
+        this.computeSummary?.();
     }
+    
     
     _cleanSide(side) {
         if (this.state.selected?.[side]) {

@@ -9,7 +9,7 @@ export default class ConfiguratorSummaryPanel extends Component {
         this.state = useState({
             summary: [],
             priceSummary: { left: 0, right: 0, total: 0 },
-            expanded: false,
+            expanded: true,
             height: 0,
         });
 
@@ -17,19 +17,14 @@ export default class ConfiguratorSummaryPanel extends Component {
             console.log("📌 SummaryPanel mounted");
             this.adjustHeight();
         });
-
+        
         onWillUpdateProps(() => {
             console.log("🌀 Props updated → recomputing summary...");
-            this.computeSummary();
+            this._preserveScroll(() => this.computeSummary());
         });
+    
 
         this.computeSummary();
-    }
-
-    // Max visible attributes in collapsed mode
-    get visibleAttributes() {
-        const MAX_VISIBLE = 5;
-        return this.state.expanded ? this.props.ptalIds : this.props.ptalIds.slice(0, MAX_VISIBLE);
     }
 
     toggleExpand() {
@@ -37,23 +32,35 @@ export default class ConfiguratorSummaryPanel extends Component {
         this.adjustHeight();
     }
 
-    adjustHeight() {
+    // 💡 Smooth scroll-preserving wrapper
+    _preserveScroll(fn) {
+        const scrollY = this.summaryWrapper?.el?.scrollTop || 0;
+        fn();
         setTimeout(() => {
+            if (this.summaryWrapper?.el) {
+                this.summaryWrapper.el.scrollTop = scrollY;
+            }
+        }, 0);
+    }
+
+    adjustHeight() {
+        clearTimeout(this._heightTimeout);
+        this._heightTimeout = setTimeout(() => {
             const el = this.summaryWrapper.el;
             if (!el) return;
-
+    
             if (this.state.expanded) {
                 el.style.height = "auto";
                 const fullHeight = el.scrollHeight;
                 el.style.height = "0px";
                 void el.offsetHeight;
-                this.state.height = fullHeight;
+                this.state.height = fullHeight || el.offsetHeight;
             } else {
                 this.state.height = 0;
             }
-        }, 0);
+        }, 20); // debounce: wait 1 frame to stabilize layout
     }
-
+    
     computeSummary() {
         console.log("🧠 Computing summary...");
         const { ptalIds = [], selected = {}, laterality, split } = this.props;
