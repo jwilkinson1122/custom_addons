@@ -123,17 +123,6 @@
                 <img t-else="" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
 
             </div>
-            <!-- <td class="o_sale_product_configurator_img py-3 px-0">
-                <img t-if="this.props.id" class="w-100" t-att-src="'/web/image/product.product/'+this.props.id+'/image_128'" alt="Product Image"/>
-                <img t-else="" class="w-100" t-att-src="'/web/image/product.template/'+this.props.product_tmpl_id+'/image_128'" alt="Product Image"/>
-            </td> -->
-
-            <!-- <t t-if="props.productTmplId.id">
-                <img t-if="props.productTmplId.product_variant_id" class="img-fluid rounded shadow-sm" style="max-width: 80%;" t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id[0] + '/image_128'" alt="Product Image"/>
-                <img t-else="" class="img-fluid rounded shadow-sm" style="max-width: 80%;" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" alt="Product Image"/>
-            </t> -->
-
-
             <!-- 📝 Summary Header with Actions -->
             <h5 class="mb-3 d-flex justify-content-between align-items-center">
                 Configuration Summary
@@ -224,39 +213,62 @@
             </div> -->
             <!-- 💰 Pricing Summary -->
             <div class="mt-3 border-top pt-2">
-                <h6 class="fw-bold">Pricing Summary</h6>
-                <ul class="list-unstyled small mb-0">
+                <h6 class="fw-bold d-flex justify-content-between align-items-center">
+        Pricing Summary
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="toggleExtras">
+                        <t t-esc="state.showExtras ? '− Hide Details' : '+ Show Details'" />
+                    </button>
+                </h6>
+
+                <ul class="list-group list-group-flush small">
                     <li>
-                        💵 Base Price: 
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.base)"/>
+                        💵 Base Price:
+                        <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.base)"/>
                     </li>
-                    <li>
-                        ➕ Left Extras: 
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.left)"/>
-                    </li>
-                    <li>
-                        ➕ Right Extras: 
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.right)"/>
-                    </li>
-                    <!-- <li t-if="state.priceSummary.shared">
-                        ➕ Shared Extras:
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.shared)"/>
-                    </li> -->
-                    <!-- <li>
-                        🧮 Subtotal (Extras Only):
-                        <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0))"/>
-                    </li> -->
                     <t t-if="(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0)) > 0">
                         <li>
-                        🧮 Subtotal (Extras Only):
-                            <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0))"/>
+                            🧮 Subtotal (Extras Only):
+                            <span class="float-end fw-semibold"
+                                t-esc="formatCurrency(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0))"/>
                         </li>
                     </t>
+                    <li class="fw-bold mt-1 border-top pt-2">
+                        📊 Total x <t t-esc="props.quantityToMake" /> :
+                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)" />
+                    </li>
+                </ul>
+
+
+                <!-- <ul class="list-unstyled small mb-0">
+                    <li>
+            💵 Base Price:
+                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.base)" />
+                    </li>
+
+                    <t t-if="state.showExtras">
+                        <li>
+                ➕ Left Extras:
+                            <span class="float-end" t-esc="formatCurrency(state.priceSummary.left)" />
+                        </li>
+                        <li>
+                ➕ Right Extras:
+                            <span class="float-end" t-esc="formatCurrency(state.priceSummary.right)" />
+                        </li>
+                    </t>
+
+                    <t t-if="state.priceSummary.subtotalExtras > 0">
+                        <li>
+                🧮 Subtotal (Extras Only):
+                            <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.subtotalExtras)" />
+                        </li>
+                    </t>
+
                     <li class="border-top mt-2 pt-1 fw-bold">
-                        📊 Total x <t t-esc="props.quantityToMake"/>:
-                    <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)"/>
+            📊 Total x <t t-esc="props.quantityToMake" />
+:
+                    <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)" />
                 </li>
-            </ul>
+            </ul> -->
         </div>
 
         <!-- 🔽 Expand/Collapse Link -->
