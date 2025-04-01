@@ -220,23 +220,33 @@
                     </button>
                 </h6>
 
-                <ul class="list-group list-group-flush small">
-                    <li>
-                        💵 Base Price:
-                        <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.base)"/>
-                    </li>
-                    <t t-if="(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0)) > 0">
-                        <li>
-                            🧮 Subtotal (Extras Only):
-                            <span class="float-end fw-semibold"
-                                t-esc="formatCurrency(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0))"/>
+        
+
+                <!-- 💵 Pricing Summary -->
+                <ul class="list-group mt-3">
+                    <!-- Base Price -->
+                    <t t-if="state.priceSummary.base > 0">
+                        <li class="list-group-item d-flex justify-content-between">
+                            💵 Base Price:
+                            <span class="fw-semibold" t-esc="formatCurrency(state.priceSummary.base)"/>
                         </li>
                     </t>
-                    <li class="fw-bold mt-1 border-top pt-2">
-                        📊 Total x <t t-esc="props.quantityToMake" /> :
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)" />
+
+                    <!-- Extras Subtotal -->
+                    <t t-if="state.priceSummary.extrasSubtotal > 0">
+                        <li class="list-group-item d-flex justify-content-between">
+                            🧮 Subtotal (Extras Only):
+                            <span class="fw-semibold" t-esc="formatCurrency(state.priceSummary.extrasSubtotal)"/>
+                        </li>
+                    </t>
+
+                    <!-- Final Total -->
+                    <li class="list-group-item d-flex justify-content-between">
+                        📊 Total x <t t-esc="props.quantityToMake"/>:
+                        <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
                     </li>
                 </ul>
+
 
 
                 <!-- <ul class="list-unstyled small mb-0">

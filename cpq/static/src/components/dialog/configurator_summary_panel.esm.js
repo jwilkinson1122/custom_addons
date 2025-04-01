@@ -98,7 +98,7 @@ export default class ConfiguratorSummaryPanel extends Component {
     
         let leftTotal = 0;
         let rightTotal = 0;
-        let sharedTotal = 0;
+        let totalExtras = 0;
     
         const getSelectedPtav = (ptavs, selectedDict) => {
             for (const ptav of ptavs) {
@@ -132,37 +132,32 @@ export default class ConfiguratorSummaryPanel extends Component {
                 left = leftPtav?.name || "-";
                 right = rightPtav?.name || "-";
     
-                const leftExtra = leftPtav?.price_extra ? Number(leftPtav.price_extra) : 0;
-                const rightExtra = rightPtav?.price_extra ? Number(rightPtav.price_extra) : 0;
+                const leftExtra = leftPtav?.price_extra || 0;
+                const rightExtra = rightPtav?.price_extra || 0;
     
                 leftTotal += leftExtra;
                 rightTotal += rightExtra;
-    
-                priceExtra = leftExtra + rightExtra; // for display
-    
+                priceExtra = leftExtra + rightExtra;
             } else {
                 const sharedPtav = getSelectedPtav(ptavs, selected);
                 shared = sharedPtav?.name || "-";
-    
-                const baseExtra = sharedPtav?.price_extra ? Number(sharedPtav.price_extra) : 0;
-                let displayExtra = baseExtra;
+                const sharedExtra = sharedPtav?.price_extra || 0;
     
                 if (laterality === "left") {
                     left = shared;
-                    leftTotal += baseExtra;
+                    leftTotal += sharedExtra;
+                    priceExtra = sharedExtra;
                 } else if (laterality === "right") {
                     right = shared;
-                    rightTotal += baseExtra;
+                    rightTotal += sharedExtra;
+                    priceExtra = sharedExtra;
                 } else if (laterality === "bilateral") {
                     left = shared;
                     right = shared;
-                    leftTotal += baseExtra;
-                    rightTotal += baseExtra;
-                    displayExtra = baseExtra * 2;
+                    leftTotal += sharedExtra;
+                    rightTotal += sharedExtra;
+                    priceExtra = sharedExtra * 2;
                 }
-    
-                priceExtra = displayExtra;
-                sharedTotal += displayExtra;
             }
     
             return {
@@ -179,19 +174,21 @@ export default class ConfiguratorSummaryPanel extends Component {
         const isBilateral = laterality === "bilateral";
         const totalBase = isBilateral ? basePrice * 2 : basePrice;
     
-        const total = (totalBase + leftTotal + rightTotal) * quantityToMake;
+        totalExtras = leftTotal + rightTotal;
+        const total = (totalBase + totalExtras) * quantityToMake;
     
         this.state.summary = result;
         this.state.priceSummary = {
             base: totalBase,
             left: leftTotal,
             right: rightTotal,
-            shared: sharedTotal,
             total,
+            extrasSubtotal: totalExtras,
         };
     
         console.log("✅ Final summary:", result);
-        console.log("💰 Price summary:", this.state.priceSummary);
+        console.log("📦 Extras Subtotal:", totalExtras);
+        console.log("💰 Total:", total);
     }
     
 
