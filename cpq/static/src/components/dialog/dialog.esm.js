@@ -84,7 +84,9 @@ export class ConfigureDialog extends Component {
             const data = await this._loadData();
             this.title = _t("Configure: %s", data.product_tmpl_id.display_name);
             this.state.ptalIds = data.ptal_ids;
-            this.state.productTmplId = data.product_tmpl_id.id;
+            // this.state.productTmplId = data.product_tmpl_id.id;
+            this.state.productTmplId = data.product_tmpl_id;
+
         });
 
         this.onSplitToggle = async () => {

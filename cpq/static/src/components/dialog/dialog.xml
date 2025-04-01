@@ -5,44 +5,34 @@
             <div class="row">
                 <div class="col">
                     <!-- ⚠️ Error Display -->
-                    <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0"
-                         class="alert alert-warning" role="alert">
+                    <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
                         <ul t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]" class="list-unstyled mb-0">
                             <li t-esc="e[1]" />
                         </ul>
                     </div>
                     <!-- 📄 Product Description -->
-                    <div t-if="state.productTmplId.description_sale"
-                         t-esc="state.productTmplId.description_sale"
-                         class="mb-3" />
+                    <div t-if="state.productTmplId.description_sale" t-esc="state.productTmplId.description_sale" class="mb-3" />
                     <!-- 👣 Laterality -->
                     <div class="mb-3">
-                        <strong>Laterality:</strong><br/>
+                        <strong>Laterality:</strong>
+                        <br/>
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="laterality" class="form-check-input" value="left"
-                                   t-att-checked="state.laterality === 'left' ? 'checked' : undefined"
-                                   t-on-change="onLateralityChange"/>
+                            <input type="radio" name="laterality" class="form-check-input" value="left" t-att-checked="state.laterality === 'left' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
                             <label class="form-check-label">Left Only</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="laterality" class="form-check-input" value="right"
-                                   t-att-checked="state.laterality === 'right' ? 'checked' : undefined"
-                                   t-on-change="onLateralityChange"/>
+                            <input type="radio" name="laterality" class="form-check-input" value="right" t-att-checked="state.laterality === 'right' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
                             <label class="form-check-label">Right Only</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input type="radio" name="laterality" class="form-check-input" value="bilateral"
-                                   t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined"
-                                   t-on-change="onLateralityChange"/>
+                            <input type="radio" name="laterality" class="form-check-input" value="bilateral" t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
                             <label class="form-check-label">Bilateral</label>
                         </div>
                     </div>
                     <!-- 🛠️ Split Toggle and Controls -->
                     <t t-if="state.laterality === 'bilateral'" class="mb-3">
                         <div class="d-flex align-items-center gap-3">
-                            <input type="checkbox"
-                                   t-att-checked="state.split ? 'checked' : undefined"
-                                   t-on-click="onSplitToggle"/>
+                            <input type="checkbox" t-att-checked="state.split ? 'checked' : undefined" t-on-click="onSplitToggle"/>
                             <label>Customize Left / Right Separately</label>
                             <t t-if="state.split">
                                 <button type="button" class="btn btn-sm btn-outline-primary" t-on-click="copyLeftToRight">
@@ -64,11 +54,7 @@
                         <label class="form-label">
                             <t t-esc="state.laterality === 'bilateral' ? 'Pairs to Make:' : 'Quantity to Make:'"/>
                         </label>
-                        <input type="number"
-                            class="form-control"
-                            t-att-value="state.quantityToMake"
-                            t-on-input="(ev) => onQuantityChange(ev)"
-                            min="1"/>
+                        <input type="number" class="form-control" t-att-value="state.quantityToMake" t-on-input="(ev) => onQuantityChange(ev)" min="1"/>
                     </div>
                     <!-- 🧩 Attribute Configuration -->
                     <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
@@ -78,32 +64,24 @@
                                 <div class="col-4">
                                     <strong t-esc="i.name"/>
                                 </div>
-                                <div class="col text-muted"><small><strong>Left</strong></small></div>
-                                <div class="col text-muted"><small><strong>Right</strong></small></div>
+                                <div class="col text-muted">
+                                    <small>
+                                        <strong>Left</strong>
+                                    </small>
+                                </div>
+                                <div class="col text-muted">
+                                    <small>
+                                        <strong>Right</strong>
+                                    </small>
+                                </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-4"/>
                                 <div class="col">
-                                    <ProductTmplAttrib
-                                        id="'ptav_%s_left' % i.id"
-                                        attribute="i"
-                                        selected="state.selected.left || {}"
-                                        side="'left'"
-                                        hideLabel="true"
-                                        onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)"
-                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)"
-                                    />
+                                    <ProductTmplAttrib id="'ptav_%s_left' % i.id" attribute="i" selected="state.selected.left || {}" side="'left'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)" />
                                 </div>
                                 <div class="col">
-                                    <ProductTmplAttrib
-                                        id="'ptav_%s_right' % i.id"
-                                        attribute="i"
-                                        selected="state.selected.right || {}"
-                                        side="'right'"
-                                        hideLabel="true"
-                                        onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)"
-                                        onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)"
-                                    />
+                                    <ProductTmplAttrib id="'ptav_%s_right' % i.id" attribute="i" selected="state.selected.right || {}" side="'right'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)" />
                                 </div>
                             </div>
                         </t>
@@ -111,30 +89,14 @@
                         <t t-if="!(state.laterality === 'bilateral' and state.split)">
                             <div class="mb-3">
                                 <strong t-esc="i.name"/>
-                                <ProductTmplAttrib
-                                    id="'ptav_%s_shared' % i.id"
-                                    attribute="i"
-                                    selected="state.selected"
-                                    side="'shared'"
-                                    hideLabel="true"
-                                    onSelect="(ev) => this._handleSharedSelect(i.id, ev)"
-                                    onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, null, ptavId, ev.target.value)"
-                                />
+                                <ProductTmplAttrib id="'ptav_%s_shared' % i.id" attribute="i" selected="state.selected" side="'shared'" hideLabel="true" onSelect="(ev) => this._handleSharedSelect(i.id, ev)" onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, null, ptavId, ev.target.value)" />
                             </div>
                         </t>
                     </t>
                 </div>
                 <div class="col-md-4 border-start ps-3">
                     <div class="sticky-summary shadow-sm p-2 bg-white rounded">
-                        <SummaryPanel
-                            ptalIds="state.ptalIds"
-                            selected="state.selected"
-                            laterality="state.laterality"
-                            split="state.split"
-                            quantityToMake="state.quantityToMake"
-                            productTmplId="state.productTmplId"
-                            t-key="summaryKey()"
-                        />
+                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" quantityToMake="state.quantityToMake" productTmplId="state.productTmplId" t-key="summaryKey()" />
                     </div>
                 </div>
             </div>
@@ -156,14 +118,9 @@
             </div>
             <!-- 🖼️ Product Image -->
             <div class="text-center mb-3">
-                <!-- <img t-attf-src="/web/image/product.template/{{ props.productTmplId.id }}/image_128"
-                    class="img-fluid rounded shadow-sm" style="max-width: 80%;" /> -->
-                <img t-if="props.productTmplId.product_variant_id"
-                    t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id.id + '/image_128'"
-                    class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
-                <img t-else=""
-                    t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'"
-                    class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
+                <!-- <img t-attf-src="/web/image/product.template/{{ props.productTmplId.id }}/image_128" class="img-fluid rounded shadow-sm" style="max-width: 80%;" /> -->
+                <img t-if="props.productTmplId.product_variant_id" t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
+                <img t-else="" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
 
             </div>
             <!-- <td class="o_sale_product_configurator_img py-3 px-0">
@@ -172,19 +129,11 @@
             </td> -->
 
             <!-- <t t-if="props.productTmplId.id">
-                <img t-if="props.productTmplId.product_variant_id"
-                    class="img-fluid rounded shadow-sm"
-                    style="max-width: 80%;"
-                    t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id[0] + '/image_128'"
-                    alt="Product Image"/>
-                <img t-else=""
-                    class="img-fluid rounded shadow-sm"
-                    style="max-width: 80%;"
-                    t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'"
-                    alt="Product Image"/>
+                <img t-if="props.productTmplId.product_variant_id" class="img-fluid rounded shadow-sm" style="max-width: 80%;" t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id[0] + '/image_128'" alt="Product Image"/>
+                <img t-else="" class="img-fluid rounded shadow-sm" style="max-width: 80%;" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" alt="Product Image"/>
             </t> -->
 
-       
+
             <!-- 📝 Summary Header with Actions -->
             <h5 class="mb-3 d-flex justify-content-between align-items-center">
                 Configuration Summary
@@ -199,9 +148,7 @@
             </h5>
             <!-- 🚩 Bilateral Split Table -->
             <t t-if="props.laterality === 'bilateral' and props.split">
-                <div class="summary-table-wrapper"
-                    t-ref="summaryWrapper"
-                    t-att-style="'height: ' + state.height + 'px; overflow: hidden; transition: height 0.4s ease;'">
+                <div class="summary-table-wrapper" t-ref="summaryWrapper" t-att-style="'height: ' + state.height + 'px; overflow: hidden; transition: height 0.4s ease;'">
                     <table class="table table-sm table-bordered align-middle text-center mb-0">
                         <thead class="table-light">
                             <tr>
@@ -216,8 +163,12 @@
                             <t t-foreach="state.summary" t-as="s" t-key="s.key">
                                 <tr>
                                     <td class="text-start fw-bold" t-esc="s.label" />
-                                    <td><span t-esc="s.left ?? '-'"/></td>
-                                    <td><span t-esc="s.right ?? '-'"/></td>
+                                    <td>
+                                        <span t-esc="s.left ?? '-'"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.right ?? '-'"/>
+                                    </td>
                                     <td>
                                         <t t-if="s.left === s.right and s.left !== '-'">
                                             <span class="badge bg-success">✅</span>
@@ -229,7 +180,9 @@
                                             <span class="text-muted">—</span>
                                         </t>
                                     </td>
-                                    <td><span t-esc="(s.priceExtra ?? 0).toFixed(2)" /> $</td>
+                                    <td>
+                                        <span t-esc="(s.priceExtra ?? 0).toFixed(2)" />
+ $</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -238,9 +191,7 @@
             </t>
             <!-- 🌐 Shared View Table -->
             <t t-if="!(props.laterality === 'bilateral' and props.split)">
-                <div class="summary-table-wrapper"
-                    t-ref="summaryWrapper"
-                    t-att-style="'height: ' + state.height + 'px; overflow: hidden; transition: height 0.4s ease;'">
+                <div class="summary-table-wrapper" t-ref="summaryWrapper" t-att-style="'height: ' + state.height + 'px; overflow: hidden; transition: height 0.4s ease;'">
                     <table class="table table-sm table-bordered align-middle text-center mb-0">
                         <thead class="table-light">
                             <tr>
@@ -253,8 +204,12 @@
                             <t t-foreach="state.summary" t-as="s" t-key="s.key">
                                 <tr>
                                     <td class="text-start fw-bold" t-esc="s.label" />
-                                    <td><span t-esc="s.shared || '-'"/></td>
-                                    <td><span t-esc="s.priceExtra.toFixed(2)" /> $</td>
+                                    <td>
+                                        <span t-esc="s.shared || '-'"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.priceExtra.toFixed(2)" />
+ $</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -287,24 +242,29 @@
                         ➕ Shared Extras:
                         <span class="float-end" t-esc="formatCurrency(state.priceSummary.shared)"/>
                     </li> -->
-                    <li>
+                    <!-- <li>
                         🧮 Subtotal (Extras Only):
                         <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0))"/>
-                    </li>
-
+                    </li> -->
+                    <t t-if="(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0)) > 0">
+                        <li>
+                        🧮 Subtotal (Extras Only):
+                            <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.left + state.priceSummary.right + (state.priceSummary.shared || 0))"/>
+                        </li>
+                    </t>
                     <li class="border-top mt-2 pt-1 fw-bold">
                         📊 Total x <t t-esc="props.quantityToMake"/>:
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)"/>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- 🔽 Expand/Collapse Link -->
-            <div class="text-end mt-2">
-                <a href="#" class="small text-decoration-none" t-on-click.prevent="toggleExpand">
-                    <t t-esc="state.expanded ? '▲ Show Less' : '▼ Show More'" />
-                </a>
-            </div>
+                    <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)"/>
+                </li>
+            </ul>
         </div>
-    </t>
+
+        <!-- 🔽 Expand/Collapse Link -->
+        <div class="text-end mt-2">
+            <a href="#" class="small text-decoration-none" t-on-click.prevent="toggleExpand">
+                <t t-esc="state.expanded ? '▲ Show Less' : '▼ Show More'" />
+            </a>
+        </div>
+    </div>
+</t>
 </templates>
