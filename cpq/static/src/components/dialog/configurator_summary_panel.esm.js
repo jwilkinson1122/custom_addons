@@ -22,11 +22,12 @@ export default class ConfiguratorSummaryPanel extends Component {
                 right: 0,
                 shared: 0,
                 total: 0,
-                subtotalExtras: 0,
+                extrasSubtotal: 0,
             },
             expanded: true,
             height: 0,
             showExtras: false, // ⬅️ For toggling
+            quantityToMake: this.props.quantityToMake || 1,
         });
 
         this.toggleExtras = () => {
@@ -38,13 +39,35 @@ export default class ConfiguratorSummaryPanel extends Component {
             this.adjustHeight();
         });
         
-        onWillUpdateProps(() => {
-            console.log("🌀 Props updated → recomputing summary...");
-            this._preserveScroll(() => this.computeSummary());
-        });
-    
+        // onWillUpdateProps((nextProps) => {
+        //     this._preserveScroll(() => this.computeSummary());
+        
+        //     if (nextProps.quantityToMake !== this.state.quantityToMake) {
+        //         console.log("🔄 Syncing quantityToMake from props to state:", nextProps.quantityToMake);
+        //         this.state.quantityToMake = nextProps.quantityToMake;
+        //     }
+        // });
 
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.quantityToMake !== this.state.quantityToMake) {
+                console.log("🔄 Syncing quantityToMake from props to state:", nextProps.quantityToMake);
+                this.state.quantityToMake = nextProps.quantityToMake;
+        
+                // 💡 Delay computeSummary until after reactivity completes
+                requestAnimationFrame(() => {
+                    this._preserveScroll(() => this.computeSummary());
+                });
+            } else {
+                // 🌀 Other props changed → still recompute summary
+                this._preserveScroll(() => this.computeSummary());
+            }
+            
+        });
+        
+        
         this.computeSummary();
+        console.log("🧠 computeSummary triggered after quantity sync:", this.state.quantityToMake);
+
     }
 
     toggleExpand() {
@@ -89,13 +112,16 @@ export default class ConfiguratorSummaryPanel extends Component {
             selected = {},
             laterality,
             split,
-            quantityToMake = 1,
         } = this.props;
     
         const selectedLeft = selected.left || {};
         const selectedRight = selected.right || {};
         const isSplit = laterality === "bilateral" && split;
-    
+        
+        const quantityToMake = this.state.quantityToMake || 1;
+        console.log("🧾 quantityToMake (from state) in computeSummary:", quantityToMake);
+        // const quantityToMake = this.props.quantityToMake || 1;
+
         let leftTotal = 0;
         let rightTotal = 0;
         let totalExtras = 0;
@@ -132,8 +158,11 @@ export default class ConfiguratorSummaryPanel extends Component {
                 left = leftPtav?.name || "-";
                 right = rightPtav?.name || "-";
     
-                const leftExtra = leftPtav?.price_extra || 0;
-                const rightExtra = rightPtav?.price_extra || 0;
+                // const leftExtra = leftPtav?.price_extra || 0;
+                // const rightExtra = rightPtav?.price_extra || 0;
+
+                const leftExtra = (leftPtav?.price_extra || 0) * quantityToMake;
+                const rightExtra = (rightPtav?.price_extra || 0) * quantityToMake;
     
                 leftTotal += leftExtra;
                 rightTotal += rightExtra;
@@ -142,22 +171,41 @@ export default class ConfiguratorSummaryPanel extends Component {
                 const sharedPtav = getSelectedPtav(ptavs, selected);
                 shared = sharedPtav?.name || "-";
                 const sharedExtra = sharedPtav?.price_extra || 0;
-    
+
                 if (laterality === "left") {
                     left = shared;
-                    leftTotal += sharedExtra;
-                    priceExtra = sharedExtra;
+                    const extra = sharedExtra * quantityToMake;
+                    leftTotal += extra;
+                    priceExtra = extra;
                 } else if (laterality === "right") {
                     right = shared;
-                    rightTotal += sharedExtra;
-                    priceExtra = sharedExtra;
+                    const extra = sharedExtra * quantityToMake;
+                    rightTotal += extra;
+                    priceExtra = extra;
                 } else if (laterality === "bilateral") {
                     left = shared;
                     right = shared;
-                    leftTotal += sharedExtra;
-                    rightTotal += sharedExtra;
-                    priceExtra = sharedExtra * 2;
+                    const extra = sharedExtra * 2 * quantityToMake;
+                    leftTotal += extra / 2;
+                    rightTotal += extra / 2;
+                    priceExtra = extra;
                 }
+    
+                // if (laterality === "left") {
+                //     left = shared;
+                //     leftTotal += sharedExtra;
+                //     priceExtra = sharedExtra;
+                // } else if (laterality === "right") {
+                //     right = shared;
+                //     rightTotal += sharedExtra;
+                //     priceExtra = sharedExtra;
+                // } else if (laterality === "bilateral") {
+                //     left = shared;
+                //     right = shared;
+                //     leftTotal += sharedExtra;
+                //     rightTotal += sharedExtra;
+                //     priceExtra = sharedExtra * 2;
+                // }
             }
     
             return {
@@ -172,10 +220,13 @@ export default class ConfiguratorSummaryPanel extends Component {
     
         const basePrice = this.props.productTmplId?.list_price || 0;
         const isBilateral = laterality === "bilateral";
-        const totalBase = isBilateral ? basePrice * 2 : basePrice;
+        const totalBase = (isBilateral ? basePrice * 2 : basePrice) * quantityToMake;
+
+        // const totalBase = isBilateral ? basePrice * 2 : basePrice;
     
         totalExtras = leftTotal + rightTotal;
-        const total = (totalBase + totalExtras) * quantityToMake;
+        const total = totalBase + totalExtras;
+        // const total = (totalBase + totalExtras) * quantityToMake;
     
         this.state.summary = result;
         this.state.priceSummary = {
@@ -305,13 +356,21 @@ export default class ConfiguratorSummaryPanel extends Component {
     //     console.log("💰 Price summary:", this.state.priceSummary);
     // }
 
-
     printSummary() {
         const printContents = this.summaryWrapper.el?.outerHTML;
         if (!printContents) return;
-
+    
         const win = window.open("", "_blank");
-        win.document.write(`
+        if (!win) {
+            console.warn("🚫 Failed to open print window.");
+            return;
+        }
+    
+        const doc = win.document;
+    
+        doc.open();  // 🔄 Explicitly open the document (avoids the deprecation warning)
+        doc.write(`
+            <!DOCTYPE html>
             <html>
                 <head>
                     <title>Configuration Summary</title>
@@ -329,11 +388,13 @@ export default class ConfiguratorSummaryPanel extends Component {
                 </body>
             </html>
         `);
-        win.document.close();
+        doc.close();  // ✅ Always close the document to finalize it
         win.focus();
         win.print();
         win.close();
     }
+    
+ 
 }
 
 ConfiguratorSummaryPanel.template = "cpq.ConfiguratorSummaryPanel";
@@ -346,3 +407,5 @@ ConfiguratorSummaryPanel.props = {
     productTmplId: Object,
     quantityToMake: Number,
 };
+
+

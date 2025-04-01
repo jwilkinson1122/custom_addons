@@ -96,7 +96,7 @@
                 </div>
                 <div class="col-md-4 border-start ps-3">
                     <div class="sticky-summary shadow-sm p-2 bg-white rounded">
-                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" quantityToMake="state.quantityToMake" productTmplId="state.productTmplId" t-key="summaryKey()" />
+                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTmplId="state.productTmplId" quantityToMake="state.quantityToMake" t-key="summaryKey()" />
                     </div>
                 </div>
             </div>
@@ -246,39 +246,6 @@
                         <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
                     </li>
                 </ul>
-
-
-
-                <!-- <ul class="list-unstyled small mb-0">
-                    <li>
-            💵 Base Price:
-                        <span class="float-end" t-esc="formatCurrency(state.priceSummary.base)" />
-                    </li>
-
-                    <t t-if="state.showExtras">
-                        <li>
-                ➕ Left Extras:
-                            <span class="float-end" t-esc="formatCurrency(state.priceSummary.left)" />
-                        </li>
-                        <li>
-                ➕ Right Extras:
-                            <span class="float-end" t-esc="formatCurrency(state.priceSummary.right)" />
-                        </li>
-                    </t>
-
-                    <t t-if="state.priceSummary.subtotalExtras > 0">
-                        <li>
-                🧮 Subtotal (Extras Only):
-                            <span class="float-end fw-semibold" t-esc="formatCurrency(state.priceSummary.subtotalExtras)" />
-                        </li>
-                    </t>
-
-                    <li class="border-top mt-2 pt-1 fw-bold">
-            📊 Total x <t t-esc="props.quantityToMake" />
-:
-                    <span class="float-end" t-esc="formatCurrency(state.priceSummary.total)" />
-                </li>
-            </ul> -->
         </div>
 
         <!-- 🔽 Expand/Collapse Link -->

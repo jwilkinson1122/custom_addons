@@ -52,11 +52,22 @@ export class ConfigureDialog extends Component {
             },
         });
 
+        // this.onQuantityChange = (ev) => {
+        //     const value = parseInt(ev.target.value, 10);
+        //     this.state.quantityToMake = isNaN(value) || value < 1 ? 1 : value;
+        // };
+
         this.onQuantityChange = (ev) => {
             const value = parseInt(ev.target.value, 10);
-            this.state.quantityToMake = isNaN(value) || value < 1 ? 1 : value;
+            const finalVal = isNaN(value) || value < 1 ? 1 : value;
+            console.log("🔢 Quantity to Make changed (input):", finalVal);
+        
+            // ✅ Defer state update to next paint frame to ensure reactivity
+            requestAnimationFrame(() => {
+                this.state.quantityToMake = finalVal;
+            });
         };
-
+        
         this.summaryKey = () => {
             try {
                 return JSON.stringify(this.state.selected || {});
@@ -69,10 +80,24 @@ export class ConfigureDialog extends Component {
 
         // 🧠 Reactively recompute summary whenever left/right selection changes
         useEffect(() => {
-            if (this.computeSummary) {
-                this.computeSummary();
-            }
-        }, () => [this.state.selected.left, this.state.selected.right]);
+            console.log("🔁 useEffect triggered (selected, quantityToMake, laterality, split)");
+            console.log("📦 quantityToMake in useEffect:", this.state.quantityToMake);
+            this.computeSummary?.();
+        }, () => [
+            this.state.selected.left,
+            this.state.selected.right,
+            this.state.quantityToMake,
+            this.state.laterality,
+            this.state.split,
+        ]);
+        
+        
+        
+        // useEffect(() => {
+        //     if (this.computeSummary) {
+        //         this.computeSummary();
+        //     }
+        // }, () => [this.state.selected.left, this.state.selected.right]);
 
         this.onLateralityChange = (ev) => {
             this.state.laterality = ev.target.value;
