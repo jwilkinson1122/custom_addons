@@ -59,6 +59,9 @@ class ProductTemplate(models.Model):
     )
     cpq_tooltip = fields.Html(compute="_compute_cpq_tooltip")
 
+    image_128 = fields.Image("Image 128", max_width=128, max_height=128)
+
+
     @api.model
     def _name_search(self, name, args=None, operator="ilike", limit=100, order=None):
         args = args or []

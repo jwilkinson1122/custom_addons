@@ -45,13 +45,18 @@ export class ConfigureDialog extends Component {
             errors: {},
             laterality: "bilateral",
             split: false,
+            quantityToMake: 1,
             undoCache: {
                 left: null,
                 right: null,
             },
         });
 
-        // this.summaryKey = () => JSON.stringify(this.state.selected || {});
+        this.onQuantityChange = (ev) => {
+            const value = parseInt(ev.target.value, 10);
+            this.state.quantityToMake = isNaN(value) || value < 1 ? 1 : value;
+        };
+
         this.summaryKey = () => {
             try {
                 return JSON.stringify(this.state.selected || {});
@@ -226,42 +231,6 @@ export class ConfigureDialog extends Component {
         }
     }
 
-    
-
-    // async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
-    //     const isBilateralSplit = ["left", "right"].includes(sideOrId);
-    //     const side = isBilateralSplit ? sideOrId : null;
-    //     const attrId = isBilateralSplit ? attributeId : sideOrId;
-    //     const ptavId = parseInt(valueIdOrPtavId, 10);
-    
-    //     const attr = this.state.ptalIds.find((a) => a.id === attrId);
-    //     if (!attr) return;
-    
-    //     const val = attr.ptav_ids.find((v) => v.id === ptavId);
-    //     if (!val) return;
-    
-    //     const clonedSelected = JSON.parse(JSON.stringify(this.state.selected));
-    
-    //     if (isBilateralSplit) {
-    //         clonedSelected[side] = clonedSelected[side] || {};
-    //         for (const v of attr.ptav_ids) delete clonedSelected[side][v.id];
-    //         clonedSelected[side][ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
-    //     } else {
-    //         for (const v of attr.ptav_ids) delete clonedSelected[v.id];
-    //         clonedSelected[ptavId] = val.is_custom && customValue !== undefined ? customValue : val.name;
-    //     }
-    
-    //     this.state.selected = clonedSelected;
-    
-    //     console.log(`[${side || "shared"}] updated ${attr.name}:`, this.state.selected);
-    
-    //     await nextTick();
-    //     await new Promise(resolve => setTimeout(resolve, 0)); 
-    
-    //     this._validate();
-    //     this.computeSummary?.();
-    // }
-
     async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         const isBilateralSplit = ["left", "right"].includes(sideOrId);
         const side = isBilateralSplit ? sideOrId : null;
@@ -320,16 +289,6 @@ export class ConfigureDialog extends Component {
         this._validate();
         this.computeSummary?.();
     }
-
-    // _handleSharedSelect(attributeId, ev) {
-    //     const ptavId = parseInt(ev.target.value, 10);
-    //     if (isNaN(ptavId)) {
-    //         console.warn("❌ Skipping update: Invalid ptavId from value:", ev.target.value);
-    //         return;
-    //     }
-    //     this._addOrUpdateSelected(attributeId, null, ptavId);
-    // }
-
 
     _handleSharedSelect(attributeId, ev) {
         const ptavId = parseInt(ev.target.value, 10);

@@ -170,7 +170,22 @@ class ProductTemplateAttributeValue(models.Model):
             "name": ptav_id.name,
             "html_color": ptav_id.html_color,
             "is_custom": ptav_id.is_custom,
-            "price_extra": 0.0,
+            "price_extra": ptav_id.price_extra,  # ✅ Fix is here
             "excluded": False,
             "cpq_custom_type": ptav_id.cpq_custom_type,
         }
+
+
+    # def _cpq_get_combination_info(self):
+    #     self.ensure_one()
+    #     ptav_id = self
+
+    #     return {
+    #         "id": ptav_id.id,
+    #         "name": ptav_id.name,
+    #         "html_color": ptav_id.html_color,
+    #         "is_custom": ptav_id.is_custom,
+    #         "price_extra": 0.0,
+    #         "excluded": False,
+    #         "cpq_custom_type": ptav_id.cpq_custom_type,
+    #     }
