@@ -9,7 +9,8 @@ import {useService} from "@web/core/utils/hooks";
 import {WarningDialog} from "@web/core/errors/error_dialogs";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
 import SummaryPanel from "./configurator_summary_panel.esm";
-import { nextTick } from "./utils.esm";  
+import { nextTick, useDebouncedInput} from "./utils.esm";  
+// import { useDebouncedInput } from "./utils.esm";
 
 
 export class ConfigureDialog extends Component {
@@ -27,8 +28,6 @@ export class ConfigureDialog extends Component {
         discard: Function,
     };
     static template = "cpq.ConfigureDialogDialog";
-
-
 
     setup() {
         super.setup();
@@ -52,21 +51,33 @@ export class ConfigureDialog extends Component {
             },
         });
 
-        // this.onQuantityChange = (ev) => {
+        this.debouncedInput = useDebouncedInput(250);
+
+        this.onQuantityChange = this.debouncedInput((val) => {
+            const parsed = parseInt(val, 10);
+            const finalVal = isNaN(parsed) || parsed < 1 ? 1 : parsed;
+            console.log("🔢 Debounced Quantity to Make:", finalVal);
+            this.state.quantityToMake = finalVal;
+        });
+        
+        // this.onQuantityChange = this.debouncedInput((val) => {
+        //     const parsed = parseInt(val, 10);
+        //     const finalVal = isNaN(parsed) || parsed < 1 ? 1 : parsed;
+        //     console.log("🔢 Debounced Quantity to Make:", finalVal);
+        //     this.state.quantityToMake = finalVal;
+        // });
+
+               // this.onQuantityChange = (ev) => {
         //     const value = parseInt(ev.target.value, 10);
-        //     this.state.quantityToMake = isNaN(value) || value < 1 ? 1 : value;
+        //     const finalVal = isNaN(value) || value < 1 ? 1 : value;
+        //     console.log("🔢 Quantity to Make changed (input):", finalVal);
+        
+        //     requestAnimationFrame(() => {
+        //         this.state.quantityToMake = finalVal;
+        //     });
         // };
 
-        this.onQuantityChange = (ev) => {
-            const value = parseInt(ev.target.value, 10);
-            const finalVal = isNaN(value) || value < 1 ? 1 : value;
-            console.log("🔢 Quantity to Make changed (input):", finalVal);
         
-            // ✅ Defer state update to next paint frame to ensure reactivity
-            requestAnimationFrame(() => {
-                this.state.quantityToMake = finalVal;
-            });
-        };
         
         this.summaryKey = () => {
             try {
@@ -77,7 +88,6 @@ export class ConfigureDialog extends Component {
             }
         };
         
-
         // 🧠 Reactively recompute summary whenever left/right selection changes
         useEffect(() => {
             console.log("🔁 useEffect triggered (selected, quantityToMake, laterality, split)");
@@ -91,14 +101,6 @@ export class ConfigureDialog extends Component {
             this.state.split,
         ]);
         
-        
-        
-        // useEffect(() => {
-        //     if (this.computeSummary) {
-        //         this.computeSummary();
-        //     }
-        // }, () => [this.state.selected.left, this.state.selected.right]);
-
         this.onLateralityChange = (ev) => {
             this.state.laterality = ev.target.value;
             this.state.split = false;
@@ -109,7 +111,6 @@ export class ConfigureDialog extends Component {
             const data = await this._loadData();
             this.title = _t("Configure: %s", data.product_tmpl_id.display_name);
             this.state.ptalIds = data.ptal_ids;
-            // this.state.productTmplId = data.product_tmpl_id.id;
             this.state.productTmplId = data.product_tmpl_id;
             console.log("🧾 Loaded product_tmpl_id:", data.product_tmpl_id);
         });
@@ -325,7 +326,6 @@ export class ConfigureDialog extends Component {
         }
         this._addOrUpdateSelected(attributeId, null, ptavId);  // ✅ Correct param order
     }
-    
     
     _cleanSide(side) {
         if (this.state.selected?.[side]) {

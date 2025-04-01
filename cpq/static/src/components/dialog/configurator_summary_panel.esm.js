@@ -39,15 +39,6 @@ export default class ConfiguratorSummaryPanel extends Component {
             this.adjustHeight();
         });
         
-        // onWillUpdateProps((nextProps) => {
-        //     this._preserveScroll(() => this.computeSummary());
-        
-        //     if (nextProps.quantityToMake !== this.state.quantityToMake) {
-        //         console.log("🔄 Syncing quantityToMake from props to state:", nextProps.quantityToMake);
-        //         this.state.quantityToMake = nextProps.quantityToMake;
-        //     }
-        // });
-
         onWillUpdateProps((nextProps) => {
             if (nextProps.quantityToMake !== this.state.quantityToMake) {
                 console.log("🔄 Syncing quantityToMake from props to state:", nextProps.quantityToMake);
@@ -191,21 +182,6 @@ export default class ConfiguratorSummaryPanel extends Component {
                     priceExtra = extra;
                 }
     
-                // if (laterality === "left") {
-                //     left = shared;
-                //     leftTotal += sharedExtra;
-                //     priceExtra = sharedExtra;
-                // } else if (laterality === "right") {
-                //     right = shared;
-                //     rightTotal += sharedExtra;
-                //     priceExtra = sharedExtra;
-                // } else if (laterality === "bilateral") {
-                //     left = shared;
-                //     right = shared;
-                //     leftTotal += sharedExtra;
-                //     rightTotal += sharedExtra;
-                //     priceExtra = sharedExtra * 2;
-                // }
             }
     
             return {
@@ -222,12 +198,9 @@ export default class ConfiguratorSummaryPanel extends Component {
         const isBilateral = laterality === "bilateral";
         const totalBase = (isBilateral ? basePrice * 2 : basePrice) * quantityToMake;
 
-        // const totalBase = isBilateral ? basePrice * 2 : basePrice;
-    
         totalExtras = leftTotal + rightTotal;
         const total = totalBase + totalExtras;
-        // const total = (totalBase + totalExtras) * quantityToMake;
-    
+
         this.state.summary = result;
         this.state.priceSummary = {
             base: totalBase,
@@ -242,120 +215,6 @@ export default class ConfiguratorSummaryPanel extends Component {
         console.log("💰 Total:", total);
     }
     
-
-    // computeSummary() {
-    //     console.log("🧠 Computing summary...");
-    
-    //     const {
-    //         ptalIds = [],
-    //         selected = {},
-    //         laterality,
-    //         split,
-    //         quantityToMake = 1,
-    //     } = this.props;
-    
-    //     const selectedLeft = selected.left || {};
-    //     const selectedRight = selected.right || {};
-    //     const isSplit = laterality === "bilateral" && split;
-    
-    //     let leftTotal = 0;
-    //     let rightTotal = 0;
-    //     let sharedTotal = 0;
-    
-    //     const getSelectedPtav = (ptavs, selectedDict) => {
-    //         for (const ptav of ptavs) {
-    //             if (Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) {
-    //                 return ptav;
-    //             }
-    //         }
-    //         return null;
-    //     };
-    
-    //     const result = ptalIds.map((attr, index) => {
-    //         if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
-    //             return {
-    //                 key: `summary-invalid-${index}`,
-    //                 label: "⚠️ Invalid Attribute",
-    //                 left: "-",
-    //                 right: "-",
-    //                 shared: "-",
-    //                 priceExtra: 0,
-    //             };
-    //         }
-    
-    //         const ptavs = attr.ptav_ids;
-    //         let left = "-", right = "-", shared = "-";
-    //         let priceExtra = 0;
-    
-    //         if (isSplit) {
-    //             const leftPtav = getSelectedPtav(ptavs, selectedLeft);
-    //             const rightPtav = getSelectedPtav(ptavs, selectedRight);
-    
-    //             left = leftPtav?.name || "-";
-    //             right = rightPtav?.name || "-";
-    
-    //             const leftExtra = leftPtav?.price_extra || 0;
-    //             const rightExtra = rightPtav?.price_extra || 0;
-    
-    //             leftTotal += leftExtra;
-    //             rightTotal += rightExtra;
-    //             priceExtra = leftExtra + rightExtra;
-    
-    //         } else {
-    //             const sharedPtav = getSelectedPtav(ptavs, selected);
-    //             shared = sharedPtav?.name || "-";
-    
-    //             const sharedExtra = sharedPtav?.price_extra || 0;
-    
-    //             const multiplier = laterality === "bilateral" ? 2 : 1;
-    //             const totalExtra = sharedExtra * multiplier;
-    //             priceExtra = totalExtra;
-    
-    //             sharedTotal += totalExtra;
-    
-    //             if (laterality === "left") {
-    //                 left = shared;
-    //                 leftTotal += totalExtra;
-    //             } else if (laterality === "right") {
-    //                 right = shared;
-    //                 rightTotal += totalExtra;
-    //             } else if (laterality === "bilateral") {
-    //                 left = shared;
-    //                 right = shared;
-    //                 leftTotal += sharedExtra;
-    //                 rightTotal += sharedExtra;
-    //             }
-    //         }
-    
-    //         return {
-    //             key: `summary-${attr.id}`,
-    //             label: attr.name,
-    //             left,
-    //             right,
-    //             shared,
-    //             priceExtra,
-    //         };
-    //     });
-    
-    //     const basePrice = this.props.productTmplId?.list_price || 0;
-    //     const isBilateral = laterality === "bilateral";
-    //     const totalBase = isBilateral ? basePrice * 2 : basePrice;
-    
-    //     const total = (totalBase + leftTotal + rightTotal) * quantityToMake;
-    
-    //     this.state.summary = result;
-    //     this.state.priceSummary = {
-    //         base: totalBase,
-    //         left: leftTotal,
-    //         right: rightTotal,
-    //         shared: sharedTotal,
-    //         total,
-    //     };
-    
-    //     console.log("✅ Final summary:", result);
-    //     console.log("💰 Price summary:", this.state.priceSummary);
-    // }
-
     printSummary() {
         const printContents = this.summaryWrapper.el?.outerHTML;
         if (!printContents) return;
