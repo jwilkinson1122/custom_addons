@@ -16,6 +16,17 @@
     "assets": {
         "web.assets_backend": [
             "cpq/static/src/components/**/*",
+            # Main CPQ components
+            # "cpq/static/src/components/**/*",
+            # "cpq/static/src/components/dialog/dialog.esm.js",
+            # "cpq/static/src/components/dialog/utils.esm.js",
+            # "cpq/static/src/components/dialog/configurator_summary_panel.esm.js",
+            # "cpq/static/src/components/dialog/product_tmpl_attrib.esm.js",
+            # "cpq/static/src/components/dialog/dialog.xml",
+            # "cpq/static/src/components/dialog/product_tmpl_attrib.xml",
+
+            # If you have cpq_sale as a separate module:
+            # "cpq_sale/static/src/js/product_configurator_widget.esm.js",
         ],
     },
 }

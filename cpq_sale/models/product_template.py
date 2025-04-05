@@ -1,4 +1,8 @@
-from odoo import fields, models
+
+from odoo import api, fields, models
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):

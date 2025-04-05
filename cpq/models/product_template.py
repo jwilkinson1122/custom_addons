@@ -1,4 +1,8 @@
 import copy
+import logging
+import json
+
+_logger = logging.getLogger(__name__)
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -61,6 +65,44 @@ class ProductTemplate(models.Model):
 
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
 
+    no_create_variants = fields.Selection(
+        [
+            ("yes", "Don't create them automatically"),
+            ("no", "Use Odoo's default variant management"),
+            ("empty", "Use the category value"),
+        ],
+        string="Variant creation",
+        required=True,
+        default="yes",
+        help="Control automatic variant creation behavior.",
+    )
+
+    def _create_variant_ids(self):
+        """
+        Prevent CPQ-enabled templates and those explicitly opting out
+        from creating variants during the usual Odoo process.
+        """
+        templates = self.filtered(lambda t: not t.cpq_ok and t.no_create_variants != "yes")
+        if not templates:
+            return True
+        return super(ProductTemplate, templates)._create_variant_ids()
+
+    def _ensure_configurator_product(self):
+        self.ensure_one()
+        Product = self.env["product.product"]
+        product = Product.search([("product_tmpl_id", "=", self.id)], limit=1)
+
+        if not product:
+            product = Product.create({
+                "product_tmpl_id": self.id,
+                "name": self.name,
+                "default_code": f"CPQ-{self.id}",
+                "uom_id": self.uom_id.id,  # ✅ Ensure UoM is copied
+                "uom_po_id": self.uom_po_id.id,  # ✅ Just in case
+            })
+            _logger.info("✅ Created fallback CPQ product: %s", product)
+
+        return product
 
     @api.model
     def _name_search(self, name, args=None, operator="ilike", limit=100, order=None):
@@ -160,17 +202,7 @@ class ProductTemplate(models.Model):
             "tag": "cpq.ConfigureDialogAction",
             "target": "self",
         }
-
-    def _create_variant_ids(self):
-        """
-        Prevent cpq products from creating variants as these serve
-        only as a template for the product configurator
-        """
-        templates = self.filtered(lambda t: not t.cpq_ok)
-        if not templates:
-            return None
-        return super(ProductTemplate, templates)._create_variant_ids()
-
+    
     def _cpq_get_create_variant_vals(self, pta_value_ids, custom_dict=None):
         self.ensure_one()
 
@@ -533,6 +565,13 @@ class ProductTemplate(models.Model):
             render_context.update(extras)
 
         return render_context
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         if vals.get("cpq_ok"):
+    #             vals.setdefault("no_create_variants", "yes")
+    #     return super().create(vals_list)
 
     def write(self, vals):
         res = super().write(vals)

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="cpq.ConfigureDialogDialog" owl="1">
         <Dialog size="size" title="title">
-            <div class="row">
+            <div class="row position-relative">
                 <div class="col">
                     <!-- ⚠️ Error Display -->
                     <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
@@ -14,8 +14,7 @@
                     <div t-if="state.productTmplId.description_sale" t-esc="state.productTmplId.description_sale" class="mb-3" />
                     <!-- 👣 Laterality -->
                     <div class="mb-3">
-                        <strong>Laterality:</strong>
-                        <br/>
+                        <strong>Laterality:</strong><br/>
                         <div class="form-check form-check-inline">
                             <input type="radio" name="laterality" class="form-check-input" value="left" t-att-checked="state.laterality === 'left' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
                             <label class="form-check-label">Left Only</label>
@@ -29,6 +28,7 @@
                             <label class="form-check-label">Bilateral</label>
                         </div>
                     </div>
+                    
                     <!-- 🛠️ Split Toggle and Controls -->
                     <t t-if="state.laterality === 'bilateral'" class="mb-3">
                         <div class="d-flex align-items-center gap-3">
@@ -55,27 +55,14 @@
                             <t t-esc="state.laterality === 'bilateral' ? 'Pairs to Make:' : 'Quantity to Make:'"/>
                         </label>
                         <input type="number" class="form-control" t-att-value="state.quantityToMake" t-on-input="onQuantityChange" min="1"/>
-                        <!-- <input type="number" class="form-control" t-att-value="state.quantityToMake" t-on-input="(ev) => onQuantityChange(ev.target.value)" min="1" /> -->
-                        <!-- <input type="number" class="form-control" t-att-value="state.quantityToMake" t-on-input="(ev) => onQuantityChange(ev)" min="1"/> -->
                     </div>
                     <!-- 🧩 Attribute Configuration -->
                     <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                        <!-- Bilateral Split View -->
                         <t t-if="state.laterality === 'bilateral' and state.split">
                             <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
-                                <div class="col-4">
-                                    <strong t-esc="i.name"/>
-                                </div>
-                                <div class="col text-muted">
-                                    <small>
-                                        <strong>Left</strong>
-                                    </small>
-                                </div>
-                                <div class="col text-muted">
-                                    <small>
-                                        <strong>Right</strong>
-                                    </small>
-                                </div>
+                                <div class="col-4"><strong t-esc="i.name"/></div>
+                                <div class="col text-muted"><small><strong>Left</strong></small></div>
+                                <div class="col text-muted"><small><strong>Right</strong></small></div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-4"/>
@@ -87,7 +74,6 @@
                                 </div>
                             </div>
                         </t>
-                        <!-- Shared Configuration -->
                         <t t-if="!(state.laterality === 'bilateral' and state.split)">
                             <div class="mb-3">
                                 <strong t-esc="i.name"/>
@@ -98,13 +84,41 @@
                 </div>
                 <div class="col-md-4 border-start ps-3">
                     <div class="sticky-summary shadow-sm p-2 bg-white rounded">
-                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTmplId="state.productTmplId" quantityToMake="state.quantityToMake" t-key="summaryKey()" />
+                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTmplId="state.productTmplId" quantityToMake="state.quantityToMake" register="registerSummaryPanel" t-key="summaryKey()" />
                     </div>
                 </div>
+
+                <!-- ✅ Loading Overlay -->
+                <!-- <t t-if="state.isLoading">
+                    <div class="cpq-loading-overlay">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="loading-text">Saving your configuration...</div>
+                    </div>
+                </t> -->
+                <t t-if="state.isLoading">
+                    <div class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center">
+                        <div>
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="text-center mt-2">Saving configuration...</div>
+                        </div>
+                    </div>
+                </t>
+
             </div>
+
+            <!-- ✅ Footer -->
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onCreate" t-att-disabled="!state.valid">
-                    Confirm
+                <button t-on-click="onCreate" t-att-disabled="state.isLoading" class="btn btn-primary">
+                    <t t-if="state.isLoading">
+                        <i class="fa fa-spinner fa-spin me-1"></i> Saving...
+                    </t>
+                    <t t-else="">
+                        Confirm
+                    </t>
                 </button>
                 <button class="btn btn-secondary" t-on-click="onClose">
                     Cancel
@@ -112,6 +126,7 @@
             </t>
         </Dialog>
     </t>
+
     <t t-name="cpq.ConfiguratorSummaryPanel" owl="1">
         <div class="config-summary-panel overflow-auto" style="max-height: 60vh;">
             <!-- 🏷️ Product Name -->
@@ -120,7 +135,6 @@
             </div>
             <!-- 🖼️ Product Image -->
             <div class="text-center mb-3">
-                <!-- <img t-attf-src="/web/image/product.template/{{ props.productTmplId.id }}/image_128" class="img-fluid rounded shadow-sm" style="max-width: 80%;" /> -->
                 <img t-if="props.productTmplId.product_variant_id" t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
                 <img t-else="" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
 

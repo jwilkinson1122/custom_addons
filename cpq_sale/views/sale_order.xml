@@ -10,21 +10,115 @@
             </xpath>
         </field>
     </record>
-    <record id="inherit_cpq_view_order_form" model="ir.ui.view">
+    <!-- <record id="inherit_cpq_view_order_form" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.cpq</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="decoration-bf">cpq_laterality</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="cpq_laterality" invisible="1"/>
+                <field name="cpq_laterality" string="Side" />
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group" position="inside">
                 <field name="cpq_laterality" readonly="1"/>
-                <field name="cpq_configuration_json" invisible="1"/>
-                <!-- <field name="cpq_configuration_json" widget="json"/> -->
-                <!-- <field name="cpq_configuration_json" widget="json" readonly="1"/> -->
-
+                <field name="cpq_configuration_json" widget="json" readonly="1"/>
             </xpath>
         </field>
+    </record> -->
+    <!-- Enhance the Sale Order Line Tree View -->
+    <!-- <record id="inherit_cpq_view_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.inherit.cpq</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="colors"> cpq_laterality=='left' : 'success', cpq_laterality=='right' : 'primary', cpq_laterality=='bilateral' : 'info'
+                </attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="cpq_laterality" string="Side"/>
+                <field name="cpq_configuration_summary" string="Config Summary" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field invisible="1" name="product_template_id_cpq_ok" />
+                <button invisible="not product_template_id_cpq_ok or state not in ['draft','sent']" class="fa-lg" help="Reconfigure" icon="fa-cogs" name="edit_cpq_configuration" type="object" title="Reconfigure" />
+            </xpath>
+
+        </field>
+    </record> -->
+
+
+    <record id="inherit_cpq_view_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.inherit.cpq</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add the field needed for colors logic -->
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="cpq_laterality" invisible="1"/>
+            </xpath>
+
+            <!-- Set row colors based on laterality -->
+            <!-- <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="colors">
+                    cpq_laterality == 'left' : 'success',
+                    cpq_laterality == 'right' : 'primary',
+                    cpq_laterality == 'bilateral' : 'info'
+                </attribute>
+            </xpath> -->
+
+            <!-- Show CPQ fields in tree view -->
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="cpq_laterality" string="Side"/>
+                <field name="cpq_configuration_summary" string="Config Summary"/>
+            </xpath>
+
+        </field>
     </record>
+
+
+
+    <!-- Enhance the Sale Order Line Form View -->
+    <record id="inherit_cpq_view_order_line_form" model="ir.ui.view">
+        <field name="name">sale.order.line.form.inherit.cpq</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Inject CPQ fields into the line form -->
+            <!-- <xpath expr="//field[@name='order_line']/form/group" position="inside">
+                <field name="cpq_laterality" readonly="1"/>
+                <field name="cpq_configuration_json" invisible="1"/>
+                <field name="cpq_configuration_summary" readonly="1"/>
+            </xpath> -->
+
+            <xpath expr="//field[@name='order_line']/form" position="inside">
+                <field name="product_template_id_cpq_ok" invisible="1"/>
+                <button name="toggle_debug_cpq_json" string="Toggle CPQ JSON" type="object" class="btn-secondary" />
+                <notebook>
+                    <page string="CPQ Details" invisible="not product_template_id_cpq_ok">
+                        <group>
+                            <field name="cpq_laterality" readonly="1"/>
+                            <!-- <field name="cpq_configuration_summary" widget="html" readonly="1"/> -->
+                            <field name="cpq_configuration_summary" widget="html" class="cpq-summary-box" readonly="1"/>
+                            <!-- <field name="cpq_configuration_summary" widget="html" class="o_form_label o_text_overflow" readonly="1"/> -->
+                            <field name="cpq_configuration_json" invisible="1"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+    
+
+
 </odoo>

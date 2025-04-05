@@ -4,7 +4,7 @@
     "author": "NWPL",
     "category": "Uncategorized",
     "version": "17.0.1.0.0",
-    "depends": ["cpq", "sale", "sale_product_configurator"],
+    "depends": ["base", "web", "cpq", "sale", "sale_product_configurator", "mail"],
     "auto_install": ["cpq", "sale"],
     "data": [
         "views/sale_order.xml",
@@ -13,6 +13,7 @@
     "license": "LGPL-3",
     "assets": {
         "web.assets_backend": [
+            "cpq_sale/static/src/css/custom.css",
             "cpq_sale/static/src/js/product_configurator_widget.esm.js",
         ],
     },

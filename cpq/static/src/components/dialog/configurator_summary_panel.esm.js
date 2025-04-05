@@ -265,6 +265,7 @@ ConfiguratorSummaryPanel.props = {
     split: Boolean,
     productTmplId: Object,
     quantityToMake: Number,
+    register: Function,
 };
 
 

@@ -1,4 +1,4 @@
-from . import product_config
-from . import product_attribute
-from . import product
-from . import ir_ui_view
+# -*- coding: utf-8 -*-
+
+from . import product_template
+from . import sale_order_line
