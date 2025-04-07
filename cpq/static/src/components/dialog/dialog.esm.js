@@ -147,7 +147,10 @@ export class ConfigureDialog extends Component {
                 this.state.ptalIds = data.ptal_ids;
                 this.state.productTmplId = data.product_tmpl_id;
         
-                const initialConfigRaw = this.env.config?.context?.cpq_initial_config;
+                // const initialConfigRaw = this.env.config?.context?.cpq_initial_config;
+
+                const initialConfigRaw = this.props.cpqInitialConfig || this.env.config?.context?.cpq_initial_config;
+
         
                 if (initialConfigRaw) {
                     try {
@@ -773,8 +776,14 @@ export function ConfigureDialogAction(env, action) {
     env.services.dialog.add(ConfigureDialog, {
         productTmplId,
         // productTmplId: context.cpq_product_template_id || context.active_id,
+        
         edit: true,
+        cpqInitialConfig: context.cpq_initial_config || null, // ✅ pass to dialog
         save: async (res) => {
+            if (!productTmplId) {
+                console.warn("⚠️ No product template ID passed to ConfigureDialogAction context:", context);
+            }
+            
             if (context.active_model === "sale.order.line" && context.active_id) {
                 try {
                     const values = {

@@ -221,18 +221,6 @@ class ProductConfiguratorController(Controller):
             ),
         }
 
-
-        # line_vals = {
-        #     'order_id': sale_order.id,
-        #     'product_id': base_product.id,
-        #     'name': config['name'],
-        #     'cpq_configuration_json': config_json,
-        #     'cpq_configuration_summary': summary_html,
-        #     'product_uom': product_tmpl.uom_id.id,
-        #     'product_uom_qty': config['quantity_to_make'],
-        #     'price_unit': (config['total_price'] / config['quantity_to_make']) if config['quantity_to_make'] else 0,
-        # }
-
         def create_or_update_line(line):
             if line and line.exists():
                 _logger.info(f"✏️ Updating existing sale.order.line {line.id}")
