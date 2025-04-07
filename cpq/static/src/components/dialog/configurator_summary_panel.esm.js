@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, useRef, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState, useRef, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
 
 function formatCurrency(amount) {
     const number = typeof amount === "number" ? amount : parseFloat(amount) || 0;
@@ -8,11 +8,15 @@ function formatCurrency(amount) {
 }
 
 export default class ConfiguratorSummaryPanel extends Component {
-    
+
     setup() {
         super.setup();
+
+        const props = this.props;
+
         this.formatCurrency = formatCurrency;
         this.summaryWrapper = useRef("summaryWrapper");
+        this.toastQueue = [];
 
         this.state = useState({
             summary: [],
@@ -26,39 +30,71 @@ export default class ConfiguratorSummaryPanel extends Component {
             },
             expanded: true,
             height: 0,
-            showExtras: false, // ⬅️ For toggling
-            quantityToMake: this.props.quantityToMake || 1,
+            showExtras: false,
+            quantityToMake: props.quantityToMake || 1,
+            toastMessage: "",
         });
 
         this.toggleExtras = () => {
             this.state.showExtras = !this.state.showExtras;
         };
-        
+
         onMounted(() => {
             console.log("📌 SummaryPanel mounted");
+
+            if (props.registerApi) {
+                props.registerApi({
+                    showToast: this.showToast.bind(this),
+                });
+            }
+
             this.adjustHeight();
         });
-        
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.quantityToMake !== this.state.quantityToMake) {
-                console.log("🔄 Syncing quantityToMake from props to state:", nextProps.quantityToMake);
-                this.state.quantityToMake = nextProps.quantityToMake;
-        
-                // 💡 Delay computeSummary until after reactivity completes
-                requestAnimationFrame(() => {
-                    this._preserveScroll(() => this.computeSummary());
-                });
-            } else {
-                // 🌀 Other props changed → still recompute summary
-                this._preserveScroll(() => this.computeSummary());
-            }
-            
-        });
-        
-        
-        this.computeSummary();
-        console.log("🧠 computeSummary triggered after quantity sync:", this.state.quantityToMake);
 
+        onWillUpdateProps((nextProps) => {
+            const quantityChanged = nextProps.quantityToMake !== this.state.quantityToMake;
+
+            if (quantityChanged) {
+                console.log("🔄 Quantity changed from props:", nextProps.quantityToMake);
+                this.state.quantityToMake = nextProps.quantityToMake;
+            }
+
+            requestAnimationFrame(() => {
+                this._preserveScroll(() => this.computeSummary());
+            });
+        });
+
+        // ✅ Add unmount cleanup
+        onWillUnmount(() => {
+            clearTimeout(this._heightTimeout);
+            clearTimeout(this._toastTimeout);
+            this.toastQueue = [];
+        });
+
+        this.computeSummary();
+        console.log("🧠 Initial computeSummary:", this.state.quantityToMake);
+    }
+
+    showToast(message) {
+        this.toastQueue.push(message);
+
+        // If already displaying, let it finish
+        if (this._toastTimeout) return;
+
+        const showNextToast = () => {
+            if (this.toastQueue.length === 0) {
+                this._toastTimeout = null;
+                return;
+            }
+
+            this.state.toastMessage = this.toastQueue.shift();
+            this._toastTimeout = setTimeout(() => {
+                this.state.toastMessage = "";
+                showNextToast();
+            }, 2000);
+        };
+
+        showNextToast();
     }
 
     toggleExpand() {
@@ -66,7 +102,6 @@ export default class ConfiguratorSummaryPanel extends Component {
         this.adjustHeight();
     }
 
-    // 💡 Smooth scroll-preserving wrapper
     _preserveScroll(fn) {
         const scrollY = this.summaryWrapper?.el?.scrollTop || 0;
         fn();
@@ -80,9 +115,9 @@ export default class ConfiguratorSummaryPanel extends Component {
     adjustHeight() {
         clearTimeout(this._heightTimeout);
         this._heightTimeout = setTimeout(() => {
-            const el = this.summaryWrapper.el;
+            const el = this.summaryWrapper?.el;
             if (!el) return;
-    
+
             if (this.state.expanded) {
                 el.style.height = "auto";
                 const fullHeight = el.scrollHeight;
@@ -92,40 +127,32 @@ export default class ConfiguratorSummaryPanel extends Component {
             } else {
                 this.state.height = 0;
             }
-        }, 20); // debounce: wait 1 frame to stabilize layout
+        }, 20);
     }
 
     computeSummary() {
         console.log("🧠 Computing summary...");
-    
+
         const {
             ptalIds = [],
             selected = {},
             laterality,
             split,
+            productTmplId,
         } = this.props;
-    
+
         const selectedLeft = selected.left || {};
         const selectedRight = selected.right || {};
         const isSplit = laterality === "bilateral" && split;
-        
         const quantityToMake = this.state.quantityToMake || 1;
-        console.log("🧾 quantityToMake (from state) in computeSummary:", quantityToMake);
-        // const quantityToMake = this.props.quantityToMake || 1;
 
         let leftTotal = 0;
         let rightTotal = 0;
-        let totalExtras = 0;
-    
+
         const getSelectedPtav = (ptavs, selectedDict) => {
-            for (const ptav of ptavs) {
-                if (Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) {
-                    return ptav;
-                }
-            }
-            return null;
+            return ptavs.find(ptav => Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) || null;
         };
-    
+
         const result = ptalIds.map((attr, index) => {
             if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
                 return {
@@ -137,24 +164,21 @@ export default class ConfiguratorSummaryPanel extends Component {
                     priceExtra: 0,
                 };
             }
-    
+
             const ptavs = attr.ptav_ids;
             let left = "-", right = "-", shared = "-";
             let priceExtra = 0;
-    
+
             if (isSplit) {
                 const leftPtav = getSelectedPtav(ptavs, selectedLeft);
                 const rightPtav = getSelectedPtav(ptavs, selectedRight);
-    
+
                 left = leftPtav?.name || "-";
                 right = rightPtav?.name || "-";
-    
-                // const leftExtra = leftPtav?.price_extra || 0;
-                // const rightExtra = rightPtav?.price_extra || 0;
 
                 const leftExtra = (leftPtav?.price_extra || 0) * quantityToMake;
                 const rightExtra = (rightPtav?.price_extra || 0) * quantityToMake;
-    
+
                 leftTotal += leftExtra;
                 rightTotal += rightExtra;
                 priceExtra = leftExtra + rightExtra;
@@ -163,27 +187,32 @@ export default class ConfiguratorSummaryPanel extends Component {
                 shared = sharedPtav?.name || "-";
                 const sharedExtra = sharedPtav?.price_extra || 0;
 
-                if (laterality === "left") {
-                    left = shared;
-                    const extra = sharedExtra * quantityToMake;
-                    leftTotal += extra;
-                    priceExtra = extra;
-                } else if (laterality === "right") {
-                    right = shared;
-                    const extra = sharedExtra * quantityToMake;
-                    rightTotal += extra;
-                    priceExtra = extra;
-                } else if (laterality === "bilateral") {
-                    left = shared;
-                    right = shared;
-                    const extra = sharedExtra * 2 * quantityToMake;
-                    leftTotal += extra / 2;
-                    rightTotal += extra / 2;
-                    priceExtra = extra;
+                const extraAmount = sharedExtra * quantityToMake;
+
+                switch (laterality) {
+                    case "left":
+                        left = shared;
+                        leftTotal += extraAmount;
+                        priceExtra = extraAmount;
+                        break;
+                    case "right":
+                        right = shared;
+                        rightTotal += extraAmount;
+                        priceExtra = extraAmount;
+                        break;
+                    case "bilateral":
+                        left = shared;
+                        right = shared;
+                        const bilateralExtra = sharedExtra * 2 * quantityToMake;
+                        leftTotal += bilateralExtra / 2;
+                        rightTotal += bilateralExtra / 2;
+                        priceExtra = bilateralExtra;
+                        break;
+                    default:
+                        break;
                 }
-    
             }
-    
+
             return {
                 key: `summary-${attr.id}`,
                 label: attr.name,
@@ -193,12 +222,12 @@ export default class ConfiguratorSummaryPanel extends Component {
                 priceExtra,
             };
         });
-    
-        const basePrice = this.props.productTmplId?.list_price || 0;
+
+        const basePrice = productTmplId?.list_price || 0;
         const isBilateral = laterality === "bilateral";
         const totalBase = (isBilateral ? basePrice * 2 : basePrice) * quantityToMake;
 
-        totalExtras = leftTotal + rightTotal;
+        const totalExtras = leftTotal + rightTotal;
         const total = totalBase + totalExtras;
 
         this.state.summary = result;
@@ -209,25 +238,25 @@ export default class ConfiguratorSummaryPanel extends Component {
             total,
             extrasSubtotal: totalExtras,
         };
-    
+
         console.log("✅ Final summary:", result);
         console.log("📦 Extras Subtotal:", totalExtras);
         console.log("💰 Total:", total);
     }
-    
+
     printSummary() {
-        const printContents = this.summaryWrapper.el?.outerHTML;
+        const printContents = this.summaryWrapper?.el?.outerHTML;
         if (!printContents) return;
-    
+
         const win = window.open("", "_blank");
         if (!win) {
             console.warn("🚫 Failed to open print window.");
             return;
         }
-    
+
         const doc = win.document;
-    
-        doc.open();  // 🔄 Explicitly open the document (avoids the deprecation warning)
+
+        doc.open();
         doc.write(`
             <!DOCTYPE html>
             <html>
@@ -247,15 +276,17 @@ export default class ConfiguratorSummaryPanel extends Component {
                 </body>
             </html>
         `);
-        doc.close();  // ✅ Always close the document to finalize it
+        doc.close();
+
         win.focus();
         win.print();
-        win.close();
+
+        // ✅ Auto-close clean up
+        win.onafterprint = () => win.close();
     }
-    
- 
 }
 
+// Component Metadata
 ConfiguratorSummaryPanel.template = "cpq.ConfiguratorSummaryPanel";
 
 ConfiguratorSummaryPanel.props = {
@@ -265,7 +296,5 @@ ConfiguratorSummaryPanel.props = {
     split: Boolean,
     productTmplId: Object,
     quantityToMake: Number,
-    register: Function,
+    registerApi: Function,
 };
-
-

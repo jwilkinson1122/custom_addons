@@ -1,73 +1,82 @@
-import json
-from markupsafe import escape
+from odoo import _
+from markupsafe import Markup
 
-def render_summary_html(env, sale_order, config):
 
-    if sale_order is None:
-        raise ValueError("Sale order is required to render the summary.")
+def render_summary_html(env, order, config):
+    """ Render clean, readable configuration summary HTML """
+    if not config:
+        return "No configuration available."
 
-    currency = sale_order.currency_id
-    currency_symbol = currency.symbol or '$'
+    # Extract config data safely
+    laterality = config.get("laterality", "unknown").capitalize()
+    quantity = config.get("quantity_to_make", 1)
+    split = config.get("split", False)
 
-    def format_currency(amount):
-        return f"{currency_symbol}{amount:,.2f}"
+    selected = config.get("selected", {})
+    if not isinstance(selected, dict):
+        selected = {}
 
-    def get_label(attr_id, value):
-        try:
-            attr = env['product.template.attribute.line'].browse(int(attr_id))
-            if isinstance(value, str):
-                return f"{escape(attr.attribute_id.name)}: {escape(value)}"
-            value_record = env['product.attribute.value'].browse(int(value))
-            if value_record.exists():
-                return f"{escape(attr.attribute_id.name)}: {escape(value_record.name)}"
-            else:
-                return f"{escape(attr.attribute_id.name)}: {escape(str(value))}"
-        except Exception:
-            return f"{escape(str(attr_id))}: {escape(str(value))}"
+    price_left = config.get("left_price", 0)
+    price_right = config.get("right_price", 0)
+    price_total = config.get("total_price", 0)
 
-    def format_selection(selection):
-        if not selection:
-            return "<em>No selections made.</em>"
-        return "<ul>" + "".join(f"<li>{get_label(k, v)}</li>" for k, v in selection.items()) + "</ul>"
+    # Fetch PTAV names from IDs
+    ptav_ids = [int(k) for k in selected.keys() if str(k).isdigit()]
+    ptavs = env["product.template.attribute.value"].browse(ptav_ids)
 
-    laterality_label = config['laterality'].capitalize()
-    quantity = config['quantity_to_make']
-    split_mode = 'Yes' if config['split'] else 'No'
+    attr_value_map = {}
+    for ptav in ptavs:
+        attribute_name = ptav.attribute_id.name
+        value_name = ptav.name
+        attr_value_map[str(ptav.id)] = (attribute_name, value_name)
 
-    body = f"""
-    <p><strong>🦶 Laterality:</strong> {escape(laterality_label)}</p>
-    <p><strong>Quantity to Make:</strong> {quantity}</p>
-    <p><strong>Split Mode:</strong> {split_mode}</p>
-    <p><strong>Selections:</strong></p>
-    <ul>
+    # Start HTML summary
+    html = f"""
+    <div style="font-size: 13px; line-height: 1.4;">
+        <div><strong>🦶 Laterality:</strong> {laterality}</div>
+        <div><strong>Quantity to Make:</strong> {quantity}</div>
+        <div><strong>Split Mode:</strong> {"Yes" if split else "No"}</div>
     """
 
-    if config['split']:
-        body += f"<li><strong>Left:</strong> {format_selection(config['selected'].get('left', {}))}</li>"
-        body += f"<li><strong>Right:</strong> {format_selection(config['selected'].get('right', {}))}</li>"
-    else:
-        body += f"<li>{format_selection(config['selected'])}</li>"
+    # Selections
+    if attr_value_map:
+        html += '<div><strong>Selections:</strong><br/>'
+        for attr_name, value_name in attr_value_map.values():
+            html += f'{attr_name}: {value_name}<br/>'
+        html += '</div>'
 
-    body += f"""
-    </ul>
-    <hr/>
-    <p><strong>💰 Price Summary:</strong></p>
-    <ul>
-        <li>💵 Left Total: {format_currency(config['left_price'])}</li>
-        <li>💵 Right Total: {format_currency(config['right_price'])}</li>
-        <li>📊 Combined Total: <strong>{format_currency(config['total_price'])}</strong></li>
-    </ul>
+    #     html += '<div><strong>Selections:</strong><ul style="margin: 4px 0; padding-left: 16px;">'
+    #     for ptav_id, (attr_name, value_name) in attr_value_map.items():
+    #         html += f'<li>{attr_name}: {value_name}</li>'
+    #     html += '</ul></div>'
+    # else:
+    #     html += "<div><strong>Selections:</strong> None</div>"
+
+    # Price Summary
+    html += f"""
+        <div style="margin-top: 8px;">
+            <strong>💰 Price Summary:</strong><br/>
+            💵 Left Total: {format_currency(env, order, price_left)}<br/>
+            💵 Right Total: {format_currency(env, order, price_right)}<br/>
+            📊 Combined Total: {format_currency(env, order, price_total)}<br/>
+        </div>
     """
 
-    # Optional: Debug dump
-    if env.context.get('debug'):
-        raw_config = json.dumps(config, indent=2)
-        body += f"""
-        <hr/>
-        <details>
-            <summary>🔍 Debug: Raw Configuration</summary>
-            <pre>{escape(raw_config)}</pre>
-        </details>
-        """
+    # html += f"""
+    #     <div style="margin-top: 8px;">
+    #         <strong>💰 Price Summary:</strong>
+    #         <ul style="margin: 4px 0; padding-left: 16px;">
+    #             <li>💵 Left Total: {format_currency(env, order, price_left)}</li>
+    #             <li>💵 Right Total: {format_currency(env, order, price_right)}</li>
+    #             <li>📊 Combined Total: {format_currency(env, order, price_total)}</li>
+    #         </ul>
+    #     </div>
+    # </div>
+    # """
 
-    return body
+    return Markup(html)
+
+
+def format_currency(env, order, amount):
+    currency = order.currency_id or env.user.company_id.currency_id
+    return currency.with_context(lang=order.partner_id.lang or env.user.lang).format(amount, currency)

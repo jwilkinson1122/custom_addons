@@ -10,19 +10,33 @@ import json
 _logger = logging.getLogger(__name__)
 
 
-# class SaleOrder(models.Model):
-#     _inherit = "sale.order"
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
 
-#     def action_config_start(self):
-#         """Return action to start configuration wizard"""
-#         configurator_obj = self.env["product.configurator.sale.order"]
-#         ctx = dict(
-#             self.env.context,
-#             default_order_id=self.id,
-#             wizard_model="product.configurator.sale.order",
-#             allow_preset_selection=True,
-#         )
-#         return configurator_obj.with_context(**ctx).get_wizard_action()
+    def action_config_start(self):
+        self.ensure_one()
+
+        cpq_products = self.env["product.template"].search([("cpq_ok", "=", True)])
+        if not cpq_products:
+            raise UserError("No CPQ-enabled products found.")
+
+        if len(cpq_products) == 1:
+            return cpq_products.action_configure_cpq()
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Select CPQ Product",
+            "res_model": "product.template",
+            "view_mode": "tree",
+            "target": "current",
+            "domain": [("cpq_ok", "=", True)],
+            "context": {
+                "active_model": "sale.order",  # ✅ Important
+                "active_id": self.id,          # ✅ Important
+                "default_cpq_ok": True,
+            },
+        }
+
 
 
 class SaleOrderLine(models.Model):
@@ -71,14 +85,18 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty = config.get("quantity_to_make", line.product_uom_qty)
 
                 # Optional: add to chatter only after save
+                summary_html = render_summary_html(self.env, line.order_id, config)
+
                 line.message_post(
-                    body=f"🛠️ CPQ configuration applied:<br/>{config.get('cpq_configuration_summary', '')}",
+                    body=f"""
+                        <b>🛠️ CPQ Configuration Applied:</b><br/>
+                        {summary_html}
+                    """,
                     subtype_xmlid="mail.mt_note",
                 )
 
             except Exception as e:
                 _logger.warning(f"⚠️ Failed to parse CPQ config JSON: {e}")
-
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_laterality(self):
@@ -162,33 +180,29 @@ class SaleOrderLine(models.Model):
             base_price *= 2
         self.price_unit = (base_price + total_extra) * qty
 
-    @api.depends('cpq_configuration_json')
-    def _compute_cpq_configuration_summary(self):
-        for line in self:
-            if line.cpq_configuration_json:
-                config = json.loads(line.cpq_configuration_json)
-                line.cpq_configuration_summary = render_summary_html(self.env, line.order_id, config)
-
-
-
     # @api.depends('cpq_configuration_json')
     # def _compute_cpq_configuration_summary(self):
     #     for line in self:
-    #         config = line.cpq_configuration_json or {}
-    #         if isinstance(config, str):
-    #             try:
-    #                 config = json.loads(config)
-    #             except Exception:
-    #                 config = {}
+    #         if line.cpq_configuration_json:
+    #             config = json.loads(line.cpq_configuration_json)
+    #             line.cpq_configuration_summary = render_summary_html(self.env, line.order_id, config)
 
-    #         side = config.get("laterality", "N/A").capitalize()
-    #         selected = config.get("selected", {})
-    #         if isinstance(selected, dict):
-    #             summary = ", ".join(str(v) for v in selected.values())
-    #             line.cpq_configuration_summary = f"{side} - {summary}" if summary else side
-    #         else:
-    #             line.cpq_configuration_summary = side
-                
+    @api.depends('cpq_configuration_json')
+    def _compute_cpq_configuration_summary(self):
+        for line in self:
+            config = line.cpq_configuration_json
+            if not config:
+                line.cpq_configuration_summary = "No configuration available."
+                continue
+
+            try:
+                if isinstance(config, str):
+                    config = json.loads(config)
+                line.cpq_configuration_summary = render_summary_html(self.env, line.order_id, config)
+            except Exception as e:
+                _logger.warning(f"⚠️ Failed to generate summary HTML: {e}")
+                line.cpq_configuration_summary = "⚠️ Error generating summary."
+
 
 
     def edit_cpq_configuration(self):
@@ -201,8 +215,9 @@ class SaleOrderLine(models.Model):
             "context": {
                 "active_model": "sale.order.line",
                 "active_id": self.id,
+                "cpq_product_template_id": tmpl.id,  
                 "from_sale_order": True,
                 "redirect_to_line": True,
-                "cpq_initial_config": self.cpq_configuration_json,  # 👈 preload config
+                "cpq_initial_config": self.cpq_configuration_json,
             },
         }

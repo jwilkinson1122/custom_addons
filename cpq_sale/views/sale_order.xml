@@ -1,87 +1,28 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <odoo>
-    <record id="sale_order_form_quote" model="ir.ui.view">
-        <field name="name">sale.order.form.inherit.sale_management</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
-                <field name="product_template_id_cpq_ok" column_invisible="1" />
-            </xpath>
-        </field>
-    </record>
-    <!-- <record id="inherit_cpq_view_order_form" model="ir.ui.view">
-        <field name="name">sale.order.form.inherit.cpq</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                <attribute name="decoration-bf">cpq_laterality</attribute>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="cpq_laterality" string="Side" />
-            </xpath>
-            <xpath expr="//field[@name='order_line']/form/group" position="inside">
-                <field name="cpq_laterality" readonly="1"/>
-                <field name="cpq_configuration_json" widget="json" readonly="1"/>
-            </xpath>
-        </field>
-    </record> -->
-    <!-- Enhance the Sale Order Line Tree View -->
     <!-- <record id="inherit_cpq_view_order_line_tree" model="ir.ui.view">
-        <field name="name">sale.order.line.tree.inherit.cpq</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
-        <field name="arch" type="xml">
-
-            <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                <attribute name="colors"> cpq_laterality=='left' : 'success', cpq_laterality=='right' : 'primary', cpq_laterality=='bilateral' : 'info'
-                </attribute>
-            </xpath>
-
-            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="cpq_laterality" string="Side"/>
-                <field name="cpq_configuration_summary" string="Config Summary" />
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="inside">
-                <field invisible="1" name="product_template_id_cpq_ok" />
-                <button invisible="not product_template_id_cpq_ok or state not in ['draft','sent']" class="fa-lg" help="Reconfigure" icon="fa-cogs" name="edit_cpq_configuration" type="object" title="Reconfigure" />
-            </xpath>
-
-        </field>
-    </record> -->
-
-
-    <record id="inherit_cpq_view_order_line_tree" model="ir.ui.view">
         <field name="name">sale.order.line.tree.inherit.cpq</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-
-            <!-- Add the field needed for colors logic -->
+            <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
+                <field name="product_template_id_cpq_ok" column_invisible="1" />
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree" position="inside">
                 <field name="cpq_laterality" invisible="1"/>
             </xpath>
-
-            <!-- Set row colors based on laterality -->
-            <!-- <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                <attribute name="colors">
-                    cpq_laterality == 'left' : 'success',
-                    cpq_laterality == 'right' : 'primary',
-                    cpq_laterality == 'bilateral' : 'info'
-                </attribute>
-            </xpath> -->
-
-            <!-- Show CPQ fields in tree view -->
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="cpq_laterality" string="Side"/>
-                <field name="cpq_configuration_summary" string="Config Summary"/>
+                <field name="cpq_laterality" string="Side" column_invisible="True"/>
+                <field name="cpq_configuration_summary" class="cpq-config-summary" string="Configuration Summary" widget="html" readonly="1" options='{"no_create": true}'/>
             </xpath>
-
         </field>
-    </record>
+    </record> -->
 
-
+    <!-- <xpath expr="//tree" position="inside">
+                <field name="cpq_ok" invisible="1"/>
+                <button name="action_config_start_global" string="🛠️ New Configuration" type="object" class="btn-primary" title="Start a new configuration" context="{'active_model': 'sale.order'}"/>
+                <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'sale.order', 'active_id': object.id}"/>
+            </xpath> -->
 
     <!-- Enhance the Sale Order Line Form View -->
     <record id="inherit_cpq_view_order_line_form" model="ir.ui.view">
@@ -89,13 +30,35 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <!-- Add Button here above Order Line to lauch configure product -->
+            <xpath expr="//field[@name='order_line']" position="before">
+                <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" invisible="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="cpq_laterality" invisible="1"/>
+                <button name="edit_cpq_configuration" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
 
-            <!-- Inject CPQ fields into the line form -->
-            <!-- <xpath expr="//field[@name='order_line']/form/group" position="inside">
-                <field name="cpq_laterality" readonly="1"/>
-                <field name="cpq_configuration_json" invisible="1"/>
-                <field name="cpq_configuration_summary" readonly="1"/>
-            </xpath> -->
+                <!-- <button name="edit_cpq_configuration" string="Edit CPQ Configuration" type="object" class="btn-secondary" invisible="not product_template_id_cpq_ok"/> -->
+                <!-- <button name="edit_cpq_configuration" string="Edit Configuration" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/> -->
+
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
+                <field name="product_template_id_cpq_ok" column_invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="cpq_laterality" string="Side" column_invisible="True"/>
+                <!-- <field name="cpq_configuration_summary" class="cpq-config-summary" string="Configuration Summary" widget="html" readonly="1" options='{"no_create": true}'/> -->
+                <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 350px; word-break: break-word;" string="Configuration Summary" widget="html" readonly="1"/>
+
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="attributes">
+                <attribute name="widget">html</attribute>
+                <attribute name="readonly">1</attribute>
+                <attribute name="class">cpq-config-summary-tree</attribute>
+            </xpath>
 
             <xpath expr="//field[@name='order_line']/form" position="inside">
                 <field name="product_template_id_cpq_ok" invisible="1"/>
@@ -104,21 +67,14 @@
                     <page string="CPQ Details" invisible="not product_template_id_cpq_ok">
                         <group>
                             <field name="cpq_laterality" readonly="1"/>
-                            <!-- <field name="cpq_configuration_summary" widget="html" readonly="1"/> -->
-                            <field name="cpq_configuration_summary" widget="html" class="cpq-summary-box" readonly="1"/>
-                            <!-- <field name="cpq_configuration_summary" widget="html" class="o_form_label o_text_overflow" readonly="1"/> -->
+                            <!-- <field name="cpq_configuration_summary" widget="html" class="cpq-summary-box" readonly="1"/> -->
+                            <field name="cpq_configuration_summary" string="Config Summary" widget="html" readonly="1" class="cpq-config-summary"/>
                             <field name="cpq_configuration_json" invisible="1"/>
                         </group>
                     </page>
                 </notebook>
             </xpath>
-
         </field>
     </record>
-
-
-
-    
-
 
 </odoo>

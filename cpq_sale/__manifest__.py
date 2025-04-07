@@ -7,8 +7,10 @@
     "depends": ["base", "web", "cpq", "sale", "sale_product_configurator", "mail"],
     "auto_install": ["cpq", "sale"],
     "data": [
+        # "views/menu.xml",
         "views/sale_order.xml",
         "views/product_template.xml",
+        "views/menu.xml",
     ],
     "license": "LGPL-3",
     "assets": {

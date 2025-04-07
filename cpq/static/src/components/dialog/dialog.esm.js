@@ -84,7 +84,8 @@ export class ConfigureDialog extends Component {
                 left: null,
                 right: null,
             },
-            isLoading: false,  // ✅ Add loading state
+            isLoading: false, 
+            isInitializing: true,
         });
         
         this.debouncedInput = useDebouncedInput(250);
@@ -135,30 +136,92 @@ export class ConfigureDialog extends Component {
         };
 
         onWillStart(async () => {
-            const data = await this._loadData();
-            this.title = this.env.config?.context?.cpq_initial_config ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name) : _t("Configure: %s", data.product_tmpl_id.display_name);
-            this.state.ptalIds = data.ptal_ids;
-            this.state.productTmplId = data.product_tmpl_id;
-            const initialConfigRaw = this.env.config?.context?.cpq_initial_config;
-            if (initialConfigRaw) {
-                try {
-                    const parsed = JSON.parse(initialConfigRaw);
-                    this.state.selected = parsed.selected || {};
-                    this.state.laterality = parsed.laterality || "bilateral";
-                    this.state.split = parsed.split || false;
-                    this.state.quantityToMake = parsed.quantity_to_make || 1;
-                    this.initialState = {
-                        laterality: this.state.laterality,
-                        split: this.state.split,
-                        selected: JSON.parse(JSON.stringify(this.state.selected)),
-                        quantityToMake: this.state.quantityToMake,
-                    };
-                } catch (e) {
-                    console.warn("⚠️ Failed to parse cpq_initial_config:", e);
+            try {
+                this.state.isInitializing = true;
+        
+                const data = await this._loadData();
+                this.title = this.env.config?.context?.cpq_initial_config
+                    ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
+                    : _t("Configure: %s", data.product_tmpl_id.display_name);
+        
+                this.state.ptalIds = data.ptal_ids;
+                this.state.productTmplId = data.product_tmpl_id;
+        
+                const initialConfigRaw = this.env.config?.context?.cpq_initial_config;
+        
+                if (initialConfigRaw) {
+                    try {
+                        const parsed = typeof initialConfigRaw === "string"
+                            ? JSON.parse(initialConfigRaw)
+                            : initialConfigRaw;
+        
+                        this.state.selected = parsed.selected || {};
+                        this.state.laterality = parsed.laterality || "bilateral";
+                        this.state.split = parsed.split || false;
+                        this.state.quantityToMake = parsed.quantity_to_make || 1;
+        
+                        this.initialState = {
+                            laterality: this.state.laterality,
+                            split: this.state.split,
+                            selected: JSON.parse(JSON.stringify(this.state.selected)),
+                            quantityToMake: this.state.quantityToMake,
+                        };
+        
+                        console.log("🧩 Loaded initial config into state:", this.initialState);
+                    } catch (e) {
+                        console.warn("⚠️ Failed to parse cpq_initial_config:", e);
+                    }
                 }
+        
+                // ✅ Wait for reactivity flush
+                await nextTick();
+                await new Promise(resolve => setTimeout(resolve, 0));
+        
+                // ✅ Avoid double validation - skip if no selection
+                if (Object.keys(this.state.selected).length > 0) {
+                    await this._validate();
+                    this.computeSummary?.();
+                }
+        
+            } catch (error) {
+                console.error("❌ Error during onWillStart initialization:", error);
+                this.notification.add("Failed to initialize configurator. Please try again.", { type: "danger" });
+            } finally {
+                this.state.isInitializing = false;
             }
         });
 
+        // onWillStart(async () => {
+        //     const data = await this._loadData();
+        //     this.title = this.props.initialConfig
+        //         ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
+        //         : _t("Configure: %s", data.product_tmpl_id.display_name);
+        
+        //     this.state.ptalIds = data.ptal_ids;
+        //     this.state.productTmplId = data.product_tmpl_id;
+        
+        //     const initialConfigRaw = this.props.initialConfig;
+        //     if (initialConfigRaw && typeof initialConfigRaw === "string") {
+        //         try {
+        //             const parsed = JSON.parse(initialConfigRaw);
+        
+        //             Object.assign(this.state, {
+        //                 selected: parsed.selected || {},
+        //                 laterality: parsed.laterality || "bilateral",
+        //                 split: parsed.split || false,
+        //                 quantityToMake: parsed.quantity_to_make || 1,
+        //             });
+        
+        //             this.initialState = JSON.parse(JSON.stringify(this.state));
+        
+        //             console.log("✅ Loaded initial configuration:", this.state);
+        
+        //         } catch (e) {
+        //             console.warn("⚠️ Failed to parse cpq_initial_config:", e);
+        //         }
+        //     }
+        // });
+        
         /**
          * View the selected config to edit
          */
@@ -561,6 +624,77 @@ export class ConfigureDialog extends Component {
         return JSON.stringify(current) !== JSON.stringify(this.initialState);
     }
 
+    async resetToDefaults() {
+        if (!this.initialState) {
+            this.notification.add("No initial configuration to reset to.", { type: "warning" });
+            return;
+        }
+    
+        const confirmed = await this._showConfirmDialog("Reset configuration to the original defaults?");
+        if (!confirmed) {
+            return;
+        }
+    
+        this.state.isLoading = true;
+    
+        try {
+            console.log("🔄 Resetting to initial state:", this.initialState);
+    
+            this.state.laterality = this.initialState.laterality;
+            this.state.split = this.initialState.split;
+            this.state.quantityToMake = this.initialState.quantityToMake;
+            this.state.selected = JSON.parse(JSON.stringify(this.initialState.selected));
+    
+            await nextTick();
+    
+            await this._validate();
+            this.computeSummary?.();
+    
+            this.notification.add("✅ Configuration reset to defaults.", { type: "success" });
+            this.pulseElement(".cpq-config-summary");
+            this.pulseElement(".pricing-summary"); // Optional: if you want price totals to animate
+            this.summaryApi?.showToast?.("✅ Configuration reset!");
+        } catch (error) {
+            console.error("❌ Failed to reset configuration:", error);
+            this.notification.add("An error occurred while resetting.", { type: "danger" });
+        } finally {
+            this.state.isLoading = false;
+        }
+ 
+    }
+
+    async resetOnlySelections() {
+        if (!this.initialState) {
+            this.notification.add("No initial state available.", { type: "warning" });
+            return;
+        }
+    
+        const confirmed = await this._showConfirmDialog("Reset only your attribute selections? Quantity and laterality will stay.");
+        if (!confirmed) {
+            return;
+        }
+    
+        this.state.isLoading = true;
+    
+        try {
+            console.log("🔄 Resetting selections only (keeping quantity and laterality).");
+    
+            this.state.selected = JSON.parse(JSON.stringify(this.initialState.selected));
+    
+            await nextTick();
+    
+            await this._validate();
+            this.computeSummary?.();
+    
+            this.notification.add("✅ Attribute selections reset.", { type: "success" });
+        } catch (error) {
+            console.error("❌ Failed to reset selections:", error);
+            this.notification.add("An error occurred while resetting selections.", { type: "danger" });
+        } finally {
+            this.state.isLoading = false;
+        }
+    }
+
     async _showConfirmDialog(message) {
         return new Promise((resolve) => {
             console.log("📣 Opening confirmation dialog:", message); // ✅ Log the intent
@@ -595,16 +729,50 @@ export class ConfigureDialog extends Component {
         const val = this.state.productTmplId;
         return typeof val === "object" ? val.display_name : "Configured Product";
     }
+
+    pulseElement(selector) {
+        const element = document.querySelector(selector);
+        if (!element) return;
+    
+        element.classList.remove('highlight-success');
+        void element.offsetWidth; // ✅ Force reflow to restart animation
+        element.classList.add('highlight-success');
+    }
     
  
 
 }
 
+
+// export function ConfigureDialogAction(env, action) {
+//     const context = action.context;
+
+//     const productTmplId =
+//         context.cpq_product_template_id ||
+//         context.product_template_id || 
+//         context.active_id;
+
+//     env.services.dialog.add(ConfigureDialog, {
+//         productTmplId,
+//         edit: true,
+//         save: async (res) => { /* ... */ },
+//         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
+//         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
+//     });
+// }
+
+
 export function ConfigureDialogAction(env, action) {
     const context = action.context;
 
+    const productTmplId =
+        context.cpq_product_template_id ||
+        context.product_template_id || 
+        context.active_id;
+
     env.services.dialog.add(ConfigureDialog, {
-        productTmplId: context.active_id,
+        productTmplId,
+        // productTmplId: context.cpq_product_template_id || context.active_id,
         edit: true,
         save: async (res) => {
             if (context.active_model === "sale.order.line" && context.active_id) {
@@ -618,8 +786,6 @@ export function ConfigureDialogAction(env, action) {
                     };
 
                     console.log("📝 Writing configuration to sale.order.line:", values);
-
-                    // await env.services.orm.write("sale.order.line", [context.active_id], values);
                     await env.services.orm.call("sale.order.line", "onchange", [context.active_id], values);
 
                     await env.services.orm.call(
@@ -651,6 +817,59 @@ export function ConfigureDialogAction(env, action) {
         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
     });
 }
+
+
+
+// export function ConfigureDialogAction(env, action) {
+//     const context = action.context;
+//     const active_model = context.active_model;
+//     const active_id = context.active_id;
+
+//     const productTmplId = context.cpq_product_template_id || context.active_id;
+
+//     env.services.dialog.add(ConfigureDialog, {
+//         productTmplId,
+//         edit: true,
+//         record: { resModel: active_model, resId: active_id },  
+//         initialConfig: context.cpq_initial_config || null,     
+//         save: async (res) => {
+//             if (active_model === "sale.order.line" && active_id) {
+//                 try {
+//                     const values = {
+//                         product_id: res.configuration.product_id,
+//                         cpq_configuration_json: res.configuration.cpq_configuration_json,
+//                         cpq_configuration_summary: res.configuration.cpq_configuration_summary,
+//                         product_uom_qty: res.configuration.quantity_to_make,
+//                         name: res.configuration.name,
+//                     };
+
+//                     console.log("📝 Writing configuration to sale.order.line:", values);
+
+//                     await env.services.orm.call("sale.order.line", "write", [active_id, values]);
+
+//                     env.services.action.doAction({
+//                         type: "ir.actions.act_window",
+//                         res_model: "sale.order.line",
+//                         res_id: active_id,
+//                         views: [[false, "form"]],
+//                         target: "current",
+//                     });
+//                 } catch (error) {
+//                     console.error("❌ Failed to write configuration to sale.order.line:", error);
+//                     env.services.notification.add(
+//                         "Failed to apply configuration to the order line.",
+//                         { type: "danger" }
+//                     );
+//                 }
+//             } else {
+//                 env.services.action.doAction({ type: "ir.actions.act_window_close" });
+//             }
+//         },
+//         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
+//         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
+//     });
+// }
+
  
 registry.category("actions").add("cpq.ConfigureDialogAction", ConfigureDialogAction);
 

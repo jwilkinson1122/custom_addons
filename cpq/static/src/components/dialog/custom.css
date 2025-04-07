@@ -48,3 +48,42 @@
     color: #333;
     font-weight: bold;
 }
+
+/* .o_list_view .o_data_cell[style*="white-space: normal"] {
+    white-space: normal !important;
+    word-break: break-word;
+} */
+
+.highlight-success {
+    animation: highlightSuccess 1s ease;
+}
+
+@keyframes highlightSuccess {
+    0% {
+        background-color: #d4edda;
+    }
+    50% {
+        background-color: #c3e6cb;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.cpq-toast-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0.95;
+    animation: fadeOutToast 2s ease-out forwards;
+}
+
+@keyframes fadeOutToast {
+    0% { opacity: 0.95; }
+    75% { opacity: 0.95; }
+    100% { opacity: 0; }
+}

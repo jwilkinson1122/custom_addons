@@ -184,80 +184,6 @@ class ProductConfiguratorController(Controller):
             _logger.exception("❌ Failed to dump config_json")
             raise UserError("Invalid configuration data. Please check your selections.")
 
-        # Prepare summary HTML
-        # def render_summary_html():
-        #     currency = sale_order.currency_id
-        #     currency_symbol = currency.symbol or '$'
-
-        #     def format_currency(amount):
-        #         return f"{currency_symbol}{amount:,.2f}"
-
-        #     def get_label(attr_id, value):
-        #         try:
-        #             attr = env['product.template.attribute.line'].browse(int(attr_id))
-        #             if isinstance(value, str):
-        #                 return f"{escape(attr.attribute_id.name)}: {escape(value)}"
-        #             value_record = env['product.attribute.value'].browse(int(value))
-        #             if value_record.exists():
-        #                 return f"{escape(attr.attribute_id.name)}: {escape(value_record.name)}"
-        #             else:
-        #                 return f"{escape(attr.attribute_id.name)}: {escape(str(value))}"
-        #         except Exception:
-        #             return f"{escape(str(attr_id))}: {escape(str(value))}"
-
-        #     def format_selection(selection):
-        #         if not selection:
-        #             return "<em>No selections made.</em>"
-        #         return "<ul>" + "".join(f"<li>{get_label(k, v)}</li>" for k, v in selection.items()) + "</ul>"
-
-        #     laterality_label = config['laterality'].capitalize()
-        #     quantity = config['quantity_to_make']
-        #     split_mode = 'Yes' if config['split'] else 'No'
-
-        #     body = f"""
-        #     <p><strong>🦶 Laterality:</strong> {escape(laterality_label)}</p>
-        #     <p><strong>Quantity to Make:</strong> {quantity}</p>
-        #     <p><strong>Split Mode:</strong> {split_mode}</p>
-        #     <p><strong>Selections:</strong></p>
-        #     <ul>
-        #     """
-
-        #     if config['split']:
-        #         body += f"<li><strong>Left:</strong> {format_selection(config['selected'].get('left', {}))}</li>"
-        #         body += f"<li><strong>Right:</strong> {format_selection(config['selected'].get('right', {}))}</li>"
-        #     else:
-        #         body += f"<li>{format_selection(config['selected'])}</li>"
-
-        #     body += f"""
-        #     </ul>
-        #     <hr/>
-        #     <p><strong>💰 Price Summary:</strong></p>
-        #     <ul>
-        #         <li>💵 Left Total: {format_currency(config['left_price'])}</li>
-        #         <li>💵 Right Total: {format_currency(config['right_price'])}</li>
-        #         <li>📊 Combined Total: <strong>{format_currency(config['total_price'])}</strong></li>
-        #     </ul>
-        #     """
-
-        #     if env.context.get('debug'):
-        #         import json
-        #         raw_config = json.dumps(config, indent=2)
-        #         body += f"""
-        #         <hr/>
-        #         <details>
-        #             <summary>🔍 Debug: Raw Configuration</summary>
-        #             <pre>{escape(raw_config)}</pre>
-        #         </details>
-        #         """
-
-        #     return body
-
-
-        # summary_html = render_summary_html()
-
-        # summary_html = render_summary_html(env, sale_order, config)
-
-
         ctx = env.context
         active_model = ctx.get("active_model")
         active_id = ctx.get("active_id")
@@ -280,8 +206,6 @@ class ProductConfiguratorController(Controller):
 
         summary_html = render_summary_html(env, sale_order, config)
 
-
-
         line_vals = {
             'order_id': sale_order.id,
             'product_id': base_product.id,
@@ -290,8 +214,24 @@ class ProductConfiguratorController(Controller):
             'cpq_configuration_summary': summary_html,
             'product_uom': product_tmpl.uom_id.id,
             'product_uom_qty': config['quantity_to_make'],
-            'price_unit': (config['total_price'] / config['quantity_to_make']) if config['quantity_to_make'] else 0,
+            'price_unit': (
+                config.get('total_price', 0) / config.get('quantity_to_make', 1)
+                if config.get('quantity_to_make', 1)
+                else 0
+            ),
         }
+
+
+        # line_vals = {
+        #     'order_id': sale_order.id,
+        #     'product_id': base_product.id,
+        #     'name': config['name'],
+        #     'cpq_configuration_json': config_json,
+        #     'cpq_configuration_summary': summary_html,
+        #     'product_uom': product_tmpl.uom_id.id,
+        #     'product_uom_qty': config['quantity_to_make'],
+        #     'price_unit': (config['total_price'] / config['quantity_to_make']) if config['quantity_to_make'] else 0,
+        # }
 
         def create_or_update_line(line):
             if line and line.exists():
@@ -328,10 +268,6 @@ class ProductConfiguratorController(Controller):
                 'selected': config['selected'],
             },
         }
-
-
-
-
 
 
 # Helper extension for attribute lines

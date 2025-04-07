@@ -7,7 +7,7 @@
     "depends": ["product", "sale_management"],
     "data": [
         "security/ir.model.access.csv",
-        "views/product_template.xml",
+        # "views/product_template.xml",
         "views/product_product.xml",
         "views/product_attribute.xml",
     ],

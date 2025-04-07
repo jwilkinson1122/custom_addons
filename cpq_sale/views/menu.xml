@@ -1,0 +1,5 @@
+<odoo>
+    <menuitem id="menu_cpq_root" name="CPQ" sequence="10" parent="sale.sale_order_menu"/>
+
+    <menuitem id="menu_cpq_products" name="Configure Products" parent="menu_cpq_root" action="action_product_template_tree_view_cpq_only" sequence="10"/>
+</odoo>
