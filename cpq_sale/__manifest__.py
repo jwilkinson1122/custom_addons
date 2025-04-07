@@ -10,6 +10,7 @@
         # "views/menu.xml",
         "views/sale_order.xml",
         "views/product_template.xml",
+        "report/sale_report_view.xml",
         "views/menu.xml",
     ],
     "license": "LGPL-3",

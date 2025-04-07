@@ -99,6 +99,13 @@
                     </div>
                 </div>
                 <!-- ✅ Loading Overlay -->
+                <!-- <t t-if="isInitializing">
+                    <div class="d-flex justify-content-center align-items-center p-3">
+                        <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                        <span class="ms-2">Loading configuration...</span>
+                    </div>
+                </t> -->
+
                 <t t-if="state.isLoading">
                     <div class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center">
                         <div>
@@ -114,17 +121,13 @@
 
             <!-- ✅ Footer -->
             <t t-set-slot="footer">
-                <t t-set="isDisabled" t-value="state.isLoading" />
                 <button t-if="canCreate()" class="btn btn-primary" t-on-click="onCreate" t-att-disabled="isDisabled">Confirm</button>
-                <button class="btn btn-secondary" t-on-click="onClose" t-att-disabled="state.isInitializing">Cancel</button>
-                <!-- <button class="btn btn-secondary" t-on-click="resetToDefaults" t-att-disabled="state.isInitializing">Reset</button> -->
+                <button class="btn btn-secondary" t-on-click="onClose" t-att-disabled="isDisabled">Cancel</button>
                 <t t-set="resetButtonDisabled" t-value="state.isLoading || !initialState"/>
                 <button class="btn btn-secondary" t-att-title="'Reset this configuration back to its original state.'" t-on-click="resetToDefaults" t-att-disabled="resetButtonDisabled">
                     <t t-if="state.isLoading">Resetting...</t>
                     <t t-else="">Reset</t>
                 </button>
-                <!-- <button class="btn btn-secondary" t-att-title="'Reset only your selections. Quantity and laterality will stay.'" t-on-click="resetOnlySelections" t-att-disabled="resetButtonDisabled">Reset Selections
-                </button> -->
             </t>
         </Dialog>
     </t>
@@ -190,7 +193,8 @@
                                         </t>
                                     </td>
                                     <td>
-                                        <span t-esc="(s.priceExtra ?? 0).toFixed(2)" />$</td>
+                                        <span t-esc="(s.priceExtra ?? 0).toFixed(2)" />
+$</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -216,7 +220,8 @@
                                         <span t-esc="s.shared || '-'"/>
                                     </td>
                                     <td>
-                                        <span t-esc="s.priceExtra.toFixed(2)" />$</td>
+                                        <span t-esc="s.priceExtra.toFixed(2)" />
+$</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -248,7 +253,8 @@
                     </t>
                     <!-- Final Total -->
                     <li class="list-group-item d-flex justify-content-between">
-                        📊 Total x <t t-esc="props.quantityToMake"/>:
+                        📊 Total x <t t-esc="props.quantityToMake"/>
+:
                     <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
                 </li>
             </ul>

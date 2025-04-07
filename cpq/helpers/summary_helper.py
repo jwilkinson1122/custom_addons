@@ -1,82 +1,74 @@
+import logging
 from odoo import _
 from markupsafe import Markup
 
+from odoo.exceptions import UserError, ValidationError
 
-def render_summary_html(env, order, config):
-    """ Render clean, readable configuration summary HTML """
+import json
+from odoo.tools.misc import formatLang
+
+_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("cpq")
+_logger.info("🧩 CPQ Step: %s", "something important")
+
+def format_currency(amount, env):
+    return formatLang(env, amount, currency_obj=env.user.company_id.currency_id)
+
+# Current
+def render_summary_html(env, order, config, mode="html"):
+    # raise UserError(f"🧩 CPQ Debug Config:\n{json.dumps(config, indent=2)}")
+
     if not config:
-        return "No configuration available."
+        _logger.warning("⚠️ [CPQ] render_summary_html: Empty config provided.")
+        return "<i>No configuration</i>"
+    
+    _logger.info("🖨️ [CPQ] render_summary_html called with config: %s", json.dumps(config, indent=2))
 
-    # Extract config data safely
-    laterality = config.get("laterality", "unknown").capitalize()
+    lines = []
+    laterality = config.get("laterality", "").capitalize()
     quantity = config.get("quantity_to_make", 1)
     split = config.get("split", False)
 
-    selected = config.get("selected", {})
-    if not isinstance(selected, dict):
-        selected = {}
+    selections = config.get("selected", {})
+    left_price = config.get("left_price", 0.0)
+    right_price = config.get("right_price", 0.0)
+    total_price = config.get("total_price", 0.0)
 
-    price_left = config.get("left_price", 0)
-    price_right = config.get("right_price", 0)
-    price_total = config.get("total_price", 0)
+    # ✅ Log parsed values
+    _logger.info("🦶 [CPQ] Laterality: %s, Quantity: %d, Split: %s", laterality, quantity, split)
+    _logger.info("🧩 [CPQ] Selections: %s", json.dumps(selections, indent=2))
+    _logger.info("💰 [CPQ] Prices: Left: %.2f, Right: %.2f, Total: %.2f", left_price, right_price, total_price)
 
-    # Fetch PTAV names from IDs
-    ptav_ids = [int(k) for k in selected.keys() if str(k).isdigit()]
-    ptavs = env["product.template.attribute.value"].browse(ptav_ids)
+    # ✅ Laterality & Quantity
+    if laterality == "Bilateral":
+        lines.append(f"🦶🦶 <b>Laterality:</b> {laterality}<br/>")
+    else:
+        lines.append(f"🦶 <b>Laterality:</b> {laterality}<br/>")
+    lines.append(f"📦 <b>Quantity to Make:</b> {quantity}<br/>")
+    lines.append(f"🔀 <b>Split Mode:</b> {'Yes' if split else 'No'}<br/><br/>")
 
-    attr_value_map = {}
-    for ptav in ptavs:
-        attribute_name = ptav.attribute_id.name
-        value_name = ptav.name
-        attr_value_map[str(ptav.id)] = (attribute_name, value_name)
+    # ✅ Selections
+    if selections:
+        lines.append("<b>Selections:</b><br/>")
+        for attr_id, value in selections.items():
+            lines.append(f"{value}<br/>")
+        lines.append("<br/>")
 
-    # Start HTML summary
-    html = f"""
-    <div style="font-size: 13px; line-height: 1.4;">
-        <div><strong>🦶 Laterality:</strong> {laterality}</div>
-        <div><strong>Quantity to Make:</strong> {quantity}</div>
-        <div><strong>Split Mode:</strong> {"Yes" if split else "No"}</div>
-    """
+    # ✅ Pricing Summary
+    lines.append(f"<b>Price Summary:</b><br/>")
+    lines.append(f"💵 Left Total: {format_currency(left_price, env)}<br/>")
+    lines.append(f"💵 Right Total: {format_currency(right_price, env)}<br/>")
+    lines.append(f"📊 Combined Total: {format_currency(total_price, env)}")
 
-    # Selections
-    if attr_value_map:
-        html += '<div><strong>Selections:</strong><br/>'
-        for attr_name, value_name in attr_value_map.values():
-            html += f'{attr_name}: {value_name}<br/>'
-        html += '</div>'
+    html_output = "".join(lines)
 
-    #     html += '<div><strong>Selections:</strong><ul style="margin: 4px 0; padding-left: 16px;">'
-    #     for ptav_id, (attr_name, value_name) in attr_value_map.items():
-    #         html += f'<li>{attr_name}: {value_name}</li>'
-    #     html += '</ul></div>'
-    # else:
-    #     html += "<div><strong>Selections:</strong> None</div>"
-
-    # Price Summary
-    html += f"""
-        <div style="margin-top: 8px;">
-            <strong>💰 Price Summary:</strong><br/>
-            💵 Left Total: {format_currency(env, order, price_left)}<br/>
-            💵 Right Total: {format_currency(env, order, price_right)}<br/>
-            📊 Combined Total: {format_currency(env, order, price_total)}<br/>
-        </div>
-    """
-
-    # html += f"""
-    #     <div style="margin-top: 8px;">
-    #         <strong>💰 Price Summary:</strong>
-    #         <ul style="margin: 4px 0; padding-left: 16px;">
-    #             <li>💵 Left Total: {format_currency(env, order, price_left)}</li>
-    #             <li>💵 Right Total: {format_currency(env, order, price_right)}</li>
-    #             <li>📊 Combined Total: {format_currency(env, order, price_total)}</li>
-    #         </ul>
-    #     </div>
-    # </div>
-    # """
-
-    return Markup(html)
+    _logger.info("🖨️ [CPQ] Final Summary HTML:\n%s", html_output)
+    _logger.info("💰 [CPQ] Price Breakdown: Left: %s, Right: %s, Total: %s",
+                format_currency(left_price, env),
+                format_currency(right_price, env),
+                format_currency(total_price, env))
 
 
-def format_currency(env, order, amount):
-    currency = order.currency_id or env.user.company_id.currency_id
-    return currency.with_context(lang=order.partner_id.lang or env.user.lang).format(amount, currency)
+    return html_output
+
+

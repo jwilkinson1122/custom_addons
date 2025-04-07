@@ -39,17 +39,69 @@ export default class ConfiguratorSummaryPanel extends Component {
             this.state.showExtras = !this.state.showExtras;
         };
 
+        // onMounted(() => {
+        //     console.log("📌 SummaryPanel mounted");
+
+        //     if (props.registerApi) {
+        //         props.registerApi({
+        //             showToast: this.showToast.bind(this),
+        //         });
+        //     }
+
+        //     this.adjustHeight();
+        // });
+
         onMounted(() => {
             console.log("📌 SummaryPanel mounted");
 
-            if (props.registerApi) {
-                props.registerApi({
+            if (this.props.registerApi) {
+                this.props.registerApi({
                     showToast: this.showToast.bind(this),
+                    getSummaryState: () => ({
+                        selections: this.state.summary,
+                        priceSummary: this.state.priceSummary,
+                        left: this.state.priceSummary.left,
+                        right: this.state.priceSummary.right,
+                        total: this.state.priceSummary.total,
+                    }),
+                    getLeftTotal: () => this.state.priceSummary.left,
+                    getRightTotal: () => this.state.priceSummary.right,
+                    getCombinedTotal: () => this.state.priceSummary.total,
                 });
             }
-
+            
+        
+            // if (this.props.registerApi) {
+            //     this.props.registerApi({
+            //         showToast: this.showToast.bind(this),
+            //         getSummaryState: () => ({
+            //             selections: this.state.summary,
+            //             priceSummary: this.state.priceSummary,
+            //             left: this.state.priceSummary.left,
+            //             right: this.state.priceSummary.right,
+            //             total: this.state.priceSummary.total,
+            //         }),
+            //         getLeftTotal: () => {
+            //             const val = this.state.priceSummary.left || 0;
+            //             console.log("💰 getLeftTotal:", val);
+            //             return val;
+            //         },
+            //         getRightTotal: () => {
+            //             const val = this.state.priceSummary.right || 0;
+            //             console.log("💰 getRightTotal:", val);
+            //             return val;
+            //         },
+            //         getCombinedTotal: () => {
+            //             const val = this.state.priceSummary.total || 0;
+            //             console.log("💰 getCombinedTotal:", val);
+            //             return val;
+            //         },
+            //     });
+            // }
+        
             this.adjustHeight();
         });
+        
 
         onWillUpdateProps((nextProps) => {
             const quantityChanged = nextProps.quantityToMake !== this.state.quantityToMake;
@@ -223,6 +275,8 @@ export default class ConfiguratorSummaryPanel extends Component {
             };
         });
 
+        const previousTotal = this.state.priceSummary.total;
+
         const basePrice = productTmplId?.list_price || 0;
         const isBilateral = laterality === "bilateral";
         const totalBase = (isBilateral ? basePrice * 2 : basePrice) * quantityToMake;
@@ -242,6 +296,10 @@ export default class ConfiguratorSummaryPanel extends Component {
         console.log("✅ Final summary:", result);
         console.log("📦 Extras Subtotal:", totalExtras);
         console.log("💰 Total:", total);
+
+        if (previousTotal !== total) {
+            this.pulseElement(".pricing-summary");
+        }
     }
 
     printSummary() {
@@ -284,6 +342,16 @@ export default class ConfiguratorSummaryPanel extends Component {
         // ✅ Auto-close clean up
         win.onafterprint = () => win.close();
     }
+
+    pulseElement(selector) {
+        const element = document.querySelector(selector);
+        if (!element) return;
+    
+        element.classList.remove('highlight-success');
+        void element.offsetWidth; // Force reflow to restart animation
+        element.classList.add('highlight-success');
+    }
+    
 }
 
 // Component Metadata

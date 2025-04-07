@@ -1,58 +1,30 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <odoo>
-    <!-- <record id="inherit_cpq_view_order_line_tree" model="ir.ui.view">
-        <field name="name">sale.order.line.tree.inherit.cpq</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
-                <field name="product_template_id_cpq_ok" column_invisible="1" />
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="inside">
-                <field name="cpq_laterality" invisible="1"/>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="cpq_laterality" string="Side" column_invisible="True"/>
-                <field name="cpq_configuration_summary" class="cpq-config-summary" string="Configuration Summary" widget="html" readonly="1" options='{"no_create": true}'/>
-            </xpath>
-        </field>
-    </record> -->
-
-    <!-- <xpath expr="//tree" position="inside">
-                <field name="cpq_ok" invisible="1"/>
-                <button name="action_config_start_global" string="🛠️ New Configuration" type="object" class="btn-primary" title="Start a new configuration" context="{'active_model': 'sale.order'}"/>
-                <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'sale.order', 'active_id': object.id}"/>
-            </xpath> -->
-
     <!-- Enhance the Sale Order Line Form View -->
     <record id="inherit_cpq_view_order_line_form" model="ir.ui.view">
         <field name="name">sale.order.line.form.inherit.cpq</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <!-- Add Button here above Order Line to lauch configure product -->
             <xpath expr="//field[@name='order_line']" position="before">
                 <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" invisible="state != 'draft'"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree" position="inside">
                 <field name="cpq_laterality" invisible="1"/>
                 <button name="edit_cpq_configuration" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
-
-                <!-- <button name="edit_cpq_configuration" string="Edit CPQ Configuration" type="object" class="btn-secondary" invisible="not product_template_id_cpq_ok"/> -->
-                <!-- <button name="edit_cpq_configuration" string="Edit Configuration" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/> -->
-
             </xpath>
             <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
                 <field name="product_template_id_cpq_ok" column_invisible="1" />
             </xpath>
+            <!-- <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                <field name="order_line_image" widget="image" style="height:30px;width:30px ;" readonly="1"/>
+            </xpath> -->
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                 <field name="cpq_laterality" string="Side" column_invisible="True"/>
-                <!-- <field name="cpq_configuration_summary" class="cpq-config-summary" string="Configuration Summary" widget="html" readonly="1" options='{"no_create": true}'/> -->
-                <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 350px; word-break: break-word;" string="Configuration Summary" widget="html" readonly="1"/>
-
+                <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 500px; word-break: break-word; padding: 4px; line-height: 1.4;" string="Configuration Summary" widget="html" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="attributes">
                 <attribute name="widget">html</attribute>

@@ -11,8 +11,6 @@ import {useService} from "@web/core/utils/hooks";
 import {WarningDialog} from "@web/core/errors/error_dialogs";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
 import SummaryPanel from "./configurator_summary_panel.esm";
-// import { applyProduct } from "@cpq_sale/js/product_configurator_widget.esm";
-
 import { validateProps, applyProduct, nextTick, useDebouncedInput} from "./utils.esm";  
 
 
@@ -24,16 +22,6 @@ export class ConfigureDialog extends Component {
         ProductTmplAttrib,
         SummaryPanel,
     };
-
-    // static props = {
-    //     orderId: { type: Number, optional: true },
-    //     productTmplId: Number,            
-    //     save: Function,                     
-    //     close: Function,                
-    //     edit: Boolean,                     
-    //     discard: Function,               
-    //     name: { type: String, optional: true },
-    // };
 
     static props = {
         orderId: { type: Number },
@@ -194,46 +182,6 @@ export class ConfigureDialog extends Component {
             }
         });
 
-        // onWillStart(async () => {
-        //     const data = await this._loadData();
-        //     this.title = this.props.initialConfig
-        //         ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
-        //         : _t("Configure: %s", data.product_tmpl_id.display_name);
-        
-        //     this.state.ptalIds = data.ptal_ids;
-        //     this.state.productTmplId = data.product_tmpl_id;
-        
-        //     const initialConfigRaw = this.props.initialConfig;
-        //     if (initialConfigRaw && typeof initialConfigRaw === "string") {
-        //         try {
-        //             const parsed = JSON.parse(initialConfigRaw);
-        
-        //             Object.assign(this.state, {
-        //                 selected: parsed.selected || {},
-        //                 laterality: parsed.laterality || "bilateral",
-        //                 split: parsed.split || false,
-        //                 quantityToMake: parsed.quantity_to_make || 1,
-        //             });
-        
-        //             this.initialState = JSON.parse(JSON.stringify(this.state));
-        
-        //             console.log("✅ Loaded initial configuration:", this.state);
-        
-        //         } catch (e) {
-        //             console.warn("⚠️ Failed to parse cpq_initial_config:", e);
-        //         }
-        //     }
-        // });
-        
-        /**
-         * View the selected config to edit
-         */
-        // onWillUpdateProps((nextProps) => {
-        //     if (nextProps.configToEdit !== this.props.configToEdit) {
-        //         this.state.configName = nextProps.configToEdit.name;
-        //     }
-        // });
-
         this.onSplitToggle = async () => {
             const goingToShared = this.state.split;
             const goingToSplit = !this.state.split;
@@ -330,6 +278,25 @@ export class ConfigureDialog extends Component {
         return this.state.valid;
     }
 
+    preparePayload() {
+        const summary = this.summaryApi?.getSummaryState?.() || {};
+        const name = this.productTemplateName;
+    
+        const config = {
+            name,
+            laterality: this.state.laterality,
+            split: this.state.split,
+            selected: this.state.selected,
+            quantity_to_make: this.state.quantityToMake,
+            left_price: summary.left || 0,
+            right_price: summary.right || 0,
+            total_price: summary.total || 0,
+        };
+    
+        console.log("🧩 Prepared config payload:", config);
+        return config;
+    }
+    
     async onCreate() {
         if (this.state.isLoading) return;
     
@@ -339,43 +306,58 @@ export class ConfigureDialog extends Component {
             this.state.isLoading = false;
             return;
         }
-
+    
         await this._validate();
-
-        // 🛑 Final validation safeguard
+    
         if (!this.state.valid) {
             this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
             this.state.isLoading = false;
             return;
         }
-    
         try {
+            // ✅ Force recompute summary before capturing state
             this.computeSummary?.();
-            const summary = this.summaryApi?.getSummaryState?.() || {};
+            await nextTick();
+            await new Promise(resolve => setTimeout(resolve, 0));
+        
+            // ✅ Force SummaryPanel to recompute
+            if (this.summaryApi?.computeSummary) {
+                this.summaryApi.computeSummary();
+                await nextTick();
+                await new Promise(resolve => setTimeout(resolve, 0));
+            }
+        
+            const summary = this.summaryApi;
             const name = this.productTemplateName;
-    
-            const config = {
-                name,
-                laterality: this.state.laterality,
-                split: this.state.split,
-                selected: this.state.selected,
-                quantity_to_make: this.state.quantityToMake,
-                left_price: summary.left || 0,
-                right_price: summary.right || 0,
-                total_price: summary.total || 0,
-            };
-    
-            console.log("🚀 Sending configuration payload:", config);
-    
+
+            // 🧩 Defensive check to ensure summaryApi exists
+            if (!summary) {
+                console.warn("⚠️ Summary API is not available. Pricing totals will be zero.");
+            }
+
+            const leftTotal = summary?.getLeftTotal?.() || 0;
+            const rightTotal = summary?.getRightTotal?.() || 0;
+            const combinedTotal = summary?.getCombinedTotal?.() || 0;
+
+            console.log("🧩 Summary totals:", {
+                leftTotal,
+                rightTotal,
+                combinedTotal,
+            });
+
+            const config = this.preparePayload();
+
+            console.log("🚀 Prepared config for backend:", config);
+
             const res = await this.rpc(`/cpq/${this.props.productTmplId}/configure`, { configuration: config });
-    
+        
             if (res?.configuration) {
                 console.log("✅ Configuration saved successfully:", res);
-    
+        
                 const success = await this._applyConfigurationResult(res);
                 if (success) {
                     this._closeDialog();
-                
+        
                     if (res.sale_order_id) {
                         this.env.services.action.doAction({
                             type: "ir.actions.act_window",
@@ -386,20 +368,18 @@ export class ConfigureDialog extends Component {
                         });
                     }
                 }
-                
             } else {
                 this.notification.add("Unexpected response from server. Please try again.", { type: "danger" });
             }
-    
         } catch (error) {
             console.error("❌ Failed to submit configuration:", error);
             this.notification.add("An error occurred while saving configuration.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
         }
+        
     }
     
-
     async _applyConfigurationResult(result) {
         if (!this.props.record) {
             console.warn("⚠️ No record prop passed to ConfigureDialog.");
@@ -723,6 +703,14 @@ export class ConfigureDialog extends Component {
     // Getters
     //----------------------------------------------------------------------
     
+    get isInitializing() {
+        return this.state.isInitializing || !this.summaryApi;
+    }
+    
+    get isDisabled() {
+        return !this.summaryApi || this.state.isLoading;
+    }
+
     get productTemplateId() {
         const val = this.state.productTmplId;
         return typeof val === "number" ? val : val?.id;
@@ -741,29 +729,8 @@ export class ConfigureDialog extends Component {
         void element.offsetWidth; // ✅ Force reflow to restart animation
         element.classList.add('highlight-success');
     }
-    
- 
 
 }
-
-
-// export function ConfigureDialogAction(env, action) {
-//     const context = action.context;
-
-//     const productTmplId =
-//         context.cpq_product_template_id ||
-//         context.product_template_id || 
-//         context.active_id;
-
-//     env.services.dialog.add(ConfigureDialog, {
-//         productTmplId,
-//         edit: true,
-//         save: async (res) => { /* ... */ },
-//         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
-//         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
-//     });
-// }
-
 
 export function ConfigureDialogAction(env, action) {
     const context = action.context;
@@ -827,59 +794,6 @@ export function ConfigureDialogAction(env, action) {
     });
 }
 
-
-
-// export function ConfigureDialogAction(env, action) {
-//     const context = action.context;
-//     const active_model = context.active_model;
-//     const active_id = context.active_id;
-
-//     const productTmplId = context.cpq_product_template_id || context.active_id;
-
-//     env.services.dialog.add(ConfigureDialog, {
-//         productTmplId,
-//         edit: true,
-//         record: { resModel: active_model, resId: active_id },  
-//         initialConfig: context.cpq_initial_config || null,     
-//         save: async (res) => {
-//             if (active_model === "sale.order.line" && active_id) {
-//                 try {
-//                     const values = {
-//                         product_id: res.configuration.product_id,
-//                         cpq_configuration_json: res.configuration.cpq_configuration_json,
-//                         cpq_configuration_summary: res.configuration.cpq_configuration_summary,
-//                         product_uom_qty: res.configuration.quantity_to_make,
-//                         name: res.configuration.name,
-//                     };
-
-//                     console.log("📝 Writing configuration to sale.order.line:", values);
-
-//                     await env.services.orm.call("sale.order.line", "write", [active_id, values]);
-
-//                     env.services.action.doAction({
-//                         type: "ir.actions.act_window",
-//                         res_model: "sale.order.line",
-//                         res_id: active_id,
-//                         views: [[false, "form"]],
-//                         target: "current",
-//                     });
-//                 } catch (error) {
-//                     console.error("❌ Failed to write configuration to sale.order.line:", error);
-//                     env.services.notification.add(
-//                         "Failed to apply configuration to the order line.",
-//                         { type: "danger" }
-//                     );
-//                 }
-//             } else {
-//                 env.services.action.doAction({ type: "ir.actions.act_window_close" });
-//             }
-//         },
-//         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
-//         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
-//     });
-// }
-
- 
 registry.category("actions").add("cpq.ConfigureDialogAction", ConfigureDialogAction);
 
  

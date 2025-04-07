@@ -37,17 +37,25 @@ class SaleOrder(models.Model):
             },
         }
 
-
-
 class SaleOrderLine(models.Model):
     _inherit = ["sale.order.line", "mail.thread"]
     _name = "sale.order.line"
 
     product_template_id_cpq_ok = fields.Boolean(related="product_template_id.cpq_ok")
+
+    # order_line_image = fields.Binary(string="Image",
+    #                                  related="product_id.image_128",
+    #                                  help="This field represents the image "
+    #                                       "associated with the product on the "
+    #                                       "sale order line."
+    #                                  )
+
+
     cpq_configuration_json = fields.Json(
         string="CPQ Configuration",
         help="Stores selected laterality and option data for CPQ products."
     )
+
     cpq_laterality = fields.Selection(
         selection=[
             ('left', 'Left Only'),
@@ -58,11 +66,13 @@ class SaleOrderLine(models.Model):
         compute='_compute_cpq_laterality',
         store=True
     )
+
     cpq_quantity_to_make = fields.Integer(
         string="Pairs to Make",
         compute="_compute_cpq_quantity_to_make",
         store=True
     )
+
     cpq_configuration_summary = fields.Html(
         string="CPQ Summary",
         compute="_compute_cpq_configuration_summary",
@@ -81,11 +91,14 @@ class SaleOrderLine(models.Model):
 
             try:
                 config = json.loads(line.cpq_configuration_json)
+                _logger.info("🧩 [CPQ] Applying configuration to order line: %s", json.dumps(config, indent=2))
+
                 line.name = config.get("name") or line.name
                 line.product_uom_qty = config.get("quantity_to_make", line.product_uom_qty)
 
                 # Optional: add to chatter only after save
-                summary_html = render_summary_html(self.env, line.order_id, config)
+                summary_html = render_summary_html(self.env, line.order_id, config, mode="chatter")
+                _logger.info("🖨️ [CPQ] Generated Summary HTML:\n%s", summary_html)
 
                 line.message_post(
                     body=f"""
@@ -157,6 +170,29 @@ class SaleOrderLine(models.Model):
             else:
                 line.name = line.product_id.name
 
+    # @api.onchange('cpq_configuration_json')
+    # def _onchange_cpq_pricing(self):
+    #     config = self.cpq_configuration_json or {}
+    #     if isinstance(config, str):
+    #         try:
+    #             config = json.loads(config)
+    #         except Exception:
+    #             config = {}
+
+    #     qty = config.get("quantity_to_make", 1)
+    #     total_extra = 0
+
+    #     selected = config.get("selected", {})
+    #     if isinstance(selected, dict):
+    #         ptav_ids = [int(k) for k in selected if k.isdigit()]
+    #         ptavs = self.env["product.template.attribute.value"].browse(ptav_ids)
+    #         total_extra = sum(ptav.price_extra for ptav in ptavs)
+
+    #     base_price = self.product_template_id.list_price
+    #     if config.get("laterality") == "bilateral":
+    #         base_price *= 2
+    #     self.price_unit = (base_price + total_extra) * qty
+
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_pricing(self):
         config = self.cpq_configuration_json or {}
@@ -178,14 +214,13 @@ class SaleOrderLine(models.Model):
         base_price = self.product_template_id.list_price
         if config.get("laterality") == "bilateral":
             base_price *= 2
-        self.price_unit = (base_price + total_extra) * qty
 
-    # @api.depends('cpq_configuration_json')
-    # def _compute_cpq_configuration_summary(self):
-    #     for line in self:
-    #         if line.cpq_configuration_json:
-    #             config = json.loads(line.cpq_configuration_json)
-    #             line.cpq_configuration_summary = render_summary_html(self.env, line.order_id, config)
+        final_price = (base_price + total_extra) * qty
+        _logger.info("💸 [CPQ] Pricing computed: Base: %.2f, Extras: %.2f, Qty: %d, Final: %.2f",
+                    base_price, total_extra, qty, final_price)
+
+        self.price_unit = final_price
+
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_configuration_summary(self):
@@ -198,12 +233,16 @@ class SaleOrderLine(models.Model):
             try:
                 if isinstance(config, str):
                     config = json.loads(config)
-                line.cpq_configuration_summary = render_summary_html(self.env, line.order_id, config)
+
+                _logger.info(f"🧩 Generating summary for Sale Order Line {line.id}")
+                _logger.info(f"Config Data: {config}")
+
+                summary_html = render_summary_html(self.env, line.order_id, config)
+                line.cpq_configuration_summary = summary_html
+
             except Exception as e:
                 _logger.warning(f"⚠️ Failed to generate summary HTML: {e}")
                 line.cpq_configuration_summary = "⚠️ Error generating summary."
-
-
 
     def edit_cpq_configuration(self):
         self.ensure_one()

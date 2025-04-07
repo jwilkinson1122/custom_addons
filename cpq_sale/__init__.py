@@ -1,1 +1,49 @@
 from . import models
+import logging
+from odoo.tools.config import config
+from logging.handlers import RotatingFileHandler
+import sys
+
+# ✅ CPQ Logger Setup
+cpq_logger = logging.getLogger("cpq")
+cpq_logger.setLevel(logging.DEBUG)
+
+
+# 🗂️ CPQ Log File with Rotation (Keeps your logs clean)
+# cpq_logfile = r"C:\odoo17\server\cpq.log"
+cpq_logfile = config.get('cpq_logfile', r"C:\odoo17\server\cpq.log")
+file_handler = RotatingFileHandler(cpq_logfile, maxBytes=5 * 1024 * 1024, backupCount=5, encoding="utf-8")
+
+file_formatter = logging.Formatter(
+    fmt="%(asctime)s | %(levelname)-8s | %(funcName)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+file_handler.setFormatter(file_formatter)
+
+# ✅ Colored Console Handler (optional, for terminal)
+class ColorFormatter(logging.Formatter):
+    COLORS = {
+        "DEBUG": "\033[94m",     # Blue
+        "INFO": "\033[92m",      # Green
+        "WARNING": "\033[93m",   # Yellow
+        "ERROR": "\033[91m",     # Red
+        "CRITICAL": "\033[95m",  # Magenta
+    }
+    RESET = "\033[0m"
+
+    def format(self, record):
+        color = self.COLORS.get(record.levelname, self.RESET)
+        record.levelname = f"{color}{record.levelname}{self.RESET}"
+        return super().format(record).encode('utf-8', errors='ignore').decode('utf-8', errors='ignore')
+
+
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(ColorFormatter(file_formatter._fmt, file_formatter.datefmt))
+console_handler.encoding = 'utf-8'  # Add this line
+
+# ✅ Attach handlers if not already attached
+if not cpq_logger.hasHandlers():
+    cpq_logger.addHandler(file_handler)
+    cpq_logger.addHandler(console_handler)
+
+cpq_logger.propagate = False
