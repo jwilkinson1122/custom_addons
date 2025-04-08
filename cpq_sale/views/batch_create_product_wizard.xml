@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <record id="view_batch_create_product_wizard" model="ir.ui.view">
+        <field name="name">batch.create.product.wizard.form</field>
+        <field name="model">batch.create.product.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Batch Create Products">
+                <group>
+                    <field name="sale_order_line_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="action_batch_create" string="Create Products" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

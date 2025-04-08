@@ -24,6 +24,7 @@ export class ConfigureDialog extends Component {
     };
 
     static props = {
+        // orderId: { type: Number, optional: true },
         orderId: { type: Number },
         productTmplId: Number,
         quantity: Number,
@@ -31,7 +32,9 @@ export class ConfigureDialog extends Component {
         soDate: String,
         productUOMId: { type: Number, optional: true },
         pricelistId: { type: Number, optional: true },
-        companyId: { type: Number, optional: true },
+        // companyId: { type: Number, optional: true },
+        companyId: { type: [Number, undefined], optional: true },
+
         edit: Boolean,
         save: Function,
         close: Function,
@@ -122,6 +125,13 @@ export class ConfigureDialog extends Component {
             this.state.isInitializing = true;
             try {
                 const data = await this._loadData();
+                // this.title = this.env.config?.context?.cpq_initial_config
+                //     ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
+                //     : _t("Configure: %s", data.product_tmpl_id.display_name);
+                this.title = this.props.edit
+                    ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
+                    : _t("Configure: %s", data.product_tmpl_id.display_name);
+                
                 this.state.ptalIds = data.ptal_ids;
                 this.state.productTmplId = data.product_tmpl_id;
 
@@ -241,9 +251,27 @@ export class ConfigureDialog extends Component {
     // Data Exchanges
     //--------------------------------------------------------------------------
 
+    // async _loadData() {
+    //     return this.rpc(`/cpq/${this.props.productTmplId}/data`, {});
+    // }
+
+
+
     async _loadData() {
-        return this.rpc(`/cpq/${this.props.productTmplId}/data`, {});
+        const productTmplId =
+            typeof this.props.productTmplId === "object"
+                ? this.props.productTmplId.id
+                : this.props.productTmplId;
+    
+        if (!productTmplId) {
+            this.notification.add("Missing product template ID.", { type: "danger" });
+            throw new Error("Missing productTmplId");
+        }
+    
+        return this.rpc(`/cpq/${productTmplId}/data`, {});
     }
+    
+    
 
     canCreate() {
         return this.state.valid;
@@ -259,7 +287,7 @@ export class ConfigureDialog extends Component {
             return;
         }
 
-        await this._validate();
+        // await this._validate();
 
         // 🛑 Final validation safeguard
         if (!this.state.valid) {
@@ -269,10 +297,12 @@ export class ConfigureDialog extends Component {
         }
     
         try {
+            await this._validate();
             this.computeSummary?.();
+            await nextTick();
             const summary = this.summaryApi?.getSummaryState?.() || {};
             const name = this.productTemplateName;
-    
+            
             const config = {
                 name,
                 laterality: this.state.laterality,
@@ -631,35 +661,49 @@ export class ConfigureDialog extends Component {
 }
 
 export function ConfigureDialogAction(env, action) {
+    const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
+
     console.log("🚀 Action called with:", action);
     console.log("🚀 Action context:", action.context);
-    // const context = action.context || {};
-    const context = action.context && typeof action.context === "object" ? action.context : {};
-
+    const context = action.context || {};
     console.log("🧩 ConfigureDialogAction context:", context);
-    const productTmplId =
-        context.cpq_product_template_id ||
-        context.product_template_id ||
-        context.active_id;
+    // const productTmplId = context.cpq_product_template_id;
+    // const orderId = context.active_sale_order_id || context.sale_order_id;
+    // const currencyId = context.currencyId;
+    // const soDate = context.soDate;
+    // const companyId = context.companyId;
+
+    const productTmplId = safeMany2One(context.cpq_product_template_id);
+    const orderId = safeMany2One(context.active_sale_order_id || context.sale_order_id);
+    const soDate = context.soDate;
+    const currencyId = safeMany2One(context.currencyId);
+    const companyId = safeMany2One(context.companyId)
+
+    if (!productTmplId) {
+        console.error("❌ No productTmplId passed in context!");
+    }
 
     env.services.dialog.add(ConfigureDialog, {
-        // productTmplId,
-        productTmplId: {
-            id: productTmplId,
-            name: context.product_template_name || "Configured Product",  // ✅ Ensure name
-        },
-        orderId: context.active_sale_order_id || context.sale_order_id,
-        context: context,
-        // context,
-
+        // productTmplId: productTmplId,
+        // productTmplName: context.product_template_name || "Configured Product",
+        // orderId: context.active_sale_order_id || context.sale_order_id,
+        // quantity: context.quantity || 1,
+        // currencyId: context.currency_id,
+        // soDate: context.so_date,
+        // companyId: context.company_id,
+        // context: context,
+        productTmplId,
+        orderId,
+        quantity: context.quantity || 1,
+        currencyId,
+        soDate,
+        companyId,
+        context,
         edit: true,
         cpqInitialConfig: context.cpq_initial_config || null,
 
         save: async (res) => {
-        
-
             if (context.active_model === "sale.order.line" && context.active_id) {
-                
                 try {
                     const values = {
                         product_id: res.configuration.product_id,
@@ -704,7 +748,6 @@ export function ConfigureDialogAction(env, action) {
                 env.services.action.doAction({ type: "ir.actions.act_window_close" });
             }
         },
-        
         
         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),

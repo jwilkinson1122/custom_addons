@@ -50,6 +50,11 @@ class ProductTemplate(models.Model):
                 "active_id": sale_order.id,
                 "cpq_product_template_id": self.id,
                 "cpq_initial_config": False,
+                "redirect_to_line": True,
+                "orderId": sale_order.id,
+                "currencyId": sale_order.currency_id.id,
+                "soDate": str(sale_order.date_order),
+                "companyId": sale_order.company_id.id,
             },
         }
 

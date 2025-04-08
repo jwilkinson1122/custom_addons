@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from datetime import date, timedelta
 from odoo.fields import Field
 from odoo import _, api, fields, models
@@ -79,6 +80,12 @@ class SaleOrderLine(models.Model):
         store=True,
     )
 
+    cpq_product_created = fields.Boolean(
+        string="CPQ Product Created",
+        compute="_compute_cpq_product_created",
+        store=True
+    )
+
     def toggle_debug_cpq_json(self):
         # Placeholder logic: in real use, you'd probably use context or a transient field to show/hide.
         raise UserError("This would show/hide CPQ JSON — placeholder.")
@@ -133,6 +140,28 @@ class SaleOrderLine(models.Model):
                     config = {}
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id and self.product_id.cpq_ok:
+            tmpl = self.product_id.product_tmpl_id
+
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'cpq.ConfigureDialogAction',
+                'context': {
+                    'active_model': 'sale.order.line',
+                    'active_id': self.id,
+                    'cpq_product_template_id': tmpl.id,
+                    'cpq_initial_config': self.cpq_configuration_json,
+                    'from_sale_order': True,
+                    'redirect_to_line': True,
+                    'orderId': self.order_id.id,
+                    'currencyId': self.order_id.currency_id.id,
+                    'soDate': str(self.order_id.date_order),
+                },
+            }
+
+
     @api.onchange("product_id")
     def _onchange_product_id_warning(self):
         res = super()._onchange_product_id_warning()
@@ -170,29 +199,6 @@ class SaleOrderLine(models.Model):
             else:
                 line.name = line.product_id.name
 
-    # @api.onchange('cpq_configuration_json')
-    # def _onchange_cpq_pricing(self):
-    #     config = self.cpq_configuration_json or {}
-    #     if isinstance(config, str):
-    #         try:
-    #             config = json.loads(config)
-    #         except Exception:
-    #             config = {}
-
-    #     qty = config.get("quantity_to_make", 1)
-    #     total_extra = 0
-
-    #     selected = config.get("selected", {})
-    #     if isinstance(selected, dict):
-    #         ptav_ids = [int(k) for k in selected if k.isdigit()]
-    #         ptavs = self.env["product.template.attribute.value"].browse(ptav_ids)
-    #         total_extra = sum(ptav.price_extra for ptav in ptavs)
-
-    #     base_price = self.product_template_id.list_price
-    #     if config.get("laterality") == "bilateral":
-    #         base_price *= 2
-    #     self.price_unit = (base_price + total_extra) * qty
-
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_pricing(self):
         config = self.cpq_configuration_json or {}
@@ -220,7 +226,6 @@ class SaleOrderLine(models.Model):
                     base_price, total_extra, qty, final_price)
 
         self.price_unit = final_price
-
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_configuration_summary(self):
@@ -261,3 +266,140 @@ class SaleOrderLine(models.Model):
                 
             },
         }
+
+    def _compute_cpq_product_created(self):
+        for line in self:
+            line.cpq_product_created = bool(
+                line.product_id and line.product_id.default_code and line.product_id.default_code.startswith("CFG-")
+            )
+
+    def action_open_create_product_wizard(self):
+        self.ensure_one()
+
+        if not self.cpq_configuration_json:
+            raise UserError("No CPQ configuration found on this line.")
+
+        return {
+            'name': _("Confirm Product Creation"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'create.product.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sale_order_line_id': self.id,
+                'default_configuration_summary': self.cpq_configuration_summary,
+            },
+        }
+
+    def action_create_product_from_configuration(self):
+        self.ensure_one()
+
+        if not self.cpq_configuration_json:
+            raise UserError("No CPQ configuration found on this line.")
+
+        try:
+            config = json.loads(self.cpq_configuration_json)
+        except Exception as e:
+            raise UserError(f"Invalid CPQ configuration JSON: {e}")
+
+        # ✅ Safety check
+        if self.product_id and self.product_id.default_code and self.product_id.default_code.startswith("CFG-"):
+            raise UserError("This line is already linked to a custom CPQ product.")
+
+        product_tmpl = self.product_template_id
+        if not product_tmpl:
+            raise UserError("No product template linked to this order line.")
+
+        today_str = datetime.today().strftime("%Y%m%d")
+        customer_initials = ''.join(word[0].upper() for word in (self.order_id.partner_id.name or "").split() if word)
+        internal_ref = f"CFG-{today_str}-{self.id}-{customer_initials or 'CUST'}"
+
+        product_name = config.get('name') or f"{product_tmpl.name} Custom"
+
+        total_extra = self._calculate_total_extras(config)
+
+        description_sale = self._generate_cpq_description(config, total_extra)
+        description_purchase = description_sale
+
+        image = product_tmpl.image_1920
+
+        new_product = self.env['product.product'].create({
+            'product_tmpl_id': product_tmpl.id,
+            'default_code': internal_ref,
+            'name': product_name,
+            'lst_price': total_extra or self.price_unit,
+            'description_sale': description_sale,
+            'description_purchase': description_purchase,
+            'image_1920': image,
+        })
+
+        _logger.info(f"🆕 Created product {new_product.display_name} ({new_product.id}) from CPQ config.")
+
+        self._apply_cpq_attributes_to_product(config, new_product)
+
+        self.message_post(body=_(
+            f"🧩 Product <b>{new_product.display_name}</b> created from CPQ configuration."
+        ))
+        new_product.message_post(body=_(
+            f"🧩 Created from CPQ configuration on Sale Order <b>{self.order_id.name}</b>."
+        ))
+
+        self.product_id = new_product.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.product',
+            'res_id': new_product.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def _generate_cpq_description(self, config, total_extra):
+        parts = [
+            f"🦶 Laterality: {config.get('laterality', '').capitalize()}",
+            f"📦 Quantity: {config.get('quantity_to_make', 1)}",
+        ]
+
+        selected = config.get("selected", {})
+        if selected:
+            parts.append("🧩 Selected Options:")
+            for _, value in selected.items():
+                parts.append(f"• {value}")
+
+        if total_extra:
+            parts.append(f"💰 Total Extras: {total_extra:.2f}")
+
+        total_price = config.get('total_price')
+        if total_price:
+            parts.append(f"📊 Total Price: {total_price:.2f}")
+
+        return "\n".join(parts)
+
+    def _calculate_total_extras(self, config):
+        selected = config.get('selected', {})
+        if not selected:
+            return 0
+
+        ptav_ids = [int(k) for k in selected if k.isdigit()]
+        ptavs = self.env['product.template.attribute.value'].browse(ptav_ids)
+
+        total_extra = sum(ptav.price_extra for ptav in ptavs)
+        _logger.info(f"🧩 Total extras calculated: {total_extra}")
+        return total_extra
+
+    def _apply_cpq_attributes_to_product(self, config, product):
+        selected = config.get('selected', {})
+        if not selected:
+            return
+
+        ptav_ids = [int(k) for k in selected if k.isdigit()]
+        ptav_records = self.env['product.template.attribute.value'].browse(ptav_ids)
+
+        if not ptav_records:
+            return
+
+        product.write({
+            'product_template_attribute_value_ids': [(6, 0, ptav_records.ids)],
+        })
+
+        _logger.info(f"🧩 Applied CPQ attributes to product {product.display_name}: {ptav_records.mapped('name')}")
