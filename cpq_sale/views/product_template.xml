@@ -125,9 +125,8 @@
             <xpath expr="//tree" position="inside">
                 <field name="cpq_ok" invisible="1"/>
                 <button name="action_config_start_global" string="🛠️ New Configuration" type="object" class="btn-primary" title="Start a new configuration" context="{'active_model': 'sale.order'}"/>
-                <!-- <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'sale.order', 'active_id': object.id}"/> -->
-                <!-- <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'sale.order', 'active_id': id}"/> -->
-                <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'sale.order', 'active_id': active_id}"/>
+                <!-- <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'sale.order', 'active_id': active_id}"/> -->
+                <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" icon="fa-cogs" context="{'active_model': 'product.template', 'active_id': id}"/>
 
             </xpath>
             <xpath expr="//tree" position="attributes">

@@ -6,9 +6,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']" position="before">
+            <!-- <xpath expr="//field[@name='order_line']" position="before">
                 <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" invisible="state != 'draft'"/>
-            </xpath>
+            </xpath> -->
             <xpath expr="//field[@name='order_line']/tree" position="inside">
                 <field name="cpq_laterality" invisible="1"/>
                 <button name="edit_cpq_configuration" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>

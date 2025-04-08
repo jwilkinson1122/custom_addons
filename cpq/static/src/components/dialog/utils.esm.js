@@ -22,6 +22,15 @@ export function useDebouncedInput(delay = 300) {
     };
 }
 
+export function debounce(func, wait = 100) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
+}
+
+
 export async function nextTick() {
     await Promise.resolve();                 // microtask
     await new Promise(r => setTimeout(r));   // full task (flushes Owl reactivity too)

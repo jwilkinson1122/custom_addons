@@ -36,64 +36,60 @@ export class ConfigureDialog extends Component {
         save: Function,
         close: Function,
         discard: Function,
+        // context: { type: Object, optional: true },
+        context: { type: Object, optional: true, default: () => ({}) },
     };
-    
-    
     
     setup() {
         super.setup();
 
-        // Dev-time prop check
-        validateProps(this, {
-            orderId: { type: "number", optional: true },
-            productTmplId: "number",
-            save: "function",
-            close: "function",
-            edit: "boolean",
-            discard: { type: "function", optional: true },
-        });
+        validateProps(this, ConfigureDialog.props);
          
-
         this.size = "xl";
+        this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.notification = useService("notification");
         this.dialogService = useService("dialog"); 
+
         this.initialState = null;
+        this.summaryApi = null;
+
+        this.context = this.props.context || {};
+
+
         this.state = useState({
+            productTmplId: this.props.productTmplId,
             ptalIds: [],
             selected: {},
-            productTmplId: null,
             valid: false,
             errors: {},
+            quantityToMake: 1,
+            priceSummary: {
+                base: 0,
+                extrasSubtotal: 0,
+                total: 0,
+            },
             laterality: "bilateral",
             split: false,
-            quantityToMake: 1,
-            undoCache: {
-                left: null,
-                right: null,
-            },
-            isLoading: false, 
+            isLoading: false,
             isInitializing: true,
+            expanded: true,
+            showExtras: false,
+            summary: [],
+            toastMessage: null,
+            undoCache: { left: null, right: null },
         });
-        
+
         this.debouncedInput = useDebouncedInput(250);
 
         this.onQuantityChange = this.debouncedInput((val) => {
             const parsed = parseInt(val, 10);
-            const finalVal = isNaN(parsed) || parsed < 1 ? 1 : parsed;
-            console.log("🔢 Debounced Quantity to Make:", finalVal);
-            this.state.quantityToMake = finalVal;
+            this.state.quantityToMake = isNaN(parsed) || parsed < 1 ? 1 : parsed;
         });
 
-        this.summaryApi = null;
-
         this.registerSummaryPanel = (api) => {
-            if (!api?.getSummaryState) {
-                console.warn("⚠️ Summary API missing required methods.");
-            }
             this.summaryApi = api;
         };
-
 
         this.summaryKey = () => {
             try {
@@ -103,8 +99,13 @@ export class ConfigureDialog extends Component {
                 return "invalid-key";
             }
         };
+
+        this.onLateralityChange = (ev) => {
+            this.state.laterality = ev.target.value;
+            this.state.split = false;
+            this.state.selected = {};
+        };
         
-        // 🧠 Reactively recompute summary whenever left/right selection changes
         useEffect(() => {
             console.log("🔁 useEffect triggered (selected, quantityToMake, laterality, split)");
             console.log("📦 quantityToMake in useEffect:", this.state.quantityToMake);
@@ -116,71 +117,45 @@ export class ConfigureDialog extends Component {
             this.state.laterality,
             this.state.split,
         ]);
-        
-        this.onLateralityChange = (ev) => {
-            this.state.laterality = ev.target.value;
-            this.state.split = false;
-            this.state.selected = {};
-        };
 
         onWillStart(async () => {
+            this.state.isInitializing = true;
             try {
-                this.state.isInitializing = true;
-        
                 const data = await this._loadData();
-                this.title = this.env.config?.context?.cpq_initial_config
-                    ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
-                    : _t("Configure: %s", data.product_tmpl_id.display_name);
-        
                 this.state.ptalIds = data.ptal_ids;
                 this.state.productTmplId = data.product_tmpl_id;
-        
-                // const initialConfigRaw = this.env.config?.context?.cpq_initial_config;
 
-                const initialConfigRaw = this.props.cpqInitialConfig || this.env.config?.context?.cpq_initial_config;
-
-        
+                const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
                 if (initialConfigRaw) {
-                    try {
-                        const parsed = typeof initialConfigRaw === "string"
-                            ? JSON.parse(initialConfigRaw)
-                            : initialConfigRaw;
-        
-                        this.state.selected = parsed.selected || {};
-                        this.state.laterality = parsed.laterality || "bilateral";
-                        this.state.split = parsed.split || false;
-                        this.state.quantityToMake = parsed.quantity_to_make || 1;
-        
-                        this.initialState = {
-                            laterality: this.state.laterality,
-                            split: this.state.split,
-                            selected: JSON.parse(JSON.stringify(this.state.selected)),
-                            quantityToMake: this.state.quantityToMake,
-                        };
-        
-                        console.log("🧩 Loaded initial config into state:", this.initialState);
-                    } catch (e) {
-                        console.warn("⚠️ Failed to parse cpq_initial_config:", e);
-                    }
+                    const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
+                    this.state.selected = parsed.selected || {};
+                    this.state.laterality = parsed.laterality || "bilateral";
+                    this.state.split = parsed.split || false;
+                    this.state.quantityToMake = parsed.quantity_to_make || 1;
+
+                    this.initialState = {
+                        laterality: this.state.laterality,
+                        split: this.state.split,
+                        selected: JSON.parse(JSON.stringify(this.state.selected)),
+                        quantityToMake: this.state.quantityToMake,
+                    };
                 }
-        
-                // ✅ Wait for reactivity flush
+
                 await nextTick();
-                await new Promise(resolve => setTimeout(resolve, 0));
-        
-                // ✅ Avoid double validation - skip if no selection
                 if (Object.keys(this.state.selected).length > 0) {
                     await this._validate();
                     this.computeSummary?.();
                 }
-        
+
             } catch (error) {
-                console.error("❌ Error during onWillStart initialization:", error);
-                this.notification.add("Failed to initialize configurator. Please try again.", { type: "danger" });
+                console.error("❌ Initialization error:", error);
+                this.notification.add("Initialization failed. Please try again.", { type: "danger" });
             } finally {
                 this.state.isInitializing = false;
             }
         });
+        
+        this.computeSummary?.();
 
         this.onSplitToggle = async () => {
             const goingToShared = this.state.split;
@@ -271,32 +246,9 @@ export class ConfigureDialog extends Component {
     }
 
     canCreate() {
-        if (!this.state.ptalIds) {
-            return false;
-        }
-
         return this.state.valid;
     }
 
-    preparePayload() {
-        const summary = this.summaryApi?.getSummaryState?.() || {};
-        const name = this.productTemplateName;
-    
-        const config = {
-            name,
-            laterality: this.state.laterality,
-            split: this.state.split,
-            selected: this.state.selected,
-            quantity_to_make: this.state.quantityToMake,
-            left_price: summary.left || 0,
-            right_price: summary.right || 0,
-            total_price: summary.total || 0,
-        };
-    
-        console.log("🧩 Prepared config payload:", config);
-        return config;
-    }
-    
     async onCreate() {
         if (this.state.isLoading) return;
     
@@ -306,58 +258,43 @@ export class ConfigureDialog extends Component {
             this.state.isLoading = false;
             return;
         }
-    
+
         await this._validate();
-    
+
+        // 🛑 Final validation safeguard
         if (!this.state.valid) {
             this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
             this.state.isLoading = false;
             return;
         }
+    
         try {
-            // ✅ Force recompute summary before capturing state
             this.computeSummary?.();
-            await nextTick();
-            await new Promise(resolve => setTimeout(resolve, 0));
-        
-            // ✅ Force SummaryPanel to recompute
-            if (this.summaryApi?.computeSummary) {
-                this.summaryApi.computeSummary();
-                await nextTick();
-                await new Promise(resolve => setTimeout(resolve, 0));
-            }
-        
-            const summary = this.summaryApi;
+            const summary = this.summaryApi?.getSummaryState?.() || {};
             const name = this.productTemplateName;
-
-            // 🧩 Defensive check to ensure summaryApi exists
-            if (!summary) {
-                console.warn("⚠️ Summary API is not available. Pricing totals will be zero.");
-            }
-
-            const leftTotal = summary?.getLeftTotal?.() || 0;
-            const rightTotal = summary?.getRightTotal?.() || 0;
-            const combinedTotal = summary?.getCombinedTotal?.() || 0;
-
-            console.log("🧩 Summary totals:", {
-                leftTotal,
-                rightTotal,
-                combinedTotal,
-            });
-
-            const config = this.preparePayload();
-
-            console.log("🚀 Prepared config for backend:", config);
-
+    
+            const config = {
+                name,
+                laterality: this.state.laterality,
+                split: this.state.split,
+                selected: this.state.selected,
+                quantity_to_make: this.state.quantityToMake,
+                left_price: summary.left || 0,
+                right_price: summary.right || 0,
+                total_price: summary.total || 0,
+            };
+    
+            console.log("🚀 Sending configuration payload:", config);
+    
             const res = await this.rpc(`/cpq/${this.props.productTmplId}/configure`, { configuration: config });
-        
+    
             if (res?.configuration) {
                 console.log("✅ Configuration saved successfully:", res);
-        
+    
                 const success = await this._applyConfigurationResult(res);
                 if (success) {
                     this._closeDialog();
-        
+                
                     if (res.sale_order_id) {
                         this.env.services.action.doAction({
                             type: "ir.actions.act_window",
@@ -368,18 +305,19 @@ export class ConfigureDialog extends Component {
                         });
                     }
                 }
+                
             } else {
                 this.notification.add("Unexpected response from server. Please try again.", { type: "danger" });
             }
+    
         } catch (error) {
             console.error("❌ Failed to submit configuration:", error);
             this.notification.add("An error occurred while saving configuration.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
         }
-        
     }
-    
+
     async _applyConfigurationResult(result) {
         if (!this.props.record) {
             console.warn("⚠️ No record prop passed to ConfigureDialog.");
@@ -409,19 +347,6 @@ export class ConfigureDialog extends Component {
                     target: 'current',
                 });
             }
-            
-    
-            // if (this.env.services.action && result?.sale_order_line_id) {
-            //     console.log("🚀 Navigating to sale order line form view:", result.sale_order_line_id);
-            //     this.env.services.action.doAction({
-            //         type: 'ir.actions.act_window',
-            //         res_model: 'sale.order.line',
-            //         res_id: result.sale_order_line_id,
-            //         views: [[false, 'form']],
-            //         target: 'current',
-            //     });
-            // }
-        
             return true;
     
         } catch (error) {
@@ -433,7 +358,41 @@ export class ConfigureDialog extends Component {
             return false;
         }
     }
+
+    async _validate() {
+        try {
+            const res = await this.rpc(`/cpq/${this.props.productTmplId}/validate`, {
+                combination: this.state.selected,
+            });
+
+            this.state.valid = res.valid;
+            this.state.errors = res.errors;
+        } catch (error) {
+            console.error("❌ Validation error:", error);
+            this.state.valid = false;
+            this.state.errors = { general: "Validation failed." };
+        }
+    }
     
+    async _showConfirmDialog(message) {
+        return new Promise((resolve) => {
+            console.log("📣 Opening confirmation dialog:", message);
+            this.dialogService.add(ConfirmationDialog, {
+                title: _t("Please Confirm"),
+                body: message,
+                confirmLabel: _t("Yes, continue"),
+                cancelLabel: _t("Cancel"),
+                confirm: () => {
+                    console.log("✅ User clicked confirm in dialog");
+                    resolve(true);
+                },
+                cancel: () => {
+                    console.log("🚫 User clicked cancel in dialog");
+                    resolve(false);
+                },
+            });
+        });
+    }
     
     async onClose() {
         await this._closeDialog();
@@ -459,45 +418,6 @@ export class ConfigureDialog extends Component {
         this.props.close?.();
     }
     
-    async _validate() {
-        if (!this.state.selected) {
-            console.warn("⚠️ No selection found. Skipping validation.");
-            return;
-        }
-    
-        const productTmplId = this.props.productTmplId;
-    
-        try {
-            const res = await this.rpc(`/cpq/${productTmplId}/validate`, {
-                combination: this.state.selected,
-            });
-    
-            this.state.valid = res.valid;
-            this.state.errors = res.errors;
-    
-            if (res.valid) {
-                console.log("✅ Configuration is valid.");
-            } else {
-                console.warn("⚠️ Configuration is invalid:", res.errors);
-            }
-    
-        } catch (error) {
-            console.error("🚨 Validation RPC failed:", error);
-    
-            this.state.valid = false;
-            this.state.errors = {
-                general: "Validation failed due to a server error.",
-            };
-    
-            if (this.notification) {
-                this.notification.add(
-                    "⚠️ Failed to validate configuration. Please try again.",
-                    { type: "danger" }
-                );
-            }
-        }
-    }
-
     async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         // const isSplit = ["left", "right"].includes(sideOrId);
         const isSplit = typeof sideOrId === "string" && ["left", "right"].includes(sideOrId);
@@ -568,7 +488,6 @@ export class ConfigureDialog extends Component {
         this.computeSummary?.();
     }
     
-
     _handleSharedSelect(attributeId, ev) {
         const ptavId = parseInt(ev.target.value, 10);
         if (isNaN(ptavId)) {
@@ -678,39 +597,18 @@ export class ConfigureDialog extends Component {
         }
     }
 
-    async _showConfirmDialog(message) {
-        return new Promise((resolve) => {
-            console.log("📣 Opening confirmation dialog:", message); // ✅ Log the intent
-            this.dialogService.add(ConfirmationDialog, {
-                title: _t("Please Confirm"),
-                body: message,
-                confirmLabel: _t("Yes, continue"),
-                cancelLabel: _t("Cancel"),
-                confirm: () => {
-                    console.log("✅ User clicked confirm in dialog");
-                    resolve(true);
-                },
-                cancel: () => {
-                    console.log("🚫 User clicked cancel in dialog");
-                    resolve(false);
-                },
-            });
-        });
-    }
-    
-
     //----------------------------------------------------------------------
     // Getters
     //----------------------------------------------------------------------
     
     get isInitializing() {
-        return this.state.isInitializing || !this.summaryApi;
+        return this.state.isInitializing;
     }
     
     get isDisabled() {
-        return !this.summaryApi || this.state.isLoading;
+        return this.state.isLoading || this.state.isInitializing;
     }
-
+    
     get productTemplateId() {
         const val = this.state.productTmplId;
         return typeof val === "number" ? val : val?.id;
@@ -733,25 +631,35 @@ export class ConfigureDialog extends Component {
 }
 
 export function ConfigureDialogAction(env, action) {
-    const context = action.context;
+    console.log("🚀 Action called with:", action);
+    console.log("🚀 Action context:", action.context);
+    // const context = action.context || {};
+    const context = action.context && typeof action.context === "object" ? action.context : {};
 
+    console.log("🧩 ConfigureDialogAction context:", context);
     const productTmplId =
         context.cpq_product_template_id ||
-        context.product_template_id || 
+        context.product_template_id ||
         context.active_id;
 
     env.services.dialog.add(ConfigureDialog, {
-        productTmplId,
-        // productTmplId: context.cpq_product_template_id || context.active_id,
-        
+        // productTmplId,
+        productTmplId: {
+            id: productTmplId,
+            name: context.product_template_name || "Configured Product",  // ✅ Ensure name
+        },
+        orderId: context.active_sale_order_id || context.sale_order_id,
+        context: context,
+        // context,
+
         edit: true,
-        cpqInitialConfig: context.cpq_initial_config || null, // ✅ pass to dialog
+        cpqInitialConfig: context.cpq_initial_config || null,
+
         save: async (res) => {
-            if (!productTmplId) {
-                console.warn("⚠️ No product template ID passed to ConfigureDialogAction context:", context);
-            }
-            
+        
+
             if (context.active_model === "sale.order.line" && context.active_id) {
+                
                 try {
                     const values = {
                         product_id: res.configuration.product_id,
@@ -760,24 +668,31 @@ export function ConfigureDialogAction(env, action) {
                         product_uom_qty: res.configuration.quantity_to_make,
                         name: res.configuration.name,
                     };
-
+        
                     console.log("📝 Writing configuration to sale.order.line:", values);
-                    await env.services.orm.call("sale.order.line", "onchange", [context.active_id], values);
-
+        
                     await env.services.orm.call(
-                        "sale.order.line", 
-                        "write", 
+                        "sale.order.line",
+                        "write",
                         [context.active_id, values]
                     );
-                    
-                    env.services.action.doAction({
-                        type: "ir.actions.act_window",
-                        res_model: "sale.order.line",
-                        res_id: context.active_id,
-                        views: [[false, "form"]],
-                        target: "current",
-                    });
-                    
+        
+                    const saleOrderId = res.configuration.sale_order_id || context.active_sale_order_id;
+        
+                    if (saleOrderId) {
+                        env.services.notification.add("✅ Configuration applied successfully.", { type: "success" });
+                        env.services.action.doAction({
+                            type: "ir.actions.act_window",
+                            res_model: "sale.order",
+                            res_id: saleOrderId,
+                            views: [[false, "form"]],
+                            target: "current",
+                        });
+                    } else {
+                        env.services.notification.add("✅ Configuration applied, please refresh your order.", { type: "success" });
+                        env.services.action.doAction({ type: "ir.actions.act_window_close" });
+                    }
+        
                 } catch (error) {
                     console.error("❌ Failed to write configuration to sale.order.line:", error);
                     env.services.notification.add(
@@ -789,6 +704,8 @@ export function ConfigureDialogAction(env, action) {
                 env.services.action.doAction({ type: "ir.actions.act_window_close" });
             }
         },
+        
+        
         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
     });

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, useState, useRef, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
+import { debounce } from "./utils.esm";
 
 function formatCurrency(amount) {
     const number = typeof amount === "number" ? amount : parseFloat(amount) || 0;
@@ -8,7 +9,6 @@ function formatCurrency(amount) {
 }
 
 export default class ConfiguratorSummaryPanel extends Component {
-
     setup() {
         super.setup();
 
@@ -21,102 +21,102 @@ export default class ConfiguratorSummaryPanel extends Component {
         this.state = useState({
             summary: [],
             priceSummary: {
-                base: 0,
                 left: 0,
                 right: 0,
                 shared: 0,
+                base: 0,
                 total: 0,
                 extrasSubtotal: 0,
             },
-            expanded: true,
+            expanded: false,
             height: 0,
-            showExtras: false,
+            showExtras: true,
             quantityToMake: props.quantityToMake || 1,
             toastMessage: "",
         });
 
-        this.toggleExtras = () => {
-            this.state.showExtras = !this.state.showExtras;
-        };
+        // 🔥 Register external API if provided
+        if (this.props.register) {
+            this.props.register({
+                showToast: (msg) => this.showToast(msg),
+                getSummaryState: () => ({
+                    selections: this.state.summary,
+                    priceSummary: this.state.priceSummary,
+                    left: this.state.priceSummary.left,
+                    right: this.state.priceSummary.right,
+                    total: this.state.priceSummary.total,
+                }),
+                getLeftTotal: () => this.state.priceSummary.left,
+                getRightTotal: () => this.state.priceSummary.right,
+                getCombinedTotal: () => this.state.priceSummary.total,
+            });
+        }
 
-        // onMounted(() => {
-        //     console.log("📌 SummaryPanel mounted");
+        const debouncedRecomputeSummary = debounce(() => {
+            console.log("🧩 Debounced recompute summary");
+            requestAnimationFrame(() => {
+                this._preserveScroll(() => this.computeSummary());
+            });
+        }, 150);
 
-        //     if (props.registerApi) {
-        //         props.registerApi({
-        //             showToast: this.showToast.bind(this),
-        //         });
-        //     }
-
-        //     this.adjustHeight();
-        // });
+        const debouncedAdjustHeight = debounce(() => {
+            console.log("📏 Debounced adjustHeight");
+            this.adjustHeight();
+        }, 150);
 
         onMounted(() => {
             console.log("📌 SummaryPanel mounted");
 
-            if (this.props.registerApi) {
-                this.props.registerApi({
-                    showToast: this.showToast.bind(this),
-                    getSummaryState: () => ({
-                        selections: this.state.summary,
-                        priceSummary: this.state.priceSummary,
-                        left: this.state.priceSummary.left,
-                        right: this.state.priceSummary.right,
-                        total: this.state.priceSummary.total,
-                    }),
-                    getLeftTotal: () => this.state.priceSummary.left,
-                    getRightTotal: () => this.state.priceSummary.right,
-                    getCombinedTotal: () => this.state.priceSummary.total,
-                });
+            if (props.ptalIds?.length > 0) {
+                console.log("🧩 Initial ptalIds detected, computing summary...");
+                this.computeSummary();
             }
-            
-        
-            // if (this.props.registerApi) {
-            //     this.props.registerApi({
-            //         showToast: this.showToast.bind(this),
-            //         getSummaryState: () => ({
-            //             selections: this.state.summary,
-            //             priceSummary: this.state.priceSummary,
-            //             left: this.state.priceSummary.left,
-            //             right: this.state.priceSummary.right,
-            //             total: this.state.priceSummary.total,
-            //         }),
-            //         getLeftTotal: () => {
-            //             const val = this.state.priceSummary.left || 0;
-            //             console.log("💰 getLeftTotal:", val);
-            //             return val;
-            //         },
-            //         getRightTotal: () => {
-            //             const val = this.state.priceSummary.right || 0;
-            //             console.log("💰 getRightTotal:", val);
-            //             return val;
-            //         },
-            //         getCombinedTotal: () => {
-            //             const val = this.state.priceSummary.total || 0;
-            //             console.log("💰 getCombinedTotal:", val);
-            //             return val;
-            //         },
-            //     });
-            // }
-        
+
             this.adjustHeight();
         });
-        
 
         onWillUpdateProps((nextProps) => {
-            const quantityChanged = nextProps.quantityToMake !== this.state.quantityToMake;
+            let needsRecompute = false;
+            let needsHeightAdjust = false;
 
-            if (quantityChanged) {
-                console.log("🔄 Quantity changed from props:", nextProps.quantityToMake);
+            if (nextProps.quantityToMake !== this.state.quantityToMake) {
+                console.log("🔄 Quantity changed:", nextProps.quantityToMake);
                 this.state.quantityToMake = nextProps.quantityToMake;
+                needsRecompute = true;
+                needsHeightAdjust = true;
             }
 
-            requestAnimationFrame(() => {
-                this._preserveScroll(() => this.computeSummary());
-            });
+            if (nextProps.laterality !== props.laterality) {
+                console.log("🔄 Laterality changed:", nextProps.laterality);
+                props.laterality = nextProps.laterality;
+                needsRecompute = true;
+                needsHeightAdjust = true;
+            }
+
+            if (nextProps.split !== props.split) {
+                console.log("🔄 Split mode changed:", nextProps.split);
+                props.split = nextProps.split;
+                needsRecompute = true;
+                needsHeightAdjust = true;
+            }
+
+            if (nextProps.selected !== props.selected) {
+                console.log("🔄 Selected attributes changed.");
+                props.selected = nextProps.selected;
+                needsRecompute = true;
+            }
+
+            if (nextProps.ptalIds !== props.ptalIds) {
+                console.log("🔄 PTAL IDs changed (attribute structure).");
+                props.ptalIds = nextProps.ptalIds;
+                needsRecompute = true;
+                needsHeightAdjust = true;
+            }
+
+            if (needsRecompute) debouncedRecomputeSummary();
+            if (needsHeightAdjust) debouncedAdjustHeight();
         });
 
-        // ✅ Add unmount cleanup
         onWillUnmount(() => {
             clearTimeout(this._heightTimeout);
             clearTimeout(this._toastTimeout);
@@ -127,18 +127,32 @@ export default class ConfiguratorSummaryPanel extends Component {
         console.log("🧠 Initial computeSummary:", this.state.quantityToMake);
     }
 
+    adjustHeight() {
+        clearTimeout(this._heightTimeout);
+        this._heightTimeout = setTimeout(() => {
+            const wrapper = this.summaryWrapper?.el;
+            if (!wrapper) return;
+
+            const table = wrapper.querySelector("table");
+            if (!table) return;
+
+            const targetHeight = table.offsetHeight + 16; // + padding
+            if (this.state.height !== targetHeight) {
+                console.log(`📏 Adjusting summary height: ${targetHeight}px`);
+                this.state.height = targetHeight;
+            }
+        }, 50);
+    }
+
     showToast(message) {
         this.toastQueue.push(message);
-
-        // If already displaying, let it finish
         if (this._toastTimeout) return;
 
         const showNextToast = () => {
-            if (this.toastQueue.length === 0) {
+            if (!this.toastQueue.length) {
                 this._toastTimeout = null;
                 return;
             }
-
             this.state.toastMessage = this.toastQueue.shift();
             this._toastTimeout = setTimeout(() => {
                 this.state.toastMessage = "";
@@ -164,27 +178,8 @@ export default class ConfiguratorSummaryPanel extends Component {
         }, 0);
     }
 
-    adjustHeight() {
-        clearTimeout(this._heightTimeout);
-        this._heightTimeout = setTimeout(() => {
-            const el = this.summaryWrapper?.el;
-            if (!el) return;
-
-            if (this.state.expanded) {
-                el.style.height = "auto";
-                const fullHeight = el.scrollHeight;
-                el.style.height = "0px";
-                void el.offsetHeight;
-                this.state.height = fullHeight || el.offsetHeight;
-            } else {
-                this.state.height = 0;
-            }
-        }, 20);
-    }
-
     computeSummary() {
         console.log("🧠 Computing summary...");
-
         const {
             ptalIds = [],
             selected = {},
@@ -201,10 +196,6 @@ export default class ConfiguratorSummaryPanel extends Component {
         let leftTotal = 0;
         let rightTotal = 0;
 
-        const getSelectedPtav = (ptavs, selectedDict) => {
-            return ptavs.find(ptav => Object.prototype.hasOwnProperty.call(selectedDict, ptav.id)) || null;
-        };
-
         const result = ptalIds.map((attr, index) => {
             if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
                 return {
@@ -218,8 +209,9 @@ export default class ConfiguratorSummaryPanel extends Component {
             }
 
             const ptavs = attr.ptav_ids;
-            let left = "-", right = "-", shared = "-";
-            let priceExtra = 0;
+            const getSelectedPtav = (ptavs, selectedDict) => ptavs.find(ptav => selectedDict[ptav.id]) || null;
+
+            let left = "-", right = "-", shared = "-", priceExtra = 0;
 
             if (isSplit) {
                 const leftPtav = getSelectedPtav(ptavs, selectedLeft);
@@ -237,31 +229,23 @@ export default class ConfiguratorSummaryPanel extends Component {
             } else {
                 const sharedPtav = getSelectedPtav(ptavs, selected);
                 shared = sharedPtav?.name || "-";
-                const sharedExtra = sharedPtav?.price_extra || 0;
+                const sharedExtra = (sharedPtav?.price_extra || 0) * quantityToMake;
 
-                const extraAmount = sharedExtra * quantityToMake;
-
-                switch (laterality) {
-                    case "left":
-                        left = shared;
-                        leftTotal += extraAmount;
-                        priceExtra = extraAmount;
-                        break;
-                    case "right":
-                        right = shared;
-                        rightTotal += extraAmount;
-                        priceExtra = extraAmount;
-                        break;
-                    case "bilateral":
-                        left = shared;
-                        right = shared;
-                        const bilateralExtra = sharedExtra * 2 * quantityToMake;
-                        leftTotal += bilateralExtra / 2;
-                        rightTotal += bilateralExtra / 2;
-                        priceExtra = bilateralExtra;
-                        break;
-                    default:
-                        break;
+                if (laterality === "left") {
+                    left = shared;
+                    leftTotal += sharedExtra;
+                    priceExtra = sharedExtra;
+                } else if (laterality === "right") {
+                    right = shared;
+                    rightTotal += sharedExtra;
+                    priceExtra = sharedExtra;
+                } else if (laterality === "bilateral") {
+                    left = shared;
+                    right = shared;
+                    const bilateralExtra = sharedExtra * 2;
+                    leftTotal += bilateralExtra / 2;
+                    rightTotal += bilateralExtra / 2;
+                    priceExtra = bilateralExtra;
                 }
             }
 
@@ -278,9 +262,7 @@ export default class ConfiguratorSummaryPanel extends Component {
         const previousTotal = this.state.priceSummary.total;
 
         const basePrice = productTmplId?.list_price || 0;
-        const isBilateral = laterality === "bilateral";
-        const totalBase = (isBilateral ? basePrice * 2 : basePrice) * quantityToMake;
-
+        const totalBase = (laterality === "bilateral" ? basePrice * 2 : basePrice) * quantityToMake;
         const totalExtras = leftTotal + rightTotal;
         const total = totalBase + totalExtras;
 
@@ -293,9 +275,7 @@ export default class ConfiguratorSummaryPanel extends Component {
             extrasSubtotal: totalExtras,
         };
 
-        console.log("✅ Final summary:", result);
-        console.log("📦 Extras Subtotal:", totalExtras);
-        console.log("💰 Total:", total);
+        console.log("✅ Final summary computed:", result);
 
         if (previousTotal !== total) {
             this.pulseElement(".pricing-summary");
@@ -315,48 +295,26 @@ export default class ConfiguratorSummaryPanel extends Component {
         const doc = win.document;
 
         doc.open();
-        doc.write(`
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    <title>Configuration Summary</title>
-                    <style>
-                        body { font-family: sans-serif; padding: 20px; }
-                        h1 { text-align: center; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-                        .price-summary { margin-top: 20px; font-size: 1.1em; }
-                    </style>
-                </head>
-                <body>
-                    <h1>${this.props.productTmplId.display_name}</h1>
-                    ${printContents}
-                </body>
-            </html>
-        `);
+        doc.write(`<!DOCTYPE html><html><head><title>Configuration Summary</title></head><body>${printContents}</body></html>`);
         doc.close();
 
         win.focus();
         win.print();
 
-        // ✅ Auto-close clean up
         win.onafterprint = () => win.close();
     }
 
     pulseElement(selector) {
         const element = document.querySelector(selector);
         if (!element) return;
-    
-        element.classList.remove('highlight-success');
-        void element.offsetWidth; // Force reflow to restart animation
-        element.classList.add('highlight-success');
+
+        element.classList.remove("highlight-success");
+        void element.offsetWidth;
+        element.classList.add("highlight-success");
     }
-    
 }
 
-// Component Metadata
 ConfiguratorSummaryPanel.template = "cpq.ConfiguratorSummaryPanel";
-
 ConfiguratorSummaryPanel.props = {
     ptalIds: Array,
     selected: Object,
@@ -364,5 +322,5 @@ ConfiguratorSummaryPanel.props = {
     split: Boolean,
     productTmplId: Object,
     quantityToMake: Number,
-    registerApi: Function,
+    register: Function,
 };
