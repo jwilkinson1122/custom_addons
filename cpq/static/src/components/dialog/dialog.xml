@@ -105,7 +105,6 @@
                         <span class="ms-2">Loading configuration...</span>
                     </div>
                 </t>
-
                 <t t-if="state.isLoading">
                     <div class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center">
                         <div>
@@ -116,13 +115,9 @@
                         </div>
                     </div>
                 </t>
-
             </div>
-
             <!-- ✅ Footer -->
             <t t-set-slot="footer">
-                <!-- <button t-on-click="onCreate" t-att-disabled="state.isLoading">Save</button> -->
-
                 <button t-if="canCreate()" class="btn btn-primary" t-on-click="onCreate" t-att-disabled="isDisabled">Confirm</button>
                 <button class="btn btn-secondary" t-on-click="onClose" t-att-disabled="isDisabled">Cancel</button>
                 <t t-set="resetButtonDisabled" t-value="state.isLoading || !initialState"/>

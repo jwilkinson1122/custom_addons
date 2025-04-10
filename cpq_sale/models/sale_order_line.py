@@ -146,22 +146,22 @@ class SaleOrderLine(models.Model):
             tmpl = self.product_id.product_tmpl_id
 
             return {
-                'type': 'ir.actions.client',
-                'tag': 'cpq.ConfigureDialogAction',
-                'context': {
-                    'active_model': 'sale.order.line',
-                    'active_id': self.id,
-                    'cpq_product_template_id': tmpl.id,
-                    'cpq_initial_config': self.cpq_configuration_json,
-                    'from_sale_order': True,
-                    'redirect_to_line': True,
-                    'orderId': self.order_id.id,
-                    'currencyId': self.order_id.currency_id.id,
-                    'soDate': str(self.order_id.date_order),
+                "type": "ir.actions.client",
+                "tag": "cpq.ConfigureDialogAction",
+                "context": {
+                    "active_model": "sale.order.line",
+                    "active_id": self.id,
+                    "cpq_product_template_id": tmpl.id,
+                    "cpq_initial_config": self.cpq_configuration_json,
+                    "from_sale_order": True,
+                    "redirect_to_line": True,
+                    "orderId": self.order_id.id,
+                    "currencyId": self.order_id.currency_id.id,
+                    "soDate": str(self.order_id.date_order),
+                    "companyId": self.order_id.company_id.id,
                 },
             }
-
-
+        
     @api.onchange("product_id")
     def _onchange_product_id_warning(self):
         res = super()._onchange_product_id_warning()
@@ -260,10 +260,13 @@ class SaleOrderLine(models.Model):
                 "active_model": "sale.order.line",
                 "active_id": self.id,
                 "cpq_product_template_id": tmpl.id,
-                "cpq_initial_config": self.cpq_configuration_json,  
+                "cpq_initial_config": self.cpq_configuration_json,
                 "from_sale_order": True,
                 "redirect_to_line": True,
-                
+                "orderId": self.order_id.id,
+                "currencyId": self.order_id.currency_id.id,
+                "soDate": str(self.order_id.date_order),
+                "companyId": self.order_id.company_id.id,
             },
         }
 

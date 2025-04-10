@@ -566,12 +566,12 @@ class ProductTemplate(models.Model):
 
         return render_context
 
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if vals.get("cpq_ok"):
-    #             vals.setdefault("no_create_variants", "yes")
-    #     return super().create(vals_list)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("cpq_ok"):
+                vals.setdefault("no_create_variants", "yes")
+        return super().create(vals_list)
 
     def write(self, vals):
         res = super().write(vals)

@@ -24,7 +24,6 @@ export class ConfigureDialog extends Component {
     };
 
     static props = {
-        // orderId: { type: Number, optional: true },
         orderId: { type: Number },
         productTmplId: Number,
         quantity: Number,
@@ -32,14 +31,12 @@ export class ConfigureDialog extends Component {
         soDate: String,
         productUOMId: { type: Number, optional: true },
         pricelistId: { type: Number, optional: true },
-        // companyId: { type: Number, optional: true },
         companyId: { type: [Number, undefined], optional: true },
 
         edit: Boolean,
         save: Function,
         close: Function,
         discard: Function,
-        // context: { type: Object, optional: true },
         context: { type: Object, optional: true, default: () => ({}) },
     };
     
@@ -57,7 +54,12 @@ export class ConfigureDialog extends Component {
         this.initialState = null;
         this.summaryApi = null;
 
-        this.context = this.props.context || {};
+        // this.context = this.props.context || {};
+        // this.dialogContext = this.props.context;
+
+        this.context = this.props.context || this.props.record?.model?.root?.context || {};
+        this.dialogContext = this.context;
+
 
 
         this.state = useState({
@@ -125,9 +127,6 @@ export class ConfigureDialog extends Component {
             this.state.isInitializing = true;
             try {
                 const data = await this._loadData();
-                // this.title = this.env.config?.context?.cpq_initial_config
-                //     ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
-                //     : _t("Configure: %s", data.product_tmpl_id.display_name);
                 this.title = this.props.edit
                     ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
                     : _t("Configure: %s", data.product_tmpl_id.display_name);
@@ -250,13 +249,7 @@ export class ConfigureDialog extends Component {
     //--------------------------------------------------------------------------
     // Data Exchanges
     //--------------------------------------------------------------------------
-
-    // async _loadData() {
-    //     return this.rpc(`/cpq/${this.props.productTmplId}/data`, {});
-    // }
-
-
-
+    
     async _loadData() {
         const productTmplId =
             typeof this.props.productTmplId === "object"
@@ -271,38 +264,49 @@ export class ConfigureDialog extends Component {
         return this.rpc(`/cpq/${productTmplId}/data`, {});
     }
     
-    
-
     canCreate() {
         return this.state.valid;
     }
 
     async onCreate() {
-        if (this.state.isLoading) return;
+        console.log("🧩 onCreate() props:", this.props);
+        console.log("🧩 onCreate() context:", this.props.context);
     
+        const activeId = this.props.context?.active_id || this.props.record?.resId;
+        const orderId = this.props.orderId || this.props.record?.data?.order_id?.[0];
+    
+        console.log("🧩 onCreate() active_id:", activeId, "orderId:", orderId);
+    
+        if (!activeId || !orderId) {
+            this.notification.add("Missing order context. Please reload the order.", { type: "danger" });
+            return;
+        }
+    
+        if (this.state.isLoading) return;
         this.state.isLoading = true;
-        const confirmed = await this._showConfirmDialog("Save this configuration to the order?");
-        if (!confirmed) {
-            this.state.isLoading = false;
-            return;
-        }
-
-        // await this._validate();
-
-        // 🛑 Final validation safeguard
-        if (!this.state.valid) {
-            this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
-            this.state.isLoading = false;
-            return;
-        }
     
         try {
+            const confirmed = await this._showConfirmDialog("Save this configuration to the order?");
+            if (!confirmed) {
+                this.state.isLoading = false;
+                return;
+            }
+    
+            if (!this.state.valid) {
+                this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
+                this.state.isLoading = false;
+                return;
+            }
+    
+            this.summaryApi?.showToast?.("✅ Configuration saved!");
+    
             await this._validate();
             this.computeSummary?.();
             await nextTick();
+    
             const summary = this.summaryApi?.getSummaryState?.() || {};
             const name = this.productTemplateName;
-            
+    
             const config = {
                 name,
                 laterality: this.state.laterality,
@@ -314,17 +318,38 @@ export class ConfigureDialog extends Component {
                 total_price: summary.total || 0,
             };
     
-            console.log("🚀 Sending configuration payload:", config);
+            // const contextPayload = {
+            //     active_model: "sale.order.line",
+            //     active_id: activeId,
+            // };
+
+            // const contextPayload = {
+            //     active_model: "sale.order.line",
+            //     active_id: activeId,
+            //     active_sale_order_id: orderId,
+            // };
+
+            const contextPayload = {
+                active_model: "sale.order.line",
+                active_id: activeId,
+                active_sale_order_id: this.state.orderId || this.props.orderId,
+            };
+            
     
-            const res = await this.rpc(`/cpq/${this.props.productTmplId}/configure`, { configuration: config });
+            console.log("🧩 Submitting CPQ config to backend:", config);
+            console.log("🧩 Context for RPC:", contextPayload);
+    
+            const res = await this.rpc(
+                `/cpq/${this.props.productTmplId}/configure`,
+                { configuration: config },
+                { context: contextPayload }
+            );
     
             if (res?.configuration) {
-                console.log("✅ Configuration saved successfully:", res);
-    
                 const success = await this._applyConfigurationResult(res);
                 if (success) {
                     this._closeDialog();
-                
+                    this.notification.add("✅ Configuration successfully saved to order line.", { type: "success" });
                     if (res.sale_order_id) {
                         this.env.services.action.doAction({
                             type: "ir.actions.act_window",
@@ -335,9 +360,8 @@ export class ConfigureDialog extends Component {
                         });
                     }
                 }
-                
             } else {
-                this.notification.add("Unexpected response from server. Please try again.", { type: "danger" });
+                this.notification.add("Unexpected server response. Please try again.", { type: "danger" });
             }
     
         } catch (error) {
@@ -347,44 +371,55 @@ export class ConfigureDialog extends Component {
             this.state.isLoading = false;
         }
     }
+    
+    
 
     async _applyConfigurationResult(result) {
-        if (!this.props.record) {
-            console.warn("⚠️ No record prop passed to ConfigureDialog.");
-            this.notification.add("No record available to update the order line.", { type: "warning" });
+        const activeId = this.props.context?.active_id || this.props.record?.resId;
+        const orderId = this.props.orderId || this.props.record?.data?.order_id?.[0];
+    
+        if (!activeId || !orderId) {
+            this.notification.add("Missing order line or order context. Please reload the page.", { type: "danger" });
             return false;
         }
     
         try {
             await applyProduct(this.props.record, result);
-            console.log("✅ Order line updated successfully.");
-            this.notification.add("Configuration applied to the order line successfully.", { type: "success" });
+            console.log("✅ Order line updated successfully with:", result);
     
-            // 🧩 Debug this!
-            console.log("🧩 Debug Navigation Check: ", {
-                record: this.props.record,
-                recordResId: this.props.record?.resId,
-                recordId: this.props.record?.id,
-            });
-
-            if (this.env.services.action && result?.sale_order_id) {
-                console.log("🚀 Navigating to sale order form view:", result.sale_order_id);
+            // ✅ Pulse summary panel for visual feedback
+            this.pulseElement(".cpq-config-summary");
+    
+            // ✅ Toast success
+            this.notification.add("✅ Configuration applied to order line.", { type: "success" });
+    
+            // ✅ Scroll to order line for clear UX
+            setTimeout(() => {
+                const lineEl = document.querySelector(`[data-id="${activeId}"]`);
+                if (lineEl) {
+                    lineEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    lineEl.classList.add("highlight-success");
+                    setTimeout(() => lineEl.classList.remove("highlight-success"), 1500);
+                }
+            }, 300);
+    
+            // ✅ Optional: Redirect to order form if present in response
+            if (result.sale_order_id) {
+                console.log("🚀 Redirecting to Sale Order:", result.sale_order_id);
                 this.env.services.action.doAction({
-                    type: 'ir.actions.act_window',
-                    res_model: 'sale.order',
+                    type: "ir.actions.act_window",
+                    res_model: "sale.order",
                     res_id: result.sale_order_id,
-                    views: [[false, 'form']],
-                    target: 'current',
+                    views: [[false, "form"]],
+                    target: "current",
                 });
             }
+    
             return true;
     
         } catch (error) {
-            console.error("❌ Failed to update order line with configuration result:", error);
-            this.notification.add(
-                "An error occurred while updating the order line. Please check your configuration.",
-                { type: "danger" }
-            );
+            console.error("❌ Failed to apply configuration result:", error);
+            this.notification.add("An error occurred while updating the order line.", { type: "danger" });
             return false;
         }
     }
@@ -662,38 +697,35 @@ export class ConfigureDialog extends Component {
 
 export function ConfigureDialogAction(env, action) {
     const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
-
-    console.log("🚀 Action called with:", action);
-    console.log("🚀 Action context:", action.context);
     const context = action.context || {};
-    console.log("🧩 ConfigureDialogAction context:", context);
-    // const productTmplId = context.cpq_product_template_id;
-    // const orderId = context.active_sale_order_id || context.sale_order_id;
-    // const currencyId = context.currencyId;
-    // const soDate = context.soDate;
-    // const companyId = context.companyId;
-
+    console.log("🚀 ConfigureDialogAction context:", context);
+    console.log("🚀 active_id:", context.active_id);
+    
     const productTmplId = safeMany2One(context.cpq_product_template_id);
     const orderId = safeMany2One(context.active_sale_order_id || context.sale_order_id);
     const soDate = context.soDate;
     const currencyId = safeMany2One(context.currencyId);
-    const companyId = safeMany2One(context.companyId)
+    const companyId = safeMany2One(context.companyId);
+    const activeId = context.active_id;
+    // ✅ Fetch record manually (safe fallback)
+    const orderLineRecord = env.models?.['sale.order.line']?.records?.find(rec => rec.resId === activeId);
 
-    if (!productTmplId) {
-        console.error("❌ No productTmplId passed in context!");
+
+    if (!productTmplId || !activeId) {
+        console.error("❌ Missing required data for configurator launch:", { productTmplId, activeId });
+        env.services.notification.add("Unable to open configurator: Missing data.", { type: "danger" });
+        return;
+    }
+
+    if (!orderLineRecord) {
+        console.error("❌ No active order line record found for ID:", activeId);
+        env.services.notification.add("No active order line found. Please check your order.", { type: "danger" });
+        return;
     }
 
     env.services.dialog.add(ConfigureDialog, {
-        // productTmplId: productTmplId,
-        // productTmplName: context.product_template_name || "Configured Product",
-        // orderId: context.active_sale_order_id || context.sale_order_id,
-        // quantity: context.quantity || 1,
-        // currencyId: context.currency_id,
-        // soDate: context.so_date,
-        // companyId: context.company_id,
-        // context: context,
         productTmplId,
-        orderId,
+        orderId: orderLineRecord.data.order_id?.[0] || null, 
         quantity: context.quantity || 1,
         currencyId,
         soDate,
@@ -701,59 +733,55 @@ export function ConfigureDialogAction(env, action) {
         context,
         edit: true,
         cpqInitialConfig: context.cpq_initial_config || null,
+        record: orderLineRecord,
 
         save: async (res) => {
-            if (context.active_model === "sale.order.line" && context.active_id) {
-                try {
-                    const values = {
+            try {
+                await env.services.orm.call("sale.order.line", "write", [
+                    [activeId],
+                    {
                         product_id: res.configuration.product_id,
                         cpq_configuration_json: res.configuration.cpq_configuration_json,
                         cpq_configuration_summary: res.configuration.cpq_configuration_summary,
                         product_uom_qty: res.configuration.quantity_to_make,
                         name: res.configuration.name,
-                    };
-        
-                    console.log("📝 Writing configuration to sale.order.line:", values);
-        
-                    await env.services.orm.call(
-                        "sale.order.line",
-                        "write",
-                        [context.active_id, values]
-                    );
-        
-                    const saleOrderId = res.configuration.sale_order_id || context.active_sale_order_id;
-        
-                    if (saleOrderId) {
-                        env.services.notification.add("✅ Configuration applied successfully.", { type: "success" });
-                        env.services.action.doAction({
-                            type: "ir.actions.act_window",
-                            res_model: "sale.order",
-                            res_id: saleOrderId,
-                            views: [[false, "form"]],
-                            target: "current",
-                        });
-                    } else {
-                        env.services.notification.add("✅ Configuration applied, please refresh your order.", { type: "success" });
-                        env.services.action.doAction({ type: "ir.actions.act_window_close" });
-                    }
-        
-                } catch (error) {
-                    console.error("❌ Failed to write configuration to sale.order.line:", error);
-                    env.services.notification.add(
-                        "Failed to apply configuration to the order line.",
-                        { type: "danger" }
-                    );
+                    },
+                ]);
+
+                // env.services.notification.add("✅ Configuration saved successfully.", { type: "success" });
+                this.notification.add(_t("✅ Configuration applied successfully!"), { type: "success" });
+
+                setTimeout(() => {
+                    this.notification.add(_t("🎉 Order line updated!"), { type: "success" });
+                }, 1000);
+
+                const saleOrderId = res.configuration.sale_order_id || context.active_sale_order_id;
+                if (saleOrderId) {
+                    env.services.action.doAction({
+                        type: "ir.actions.act_window",
+                        res_model: "sale.order",
+                        res_id: saleOrderId,
+                        views: [[false, "form"]],
+                        target: "current",
+                    });
+                } else {
+                    env.services.action.doAction({ type: "ir.actions.act_window_close" });
                 }
-            } else {
-                env.services.action.doAction({ type: "ir.actions.act_window_close" });
+
+            } catch (error) {
+                console.error("❌ Failed to write configuration to order line:", error);
+                env.services.notification.add("Failed to apply configuration. Please try again.", {
+                    type: "danger",
+                });
             }
         },
-        
+
         close: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
         discard: () => env.services.action.doAction({ type: "ir.actions.act_window_close" }),
     });
 }
 
+
 registry.category("actions").add("cpq.ConfigureDialogAction", ConfigureDialogAction);
 
- 
+

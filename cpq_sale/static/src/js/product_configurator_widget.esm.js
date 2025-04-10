@@ -19,6 +19,8 @@ patch(SaleOrderLineProductField.prototype, {
 
     _editProductConfiguration() {
         if (this.props.record.data.product_template_id_cpq_ok) {
+            console.log("🚀 Opening configurator dialog with orderId:", orderId);
+
             return this._cpqConfigureDialog();
         }
         super._editProductConfiguration(...arguments);
@@ -44,68 +46,174 @@ patch(SaleOrderLineProductField.prototype, {
         super._onProductTemplateUpdate(...arguments);
     },
 
-    _cpqConfigureDialog() {
-        this.notification.add(_t("Opening CPQ Configurator..."), { type: "info" });
-
-        const safeMany2One = (field) => Array.isArray(field) ? field[0] : undefined;
-
-        const productTmplId =
-            safeMany2One(this.props.record.data.product_template_id) ||
-            safeMany2One(this.props.record.data.product_id);
-
+    async _cpqConfigureDialog() {
+        this.skipNextProductTemplateUpdate = false;
+    
+        const safeM2O = (field) => Array.isArray(field) ? field : field ? [field, ""] : [false, ""];
+        const safeRead = async (model, ids, fieldList) => {
+            try {
+                const idList = Array.isArray(ids) ? ids : [ids];
+                const result = await this.orm.call(model, "read", [idList, fieldList]);
+                return Array.isArray(result) ? result[0] : result;
+            } catch (error) {
+                console.error(`❌ Failed to read model: ${model} with ID(s): ${ids}`, error);
+                throw error;
+            }
+        };
+    
+        const safeFrontendUpdate = async (record, backendData) => {
+            const frontendFields = Object.keys(record.data || {});
+            const safeData = {};
+            const skippedFields = [];
+    
+            for (const [key, value] of Object.entries(backendData)) {
+                if (frontendFields.includes(key)) {
+                    safeData[key] = Array.isArray(value) ? value : value;
+                } else {
+                    skippedFields.push(key);
+                }
+            }
+    
+            if (skippedFields.length > 0) {
+                console.warn(`🚧 Skipped fields (not in view):`, skippedFields);
+            }
+    
+            if (Object.keys(safeData).length > 0) {
+                console.log("✅ Safe data applied to record:", safeData);
+                await record.update(safeData);
+            }
+        };
+    
+        const productTmplId = safeM2O(this.props.record.data.product_template_id)[0];
         if (!productTmplId) {
             this.notification.add(_t("Missing product template for CPQ configuration."), { type: "danger" });
             return;
         }
-
-        this.dialog.add(ConfigureDialog, {
+    
+        let activeId = this.props.record.resId;
+        let orderId = null;
+        this.notification.add(_t("🔧 Preparing your configuration..."), { type: "info" });
+    
+        let lineData = null;
+    
+        if (!activeId) {
+            try {
+                orderId = safeM2O(this.props.record.model.root.resId)[0];
+                if (!orderId) {
+                    this.notification.add(_t("Cannot configure: missing order. Please check your order."), { type: "danger" });
+                    return;
+                }
+    
+                const productData = await safeRead("product.template", productTmplId, ["uom_id", "product_variant_id"]);
+                console.log("🧩 Product data loaded:", productData);
+    
+                const createdId = await this.orm.call("sale.order.line", "create", [{
+                    order_id: orderId,
+                    product_template_id: productTmplId,
+                    product_id: productData.product_variant_id?.[0] || false,
+                    product_uom: productData.uom_id?.[0] || false,
+                    product_uom_qty: 1,
+                    name: "Custom CPQ Line",
+                    price_unit: 0.0,
+                }]);
+    
+                activeId = Array.isArray(createdId) ? createdId[0] : createdId;
+                console.log("✅ Created order line ID:", activeId);
+    
+                lineData = await safeRead("sale.order.line", activeId, [
+                    "order_id",
+                    "product_template_id",
+                    "product_uom_qty",
+                    "currency_id",
+                    "company_id",
+                    "name",
+                    "product_uom",
+                ]);
+    
+                orderId = safeM2O(lineData.order_id)[0] || orderId;
+                console.log("🧩 Cached orderId after creation:", orderId);
+    
+                await safeFrontendUpdate(this.props.record, {
+                    order_id: safeM2O(lineData.order_id),
+                    product_template_id: safeM2O(lineData.product_template_id),
+                    product_uom_qty: lineData.product_uom_qty,
+                    currency_id: safeM2O(lineData.currency_id),
+                    company_id: safeM2O(lineData.company_id),
+                    name: lineData.name,
+                    product_uom: safeM2O(lineData.product_uom),
+                });
+    
+                this.notification.add(_t("✅ Order line created! Opening configurator..."), { type: "success" });
+                this._pulseLine(activeId);
+    
+            } catch (error) {
+                console.error("❌ Failed to create order line:", error);
+                this.notification.add(_t("Failed to create order line. Please try again."), { type: "danger" });
+                return;
+            }
+        } else {
+            try {
+                lineData = await safeRead("sale.order.line", activeId, ["order_id"]);
+                orderId = safeM2O(lineData?.order_id)[0] || safeM2O(this.props.record.data.order_id)[0] || safeM2O(this.props.record.model.root.resId)[0];
+                console.log("🧩 Cached orderId from existing line:", orderId);
+            } catch (error) {
+                console.warn("⚠️ Could not fetch orderId from existing line:", error);
+            }
+        }
+    
+        if (!orderId) {
+            console.error("🚨 orderId still undefined before opening dialog!");
+            this.notification.add(_t("Cannot open configurator: missing order ID."), { type: "danger" });
+            return;
+        }
+    
+        console.log("🚀 Opening configurator dialog with orderId:", orderId);
+    
+        this.dialogService.add(ConfigureDialog, {
             record: this.props.record,
-            orderId: safeMany2One(this.props.record.data.order_id),
-            productTmplId: productTmplId,
+            orderId,
+            productTmplId,
             quantity: this.props.record.data.product_uom_qty,
-            currencyId: safeMany2One(this.props.record.data.currency_id),
+            currencyId: safeM2O(this.props.record.data.currency_id)[0],
             soDate: serializeDateTime(this.props.record.model.root.data.date_order),
-            productUOMId: safeMany2One(this.props.record.data.product_uom),
-            pricelistId: safeMany2One(this.props.record.model.root.data.pricelist_id),
-            companyId: safeMany2One(this.props.record.model.root.data.company_id),
-            edit: true,
-
-            save: async (productTmplId, result) => {
-                const lineId = result.sale_order_line_id;
-                this.skipNextProductTemplateUpdate = true;
-
-                if (lineId) {
-                    const [lineData] = await this.orm.call('sale.order.line', 'read', [lineId], [
-                        'product_id', 'name', 'price_unit', 'cpq_configuration_summary',
-                    ]);
-                    await this.props.record.update({
-                        product_id: [lineData.product_id[0], lineData.product_id[1]],
-                        name: lineData.cpq_configuration_summary || lineData.name,
-                        price_unit: lineData.price_unit,
-                    });
-                }
-
-                this.props.record.model.root.data.order_line.leaveEditMode();
-                window.location.reload();
-
-                if (lineId) {
-                    setTimeout(() => {
-                        const lineEl = document.querySelector(`[data-id="${lineId}"]`);
-                        if (lineEl) {
-                            lineEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                            lineEl.classList.add("o_selected_row");
-                        }
-                    }, 500);
-                }
+            productUOMId: safeM2O(this.props.record.data.product_uom)[0],
+            companyId: safeM2O(this.props.record.model.root.data.company_id)[0],
+            context: {
+                ...this.props.record.model.root.context,
+                active_model: "sale.order.line",
+                active_id: activeId,
             },
-
+            edit: true,
+            save: async (productTmplId, result) => {
+                await this.onCreate(productTmplId, result);
+            },
             discard: () => {
                 this.props.record.model.root.data.order_line.delete(this.props.record);
+                this.notification.add(_t("Configuration discarded."), { type: "warning" });
             },
-
             close: () => {
-                console.log("Dialog closed");
+                this.notification.add(_t("Configurator closed."), { type: "info" });
             },
         });
+    }
+    ,
+    
+
+
+    _pulseLine(lineId) {
+        setTimeout(() => {
+            const lineEl = document.querySelector(`[data-id="${lineId}"]`);
+            if (lineEl) {
+                lineEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                lineEl.classList.add("highlight-success");
+                setTimeout(() => lineEl.classList.remove("highlight-success"), 1500);
+            }
+
+            const totalEl = document.querySelector(".o_sale_order_total");
+            if (totalEl) {
+                totalEl.classList.add("highlight-success");
+                setTimeout(() => totalEl.classList.remove("highlight-success"), 1500);
+            }
+        }, 300);
     },
 });

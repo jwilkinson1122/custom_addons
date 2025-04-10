@@ -13,48 +13,62 @@ class ProductTemplate(models.Model):
         string="Configurable Sale Description Template"
     )
 
+    # def action_configure_cpq(self):
+    #     self.ensure_one()
+
+    #     if not self.id:
+    #         self.order_id._compute_amount_all()
+    #         self.order_id.write({'order_line': [(1, self._origin.id, {})]})
+    #         self._cr.commit()
+
+    #     return {
+    #     "type": "ir.actions.client",
+    #     "tag": "cpq.ConfigureDialogAction",
+    #     "context": {
+    #         "active_model": "sale.order.line",
+    #         "active_id": self.id,
+    #         "cpq_product_template_id": self.product_template_id.id,
+    #         "cpq_initial_config": self.cpq_configuration_json or False,
+    #         "orderId": self.order_id.id,
+    #         "currencyId": self.order_id.currency_id.id,
+    #         "soDate": str(self.order_id.date_order),
+    #         "companyId": self.order_id.company_id.id,
+    #     },
+    # }
+
     def action_configure_cpq(self):
         self.ensure_one()
 
-        ctx = self.env.context
-        active_order_id = ctx.get("active_id")
-        active_model = ctx.get("active_model")
+        # ✅ Step 1: Ensure sale.order exists
+        order = self.env["sale.order"].search([("state", "=", "draft")], limit=1)
+        if not order:
+            order = self.env["sale.order"].create({
+                "partner_id": self.env.user.partner_id.id,
+            })
 
-        _logger.info(f"🧩 Configurator called for product {self.display_name} with context: {ctx}")
+        # ✅ Step 2: Create draft order line for this template
+        order_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_template_id": self.id,
+            "product_id": self._ensure_configurator_product().id,
+            "product_uom_qty": 1,
+            "price_unit": self.list_price,
+        })
 
-        sale_order = None
-
-        if active_model == "sale.order" and active_order_id:
-            sale_order = self.env["sale.order"].browse(active_order_id)
-            _logger.info(f"🧾 Using active Sale Order {sale_order.name} ({sale_order.id}) from context.")
-        elif active_model == "sale.order.line" and active_order_id:
-            sale_order_line = self.env["sale.order.line"].browse(active_order_id)
-            sale_order = sale_order_line.order_id
-            _logger.info(f"🧾 Using Sale Order {sale_order.name} ({sale_order.id}) from sale order line context.")
-        else:
-            # Smart fallback: try to use existing draft order
-            sale_order = self.env["sale.order"].search([("state", "=", "draft")], limit=1)
-            if sale_order:
-                _logger.info(f"🧾 Fallback to first draft Sale Order {sale_order.name} ({sale_order.id})")
-            else:
-                sale_order = self.env["sale.order"].create({
-                    "partner_id": self.env.user.partner_id.id,
-                })
-                _logger.info(f"🆕 Created new draft Sale Order {sale_order.name} ({sale_order.id})")
+        _logger.info(f"🧩 Created order line {order_line.id} for CPQ configuration.")
 
         return {
             "type": "ir.actions.client",
             "tag": "cpq.ConfigureDialogAction",
             "context": {
-                "active_model": "sale.order",
-                "active_id": sale_order.id,
+                "active_model": "sale.order.line",
+                "active_id": order_line.id,  # ✅ CORRECT order line ID
                 "cpq_product_template_id": self.id,
-                "cpq_initial_config": False,
-                "redirect_to_line": True,
-                "orderId": sale_order.id,
-                "currencyId": sale_order.currency_id.id,
-                "soDate": str(sale_order.date_order),
-                "companyId": sale_order.company_id.id,
+                "cpq_initial_config": order_line.cpq_configuration_json or False,
+                "orderId": order.id,
+                "currencyId": order.currency_id.id,
+                "soDate": str(order.date_order),
+                "companyId": order.company_id.id,
             },
         }
 

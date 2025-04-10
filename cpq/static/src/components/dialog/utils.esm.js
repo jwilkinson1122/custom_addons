@@ -89,29 +89,3 @@ export async function applyProduct(record, configResult) {
 }
 
 
-// export async function applyProduct(record, configResult) {
-//     console.log("🧩 Applying configured product to order line:", configResult);
-
-//     if (!record) {
-//         console.warn("⚠️ No record provided to applyProduct.");
-//         return;
-//     }
-
-//     const updates = {
-//         product_id: [configResult.product_id, configResult.product_display_name],
-//         cpq_configuration_json: configResult.configuration_json,
-//         cpq_configuration_summary: configResult.configuration_summary,
-//         product_uom_qty: configResult.configuration?.quantity_to_make || 1,
-//     };
-
-//     console.log("💾 Applying updates to record:", updates);
-
-//     await record.update(updates);
-
-//     record.model.root.data.order_line.leaveEditMode();
-
-//     console.log("✅ Order line updated with CPQ configuration.");
-// }
-
-
-
