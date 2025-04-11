@@ -15,7 +15,7 @@
         "views/sale_blanket_order_view.xml",
     ],
     "installable": True,
-    "auto_install": True,
+    "auto_install": False,
     "development_status": "Alpha",
     "maintainers": ["dreispt"],
 }

@@ -18,6 +18,6 @@
             'pod_product_configurator/static/src/**/*',
         ],
     },
-    'auto_install': True,
+    'auto_install': False,
     'license': 'LGPL-3',
 }

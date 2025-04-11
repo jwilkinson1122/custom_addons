@@ -4,7 +4,7 @@
     "author": "NWPL",
     "category": "Sales/Sales",
     "version": "17.0.1.0.0",
-    "depends": ["product", "sale_management"],
+    "depends": ["product"],
     "data": [
         "security/ir.model.access.csv",
         # "views/product_template.xml",

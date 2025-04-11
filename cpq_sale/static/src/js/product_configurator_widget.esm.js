@@ -1,5 +1,7 @@
 /** @odoo-module **/
 /* eslint-disable sort-imports */
+// import { registry } from "@web/core/registry";
+// import { ProductConfiguratorWidget } from "@sale_product_configurator/components/product_configurator_widget/product_configurator_widget";
 
 import { ConfigureDialog } from "@cpq/components/dialog/dialog.esm";
 import { patch } from "@web/core/utils/patch";
@@ -96,7 +98,10 @@ patch(SaleOrderLineProductField.prototype, {
     
         let lineData = null;
     
-        if (!activeId) {
+        const isVirtual = activeId && typeof activeId === 'string' && activeId.startsWith('virtual');
+        console.log(`🧩 _cpqConfigureDialog() invoked - Order ID: unknown yet, Order Line ID: ${activeId} (virtual: ${isVirtual})`);
+    
+        if (!activeId || isVirtual) {
             try {
                 orderId = safeM2O(this.props.record.model.root.resId)[0];
                 if (!orderId) {
@@ -104,7 +109,8 @@ patch(SaleOrderLineProductField.prototype, {
                     return;
                 }
     
-                const productData = await safeRead("product.template", productTmplId, ["uom_id", "product_variant_id"]);
+                await this.orm.call("product.template", "ensure_configurator_product", [productTmplId]);
+                const productData = await safeRead("product.template", productTmplId, ["uom_id", "product_variant_id", "name"]);
                 console.log("🧩 Product data loaded:", productData);
     
                 const createdId = await this.orm.call("sale.order.line", "create", [{
@@ -182,10 +188,18 @@ patch(SaleOrderLineProductField.prototype, {
                 ...this.props.record.model.root.context,
                 active_model: "sale.order.line",
                 active_id: activeId,
+                active_sale_order_id: orderId,
             },
             edit: true,
             save: async (productTmplId, result) => {
-                await this.onCreate(productTmplId, result);
+                const context = {
+                    ...this.props.record.model.root.context,
+                    active_model: "sale.order.line",
+                    active_id: activeId,
+                    active_sale_order_id: orderId,
+                };
+                console.log("🧩 Corrected Context for Save:", context);
+                await this.onCreate(productTmplId, result, context);
             },
             discard: () => {
                 this.props.record.model.root.data.order_line.delete(this.props.record);
@@ -195,11 +209,22 @@ patch(SaleOrderLineProductField.prototype, {
                 this.notification.add(_t("Configurator closed."), { type: "info" });
             },
         });
-    }
-    ,
+    },
     
 
-
+    // save: async (productTmplId, result) => {
+    //     const activeId = this.props.record.resId;
+    //     const context = {
+    //         ...this.props.record.model.root.context,
+    //         active_model: "sale.order.line",
+    //         active_id: activeId,
+    //         active_sale_order_id: orderId,
+    //     };
+    //     console.log("🧩 Corrected Context for Save:", context);
+    //     await this.onCreate(productTmplId, result, context);
+    // },
+    
+    
     _pulseLine(lineId) {
         setTimeout(() => {
             const lineEl = document.querySelector(`[data-id="${lineId}"]`);
@@ -217,3 +242,138 @@ patch(SaleOrderLineProductField.prototype, {
         }, 300);
     },
 });
+
+// export class CPQProductConfiguratorWidget extends ProductConfiguratorWidget {
+//     setup() {
+//         super.setup();
+//         this.state.isCreating = false; // ✅ Debounce flag
+//     }
+
+//     async _cpqConfigureDialog() {
+//         if (this.state.isCreating) {
+//             console.warn("🚧 Already creating a line, skipping.");
+//             return;
+//         }
+
+//         this.state.isCreating = true;
+
+//         try {
+//             const safeM2O = (field) => Array.isArray(field) ? field : field ? [field, ""] : [false, ""];
+//             const safeRead = async (model, ids, fields) => {
+//                 const idList = Array.isArray(ids) ? ids : [ids];
+//                 const result = await this.orm.call(model, "read", [idList, fields]);
+//                 return Array.isArray(result) ? result[0] : result;
+//             };
+
+//             const safeFrontendUpdate = async (record, backendData) => {
+//                 const frontendFields = Object.keys(record.data || {});
+//                 const safeData = {};
+//                 for (const [key, value] of Object.entries(backendData)) {
+//                     if (frontendFields.includes(key)) {
+//                         safeData[key] = Array.isArray(value) ? value : value;
+//                     }
+//                 }
+//                 if (Object.keys(safeData).length > 0) {
+//                     await record.update(safeData);
+//                 }
+//             };
+
+//             const productTmplId = safeM2O(this.props.record.data.product_template_id)[0];
+//             if (!productTmplId) {
+//                 this.notification.add(_t("Missing product template for CPQ configuration."), { type: "danger" });
+//                 return;
+//             }
+
+//             let activeId = this.props.record.resId;
+//             let orderId = null;
+//             let lineData = null;
+
+//             if (!activeId) {
+//                 try {
+//                     orderId = safeM2O(this.props.record.model.root.resId)[0];
+//                     if (!orderId) {
+//                         this.notification.add(_t("Cannot configure: missing order. Please check your order."), { type: "danger" });
+//                         return;
+//                     }
+
+//                     await this.orm.call("product.template", "ensure_configurator_product", [productTmplId]);
+
+//                     const productData = await safeRead("product.template", productTmplId, ["uom_id", "product_variant_id", "name"]);
+//                     const createdId = await this.orm.call("sale.order.line", "create", [{
+//                         order_id: orderId,
+//                         product_template_id: productTmplId,
+//                         product_id: productData.product_variant_id?.[0] || false,
+//                         product_uom: productData.uom_id?.[0] || false,
+//                         product_uom_qty: 1,
+//                         name: "Custom CPQ Line",
+//                         price_unit: 0.0,
+//                     }]);
+
+//                     activeId = Array.isArray(createdId) ? createdId[0] : createdId;
+//                     lineData = await safeRead("sale.order.line", activeId, ["order_id", "product_template_id", "product_uom_qty", "currency_id", "company_id", "name", "product_uom"]);
+//                     orderId = safeM2O(lineData.order_id)[0] || orderId;
+
+//                     await safeFrontendUpdate(this.props.record, {
+//                         order_id: safeM2O(lineData.order_id),
+//                         product_template_id: safeM2O(lineData.product_template_id),
+//                         product_uom_qty: lineData.product_uom_qty,
+//                         currency_id: safeM2O(lineData.currency_id),
+//                         company_id: safeM2O(lineData.company_id),
+//                         name: lineData.name,
+//                         product_uom: safeM2O(lineData.product_uom),
+//                     });
+
+//                     this.notification.add(_t("✅ Order line created! Opening configurator..."), { type: "success" });
+//                 } catch (error) {
+//                     console.error("❌ Failed to create order line:", error);
+//                     this.notification.add(_t("Failed to create order line. Please try again."), { type: "danger" });
+//                     return;
+//                 }
+//             } else {
+//                 try {
+//                     lineData = await safeRead("sale.order.line", activeId, ["order_id"]);
+//                     orderId = safeM2O(lineData?.order_id)[0] || safeM2O(this.props.record.data.order_id)[0];
+//                 } catch (error) {
+//                     console.warn("⚠️ Could not fetch orderId from existing line:", error);
+//                 }
+//             }
+
+//             if (!orderId) {
+//                 this.notification.add(_t("Cannot open configurator: missing order ID."), { type: "danger" });
+//                 return;
+//             }
+
+//             this.dialogService.add(ConfigureDialog, {
+//                 record: this.props.record,
+//                 orderId,
+//                 productTmplId,
+//                 quantity: this.props.record.data.product_uom_qty,
+//                 currencyId: safeM2O(this.props.record.data.currency_id)[0],
+//                 soDate: this.props.record.model.root.data.date_order,
+//                 productUOMId: safeM2O(this.props.record.data.product_uom)[0],
+//                 companyId: safeM2O(this.props.record.model.root.data.company_id)[0],
+//                 context: {
+//                     ...this.props.record.model.root.context,
+//                     active_model: "sale.order.line",
+//                     active_id: activeId,
+//                 },
+//                 edit: true,
+//                 close: () => {
+//                     this.notification.add(_t("Configurator closed."), { type: "info" });
+//                 },
+//                 discard: () => {
+//                     this.props.record.model.root.data.order_line.delete(this.props.record);
+//                     this.notification.add(_t("Configuration discarded."), { type: "warning" });
+//                 },
+//             });
+
+//         } catch (error) {
+//             console.error("❌ CPQ Configurator Dialog error:", error);
+//             this.notification.add(_t("Failed to open configurator. Please try again."), { type: "danger" });
+//         } finally {
+//             this.state.isCreating = false;
+//         }
+//     }
+// }
+
+// registry.category("view_widgets").add("product_configurator", CPQProductConfiguratorWidget);

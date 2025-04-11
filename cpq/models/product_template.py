@@ -87,6 +87,15 @@ class ProductTemplate(models.Model):
             return True
         return super(ProductTemplate, templates)._create_variant_ids()
 
+    @api.model
+    def ensure_configurator_product(self, product_tmpl_id):
+        product_tmpl = self.sudo().browse(product_tmpl_id)
+        if not product_tmpl.exists():
+            raise UserError("Product template not found.")
+        product = product_tmpl._ensure_configurator_product()
+        return {"product_id": product.id}
+
+
     def _ensure_configurator_product(self):
         self.ensure_one()
         Product = self.env["product.product"]
