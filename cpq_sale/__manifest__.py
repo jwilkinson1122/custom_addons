@@ -8,7 +8,6 @@
     "auto_install": ["cpq", "sale"],
     "data": [
         "security/ir.model.access.csv",
-        # "views/menu.xml",
         "views/sale_order.xml",
         "views/sale_order_line.xml",
         "views/product_template.xml",
@@ -17,7 +16,7 @@
         "reports/reports.xml",
         "reports/report_configuration_summary.xml",
         "reports/sale_report_view.xml",
-        "views/menu.xml",
+        
     ],
     "license": "LGPL-3",
     "assets": {

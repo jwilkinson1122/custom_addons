@@ -95,7 +95,6 @@ class ProductTemplate(models.Model):
         product = product_tmpl._ensure_configurator_product()
         return {"product_id": product.id}
 
-
     def _ensure_configurator_product(self):
         self.ensure_one()
         Product = self.env["product.product"]
@@ -211,6 +210,66 @@ class ProductTemplate(models.Model):
             "tag": "cpq.ConfigureDialogAction",
             "target": "self",
         }
+    
+    # def action_configure_cpq(self):
+    #     self.ensure_one()
+    #     order = self.env["sale.order"].search([("state", "=", "draft")], limit=1)
+    #     if not order:
+    #         order = self.env["sale.order"].create({
+    #             "partner_id": self.env.user.partner_id.id,
+    #         })
+
+    #     order_line = self.env["sale.order.line"].create({
+    #         "order_id": order.id,
+    #         "product_template_id": self.id,
+    #         "product_id": self._ensure_configurator_product().id,
+    #         "product_uom_qty": 1,
+    #         "price_unit": self.list_price,
+    #     })
+
+    #     _logger.info(f"🧩 Created order line {order_line.id} for CPQ configuration.")
+
+    #     return {
+    #         "type": "ir.actions.client",
+    #         "tag": "cpq.ConfigureDialogAction",
+    #         "context": {
+    #             "active_model": "sale.order.line",
+    #             "active_id": order_line.id, 
+    #             "cpq_product_template_id": self.id,
+    #             "cpq_initial_config": order_line.cpq_configuration_json or False,
+    #             "orderId": order.id,
+    #             "currencyId": order.currency_id.id,
+    #             "soDate": str(order.date_order),
+    #             "companyId": order.company_id.id,
+    #         },
+    #     }
+
+    # def action_config_start_global(self):
+    #     order = self.env["sale.order"].search([("state", "=", "draft")], limit=1)
+    #     if not order:
+    #         order = self.env["sale.order"].create({
+    #             "partner_id": self.env.user.partner_id.id,
+    #         })
+
+    #     cpq_products = self.env["product.template"].search([("cpq_ok", "=", True)])
+    #     if not cpq_products:
+    #         raise UserError("No CPQ-enabled products found.")
+
+    #     if len(cpq_products) == 1:
+    #         return cpq_products[0].action_configure_cpq()
+
+    #     return {
+    #         "type": "ir.actions.act_window",
+    #         "name": "Select CPQ Product",
+    #         "res_model": "product.template",
+    #         "view_mode": "tree",
+    #         "domain": [("cpq_ok", "=", True)],
+    #         "target": "current",
+    #         "context": {
+    #             "active_model": "sale.order",
+    #             "active_id": order.id,
+    #         },
+    #     }
     
     def _cpq_get_create_variant_vals(self, pta_value_ids, custom_dict=None):
         self.ensure_one()
@@ -608,3 +667,4 @@ class ProductTemplate(models.Model):
                     )
 
         return archived
+

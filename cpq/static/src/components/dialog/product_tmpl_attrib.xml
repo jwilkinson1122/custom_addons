@@ -7,10 +7,7 @@
             <div class="mb-3">
                 <t t-call="{{ getPTAVTemplate() }}" />
             </div>
-
-            <!-- Custom Value Input Section -->
-            <div class="mb-3"
-                t-if="props.attribute.ptav_ids.some(e => e.is_custom and ['char', 'float', 'integer'].includes(e.cpq_custom_type))">
+            <div class="mb-3" t-if="props.attribute.ptav_ids.some(e => e.is_custom and ['char', 'float', 'integer'].includes(e.cpq_custom_type))">
                 <div t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id">
                     <t t-if="ptav.is_custom
                             and props.selected[ptav.id] !== undefined
@@ -18,22 +15,22 @@
                         <strong t-esc="ptav.name" class="form-label" />
                         <p class="text-muted small mb-1">Enter custom value:</p>
                         <t t-if="[false, 'char'].includes(ptav.cpq_custom_type)">
-                            <input type="text" class="form-control o_input"
-                                t-on-input="(ev) => props.onCustom(ptav.id, ev)"
-                                t-att-value="props.selected[ptav.id]" />
+                            <input type="text" class="form-control o_input" t-on-input="(ev) => props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]" />
                         </t>
                         <t t-elif="['float', 'integer'].includes(ptav.cpq_custom_type)">
-                            <input type="number" class="form-control o_input"
-                                t-att-step="ptav.cpq_custom_type === 'float' ? 0.01 : 1"
-                                t-on-input="(ev) => props.onCustom(ptav.id, ev)"
-                                t-att-value="props.selected[ptav.id]" />
+                            <input type="number" class="form-control o_input" t-att-step="ptav.cpq_custom_type === 'float' ? 0.01 : 1" t-on-input="(ev) => props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]" />
+                        </t>
+                        <t t-elif="ptav.cpq_custom_type === 'options'">
+                            <select class="form-control" t-on-change="(ev) =&gt; props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]">
+                                <option />
+                                <option t-foreach="ptav.cpq_selection_values" t-as="i" t-key="i[0]" t-att-value="i[0]" t-esc="i[1]" t-att-class="{ 'css_not_available': ptav.excluded }" />
+                            </select>
                         </t>
                     </t>
                 </div>
             </div>
         </div>
     </t>
-
     <t t-name="cpq.ProductTmplAttrib-select" owl="1">
         <t t-if="!props.hideLabel">
             <label t-att-for="'ptal-' + props.attribute.id + '-' + (props.side || 'shared')" class="form-label font-weight-bold">
@@ -45,7 +42,6 @@
             <option t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id" t-att-value="ptav.id" t-att-selected="props.selected[ptav.id] !== undefined" t-att-class="{ 'css_not_available': ptav.excluded }" t-esc="ptav.name" />
         </select>
     </t>
-
     <!-- Radio Button Template -->
     <t t-name="cpq.ProductTmplAttrib-radio" owl="1">
         <t t-if="!props.hideLabel">
@@ -59,17 +55,12 @@
         </div>
         <!-- <t t-foreach="attribute.ptav_ids" t-as="ptav" t-key="ptav.id">
             <label class="form-check-label">
-                <input type="radio"
-                    name="attribute-{{ attribute.id }}"
-                    value="{{ ptav.id }}"
-                    class="form-check-input"
-                    t-on-change="(ev) => handleSelect(ev, ptav.id)" />
+                <input type="radio" name="attribute-{{ attribute.id }}" value="{{ ptav.id }}" class="form-check-input" t-on-change="(ev) => handleSelect(ev, ptav.id)" />
                 {{ ptav.formatted_name }}
             </label>
         </t> -->
 
     </t>
-
     <!-- Color Swatch Template -->
     <t t-name="cpq.ProductTmplAttrib-color" owl="1">
         <t t-if="!props.hideLabel">
@@ -83,5 +74,16 @@
             </li>
         </ul>
     </t>
-
 </templates>
+<!-- <templates xml:space="preserve">
+    <t t-inherit="cpq.ProductTmplAttrib" owl="1" t-inherit-mode="extension">
+        <xpath expr="//div[@t-foreach]/t/t[@t-elif][last()]" position="after">
+            <t t-elif="ptav.cpq_custom_type === 'options'">
+                <select class="form-control" t-on-change="(ev) =&gt; props.onCustom(ptav.id, ev)" t-att-value="props.selected[ptav.id]">
+                    <option />
+                    <option t-foreach="ptav.cpq_selection_values" t-as="i" t-key="i[0]" t-att-value="i[0]" t-esc="i[1]" t-att-class="{ 'css_not_available': ptav.excluded }" />
+                </select>
+            </t>
+        </xpath>
+    </t>
+</templates> -->

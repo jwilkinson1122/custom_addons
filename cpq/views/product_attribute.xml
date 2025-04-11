@@ -25,9 +25,10 @@
                     </group>
                 </group>
             </xpath>
-
             <xpath expr="//field[@name='value_ids']/tree/field[@name='is_custom']" position="after">
                 <field name="cpq_custom_type" invisible="is_custom == False" groups="product.group_product_variant" />
+                <field name="cpq_options_id" invisible="is_custom == False or cpq_custom_type != 'options'" groups="product.group_product_variant" />
+                <field name="cpq_options_relaxed_validation" invisible="is_custom == False or cpq_custom_type != 'options'" groups="product.group_product_variant" />
             </xpath>
         </field>
     </record>

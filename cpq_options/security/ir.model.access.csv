@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cpq_options,access_cpq_options,model_cpq_options,base.group_user,1,1,1,1
-access_cpq_options_public,access_cpq_options_public,model_cpq_options,,1,0,0,0

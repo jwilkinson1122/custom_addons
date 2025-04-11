@@ -2,9 +2,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ProductLaterality(models.Model):
-    _name = "cpq.laterality"
-    _description = "CPQ Laterality"
+class ProductOptions(models.Model):
+    _name = "product.options"
+    _description = "CPQ Product Options"
     _rec_name = "display_name"
 
     _parent_name = "parent_id"
@@ -20,12 +20,12 @@ class ProductLaterality(models.Model):
         index=True,
     )
     parent_id = fields.Many2one(
-        comodel_name="cpq.laterality", string="Parent", ondelete="cascade"
+        comodel_name="product.options", string="Parent", ondelete="cascade"
     )
     parent_path = fields.Char(index=True, unaccent=False)
     depth = fields.Integer(compute="_compute_depth", store=True)
     child_ids = fields.One2many(
-        comodel_name="cpq.laterality",
+        comodel_name="product.options",
         inverse_name="parent_id",
         string="Children",
         domain="[('parent_id', '=', False)]",
@@ -42,10 +42,10 @@ class ProductLaterality(models.Model):
                 "warning": {
                     "title": _("Warning"),
                     "message": _(
-                        "Changing the parent of a laterality record may"
+                        "Changing the parent of a options record may"
                         " have unexpected results if this has been"
                         " used on a product.\n"
-                        "Recommended action is to archive this laterality and"
+                        "Recommended action is to archive this options and"
                         " create a new one"
                     ),
                 }
@@ -99,7 +99,7 @@ class ProductLaterality(models.Model):
     def action_view_children(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "cpq_laterality.product_laterality_action"
+            "cpq_options.product_options_action"
         )
         action["domain"] = [
             ("parent_path", "ilike", self.parent_path + "%"),
@@ -111,4 +111,4 @@ class ProductLaterality(models.Model):
     @api.constrains("parent_id")
     def _check_category_recursion(self):
         if not self._check_recursion():
-            raise ValidationError(_("You cannot create recursive lateralitys."))
+            raise ValidationError(_("You cannot create recursive optionss."))

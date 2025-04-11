@@ -11,32 +11,9 @@ import json
 _logger = logging.getLogger(__name__)
 
 
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
+# class SaleOrder(models.Model):
+#     _inherit = "sale.order"
 
-    # def action_config_start(self):
-    #     self.ensure_one()
-
-    #     cpq_products = self.env["product.template"].search([("cpq_ok", "=", True)])
-    #     if not cpq_products:
-    #         raise UserError("No CPQ-enabled products found.")
-
-    #     if len(cpq_products) == 1:
-    #         return cpq_products.action_configure_cpq()
-
-    #     return {
-    #         "type": "ir.actions.act_window",
-    #         "name": "Select CPQ Product",
-    #         "res_model": "product.template",
-    #         "view_mode": "tree",
-    #         "target": "current",
-    #         "domain": [("cpq_ok", "=", True)],
-    #         "context": {
-    #             "active_model": "sale.order",  
-    #             "active_id": self.id,          
-    #             "default_cpq_ok": True,
-    #         },
-    #     }
 
 class SaleOrderLine(models.Model):
     _inherit = ["sale.order.line", "mail.thread"]
@@ -140,27 +117,27 @@ class SaleOrderLine(models.Model):
                     config = {}
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        if self.product_id and self.product_id.cpq_ok:
-            tmpl = self.product_id.product_tmpl_id
+    # @api.onchange('product_id')
+    # def _onchange_product_id(self):
+    #     if self.product_id and self.product_id.cpq_ok:
+    #         tmpl = self.product_id.product_tmpl_id
 
-            return {
-                "type": "ir.actions.client",
-                "tag": "cpq.ConfigureDialogAction",
-                "context": {
-                    "active_model": "sale.order.line",
-                    "active_id": self.id,
-                    "cpq_product_template_id": tmpl.id,
-                    "cpq_initial_config": self.cpq_configuration_json,
-                    "from_sale_order": True,
-                    "redirect_to_line": True,
-                    "orderId": self.order_id.id,
-                    "currencyId": self.order_id.currency_id.id,
-                    "soDate": str(self.order_id.date_order),
-                    "companyId": self.order_id.company_id.id,
-                },
-            }
+    #         return {
+    #             "type": "ir.actions.client",
+    #             "tag": "cpq.ConfigureDialogAction",
+    #             "context": {
+    #                 "active_model": "sale.order.line",
+    #                 "active_id": self.id,
+    #                 "cpq_product_template_id": tmpl.id,
+    #                 "cpq_initial_config": self.cpq_configuration_json,
+    #                 "from_sale_order": True,
+    #                 "redirect_to_line": True,
+    #                 "orderId": self.order_id.id,
+    #                 "currencyId": self.order_id.currency_id.id,
+    #                 "soDate": str(self.order_id.date_order),
+    #                 "companyId": self.order_id.company_id.id,
+    #             },
+    #         }
         
     @api.onchange("product_id")
     def _onchange_product_id_warning(self):

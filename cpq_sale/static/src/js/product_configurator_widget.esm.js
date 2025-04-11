@@ -174,7 +174,7 @@ patch(SaleOrderLineProductField.prototype, {
         }
     
         console.log("🚀 Opening configurator dialog with orderId:", orderId);
-    
+        
         this.dialogService.add(ConfigureDialog, {
             record: this.props.record,
             orderId,
@@ -191,16 +191,6 @@ patch(SaleOrderLineProductField.prototype, {
                 active_sale_order_id: orderId,
             },
             edit: true,
-            save: async (productTmplId, result) => {
-                const context = {
-                    ...this.props.record.model.root.context,
-                    active_model: "sale.order.line",
-                    active_id: activeId,
-                    active_sale_order_id: orderId,
-                };
-                console.log("🧩 Corrected Context for Save:", context);
-                await this.onCreate(productTmplId, result, context);
-            },
             discard: () => {
                 this.props.record.model.root.data.order_line.delete(this.props.record);
                 this.notification.add(_t("Configuration discarded."), { type: "warning" });
@@ -209,6 +199,42 @@ patch(SaleOrderLineProductField.prototype, {
                 this.notification.add(_t("Configurator closed."), { type: "info" });
             },
         });
+        
+
+        // this.dialogService.add(ConfigureDialog, {
+        //     record: this.props.record,
+        //     orderId,
+        //     productTmplId,
+        //     quantity: this.props.record.data.product_uom_qty,
+        //     currencyId: safeM2O(this.props.record.data.currency_id)[0],
+        //     soDate: serializeDateTime(this.props.record.model.root.data.date_order),
+        //     productUOMId: safeM2O(this.props.record.data.product_uom)[0],
+        //     companyId: safeM2O(this.props.record.model.root.data.company_id)[0],
+        //     context: {
+        //         ...this.props.record.model.root.context,
+        //         active_model: "sale.order.line",
+        //         active_id: activeId,
+        //         active_sale_order_id: orderId,
+        //     },
+        //     edit: true,
+        //     save: async (productTmplId, result) => {
+        //         const context = {
+        //             ...this.props.record.model.root.context,
+        //             active_model: "sale.order.line",
+        //             active_id: activeId,
+        //             active_sale_order_id: orderId,
+        //         };
+        //         console.log("🧩 Corrected Context for Save:", context);
+        //         await this.onCreate(productTmplId, result, context);
+        //     },
+        //     discard: () => {
+        //         this.props.record.model.root.data.order_line.delete(this.props.record);
+        //         this.notification.add(_t("Configuration discarded."), { type: "warning" });
+        //     },
+        //     close: () => {
+        //         this.notification.add(_t("Configurator closed."), { type: "info" });
+        //     },
+        // });
     },
     
 

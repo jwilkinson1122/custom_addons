@@ -22,19 +22,29 @@ export function useDebouncedInput(delay = 300) {
     };
 }
 
-export function debounce(func, wait = 100) {
+// export function useDebouncedInput(delay = 300) {
+//     let timeout;
+//     return (callback) => (value) => {
+//         clearTimeout(timeout);
+//         timeout = setTimeout(() => callback(value), delay);
+//     };
+// }
+
+export function debounce(func, wait = 300) {
     let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
+    return function (...args) {
+        if (timeout) return;  
+        timeout = setTimeout(() => {
+            timeout = null;
+        }, wait);
+        return func.apply(this, args);
     };
 }
 
-
-export async function nextTick() {
-    await Promise.resolve();                 // microtask
-    await new Promise(r => setTimeout(r));   // full task (flushes Owl reactivity too)
+export function nextTick() {
+    return new Promise(resolve => setTimeout(resolve, 0));
 }
+
 
 export function validateProps(component, expectedProps) {
     for (const [key, def] of Object.entries(expectedProps)) {
@@ -51,6 +61,30 @@ export function validateProps(component, expectedProps) {
         }
     }
 }
+
+// export async function applyProduct(record, result) {
+//     if (!record || !result) {
+//         console.warn("⚠️ applyProduct: Missing record or result.");
+//         return;
+//     }
+
+//     const changes = {};
+//     const safeGet = (obj, path, fallback = null) => path.split('.').reduce((acc, key) => acc?.[key] ?? fallback, obj);
+
+//     const config = result.configuration || {};
+//     changes.name = config.name;
+//     changes.cpq_configuration_json = config.cpq_configuration_json;
+//     changes.cpq_configuration_summary = config.cpq_configuration_summary;
+
+//     changes.product_uom_qty = config.quantity_to_make || 1;
+
+//     try {
+//         await record.update(changes);
+//         console.log("✅ Record updated successfully:", changes);
+//     } catch (error) {
+//         console.error("❌ Failed to apply product config:", error);
+//     }
+// }
 
 export async function applyProduct(record, configResult) {
     console.log("🧩 applyProduct() called with configResult:", configResult);
@@ -79,7 +113,6 @@ export async function applyProduct(record, configResult) {
         await record.update(updates);
         console.log("✅ Order line after update:", record.data);
 
-        // Ensure UI refresh
         record.model.root.data.order_line.leaveEditMode();
 
         console.log("✅ Order line updated with CPQ configuration.");

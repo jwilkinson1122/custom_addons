@@ -30,7 +30,6 @@
                     </p>
 
                     <field name="cpq_ref_tmpl" invisible="cpq_ok == False or cpq_ref_mode != 'inline'" />
-
                     <field name="cpq_ref_code" options="{'mode': 'python'}" widget="ace" invisible="cpq_ok == False or cpq_ref_mode != 'code'" />
                 </group>
             </xpath>
@@ -50,6 +49,9 @@
                     <field name="no_create_variants"/>
                 </group>
             </xpath>
+            <!-- <xpath expr="//field[@name='product_tooltip']" position="before">
+                <field name="cpq_tooltip" string="" class="font-italic text-muted"/>
+            </xpath> -->
         </field>
     </record>
 
@@ -66,6 +68,11 @@
                     <i class="fa fa-wrench fa-lg" title="Configure Product" />
                 </a>
             </xpath>
+            <!-- <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
+                <a name="action_configure_cpq" type="object" invisible="cpq_ok == False" style="margin-right: 8px">
+                    <i class="fa fa-wrench fa-lg" title="Configure Product"/>
+                </a>
+            </xpath> -->
         </field>
     </record>
 
@@ -90,6 +97,46 @@
                 <field name="cpq_tooltip" string="" class="font-italic text-muted" />
             </xpath>
         </field>
+    </record>
+
+    <!-- ✅ Product Template Tree View with buttons -->
+    <!-- <record id="product_template_tree_view_cpq_configure" model="ir.ui.view">
+        <field name="name">product.template.tree.cpq.configure</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="cpq_ok" invisible="1"/>
+                <button name="action_config_start_global" string="🛠️ New Configuration" type="object" class="btn-primary" title="Start a new configuration" context="{'active_model': 'sale.order'}"/>
+                <button name="action_configure_cpq" string="Configure Product" type="object" class="btn-primary" context="{'from_cpq_button': True}"/>
+            </xpath>
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="multi_edit">0</attribute>
+            </xpath>
+        </field>
+    </record> -->
+
+    <!-- 🌟 Search View -->
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product_template_search_view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='consumable']" position="after">
+                <separator/>
+                <filter string="Configurable Products" name="cpq_products" domain="[('cpq_ok', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 🌟 Action to show only CPQ products -->
+    <record id="action_cpq_product_templates_only" model="ir.actions.act_window">
+        <field name="name">CPQ Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('cpq_ok', '=', True)]</field>
+        <field name="context">{}</field>
     </record>
     
 </odoo>
