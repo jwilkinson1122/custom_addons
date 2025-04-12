@@ -351,9 +351,9 @@ export class ConfigureDialog extends Component {
     
             console.log("✅ CPQ configure response:", response);
     
-            if (response?.sale_order_line_id) {
-                this._pulseLine(response.sale_order_line_id);
-            }
+            // if (response?.sale_order_line_id) {
+            //     this._pulseLine(response.sale_order_line_id);
+            // }
     
             if (response?.configuration) {
                 const success = await this._applyConfigurationResult(response);
