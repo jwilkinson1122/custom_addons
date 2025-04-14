@@ -274,6 +274,11 @@ export default class ConfiguratorSummaryPanel extends Component {
             total,
             extrasSubtotal: totalExtras,
         };
+        
+        if (this.summaryApi?.updateTotals) {
+            this.summaryApi.updateTotals(this.state.priceSummary);
+        }
+        
 
         console.log("✅ Final summary computed:", result);
 

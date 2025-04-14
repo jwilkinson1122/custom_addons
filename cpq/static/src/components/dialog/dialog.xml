@@ -51,12 +51,26 @@
                         </div>
                     </t>
                     <!-- 🔢 Quantity Input -->
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="form-label">
                             <t t-esc="state.laterality === 'bilateral' ? 'Pairs to Make:' : 'Quantity to Make:'"/>
                         </label>
                         <input type="number" class="form-control" t-att-value="state.quantityToMake" t-on-input="onQuantityChange" min="1"/>
+                    </div> -->
+                    <!-- 🔢 Quantity & Price Input (Enhanced) -->
+                    <div class="d-flex flex-column align-items-end">
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-secondary d-none d-md-inline-block" aria-label="Remove one" t-on-click="() => env.updateQuantity(state.quantityToMake - 1)">
+                                <i class="fa fa-minus"/>
+                            </button>
+                            <input class="form-control quantity border-bottom border-top text-center" style="min-width: 30px;" name="product_quantity" type="number" t-att-value="state.quantityToMake" t-on-change="onQuantityChange" />
+                            <button class="btn btn-secondary d-none d-md-inline-block" aria-label="Add one" t-on-click="() => env.updateQuantity(state.quantityToMake + 1)">
+                                <i class="fa fa-plus"/>
+                            </button>
+                        </div>
                     </div>
+
+
                     <!-- 🧩 Attribute Configuration -->
                     <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
                         <t t-if="state.laterality === 'bilateral' and state.split">

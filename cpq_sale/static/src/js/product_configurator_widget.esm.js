@@ -1,14 +1,13 @@
 /** @odoo-module **/
 /* eslint-disable sort-imports */
-// import { registry } from "@web/core/registry";
-// import { ProductConfiguratorWidget } from "@sale_product_configurator/components/product_configurator_widget/product_configurator_widget";
 
-import { ConfigureDialog } from "@cpq/components/dialog/dialog.esm";
 import { patch } from "@web/core/utils/patch";
 import { SaleOrderLineProductField } from "@sale/js/sale_product_field";
 import { useService } from "@web/core/utils/hooks";
+import { ConfigureDialog } from "@cpq/components/dialog/dialog.esm";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+
 
 patch(SaleOrderLineProductField.prototype, {
     setup() {
@@ -51,7 +50,7 @@ patch(SaleOrderLineProductField.prototype, {
     async _cpqConfigureDialog() {
         this.skipNextProductTemplateUpdate = false;
     
-        const safeM2O = (field) => Array.isArray(field) ? field : field ? [field, ""] : [false, ""];
+        const safeMany2One = (field) => Array.isArray(field) ? field : field ? [field, ""] : [false, ""];
         const safeRead = async (model, ids, fieldList) => {
             try {
                 const idList = Array.isArray(ids) ? ids : [ids];
@@ -86,15 +85,15 @@ patch(SaleOrderLineProductField.prototype, {
             }
         };
     
-        const productTmplId = safeM2O(this.props.record.data.product_template_id)[0];
+        const productTmplId = safeMany2One(this.props.record.data.product_template_id)[0];
         if (!productTmplId) {
             this.notification.add(_t("Missing product template for CPQ configuration."), { type: "danger" });
             return;
         }
     
-        let activeId = this.props.record.resId;
-        let orderId = null;
-        
+        let orderId = this.props.record.model.root.resId || null;
+        let activeId = this.props.record.resId || null;
+
         this.notification.add(_t("🔧 Preparing your configuration..."), { type: "info" });
     
         let lineData = null;
@@ -104,7 +103,7 @@ patch(SaleOrderLineProductField.prototype, {
     
         if (!activeId || isVirtual) {
             try {
-                orderId = safeM2O(this.props.record.model.root.resId)[0];
+                orderId = safeMany2One(this.props.record.model.root.resId)[0];
                 if (!orderId) {
                     this.notification.add(_t("Cannot configure: missing order. Please check your order."), { type: "danger" });
                     return;
@@ -137,17 +136,17 @@ patch(SaleOrderLineProductField.prototype, {
                     "product_uom",
                 ]);
     
-                orderId = safeM2O(lineData.order_id)[0] || orderId;
+                orderId = safeMany2One(lineData.order_id)[0] || orderId;
                 console.log("🧩 Cached orderId after creation:", orderId);
     
                 await safeFrontendUpdate(this.props.record, {
-                    order_id: safeM2O(lineData.order_id),
-                    product_template_id: safeM2O(lineData.product_template_id),
+                    order_id: safeMany2One(lineData.order_id),
+                    product_template_id: safeMany2One(lineData.product_template_id),
                     product_uom_qty: lineData.product_uom_qty,
-                    currency_id: safeM2O(lineData.currency_id),
-                    company_id: safeM2O(lineData.company_id),
+                    currency_id: safeMany2One(lineData.currency_id),
+                    company_id: safeMany2One(lineData.company_id),
                     name: lineData.name,
-                    product_uom: safeM2O(lineData.product_uom),
+                    product_uom: safeMany2One(lineData.product_uom),
                 });
     
                 this.notification.add(_t("✅ Order line created! Opening configurator..."), { type: "success" });
@@ -161,7 +160,7 @@ patch(SaleOrderLineProductField.prototype, {
         } else {
             try {
                 lineData = await safeRead("sale.order.line", activeId, ["order_id"]);
-                orderId = safeM2O(lineData?.order_id)[0] || safeM2O(this.props.record.data.order_id)[0] || safeM2O(this.props.record.model.root.resId)[0];
+                orderId = safeMany2One(lineData?.order_id)[0] || safeMany2One(this.props.record.data.order_id)[0] || safeMany2One(this.props.record.model.root.resId)[0];
                 console.log("🧩 Cached orderId from existing line:", orderId);
             } catch (error) {
                 console.warn("⚠️ Could not fetch orderId from existing line:", error);
@@ -174,13 +173,6 @@ patch(SaleOrderLineProductField.prototype, {
             return;
         }
 
-        // const saleOrderLineId = await env.services.orm.create("sale.order.line", {
-        //     order_id: active_order_id,
-        //     product_template_id: product_tmpl_id,
-        //     product_uom_qty: quantity,
-        //     ...
-        // });
-    
         console.log("🚀 Opening configurator dialog with orderId:", orderId);
         
         this.dialogService.add(ConfigureDialog, {
@@ -188,10 +180,10 @@ patch(SaleOrderLineProductField.prototype, {
             orderId,
             productTmplId,
             quantity: this.props.record.data.product_uom_qty,
-            currencyId: safeM2O(this.props.record.data.currency_id)[0],
+            currencyId: safeMany2One(this.props.record.data.currency_id)[0],
             soDate: serializeDateTime(this.props.record.model.root.data.date_order),
-            productUOMId: safeM2O(this.props.record.data.product_uom)[0],
-            companyId: safeM2O(this.props.record.model.root.data.company_id)[0],
+            productUOMId: safeMany2One(this.props.record.data.product_uom)[0],
+            companyId: safeMany2One(this.props.record.model.root.data.company_id)[0],
             context: {
                 ...this.props.record.model.root.context,
                 active_model: "sale.order.line",
@@ -199,10 +191,38 @@ patch(SaleOrderLineProductField.prototype, {
                 active_sale_order_id: orderId,
             },
             edit: true,
-            discard: () => {
-                this.props.record.model.root.data.order_line.delete(this.props.record);
-                this.notification.add(_t("Configuration discarded."), { type: "warning" });
+            save: async (configResult) => {
+                const activeId = this.props.record.resId;
+                const values = configResult.configuration;
+            
+                console.log("🧩 Saving CPQ configuration in _cpqConfigureDialog:", values);
+            
+                await this.orm.call("sale.order.line", "onchange", [activeId, values]);
+                await this.orm.call("sale.order.line", "write", [activeId, values]);
+            
+                // 🧹 Clean up ghost frontend records (CRITICAL FIX)
+                const orderLineData = this.props.record.model.root.data.order_line;
+                if (orderLineData && orderLineData.records) {
+                    orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
+                    orderLineData.leaveEditMode();
+                }
+            
+                this.notification.add("✅ Configuration applied successfully.", { type: "success" });
             },
+            
+            // save: async (configResult) => {
+            //     const activeId = this.props.record.resId;
+            //     const values = configResult.configuration;
+            
+            //     console.log("🧩 Saving CPQ configuration in _cpqConfigureDialog:", values);
+            
+            //     await this.orm.call("sale.order.line", "onchange", [activeId, values]);
+            //     await this.orm.call("sale.order.line", "write", [activeId, values]);
+            
+            //     this.props.record.model.root.data.order_line.leaveEditMode();
+            //     this.notification.add("✅ Configuration applied successfully.", { type: "success" });
+            // },
+            
             close: () => {
                 this.notification.add(_t("Configurator closed."), { type: "info" });
             },

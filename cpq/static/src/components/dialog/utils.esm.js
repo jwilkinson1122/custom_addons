@@ -22,14 +22,6 @@ export function useDebouncedInput(delay = 300) {
     };
 }
 
-// export function useDebouncedInput(delay = 300) {
-//     let timeout;
-//     return (callback) => (value) => {
-//         clearTimeout(timeout);
-//         timeout = setTimeout(() => callback(value), delay);
-//     };
-// }
-
 export function debounce(func, wait = 300) {
     let timeout;
     return function (...args) {
@@ -44,7 +36,6 @@ export function debounce(func, wait = 300) {
 export function nextTick() {
     return new Promise(resolve => setTimeout(resolve, 0));
 }
-
 
 export function validateProps(component, expectedProps) {
     for (const [key, def] of Object.entries(expectedProps)) {
@@ -62,63 +53,19 @@ export function validateProps(component, expectedProps) {
     }
 }
 
-// export async function applyProduct(record, result) {
-//     if (!record || !result) {
-//         console.warn("⚠️ applyProduct: Missing record or result.");
-//         return;
-//     }
-
-//     const changes = {};
-//     const safeGet = (obj, path, fallback = null) => path.split('.').reduce((acc, key) => acc?.[key] ?? fallback, obj);
-
-//     const config = result.configuration || {};
-//     changes.name = config.name;
-//     changes.cpq_configuration_json = config.cpq_configuration_json;
-//     changes.cpq_configuration_summary = config.cpq_configuration_summary;
-
-//     changes.product_uom_qty = config.quantity_to_make || 1;
-
-//     try {
-//         await record.update(changes);
-//         console.log("✅ Record updated successfully:", changes);
-//     } catch (error) {
-//         console.error("❌ Failed to apply product config:", error);
-//     }
-// }
-
-export async function applyProduct(record, configResult) {
-    console.log("🧩 applyProduct() called with configResult:", configResult);
-
-    if (!record) {
-        console.warn("⚠️ No record provided to applyProduct.");
-        return;
+export async function waitForTargetRecord(targetResId, recordList, maxAttempts = 10, interval = 150) {
+    let attempt = 0;
+    while (attempt < maxAttempts) {
+        const found = recordList.find((r) => r.resId === targetResId);
+        if (found) {
+            console.log(`✅ Found target record after ${attempt + 1} attempt(s).`);
+            return found;
+        }
+        console.log(`⏳ Attempt ${attempt + 1}: target record not found yet.`);
+        attempt++;
+        await new Promise(resolve => setTimeout(resolve, interval));
     }
-
-    const config = configResult.configuration;
-    if (!config) {
-        console.warn("⚠️ No 'configuration' object found in result:", configResult);
-        return;
-    }
-
-    const updates = {
-        product_id: [configResult.product_id, configResult.product_display_name || config.name || "Configured Product"],
-        cpq_configuration_json: config.cpq_configuration_json || "",
-        cpq_configuration_summary: config.cpq_configuration_summary || "",
-        product_uom_qty: config.quantity_to_make || 1,
-    };
-
-    console.log("💾 Updates prepared for record:", updates);
-
-    try {
-        await record.update(updates);
-        console.log("✅ Order line after update:", record.data);
-
-        record.model.root.data.order_line.leaveEditMode();
-
-        console.log("✅ Order line updated with CPQ configuration.");
-    } catch (error) {
-        console.error("❌ Failed to update order line with configuration result:", error);
-    }
+    console.warn("⚠️ Target record not found after maximum attempts.");
+    return null;
 }
-
 

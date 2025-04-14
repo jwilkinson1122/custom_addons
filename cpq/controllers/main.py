@@ -148,6 +148,7 @@ class ProductConfiguratorController(Controller):
 
         return {"valid": variant_ok, "errors": msg}
     
+
     @route('/cpq/<int:product_tmpl_id>/configure', type='json', auth='user')
     def cpq_configure(self, product_tmpl_id, configuration, **kwargs):
         env = request.env
@@ -158,7 +159,6 @@ class ProductConfiguratorController(Controller):
         if not product_tmpl.cpq_ok:
             raise UserError(_('Not a CPQ enabled product!'))
 
-        # Extract config safely
         config = {
             'laterality': configuration.get('laterality', 'unspecified'),
             'name': configuration.get('name') or f"{product_tmpl.name} - {configuration.get('laterality', 'unspecified').capitalize()}",
@@ -172,22 +172,18 @@ class ProductConfiguratorController(Controller):
 
         _logger.info(f"🧩 CPQ Config Received for {product_tmpl.display_name}:\n{json.dumps(config, indent=2)}")
 
-        # Ensure configurator base product exists
         base_product = product_tmpl._ensure_configurator_product()
         if not base_product or not base_product.exists():
             raise UserError(_('No valid product could be determined.'))
 
-        # Prepare config JSON
         try:
             config_json = json.dumps(config, indent=2)
         except Exception as e:
             _logger.exception("❌ Failed to dump config_json")
             raise UserError("Invalid configuration data. Please check your selections.")
 
-        # ctx = env.context
-
-        ctx = env.context.copy()  # Odoo internal context
-        ctx.update(kwargs.get("context", {}))  # Merge frontend context
+        ctx = env.context.copy() 
+        ctx.update(kwargs.get("context", {})) 
 
         _logger.info(f"📦 Received context: {json.dumps(ctx, indent=2)}")
 
@@ -196,16 +192,6 @@ class ProductConfiguratorController(Controller):
         active_sale_order_id = ctx.get("active_sale_order_id")
         sale_order = None
         existing_line = None
-
-        # if active_model == "sale.order.line" and active_id:
-        #     existing_line = env['sale.order.line'].sudo().browse(active_id)
-        #     if existing_line.exists():
-        #         sale_order = existing_line.order_id
-        # elif active_model == "sale.order" and active_id:
-        #     sale_order = env['sale.order'].sudo().browse(active_id)
-
-        
-
         if active_model == "sale.order.line" and active_id:
             existing_line = env['sale.order.line'].sudo().browse(active_id)
             if existing_line.exists():
@@ -222,10 +208,27 @@ class ProductConfiguratorController(Controller):
 
 
         _logger.info(f"🧾 Using Sale Order: {sale_order.name} ({sale_order.id})")
-        # _logger.info(f"🔍 Processing: active_model={active_model}, active_id={active_id}, existing_line={'Yes' if existing_line else 'No'}")
         _logger.info(f"🔍 Processing: active_model={active_model}, active_id={active_id}, active_sale_order_id={active_sale_order_id}, existing_line={'Yes' if existing_line else 'No'}")
 
         summary_html = render_summary_html(env, sale_order, config)
+
+        # line_vals = {
+        #     'order_id': sale_order.id,
+        #     'product_id': base_product.id,
+        #     'name': config['name'],
+        #     'cpq_configuration_json': config_json,
+        #     'cpq_configuration_summary': summary_html,
+        #     'product_uom': product_tmpl.uom_id.id,
+        #     'product_uom_qty': config['quantity_to_make'],
+        #     'price_unit': (
+        #         config.get('total_price', 0) / config.get('quantity_to_make', 1)
+        #         if config.get('quantity_to_make', 1)
+        #         else 0
+        #     ),
+        # }
+
+        product_taxes = base_product.taxes_id.filtered(lambda tax: tax.company_id == sale_order.company_id)
+        taxes = product_taxes.ids
 
         line_vals = {
             'order_id': sale_order.id,
@@ -240,7 +243,11 @@ class ProductConfiguratorController(Controller):
                 if config.get('quantity_to_make', 1)
                 else 0
             ),
+            # 'tax_id': [(6, 0, taxes)],  
+            'tax_id': [(6, 0, taxes)] if taxes else False, # tax-exempt
+
         }
+
 
         def create_or_update_line(line):
             if line and line.exists():
