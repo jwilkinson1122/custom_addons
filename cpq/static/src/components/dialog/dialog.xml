@@ -11,7 +11,9 @@
                         </ul>
                     </div>
                     <!-- 📄 Product Description -->
-                    <div t-if="state.productTmplId.description_sale" t-esc="state.productTmplId.description_sale" class="mb-3" />
+                    <div t-if="props.productTmplId.description_sale" t-esc="props.productTmplId.description_sale" class="mb-3" />
+
+                    <!-- <div t-if="state.productTmplId.description_sale" t-esc="state.productTmplId.description_sale" class="mb-3" /> -->
                     <!-- 👣 Laterality -->
                     <div class="mb-3">
                         <strong>Laterality:</strong>
@@ -109,7 +111,10 @@
                 </div>
                 <div class="col-md-4 border-start ps-3">
                     <div class="sticky-summary shadow-sm p-2 bg-white rounded">
-                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTmplId="state.productTmplId" quantityToMake="state.quantityToMake" register="registerSummaryPanel" t-key="summaryKey()" />
+                        <!-- <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTmplId="state.productTmplId" quantityToMake="state.quantityToMake" register="registerSummaryPanel" t-key="summaryKey()" /> -->
+
+                        <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTmplId="props.productTmplId" quantityToMake="state.quantityToMake" register="registerSummaryPanel" t-key="summaryKey()"/>
+
                     </div>
                 </div>
                 <!-- ✅ Loading Overlay -->
@@ -138,7 +143,12 @@
                 </button> -->
 
             <t t-set-slot="footer">
-                <button t-if="canCreate()" class="btn btn-primary" t-on-click="onCreate" t-att-disabled="isDisabled">Confirm</button>
+                <!-- <button t-if="canCreate()" class="btn btn-primary" t-on-click="onCreate" t-att-disabled="isDisabled">Confirm</button> -->
+                <button t-if="canCreate()" class="btn btn-primary" t-on-click="onCreate" t-att-disabled="isDisabled">
+                    <t t-if="state.isLoading">Saving...</t>
+                    <t t-else="">Confirm</t>
+                </button>
+
                 <button class="btn btn-secondary" t-on-click="onClose" t-att-disabled="isDisabled">Cancel</button>
                 <t t-set="resetButtonDisabled" t-value="state.isLoading || !initialState"/>
                 <button class="btn btn-secondary" t-att-title="'Reset this configuration back to its original state.'" t-on-click="resetToDefaults" t-att-disabled="resetButtonDisabled">
@@ -162,7 +172,9 @@
             <!-- 🖼️ Product Image -->
             <div class="text-center mb-3">
                 <img t-if="props.productTmplId.product_variant_id" t-att-src="'/web/image/product.product/' + props.productTmplId.product_variant_id.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
-                <img t-else="" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
+                <img t-if="props.productTmplId?.id" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" />
+
+                <!-- <img t-else="" t-att-src="'/web/image/product.template/' + props.productTmplId.id + '/image_128'" class="img-fluid rounded shadow-sm" style="max-width: 80%;" /> -->
             </div>
             <!-- 📝 Summary Header with Actions -->
             <h5 class="mb-3 d-flex justify-content-between align-items-center">

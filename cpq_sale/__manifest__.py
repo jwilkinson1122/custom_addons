@@ -22,7 +22,7 @@
     "assets": {
         "web.assets_backend": [
             "cpq_sale/static/src/css/custom.css",
-            "cpq_sale/static/src/js/product_configurator_widget.esm.js",
+            "cpq_sale/static/src/js/sale_product_field.esm.js",
         ],
     },
 }

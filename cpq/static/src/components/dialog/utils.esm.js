@@ -69,3 +69,32 @@ export async function waitForTargetRecord(targetResId, recordList, maxAttempts =
     return null;
 }
 
+export async function cleanGhostRecords(record, activeId) {
+    if (!record?.model?.root?.data?.order_line) return;
+
+    const orderLineData = record.model.root.data.order_line;
+    const staleRecords = orderLineData.records?.filter(line => line.resId !== activeId) || [];
+
+    if (staleRecords.length > 0) {
+        console.log(`🧹 Cleaning ${staleRecords.length} ghost frontend records...`);
+        orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
+    } else {
+        console.log("✅ No ghost records found.");
+    }
+
+    if (typeof orderLineData.leaveEditMode === "function") {
+        try {
+            orderLineData.leaveEditMode();
+            console.log("✅ Left edit mode cleanly.");
+        } catch (error) {
+            console.warn("⚠️ leaveEditMode failed:", error);
+        }
+    }
+
+    const orderRoot = record.model.root;
+    if (orderRoot && "isDirty" in orderRoot) {
+        orderRoot.isDirty = false;
+        console.log("✅ Cleared orderRoot isDirty flag.");
+    }
+}
+
