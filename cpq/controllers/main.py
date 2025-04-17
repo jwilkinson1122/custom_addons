@@ -4,7 +4,7 @@ from odoo.http import request, route
 import logging
 import json
 
-from ..helpers.summary_helper import render_summary_html
+from ..helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown
 
 _logger = logging.getLogger(__name__)
 
@@ -58,12 +58,16 @@ class ProductConfiguratorController(http.Controller):
             ptal_data = {
                 'id': ptal.id,
                 'name': ptal.attribute_id.display_name,
+                # 'display_type': ptal.display_type or "radio",
+                'display_type': ptal.attribute_id.display_type or "radio",
                 'ptav_ids': [
                     {
                         'id': ptav.id,
                         'name': ptav.name,
                         'is_custom': ptav.is_custom,
                         'price_extra': ptav.price_extra,
+                        'html_color': ptav.html_color or "",         
+                        'cpq_custom_type': ptav.cpq_custom_type or "", 
                     }
                     for ptav in ptal.product_template_value_ids
                 ],
@@ -75,6 +79,7 @@ class ProductConfiguratorController(http.Controller):
                 'id': template.id,
                 'display_name': template.display_name,
                 'description_sale': template.description_sale,
+                'list_price': template.list_price,
             },
             'ptal_ids': ptal_ids,
         }
@@ -122,7 +127,7 @@ class ProductConfiguratorController(http.Controller):
             raise UserError(_("Configuration could not be saved. Please check your selections."))
 
         summary_html = render_summary_html(request.env, line.order_id, configuration)
-
+        
         line.write({
             'cpq_configuration_json': config_json,
             'cpq_configuration_summary': summary_html,
@@ -138,9 +143,28 @@ class ProductConfiguratorController(http.Controller):
             'sale_order_id': line.order_id.id,
         }
 
-    
+    @route('/cpq/<int:product_tmpl_id>/price_preview', type='json', auth='user')
+    def cpq_price_preview(self, product_tmpl_id, configuration, context=None):
+        env = request.env
+        ctx = dict(context or {}, **request.context)
 
+        order_id = ctx.get("active_sale_order_id")
+        if not order_id:
+            return {"error": "Missing order context."}
 
+        order_line = env['sale.order.line'].with_context(ctx).new({
+            'order_id': order_id,
+            'product_template_id': product_tmpl_id,
+        })
+
+        result = compute_cpq_price_breakdown(env, order_line, configuration)
+
+        return {
+            "price": result["final_price"],
+            "breakdown": result,
+        }
+
+ 
 # Helper extension for attribute lines
 class ProductTemplateAttributeLine(models.Model):
     _inherit = "product.template.attribute.line"

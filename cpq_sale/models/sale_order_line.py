@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from odoo.fields import Field
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.cpq.helpers.summary_helper import render_summary_html
+from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown
 
 import json
 
@@ -28,12 +28,6 @@ class SaleOrderLine(models.Model):
     #                                       "sale order line."
     #                                  )
 
-
-    cpq_configuration_json = fields.Json(
-        string="CPQ Configuration",
-        help="Stores selected laterality and option data for CPQ products."
-    )
-
     cpq_laterality = fields.Selection(
         selection=[
             ('left', 'Left Only'),
@@ -45,16 +39,21 @@ class SaleOrderLine(models.Model):
         store=True
     )
 
-    cpq_quantity_to_make = fields.Integer(
-        string="Pairs to Make",
-        compute="_compute_cpq_quantity_to_make",
-        store=True
-    )
-
     cpq_configuration_summary = fields.Html(
         string="CPQ Summary",
         compute="_compute_cpq_configuration_summary",
         store=True,
+    )
+
+    cpq_configuration_json = fields.Json(
+        string="CPQ Configuration",
+        help="Stores selected laterality and option data for CPQ products."
+    )
+
+    cpq_quantity_to_make = fields.Integer(
+        string="Pairs to Make",
+        compute="_compute_cpq_quantity_to_make",
+        store=True
     )
 
     cpq_product_created = fields.Boolean(
@@ -62,6 +61,15 @@ class SaleOrderLine(models.Model):
         compute="_compute_cpq_product_created",
         store=True
     )
+
+    cpq_total_price = fields.Monetary(
+        string="CPQ Total Price",
+        compute="_compute_cpq_total_price",
+        currency_field="currency_id",
+        store=True
+    )
+
+    cpq_summary_printable = fields.Html("Printable CPQ Summary")
 
     def toggle_debug_cpq_json(self):
         # Placeholder logic: in real use, you'd probably use context or a transient field to show/hide.
@@ -117,28 +125,6 @@ class SaleOrderLine(models.Model):
                     config = {}
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
-    # @api.onchange('product_id')
-    # def _onchange_product_id(self):
-    #     if self.product_id and self.product_id.cpq_ok:
-    #         tmpl = self.product_id.product_tmpl_id
-
-    #         return {
-    #             "type": "ir.actions.client",
-    #             "tag": "cpq.ConfigureDialogAction",
-    #             "context": {
-    #                 "active_model": "sale.order.line",
-    #                 "active_id": self.id,
-    #                 "cpq_product_template_id": tmpl.id,
-    #                 "cpq_initial_config": self.cpq_configuration_json,
-    #                 "from_sale_order": True,
-    #                 "redirect_to_line": True,
-    #                 "orderId": self.order_id.id,
-    #                 "currencyId": self.order_id.currency_id.id,
-    #                 "soDate": str(self.order_id.date_order),
-    #                 "companyId": self.order_id.company_id.id,
-    #             },
-    #         }
-        
     @api.onchange("product_id")
     def _onchange_product_id_warning(self):
         res = super()._onchange_product_id_warning()
@@ -174,48 +160,32 @@ class SaleOrderLine(models.Model):
             elif side:
                 line.name = f"{line.product_id.name} - {side}"
             else:
-                line.name = line.product_id.name
+                line.name = line.product_id.name if line.product_id else line.product_template_id.name or "Custom Product"
 
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_pricing(self):
-        config = self.cpq_configuration_json or {}
-        if isinstance(config, str):
-            try:
-                config = json.loads(config)
-            except Exception:
-                config = {}
+        for line in self:
+            config = line.cpq_configuration_json or {}
+            if isinstance(config, str):
+                try:
+                    config = json.loads(config)
+                except Exception:
+                    config = {}
 
-        qty = config.get("quantity_to_make", 1)
-        total_extra = 0
+            result = compute_cpq_price_breakdown(self.env, line, config)
 
-        selected = config.get("selected", {})
-        if isinstance(selected, dict):
-            ptav_ids = [int(k) for k in selected if k.isdigit()]
-            ptavs = self.env["product.template.attribute.value"].browse(ptav_ids)
-            total_extra = sum(ptav.price_extra for ptav in ptavs)
-
-        base_price = self.product_template_id.list_price
-        if config.get("laterality") == "bilateral":
-            base_price *= 2
-
-        final_price = (base_price + total_extra) * qty
-        _logger.info("💸 [CPQ] Pricing computed: Base: %.2f, Extras: %.2f, Qty: %d, Final: %.2f",
-                    base_price, total_extra, qty, final_price)
-
-        self.price_unit = final_price
+            line.price_unit = result["subtotal"]  # Per unit price (before quantity)
+            line.product_uom_qty = result["quantity"]  # Optional sync
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_configuration_summary(self):
         for line in self:
-            config = line.cpq_configuration_json
+            config = line._parse_config()
             if not config:
                 line.cpq_configuration_summary = "No configuration available."
                 continue
-
             try:
-                if isinstance(config, str):
-                    config = json.loads(config)
-
+                config = line._parse_config()
                 _logger.info(f"🧩 Generating summary for Sale Order Line {line.id}")
                 _logger.info(f"Config Data: {config}")
 
@@ -224,11 +194,21 @@ class SaleOrderLine(models.Model):
 
             except Exception as e:
                 _logger.warning(f"⚠️ Failed to generate summary HTML: {e}")
-                line.cpq_configuration_summary = "⚠️ Error generating summary."
+                config = line._parse_config()
+
+    def _parse_config(self):
+        try:
+            return json.loads(self.cpq_configuration_json) if isinstance(self.cpq_configuration_json, str) else self.cpq_configuration_json or {}
+        except Exception as e:
+            _logger.warning(f"[CPQ] JSON parse error: {e}")
+            return {}
 
     def edit_cpq_configuration(self):
         self.ensure_one()
-        tmpl = self.product_id.product_tmpl_id
+        
+        tmpl = self.product_template_id
+        if not tmpl:
+            raise UserError("No product template linked to this line.")
 
         return {
             "type": "ir.actions.client",
@@ -245,8 +225,9 @@ class SaleOrderLine(models.Model):
                 "soDate": str(self.order_id.date_order),
                 "companyId": self.order_id.company_id.id,
             },
+            
         }
-
+    
     def _compute_cpq_product_created(self):
         for line in self:
             line.cpq_product_created = bool(
@@ -293,14 +274,10 @@ class SaleOrderLine(models.Model):
         today_str = datetime.today().strftime("%Y%m%d")
         customer_initials = ''.join(word[0].upper() for word in (self.order_id.partner_id.name or "").split() if word)
         internal_ref = f"CFG-{today_str}-{self.id}-{customer_initials or 'CUST'}"
-
         product_name = config.get('name') or f"{product_tmpl.name} Custom"
-
         total_extra = self._calculate_total_extras(config)
-
         description_sale = self._generate_cpq_description(config, total_extra)
         description_purchase = description_sale
-
         image = product_tmpl.image_1920
 
         new_product = self.env['product.product'].create({
@@ -333,7 +310,20 @@ class SaleOrderLine(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+    
+    def _calculate_total_extras(self, config):
+        selected = config.get('selected', {})
+        if not selected:
+            return 0
 
+        ptav_ids = [int(k) for k in selected if k.isdigit()]
+        ptavs = self.env['product.template.attribute.value'].browse(ptav_ids)
+
+        total_extra = sum(ptav.price_extra for ptav in ptavs)
+        _logger.info(f"🧩 Total extras calculated: {total_extra}")
+        return total_extra
+
+    @api.model
     def _generate_cpq_description(self, config, total_extra):
         parts = [
             f"🦶 Laterality: {config.get('laterality', '').capitalize()}",
@@ -355,18 +345,17 @@ class SaleOrderLine(models.Model):
 
         return "\n".join(parts)
 
-    def _calculate_total_extras(self, config):
-        selected = config.get('selected', {})
-        if not selected:
-            return 0
+    @api.depends("cpq_configuration_json")
+    def _compute_cpq_total_price(self):
+        for line in self:
+            if not line.product_template_id.cpq_ok or not line.cpq_configuration_json:
+                line.cpq_total_price = 0.0
+                continue
+            config = line.cpq_configuration_json
+            breakdown = compute_cpq_price_breakdown(self.env, line, config)
+            line.cpq_total_price = line.currency_id.round(breakdown.get("final_price", 0.0))
 
-        ptav_ids = [int(k) for k in selected if k.isdigit()]
-        ptavs = self.env['product.template.attribute.value'].browse(ptav_ids)
-
-        total_extra = sum(ptav.price_extra for ptav in ptavs)
-        _logger.info(f"🧩 Total extras calculated: {total_extra}")
-        return total_extra
-
+    @api.model
     def _apply_cpq_attributes_to_product(self, config, product):
         selected = config.get('selected', {})
         if not selected:

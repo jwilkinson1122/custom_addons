@@ -49,9 +49,6 @@
                     <field name="no_create_variants"/>
                 </group>
             </xpath>
-            <!-- <xpath expr="//field[@name='product_tooltip']" position="before">
-                <field name="cpq_tooltip" string="" class="font-italic text-muted"/>
-            </xpath> -->
         </field>
     </record>
 
@@ -68,11 +65,6 @@
                     <i class="fa fa-wrench fa-lg" title="Configure Product" />
                 </a>
             </xpath>
-            <!-- <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
-                <a name="action_configure_cpq" type="object" invisible="cpq_ok == False" style="margin-right: 8px">
-                    <i class="fa fa-wrench fa-lg" title="Configure Product"/>
-                </a>
-            </xpath> -->
         </field>
     </record>
 
@@ -99,7 +91,6 @@
         </field>
     </record>
 
-    <!-- 🌟 Search View -->
     <record id="product_template_search_view" model="ir.ui.view">
         <field name="name">product_template_search_view</field>
         <field name="model">product.template</field>
@@ -112,7 +103,6 @@
         </field>
     </record>
 
-    <!-- 🌟 Action to show only CPQ products -->
     <record id="action_cpq_product_templates_only" model="ir.actions.act_window">
         <field name="name">CPQ Products</field>
         <field name="res_model">product.template</field>

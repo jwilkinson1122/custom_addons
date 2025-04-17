@@ -10,7 +10,7 @@
             </xpath> -->
             <xpath expr="//field[@name='order_line']/tree" position="inside">
                 <field name="cpq_laterality" invisible="1"/>
-                <button name="edit_cpq_configuration" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
+                <button name="edit_cpq_configuration" title="Reconfigure" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
                 <field name="product_template_id_cpq_ok" column_invisible="1" />
@@ -24,9 +24,6 @@
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                 <field name="cpq_laterality" string="Side" column_invisible="True"/>
                 <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 500px; word-break: break-word; padding: 4px; line-height: 1.4;" string="Configuration Summary" widget="html" readonly="1"/>
-                <!-- <t t-if="record.cpq_configuration_json.raw">
-                    <span class="badge bg-warning text-dark ms-1">Draft CPQ</span>
-                </t> -->
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="attributes">
                 <attribute name="widget">html</attribute>
@@ -41,7 +38,6 @@
                     <page string="CPQ Details" invisible="not product_template_id_cpq_ok">
                         <group>
                             <field name="cpq_laterality" readonly="1"/>
-                            <!-- <field name="cpq_configuration_summary" widget="html" class="cpq-summary-box" readonly="1"/> -->
                             <field name="cpq_configuration_summary" string="Config Summary" widget="html" readonly="1" class="cpq-config-summary"/>
                             <field name="cpq_configuration_json" invisible="1"/>
                         </group>

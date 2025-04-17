@@ -13,7 +13,7 @@ export default class ConfiguratorSummaryPanel extends Component {
         super.setup();
 
         const props = this.props;
-
+        this.productTemplate = props.productTemplate;
         this.formatCurrency = formatCurrency;
         this.summaryWrapper = useRef("summaryWrapper");
         this.toastQueue = [];
@@ -177,7 +177,8 @@ export default class ConfiguratorSummaryPanel extends Component {
             }
         }, 0);
     }
-
+    
+    // Handles shared and split + proper bilateral pricing logic
     computeSummary() {
         console.log("🧠 Computing summary...");
         const {
@@ -185,17 +186,17 @@ export default class ConfiguratorSummaryPanel extends Component {
             selected = {},
             laterality,
             split,
-            productTmplId,
+            productTemplate,
+            quantityToMake = 1,
         } = this.props;
-
+    
         const selectedLeft = selected.left || {};
         const selectedRight = selected.right || {};
         const isSplit = laterality === "bilateral" && split;
-        const quantityToMake = this.state.quantityToMake || 1;
-
+    
         let leftTotal = 0;
         let rightTotal = 0;
-
+    
         const result = ptalIds.map((attr, index) => {
             if (!attr || !attr.name || !Array.isArray(attr.ptav_ids)) {
                 return {
@@ -207,30 +208,32 @@ export default class ConfiguratorSummaryPanel extends Component {
                     priceExtra: 0,
                 };
             }
-
+    
             const ptavs = attr.ptav_ids;
-            const getSelectedPtav = (ptavs, selectedDict) => ptavs.find(ptav => selectedDict[ptav.id]) || null;
-
+            const getSelectedPtav = (ptavs, selectedDict) =>
+                ptavs.find((ptav) => ptav.id in selectedDict) || null;
+    
             let left = "-", right = "-", shared = "-", priceExtra = 0;
-
+    
             if (isSplit) {
                 const leftPtav = getSelectedPtav(ptavs, selectedLeft);
                 const rightPtav = getSelectedPtav(ptavs, selectedRight);
-
+    
                 left = leftPtav?.name || "-";
                 right = rightPtav?.name || "-";
-
+    
                 const leftExtra = (leftPtav?.price_extra || 0) * quantityToMake;
                 const rightExtra = (rightPtav?.price_extra || 0) * quantityToMake;
-
+    
                 leftTotal += leftExtra;
                 rightTotal += rightExtra;
                 priceExtra = leftExtra + rightExtra;
+    
             } else {
                 const sharedPtav = getSelectedPtav(ptavs, selected);
                 shared = sharedPtav?.name || "-";
                 const sharedExtra = (sharedPtav?.price_extra || 0) * quantityToMake;
-
+    
                 if (laterality === "left") {
                     left = shared;
                     leftTotal += sharedExtra;
@@ -248,7 +251,7 @@ export default class ConfiguratorSummaryPanel extends Component {
                     priceExtra = bilateralExtra;
                 }
             }
-
+    
             return {
                 key: `summary-${attr.id}`,
                 label: attr.name,
@@ -258,14 +261,15 @@ export default class ConfiguratorSummaryPanel extends Component {
                 priceExtra,
             };
         });
+    
 
-        const previousTotal = this.state.priceSummary.total;
-
-        const basePrice = productTmplId?.list_price || 0;
-        const totalBase = (laterality === "bilateral" ? basePrice * 2 : basePrice) * quantityToMake;
+        const basePrice = productTemplate?.list_price || 0;
+        // const basePrice = this.props.productTemplate?.list_price || 0;
+        const baseMultiplier = laterality === "bilateral" ? 2 : 1;
+        const totalBase = basePrice * baseMultiplier * quantityToMake;
         const totalExtras = leftTotal + rightTotal;
         const total = totalBase + totalExtras;
-
+    
         this.state.summary = result;
         this.state.priceSummary = {
             base: totalBase,
@@ -274,39 +278,79 @@ export default class ConfiguratorSummaryPanel extends Component {
             total,
             extrasSubtotal: totalExtras,
         };
-        
+    
         if (this.summaryApi?.updateTotals) {
             this.summaryApi.updateTotals(this.state.priceSummary);
         }
-        
-
+    
         console.log("✅ Final summary computed:", result);
-
-        if (previousTotal !== total) {
-            this.pulseElement(".pricing-summary");
-        }
     }
+    
 
     printSummary() {
-        const printContents = this.summaryWrapper?.el?.outerHTML;
-        if (!printContents) return;
-
-        const win = window.open("", "_blank");
-        if (!win) {
-            console.warn("🚫 Failed to open print window.");
-            return;
+        const summaryHtml = this._generatePrintHtml();
+        const printWindow = window.open("", "Print Summary", "width=800,height=600");
+        if (printWindow) {
+            printWindow.document.open();
+            printWindow.document.write(summaryHtml);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        } else {
+            this.notification?.add("Popup blocked. Please allow popups to print.", { type: "warning" });
         }
-
-        const doc = win.document;
-
-        doc.open();
-        doc.write(`<!DOCTYPE html><html><head><title>Configuration Summary</title></head><body>${printContents}</body></html>`);
-        doc.close();
-
-        win.focus();
-        win.print();
-
-        win.onafterprint = () => win.close();
+    }
+    
+    _generatePrintHtml() {
+        const pb = this.state.priceSummary || {};
+        const rows = this.state.summary.map(s => {
+            return `<tr>
+                <td>${s.label}</td>
+                <td>${s.shared ?? s.left ?? "-"}</td>
+                ${this.props.split ? `<td>${s.right ?? "-"}</td><td>${s.left === s.right ? "✅" : "❌"}</td>` : ""}
+                <td>$${(s.priceExtra || 0).toFixed(2)}</td>
+            </tr>`;
+        }).join("");
+    
+        return `
+            <html>
+            <head>
+                <title>Configuration Summary</title>
+                <style>
+                    body { font-family: sans-serif; margin: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                    th { background: #f0f0f0; }
+                    .totals { font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <h2>📝 Product Configuration Summary</h2>
+                <p><b>Product:</b> ${this.productTemplate?.display_name || "-"}</p>
+                <p><b>Quantity:</b> ${this.props.quantityToMake}</p>
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>${this.props.split ? "Left" : "Value"}</th>
+                            ${this.props.split ? "<th>Right</th><th>Match</th>" : ""}
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+    
+                <div class="totals">
+                    <p>💸 Base Price: $${pb.base?.toFixed(2) || "0.00"}</p>
+                    <p>➕ Extras: $${pb.extrasSubtotal?.toFixed(2) || "0.00"}</p>
+                    <p>📦 Subtotal: $${pb.subtotal?.toFixed(2) || "0.00"}</p>
+                    <p>× Quantity: ${pb.quantity || this.props.quantityToMake}</p>
+                    <p>📊 Final Total: <b>$${pb.total?.toFixed(2) || "0.00"}</b></p>
+                </div>
+            </body>
+            </html>
+        `;
     }
 
     pulseElement(selector) {
@@ -325,7 +369,7 @@ ConfiguratorSummaryPanel.props = {
     selected: Object,
     laterality: String,
     split: Boolean,
-    productTmplId: Object,
+    productTemplate: Object,
     quantityToMake: Number,
     register: Function,
 };

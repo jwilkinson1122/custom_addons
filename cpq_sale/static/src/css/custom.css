@@ -54,3 +54,14 @@
     font-size: 90%;
 }
 
+
+.cpq-summary-table td, .cpq-summary-table th {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: center;
+}
+.cpq-summary-header {
+    background-color: #f7f7f7;
+    font-weight: bold;
+    text-align: center;
+}

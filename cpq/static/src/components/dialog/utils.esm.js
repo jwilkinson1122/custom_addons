@@ -2,6 +2,20 @@
 
 import { onWillUnmount } from "@odoo/owl";
 
+export function computeLocalCPQPriceBreakdown({ basePrice = 0, extras = 0, discountFactor = 1.0, quantity = 1 }) {
+    const discountedBase = basePrice * discountFactor;
+    const subtotal = discountedBase + extras;
+    const final = subtotal * quantity;
+    return {
+        base: basePrice,
+        extras,
+        discountPct: Math.round((1 - discountFactor) * 100),
+        subtotal,
+        quantity,
+        total: final,
+    };
+}
+
 
 export function useDebouncedInput(delay = 300) {
     let timeout = null;
