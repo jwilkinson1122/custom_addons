@@ -160,8 +160,6 @@ export class ConfigureDialog extends Component {
             }
         };
 
-        // useSubEnv({ updateQuantity: this.onQuantityChange.bind(this), state: this.state });
-
         useSubEnv({
             updateQuantity: this.onQuantityChange.bind(this),
             state: this.state,
@@ -223,11 +221,6 @@ export class ConfigureDialog extends Component {
                     this.updatePricePreview();
 
                 }
-                // await nextTick();
-                // if (Object.keys(this.state.selected).length > 0) {
-                //     await this._validate();
-                //     this.summaryApi?.computeSummary?.();
-                // }
 
             } catch (error) {
                 console.error("❌ Initialization error:", error);
@@ -329,9 +322,6 @@ export class ConfigureDialog extends Component {
         };
         this._setupAutoRefresh();
 
-        
-
-
     }
 
     _setupAutoRefresh() {
@@ -378,43 +368,6 @@ export class ConfigureDialog extends Component {
         return this.rpc(`/cpq_product_configurator/${productTmplId}/data`, {});
     }
 
-    // async _loadData() {
-    //     const productTmplId = this.state.productTmplId?.id || this.state.productTmplId;
-    //     if (!productTmplId) {
-    //         console.error("❌ Missing product template ID in _loadData()");
-    //         throw new Error("Missing product template ID");
-    //     }
-    //     return this.rpc(`/cpq_product_configurator/${productTmplId}/data`, {});
-    // }
-    
-    // async _validate() {
-    //     if (!this.state.selected) {
-    //         console.warn("⚠️ No selection found. Skipping validation.");
-    //         return;
-    //     }
-    
-    //     const productTmplId = this.productTemplateId;
-    //     console.log("🧩 Selected state at validation time:", this.state.selected);
-    //     const combination = this._flattenCombination(this.state.selected);
-    //     console.log("🧪 Validating flattened combination:", combination);
-    
-    //     try {
-    //         const res = await this.rpc(`/cpq/${productTmplId}/validate`, {
-    //             combination,
-    //         });
-    //         this.state.valid = res.valid;
-    //         this.state.errors = res.errors;
-    
-    //         if (!res.valid) {
-    //             console.warn("⚠️ Validation errors:", res.errors);
-    //         }
-    //     } catch (error) {
-    //         console.error("❌ Validation error:", error);
-    //         this.state.valid = false;
-    //         this.state.errors = { general: "Validation failed due to RPC error." };
-    //     }
-    // }
-
     async _validate() {
         const combination = this._flattenCombination(this.state.selected || {});
         if (!Object.keys(combination).length) {
@@ -434,9 +387,6 @@ export class ConfigureDialog extends Component {
         }
     }
     
-    
-    
-
     async _showConfirmDialog(message) {
         return new Promise(resolve => {
             this.dialogService.add(ConfirmationDialog, {
