@@ -3,6 +3,11 @@
     overflow: hidden;
 }
 
+/* .config-summary-sidebar {
+    position: sticky;
+    top: 80px;
+} */
+
 .sticky-summary {
     position: sticky;
     top: 1rem;
@@ -128,3 +133,68 @@
         transform: translateY(0);
     }
 }
+
+.config-section {
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    background: #fcfcfc;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.config-section:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.config-section label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.config-section .form-check-label {
+    margin-right: 1.5rem;
+}
+
+/* .config-summary-sidebar {
+    position: sticky;
+    top: 80px;
+} */
+
+.cpq-rx-sheet {
+    font-size: 14px;
+    max-width: 850px;
+    margin: auto;
+    background: #fff;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  @media print {
+    .o_web_client, .o_main_navbar, .breadcrumb, .o_control_panel, .btn, .o_action_manager {
+      display: none !important;
+    }
+    .cpq-rx-sheet {
+      box-shadow: none;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+}
+
+/* @media print {
+    body * {
+        visibility: hidden;
+    }
+    .cpq-print-preview, .cpq-print-preview * {
+        visibility: visible;
+    }
+    .cpq-print-preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+} */

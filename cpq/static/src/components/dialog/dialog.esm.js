@@ -69,6 +69,7 @@ export class ConfigureDialog extends Component {
             summary: [],
             toastMessage: null,
             undoCache: { left: null, right: null },
+            // showPrintPreview: false,
         });
 
         this.state.productTmplId = this.props.productTmplId;
@@ -150,6 +151,7 @@ export class ConfigureDialog extends Component {
         };
 
         this.registerSummaryPanel = api => { this.summaryApi = api; };
+        // this.togglePrintPreview = () => { this.state.showPrintPreview = !this.state.showPrintPreview; };
 
         this.summaryKey = () => {
             try {
