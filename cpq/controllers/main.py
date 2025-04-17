@@ -86,10 +86,14 @@ class ProductConfiguratorController(http.Controller):
 
     @route('/cpq/<int:product_tmpl_id>/validate', type='json', auth='user')
     def cpq_validate(self, product_tmpl_id, combination):
+
+        _logger.info("🔍 Flattened combination received for validation: %s", combination)
+
         template = request.env['product.template'].sudo().browse(product_tmpl_id)
         if not template or not template.cpq_ok:
             return {"valid": False, "errors": {"general": _("Invalid CPQ product.")}}
-
+        
+        # _logger.info("🔍 Flattened combination received for validation: %s", combination)
         ptav_ids, custom_dict = self._cpq_extract_from_combination(template, combination)
         valid, msg = template._cpq_ensure_valid_values(
             ptav_ids, custom_dict, raise_on_invalidity=False, validate_only=True

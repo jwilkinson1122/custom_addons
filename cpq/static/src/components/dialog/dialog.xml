@@ -5,16 +5,16 @@
             <div class="row position-relative">
                 <div class="col">
                     <!-- ⚠️ Error Display -->
-                    <div t-if="!state.valid and Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
-                        <ul t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]" class="list-unstyled mb-0">
-                            <li t-esc="e[1]" />
-                        </ul>
-                    </div>
-                    <!-- <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
+                    <!-- <div t-if="!state.valid and Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
                         <ul t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]" class="list-unstyled mb-0">
                             <li t-esc="e[1]" />
                         </ul>
                     </div> -->
+                    <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
+                        <ul t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]" class="list-unstyled mb-0">
+                            <li t-esc="e[1]" />
+                        </ul>
+                    </div>
                     <!-- 📄 Product Description -->
                     <t t-if="productTemplate and productTemplate.description_sale">
                         <div class="mb-3" t-esc="productTemplate.description_sale" />

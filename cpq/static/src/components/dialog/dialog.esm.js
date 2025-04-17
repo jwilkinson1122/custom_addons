@@ -167,8 +167,13 @@ export class ConfigureDialog extends Component {
             state: this.state,
             formatCurrency: this.formatCurrency,  // ✅ Expose it here
         });
-        
 
+        this.onLateralityChange = (ev) => {
+            this.state.laterality = ev.target.value;
+            this.state.split = false;
+            this.state.selected = {};
+        };
+        
         useEffect(() => {
             console.log("🔁 useEffect triggered (selected, quantityToMake, laterality, split)");
             this._validate();
@@ -212,11 +217,18 @@ export class ConfigureDialog extends Component {
 
                 await nextTick();
                 if (Object.keys(this.state.selected).length > 0) {
+                    console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
                     await this._validate();
                     this.summaryApi?.computeSummary?.();
                     this.updatePricePreview();
 
                 }
+                // await nextTick();
+                // if (Object.keys(this.state.selected).length > 0) {
+                //     await this._validate();
+                //     this.summaryApi?.computeSummary?.();
+                // }
+
             } catch (error) {
                 console.error("❌ Initialization error:", error);
                 this.notification.add("Initialization failed. Please try again.", { type: "danger" });
@@ -317,11 +329,7 @@ export class ConfigureDialog extends Component {
         };
         this._setupAutoRefresh();
 
-        this.onLateralityChange = (ev) => {
-            this.state.laterality = ev.target.value;
-            this.state.split = false;
-            this.state.selected = {};
-        };
+        
 
 
     }
@@ -359,12 +367,6 @@ export class ConfigureDialog extends Component {
     //---------------------------------------------------------------------
 
 
-    // async _loadData() {
-    //     const productTmplId = this.props.productTmplId;
-    //     if (!productTmplId) throw new Error("Missing product template ID");
-    //     return this.rpc(`/cpq_product_configurator/${productTmplId}/data`, {});
-    // }
-
     async _loadData() {
         const productTmplId = this.props.productTmplId;
         console.log("🔍 productTmplId received:", this.props.productTmplId);
@@ -375,33 +377,64 @@ export class ConfigureDialog extends Component {
         }
         return this.rpc(`/cpq_product_configurator/${productTmplId}/data`, {});
     }
+
+    // async _loadData() {
+    //     const productTmplId = this.state.productTmplId?.id || this.state.productTmplId;
+    //     if (!productTmplId) {
+    //         console.error("❌ Missing product template ID in _loadData()");
+    //         throw new Error("Missing product template ID");
+    //     }
+    //     return this.rpc(`/cpq_product_configurator/${productTmplId}/data`, {});
+    // }
     
+    // async _validate() {
+    //     if (!this.state.selected) {
+    //         console.warn("⚠️ No selection found. Skipping validation.");
+    //         return;
+    //     }
+    
+    //     const productTmplId = this.productTemplateId;
+    //     console.log("🧩 Selected state at validation time:", this.state.selected);
+    //     const combination = this._flattenCombination(this.state.selected);
+    //     console.log("🧪 Validating flattened combination:", combination);
+    
+    //     try {
+    //         const res = await this.rpc(`/cpq/${productTmplId}/validate`, {
+    //             combination,
+    //         });
+    //         this.state.valid = res.valid;
+    //         this.state.errors = res.errors;
+    
+    //         if (!res.valid) {
+    //             console.warn("⚠️ Validation errors:", res.errors);
+    //         }
+    //     } catch (error) {
+    //         console.error("❌ Validation error:", error);
+    //         this.state.valid = false;
+    //         this.state.errors = { general: "Validation failed due to RPC error." };
+    //     }
+    // }
+
     async _validate() {
-        if (!this.state.selected) {
-            console.warn("⚠️ No selection found. Skipping validation.");
+        const combination = this._flattenCombination(this.state.selected || {});
+        if (!Object.keys(combination).length) {
+            console.log("⏭️ Skipping validation — selected is empty.");
             return;
         }
     
-        const productTmplId = this.productTemplateId;
-        const combination = this._flattenCombination(this.state.selected);
-        console.log("🧪 Validating flattened combination:", combination);
-    
         try {
-            const res = await this.rpc(`/cpq/${productTmplId}/validate`, {
+            const res = await this.rpc(`/cpq/${this.productTemplateId}/validate`, {
                 combination,
             });
             this.state.valid = res.valid;
             this.state.errors = res.errors;
-    
-            if (!res.valid) {
-                console.warn("⚠️ Validation errors:", res.errors);
-            }
-        } catch (error) {
-            console.error("❌ Validation error:", error);
+        } catch (e) {
             this.state.valid = false;
-            this.state.errors = { general: "Validation failed due to RPC error." };
+            this.state.errors = { general: "Validation RPC error." };
         }
     }
+    
+    
     
 
     async _showConfirmDialog(message) {
@@ -516,16 +549,32 @@ export class ConfigureDialog extends Component {
             console.warn("❌ Invalid PTAV ID:", valueIdOrPtavId);
             return;
         }
+
+        console.groupCollapsed("🔄 _addOrUpdateSelected");
+        console.log("sideOrId:", sideOrId);
+        console.log("attributeId:", attributeId);
+        console.log("valueIdOrPtavId:", valueIdOrPtavId);
+        console.log("customValue:", customValue);
+        console.log("→ resolved side:", side);
+        console.log("→ resolved attrId:", attrId);
+        console.log("→ resolved ptavId:", ptavId);
     
         const attr = this.state.ptalIds.find((a) => a.id === attrId);
-        if (!attr) return;
+        if (!attr) {
+            console.warn("⚠️ No attribute found for ID:", attrId);
+            console.groupEnd();
+            return;
+        }
     
         const ptav = attr.ptav_ids.find((v) => v.id === ptavId);
-        if (!ptav) return;
+        if (!ptav) {
+            console.warn(`⚠️ PTAV ID ${ptavId} not found in attribute "${attr.name}"`);
+            console.groupEnd();
+            return;
+        }
     
         // const value = ptav.is_custom && customValue !== undefined ? customValue : ptav.name;
         const value = ptav.is_custom && customValue !== undefined ? customValue : ptavId;
-
         const newSelected = JSON.parse(JSON.stringify(this.state.selected));
     
         if (isSplit) {
@@ -534,18 +583,24 @@ export class ConfigureDialog extends Component {
                 delete newSelected[side][v.id];
             }
             newSelected[side][ptavId] = value;
+            console.log(`🦶 Updated ${side} side for "${attr.name}":`, newSelected[side]);
         } else {
             for (const v of attr.ptav_ids) {
                 delete newSelected[v.id];
             }
             newSelected[ptavId] = value;
+            console.log(`🧩 Updated shared selection for "${attr.name}":`, newSelected);
         }
     
         this.state.selected = newSelected;
+
+        console.log("🧠 New selected state:", JSON.stringify(this.state.selected, null, 2));
+        console.groupEnd();
     
         await nextTick();
         await new Promise((resolve) => setTimeout(resolve, 0));
-    
+
+        console.log("✅ Running validation and summary update...");
         this._validate();
         this.summaryApi?.computeSummary?.();
         this.updatePricePreview();
@@ -598,15 +653,16 @@ export class ConfigureDialog extends Component {
             for (const side of ["left", "right"]) {
                 for (const [key, val] of Object.entries(selected[side] || {})) {
                     const ptavId = parseInt(key, 10);
-                    if (!isNaN(ptavId)) result[ptavId] = ptavId;  // enforce ID form
+                    if (!isNaN(ptavId)) result[ptavId] = val;  // ✅ preserve the value (may be string)
                 }
             }
         } else {
             for (const [key, val] of Object.entries(selected || {})) {
                 const ptavId = parseInt(key, 10);
-                if (!isNaN(ptavId)) result[ptavId] = ptavId;
+                if (!isNaN(ptavId)) result[ptavId] = val;  // ✅ preserve the value
             }
         }
+    
         return result;
     }
     
