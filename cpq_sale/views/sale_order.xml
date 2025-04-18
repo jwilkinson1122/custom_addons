@@ -9,7 +9,7 @@
                 <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" invisible="state != 'draft'"/>
             </xpath> -->
             <xpath expr="//field[@name='order_line']/tree" position="inside">
-                <field name="cpq_laterality" invisible="1"/>
+                <field name="cpq_laterality" column_invisible="1"/>
                 <button name="edit_cpq_configuration" title="Reconfigure" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
@@ -22,7 +22,7 @@
                 <attribute name="column_invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="cpq_laterality" string="Side" column_invisible="True"/>
+                <field name="cpq_laterality" string="Side" column_invisible="1"/>
                 <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 500px; word-break: break-word; padding: 4px; line-height: 1.4;" string="Configuration Summary" widget="html" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="attributes">
@@ -30,7 +30,12 @@
                 <attribute name="readonly">1</attribute>
                 <attribute name="class">cpq-config-summary-tree</attribute>
             </xpath>
-
+            <xpath expr="//field[@name='order_line']//tree//field[@name='tax_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_subtotal']" position="attributes">
+                <attribute name="string">Subtotal</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']/form" position="inside">
                 <field name="product_template_id_cpq_ok" invisible="1"/>
                 <button name="toggle_debug_cpq_json" string="Toggle CPQ JSON" type="object" class="btn-secondary" />

@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 import json
 from datetime import datetime
+from odoo.addons.cpq.helpers.summary_helper import get_cpq_config_dict
 
 class CreateProductWizard(models.TransientModel):
     _name = "create.product.wizard"
@@ -15,22 +16,29 @@ class CreateProductWizard(models.TransientModel):
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
 
-        line = self.env['sale.order.line'].browse(self.env.context.get('default_sale_order_line_id'))
-        config_json = line.cpq_configuration_json
+        line_id = self.env.context.get('default_sale_order_line_id')
+        if not line_id:
+            return res
 
-        if config_json:
-            config = json.loads(config_json)
+        line = self.env['sale.order.line'].browse(line_id).exists()
+        if not line or not line.cpq_configuration_json:
+            return res
 
-            today_str = datetime.today().strftime("%Y%m%d")
-            customer_initials = ''.join(word[0].upper() for word in (line.order_id.partner_id.name or "").split() if word)
-            internal_ref = f"CFG-{today_str}-{line.id}-{customer_initials or 'CUST'}"
+        config = get_cpq_config_dict(line)
+        if not config:
+            return res  # or raise ValidationError("Invalid CPQ configuration data.")
 
-            name = config.get('name') or f"{line.product_template_id.name} Custom"
+        today_str = datetime.today().strftime("%Y%m%d")
+        customer_initials = ''.join(
+            word[0].upper() for word in (line.order_id.partner_id.name or "").split() if word
+        )
+        internal_ref = f"CFG-{today_str}-{line.id}-{customer_initials or 'CUST'}"
+        name = config.get('name') or f"{line.product_template_id.name} Custom"
 
-            res.update({
-                'preview_internal_ref': internal_ref,
-                'preview_name': name,
-            })
+        res.update({
+            'preview_internal_ref': internal_ref,
+            'preview_name': name,
+        })
 
         return res
 

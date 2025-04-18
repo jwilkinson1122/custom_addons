@@ -140,13 +140,19 @@ export class ConfigureDialog extends Component {
 
         this.onIncreaseQuantity = () => {
             this.state.quantityToMake += 1;
-            this.summaryApi?.recalculate();  
+            // this.summaryApi?.recalculate();  
+            this.summaryApi?.computeSummary?.();
+            this.updatePricePreview();  // Optional: for real-time pricing refresh
+
         };
         
         this.onDecreaseQuantity = () => {
             if (this.state.quantityToMake > 1) {
                 this.state.quantityToMake -= 1;
-                this.summaryApi?.recalculate();
+                // this.summaryApi?.recalculate();
+                this.summaryApi?.computeSummary?.();
+                this.updatePricePreview();  // Optional: for real-time pricing refresh
+
             }
         };
 
@@ -844,7 +850,9 @@ export function ConfigureDialogAction(env, action) {
     const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
     const context = action.context || {};
 
-    const productTmplId = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
+    // const productTmplId = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
+    const rawTmpl = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
+    const productTmplId = typeof rawTmpl === "object" ? rawTmpl.id : rawTmpl;
     const orderId = safeMany2One(context.active_sale_order_id || context.sale_order_id);
     const activeId = context.active_id;
 
@@ -867,8 +875,10 @@ export function ConfigureDialogAction(env, action) {
     }
 
     env.services.dialog.add(ConfigureDialog, {
-        productTmplId: productTmplId.id,
-        productTemplate: productTmplId,
+        productTmplId,
+        productTemplate: typeof rawTmpl === "object" ? rawTmpl : null,
+        // productTmplId: productTmplId.id,
+        // productTemplate: productTmplId,
         orderId,
         context,
         edit: true,

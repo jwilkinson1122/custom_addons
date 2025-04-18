@@ -1,37 +1,134 @@
 import logging
 import json
 from markupsafe import Markup
-from odoo.tools.safe_eval import json
 from odoo.tools.translate import _
 from odoo import _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError
-
+from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
-# _logger = logging.getLogger("cpq")
-# _logger.info("🧩 CPQ Step: %s", "something important")
+
+def get_cpq_config_dict(raw):
+    try:
+        if isinstance(raw, str):
+            return json.loads(raw)
+        elif isinstance(raw, dict):
+            return raw
+    except Exception as e:
+        _logger.warning(f"⚠️ CPQ config decode failed: {e}")
+    return {}
 
 def format_currency(amount, env):
     return formatLang(env, amount, currency_obj=env.user.company_id.currency_id)
 
+
+# def render_summary_html(env, order, config):
+#     if not isinstance(order, BaseModel) or order._name != "sale.order.line":
+#         raise ValueError("Expected a sale.order.line record in render_summary_html()")
+    
+#     laterality = config.get("laterality", "bilateral")
+#     split = config.get("split", False)
+#     selected = config.get("selected", {}) or {}
+#     quantity = config.get("quantity_to_make", 1)
+
+#     def get_ptav(ptav_id):
+#         return env["product.template.attribute.value"].sudo().browse(int(ptav_id))
+
+#     def get_price(ptav_id):
+#         ptav = get_ptav(ptav_id)
+#         return ptav.price_extra if ptav.exists() else 0.0
+
+#     def get_label_and_value(ptav_id):
+#         ptav = get_ptav(ptav_id)
+#         if not ptav.exists():
+#             return str(ptav_id), str(ptav_id)
+#         return ptav.attribute_id.name, ptav.name
+
+#     def line(attr_label, laterality_label, val, price=None):
+#         label = f"{attr_label} - {laterality_label}"
+#         price_html = f"<span class='float-end text-muted'>+ ${price:.2f}</span>" if price else ""
+#         return f"<li>{label}: <b>{val}</b>{price_html}</li>"
+
+#     lines = []
+#     left_total = right_total = 0.0
+
+#     if laterality == "bilateral" and split:
+#         left = selected.get("left", {})
+#         right = selected.get("right", {})
+#         all_attr_ids = set(left.keys()).union(right.keys())
+#         for attr_id in all_attr_ids:
+#             attr_label, _ = get_label_and_value(attr_id)
+#             lval = get_label_and_value(attr_id)[1] if attr_id in left else "-"
+#             rval = get_label_and_value(attr_id)[1] if attr_id in right else "-"
+#             price = 0.0
+#             if attr_id in left:
+#                 price += get_price(attr_id)
+#                 left_total += get_price(attr_id)
+#             if attr_id in right:
+#                 price += get_price(attr_id)
+#                 right_total += get_price(attr_id)
+#             lines.append(
+#                 f"<li>{attr_label} - Bilateral: <b>L:</b> {lval}, <b>R:</b> {rval} "
+#                 f"<span class='float-end text-muted'>+ ${price:.2f}</span></li>"
+#             )
+#     else:
+#         side_label = {"left": "Left", "right": "Right", "bilateral": "Bilateral"}.get(laterality, "Shared")
+#         for attr_id, val in selected.items():
+#             attr_label, value_label = get_label_and_value(attr_id)
+#             price = get_price(attr_id)
+#             lines.append(line(attr_label, side_label, value_label, price))
+#             if laterality == "left":
+#                 left_total += price
+#             elif laterality == "right":
+#                 right_total += price
+#             elif laterality == "bilateral":
+#                 left_total += price
+#                 right_total += price
+
+#     base_price = order.product_id.product_tmpl_id.list_price
+#     base_multiplier = 2 if laterality == "bilateral" else 1
+#     base = base_price * base_multiplier * quantity
+#     extras = (left_total + right_total) * quantity
+#     total = base + extras
+
+#     base_hint = ""
+#     if laterality == "bilateral":
+#         base_hint = f" (${base_price:.2f} x 2)"
+#     elif laterality in ("left", "right"):
+#         base_hint = f" (${base_price:.2f} x {quantity})"
+
+#     pricing_lines = []
+#     if laterality == "bilateral" and split:
+#         pricing_lines += [
+#             f"<li>🦶 <b>Left Extras:</b> ${left_total:.2f}</li>",
+#             f"<li>🦶 <b>Right Extras:</b> ${right_total:.2f}</li>",
+#         ]
+#     pricing_lines += [
+#         f"<li><b>💵 Base:</b> ${base:.2f}{base_hint}</li>",
+#         f"<li><b>➕ Extras:</b> ${extras:.2f}</li>",
+#         f"<li><b>📊 Total (x{quantity}):</b> <b>${total:.2f}</b></li>",
+#     ]
+
+#     return Markup(f"<ul>{''.join(lines)}<hr/>{''.join(pricing_lines)}</ul>")
+
 def render_summary_html(env, order, config):
+    if not isinstance(order, BaseModel) or order._name != "sale.order.line":
+        raise ValueError("Expected a sale.order.line record in render_summary_html()")
+
     laterality = config.get("laterality", "bilateral")
     split = config.get("split", False)
-    selected = config.get("selected", {})
+    selected = config.get("selected", {}) or {}
     quantity = config.get("quantity_to_make", 1)
 
-    def get_name(ptav_id):
-        ptav = env["product.template.attribute.value"].sudo().browse(int(ptav_id))
-        return ptav.name if ptav.exists() else str(ptav_id)
+    def get_ptav(ptav_id):
+        return env["product.template.attribute.value"].sudo().browse(int(ptav_id))
 
-    def get_price(ptav_id):
-        ptav = env["product.template.attribute.value"].sudo().browse(int(ptav_id))
-        return ptav.price_extra if ptav.exists() else 0.0
-
-    def line(label, val, price=None):
-        price_html = f"<span class='float-end text-muted'>+ ${price:.2f}</span>" if price else ""
-        return f"<li>{label}: <b>{val}</b>{price_html}</li>"
+    def get_label_and_value(ptav_id):
+        ptav = get_ptav(ptav_id)
+        if ptav.exists():
+            return ptav.attribute_id.name, ptav.name, ptav.price_extra
+        return str(ptav_id), str(ptav_id), 0.0
 
     lines = []
     left_total = right_total = 0.0
@@ -39,24 +136,38 @@ def render_summary_html(env, order, config):
     if laterality == "bilateral" and split:
         left = selected.get("left", {})
         right = selected.get("right", {})
-        for attr_id in set(left.keys()).union(right.keys()):
-            lval = get_name(attr_id) if attr_id in left else "-"
-            rval = get_name(attr_id) if attr_id in right else "-"
-            price = 0.0
-            if attr_id in left:
-                price += get_price(attr_id)
-            if attr_id in right:
-                price += get_price(attr_id)
-            lines.append(f"<li>{attr_id}: <b>L:</b> {lval}, <b>R:</b> {rval} <span class='float-end text-muted'>+ ${price:.2f}</span></li>")
-            left_total += get_price(attr_id) if attr_id in left else 0
-            right_total += get_price(attr_id) if attr_id in right else 0
+        combined = {}
 
+        for ptav_id in set(left.keys()).union(right.keys()):
+            attr_label, _, _ = get_label_and_value(ptav_id)
+            combined.setdefault(attr_label, {"left": None, "right": None, "ptav_id_left": None, "ptav_id_right": None})
+
+            if ptav_id in left:
+                _, val, price = get_label_and_value(ptav_id)
+                combined[attr_label]["left"] = val
+                combined[attr_label]["ptav_id_left"] = ptav_id
+                left_total += price
+
+            if ptav_id in right:
+                _, val, price = get_label_and_value(ptav_id)
+                combined[attr_label]["right"] = val
+                combined[attr_label]["ptav_id_right"] = ptav_id
+                right_total += price
+
+        for attr_label, vals in combined.items():
+            if vals["left"]:
+                left_val = vals["left"]
+                price = get_label_and_value(vals["ptav_id_left"])[2]
+                lines.append(f"<div>{attr_label} - Left: <b>{left_val}</b> <span class='float-end text-muted'>+ ${price:.2f}</span></div>")
+            if vals["right"]:
+                right_val = vals["right"]
+                price = get_label_and_value(vals["ptav_id_right"])[2]
+                lines.append(f"<div>{attr_label} - Right: <b>{right_val}</b> <span class='float-end text-muted'>+ ${price:.2f}</span></div>")
     else:
-        side_label = {"left": "Left", "right": "Right", "bilateral": "Shared"}.get(laterality, "Shared")
-        for attr_id, val in selected.items():
-            name = get_name(attr_id)
-            price = get_price(attr_id)
-            lines.append(line(f"{side_label} - {name}", val, price))
+        side_label = {"left": "Left", "right": "Right", "bilateral": "Bilateral"}.get(laterality, "Shared")
+        for ptav_id, val in selected.items():
+            attr_label, value_label, price = get_label_and_value(ptav_id)
+            lines.append(f"<div>{attr_label} - {side_label}: <b>{value_label}</b> <span class='float-end text-muted'>+ ${price:.2f}</span></div>")
             if laterality == "left":
                 left_total += price
             elif laterality == "right":
@@ -65,121 +176,34 @@ def render_summary_html(env, order, config):
                 left_total += price
                 right_total += price
 
-    base_price = order.product_id.product_tmpl_id.list_price
-    base = base_price * (2 if laterality == "bilateral" else 1) * quantity
-    extras = (left_total + right_total) * quantity
-    total = base + extras
+    # 🧮 Base Price Calculation
+    unit_base_price = order.product_id.product_tmpl_id.list_price
+    base_multiplier = 2 if laterality == "bilateral" else 1
+    base_price = unit_base_price * base_multiplier
+    extras_total = left_total + right_total
+    total = (base_price + extras_total) * quantity
 
-    pricing = f"""
-    <li><b>💵 Base:</b> ${base:.2f}</li>
-    <li><b>➕ Extras:</b> ${extras:.2f}</li>
-    <li><b>📊 Total (x{quantity}):</b> <b>${total:.2f}</b></li>
+    # 🧾 Price Explanation
+    breakdown_note = f"(${unit_base_price:.2f} x {base_multiplier})"
+    base_row = f"<li><b>💵 Base:</b> ${base_price:.2f} <span class='text-muted'>{breakdown_note}</span></li>"
+
+    price_block = f"""
+        <hr/>
+        <ul class='mt-2 mb-0'>
+            {'<li><b>🦶 Left Extras:</b> $%.2f</li>' % left_total if left_total else ''}
+            {'<li><b>🦶 Right Extras:</b> $%.2f</li>' % right_total if right_total else ''}
+            {base_row}
+            <li><b>➕ Extras:</b> ${extras_total:.2f}</li>
+            <li><b>📊 Total (x{quantity}):</b> <b>${total:.2f}</b></li>
+        </ul>
     """
 
-    return Markup(f"<ul>{''.join(lines)}<hr/>{pricing}</ul>")
+    return Markup(f"<div class='cpq-summary'>{''.join(lines)}{price_block}</div>")
 
-# Current
-# def render_summary_html(env, order, config, mode="html"):
-#     if not config:
-#         _logger.warning("⚠️ [CPQ] render_summary_html: Empty config provided.")
-#         return "<i>No configuration</i>"
-
-#     _logger.info("🖨️ [CPQ] render_summary_html called with config: %s", json.dumps(config, indent=2))
-
-#     lines = []
-#     laterality = config.get("laterality", "").capitalize()
-#     quantity = config.get("quantity_to_make", 1)
-#     split = config.get("split", False)
-
-#     selections = config.get("selected", {})
-#     left_price = config.get("left_price", 0.0)
-#     right_price = config.get("right_price", 0.0)
-#     total_price = config.get("total_price", 0.0)
-
-#     ptav_ids = set()
-#     if isinstance(selections, dict):
-#         if split:
-#             ptav_ids.update(int(k) for side in ("left", "right") for k in selections.get(side, {}) if k.isdigit())
-#         else:
-#             ptav_ids.update(int(k) for k in selections if k.isdigit())
-
-#     ptav_by_id = {ptav.id: ptav for ptav in env["product.template.attribute.value"].browse(list(ptav_ids))}
-#     attribute_by_id = {}
-#     for ptav in ptav_by_id.values():
-#         attribute_by_id.setdefault(ptav.attribute_id.id, ptav.attribute_id)
-
-#     lines.append(f"🦶 {'🦶 ' if laterality == 'Bilateral' else ''}<b>Laterality:</b> {laterality}<br/>")
-#     lines.append(f"📦 <b>Quantity to Make:</b> {quantity}<br/>")
-#     lines.append(f"🔀 <b>Split Mode:</b> {'Yes' if split else 'No'}<br/><br/>")
-
-#     if selections:
-#         lines.append("<b>Selections:</b><br/>")
-
-#         def render_side(side_name, side_selections):
-#             result = []
-#             for ptav_id_str, value in side_selections.items():
-#                 ptav_id = int(ptav_id_str)
-#                 ptav = ptav_by_id.get(ptav_id)
-#                 if not ptav:
-#                     continue
-#                 attribute = ptav.attribute_id
-#                 price_extra = ptav.price_extra or 0.0
-#                 result.append(f"<span title='{attribute.name}'>{attribute.name}: <b>{ptav.name}</b>"
-#                               f"{f' <small>({format_currency(price_extra, env)})</small>' if price_extra else ''}"
-#                               f"</span><br/>")
-#             return "".join(result)
-
-#         if split:
-#             left_selections = selections.get("left", {})
-#             right_selections = selections.get("right", {})
-#             attr_ids = set(
-#                 int(ptav_id) for ptav_id in list(left_selections.keys()) + list(right_selections.keys())
-#             )
-
-#             for attr in attribute_by_id.values():
-#                 left_val = None
-#                 right_val = None
-#                 for ptav_id, ptav in ptav_by_id.items():
-#                     if ptav.attribute_id.id != attr.id:
-#                         continue
-#                     if str(ptav_id) in left_selections:
-#                         left_val = ptav.name
-#                     if str(ptav_id) in right_selections:
-#                         right_val = ptav.name
-#                 match = "✅" if left_val == right_val and left_val else "❌"
-#                 lines.append(f"{attr.name}: {left_val or '-'} / {right_val or '-'} {match}<br/>")
-
-#         else:
-#             lines.append(render_side("Shared", selections))
-
-#         lines.append("<br/>")
-
-#     lines.append(f"<b>Price Summary:</b><br/>")
-#     lines.append(f"💵 Left Total: {format_currency(left_price, env)}<br/>")
-#     lines.append(f"💵 Right Total: {format_currency(right_price, env)}<br/>")
-#     lines.append(f"📊 Combined Total: {format_currency(total_price, env)}")
-
-#     html_output = "".join(lines)
-
-#     _logger.info("🖨️ [CPQ] Final Summary HTML:\n%s", html_output)
-#     return html_output
 
 def render_summary_plaintext(env, order, config):
     html = render_summary_html(env, order, config)
     return Markup(html).striptags()
-
-# def _calculate_total_extras(self, config):
-#         selected = config.get('selected', {})
-#         if not selected:
-#             return 0
-
-#         ptav_ids = [int(k) for k in selected if k.isdigit()]
-#         ptavs = self.env['product.template.attribute.value'].browse(ptav_ids)
-
-#         total_extra = sum(ptav.price_extra for ptav in ptavs)
-#         _logger.info(f"🧩 Total extras calculated: {total_extra}")
-#         return total_extra
-
 
 def compute_cpq_price_breakdown(env, order_line, config):
     """
@@ -201,7 +225,13 @@ def compute_cpq_price_breakdown(env, order_line, config):
     """
     template = order_line.product_template_id
     partner = order_line.order_id.partner_id
+    # currency = order_line.currency_id
+
     currency = order_line.currency_id
+    if not currency or not currency.ids:
+        currency = env.user.company_id.currency_id
+    currency = currency.ensure_one()
+
 
     base_price = template.list_price or 0.0
     quantity = config.get("quantity_to_make", 1)
@@ -259,8 +289,8 @@ def compute_cpq_price_breakdown(env, order_line, config):
         "extras_total": round(extras_total * quantity, 2),
         "subtotal": round(subtotal, 2),
         "final_price": final_price,
+        "total": final_price, # ✅ Add this alias to avoid KeyError in consumers
     }
-
 
 def get_partner_discount(env, partner, template):
     if not partner:
@@ -279,3 +309,6 @@ def get_partner_discount(env, partner, template):
 # partner categories
 # volume tiers
 # custom partner fields (e.g., partner.cpq_discount_pct)
+
+
+

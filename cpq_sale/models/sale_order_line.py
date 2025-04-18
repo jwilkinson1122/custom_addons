@@ -1,19 +1,16 @@
 import logging
+import json
 from datetime import datetime
 from datetime import date, timedelta
 from odoo.fields import Field
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown
-
-import json
+from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown, get_cpq_config_dict
 
 _logger = logging.getLogger(__name__)
 
-
 # class SaleOrder(models.Model):
 #     _inherit = "sale.order"
-
 
 class SaleOrderLine(models.Model):
     _inherit = ["sale.order.line", "mail.thread"]
@@ -82,7 +79,8 @@ class SaleOrderLine(models.Model):
                 continue
 
             try:
-                config = json.loads(line.cpq_configuration_json)
+                config = get_cpq_config_dict(line)  # ✅ Cleaner and safe
+
                 _logger.info("🧩 [CPQ] Applying configuration to order line: %s", json.dumps(config, indent=2))
 
                 line.name = config.get("name") or line.name
@@ -90,6 +88,7 @@ class SaleOrderLine(models.Model):
 
                 # Optional: add to chatter only after save
                 summary_html = render_summary_html(self.env, line.order_id, config, mode="chatter")
+
                 _logger.info("🖨️ [CPQ] Generated Summary HTML:\n%s", summary_html)
 
                 line.message_post(
@@ -106,23 +105,13 @@ class SaleOrderLine(models.Model):
     @api.depends('cpq_configuration_json')
     def _compute_cpq_laterality(self):
         for line in self:
-            config = line.cpq_configuration_json or {}
-            if isinstance(config, str):
-                try:
-                    config = json.loads(config)
-                except Exception:
-                    config = {}
-            line.cpq_laterality = config.get('laterality')
+            config = get_cpq_config_dict(line.cpq_configuration_json)
+            line.cpq_laterality = config.get('laterality') 
 
     @api.depends("cpq_configuration_json")
     def _compute_cpq_quantity_to_make(self):
         for line in self:
-            config = line.cpq_configuration_json or {}
-            if isinstance(config, str):
-                try:
-                    config = json.loads(config)
-                except Exception:
-                    config = {}
+            config = get_cpq_config_dict(line.cpq_configuration_json)
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
     @api.onchange("product_id")
@@ -165,17 +154,29 @@ class SaleOrderLine(models.Model):
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_pricing(self):
         for line in self:
-            config = line.cpq_configuration_json or {}
-            if isinstance(config, str):
-                try:
-                    config = json.loads(config)
-                except Exception:
-                    config = {}
+            config = get_cpq_config_dict(line.cpq_configuration_json)
 
-            result = compute_cpq_price_breakdown(self.env, line, config)
+            result = compute_cpq_price_breakdown(self.env, line, config) or {}
+            quantity = result.get("quantity", 1)
+            total = result.get("total")
+            subtotal = result.get("subtotal")
 
-            line.price_unit = result["subtotal"]  # Per unit price (before quantity)
-            line.product_uom_qty = result["quantity"]  # Optional sync
+            if total is not None:
+                line.price_unit = total / quantity if quantity else 0.0
+            elif subtotal is not None:
+                line.price_unit = subtotal
+            else:
+                line.price_unit = 0.0  
+
+            line.product_uom_qty = quantity
+
+    # @api.onchange('cpq_configuration_json')
+    # def _onchange_cpq_pricing(self):
+    #     for line in self:
+    #         config = get_cpq_config_dict(line.cpq_configuration_json)
+    #         result = compute_cpq_price_breakdown(self.env, line, config)
+    #         line.price_unit = result["total"] / result["quantity"]
+    #         line.product_uom_qty = result["quantity"]
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_configuration_summary(self):
@@ -190,6 +191,7 @@ class SaleOrderLine(models.Model):
                 _logger.info(f"Config Data: {config}")
 
                 summary_html = render_summary_html(self.env, line.order_id, config)
+
                 line.cpq_configuration_summary = summary_html
 
             except Exception as e:
@@ -206,7 +208,11 @@ class SaleOrderLine(models.Model):
     def edit_cpq_configuration(self):
         self.ensure_one()
         
-        tmpl = self.product_template_id
+        # tmpl = self.product_template_id
+        # if not tmpl:
+        #     raise UserError("No product template linked to this line.")
+
+        tmpl = self.product_template_id or self.product_id.product_tmpl_id
         if not tmpl:
             raise UserError("No product template linked to this line.")
 
@@ -255,15 +261,13 @@ class SaleOrderLine(models.Model):
     def action_create_product_from_configuration(self):
         self.ensure_one()
 
-        if not self.cpq_configuration_json:
-            raise UserError("No CPQ configuration found on this line.")
+        config = get_cpq_config_dict(self)
+        if not config:
+            raise UserError("No CPQ configuration found or it could not be parsed.")
 
-        try:
-            config = json.loads(self.cpq_configuration_json)
-        except Exception as e:
-            raise UserError(f"Invalid CPQ configuration JSON: {e}")
+        _logger.info("🧩 [CPQ] Creating product from configuration: %s", json.dumps(config, indent=2))
 
-        # ✅ Safety check
+        # ✅ Safety check: prevent duplicate CPQ product creation
         if self.product_id and self.product_id.default_code and self.product_id.default_code.startswith("CFG-"):
             raise UserError("This line is already linked to a custom CPQ product.")
 
@@ -274,10 +278,10 @@ class SaleOrderLine(models.Model):
         today_str = datetime.today().strftime("%Y%m%d")
         customer_initials = ''.join(word[0].upper() for word in (self.order_id.partner_id.name or "").split() if word)
         internal_ref = f"CFG-{today_str}-{self.id}-{customer_initials or 'CUST'}"
+
         product_name = config.get('name') or f"{product_tmpl.name} Custom"
         total_extra = self._calculate_total_extras(config)
         description_sale = self._generate_cpq_description(config, total_extra)
-        description_purchase = description_sale
         image = product_tmpl.image_1920
 
         new_product = self.env['product.product'].create({
@@ -286,7 +290,7 @@ class SaleOrderLine(models.Model):
             'name': product_name,
             'lst_price': total_extra or self.price_unit,
             'description_sale': description_sale,
-            'description_purchase': description_purchase,
+            'description_purchase': description_sale,
             'image_1920': image,
         })
 
@@ -310,7 +314,7 @@ class SaleOrderLine(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
-    
+
     def _calculate_total_extras(self, config):
         selected = config.get('selected', {})
         if not selected:
@@ -322,6 +326,7 @@ class SaleOrderLine(models.Model):
         total_extra = sum(ptav.price_extra for ptav in ptavs)
         _logger.info(f"🧩 Total extras calculated: {total_extra}")
         return total_extra
+    
 
     @api.model
     def _generate_cpq_description(self, config, total_extra):
@@ -348,12 +353,9 @@ class SaleOrderLine(models.Model):
     @api.depends("cpq_configuration_json")
     def _compute_cpq_total_price(self):
         for line in self:
-            if not line.product_template_id.cpq_ok or not line.cpq_configuration_json:
-                line.cpq_total_price = 0.0
-                continue
-            config = line.cpq_configuration_json
+            config = get_cpq_config_dict(line.cpq_configuration_json)
             breakdown = compute_cpq_price_breakdown(self.env, line, config)
-            line.cpq_total_price = line.currency_id.round(breakdown.get("final_price", 0.0))
+            line.cpq_total_price = breakdown.get("total", 0.0)
 
     @api.model
     def _apply_cpq_attributes_to_product(self, config, product):

@@ -1,10 +1,11 @@
+import logging
+import json
 from odoo import api, fields, models, http, _
 from odoo.exceptions import UserError
 from odoo.http import request, route
-import logging
-import json
 
 from ..helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown
+# from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown
 
 _logger = logging.getLogger(__name__)
 
@@ -121,6 +122,7 @@ class ProductConfiguratorController(http.Controller):
             raise UserError(_("Invalid active model or active ID."))
 
         line = request.env['sale.order.line'].sudo().browse(active_id)
+        # line = request.env["sale.order.line"].browse(line_id)
         if not line.exists():
             _logger.error("❌ Sale order line not found for ID %s", active_id)
             raise UserError(_("Sale order line not found."))
@@ -130,12 +132,26 @@ class ProductConfiguratorController(http.Controller):
             _logger.exception("❌ Failed to serialize configuration:")
             raise UserError(_("Configuration could not be saved. Please check your selections."))
 
-        summary_html = render_summary_html(request.env, line.order_id, configuration)
+
+        summary_html = render_summary_html(request.env, line, configuration)
         
+        # ✅ Compute correct price breakdown
+        breakdown = compute_cpq_price_breakdown(request.env, line, configuration)
+        price_unit = breakdown["final_price"] / breakdown["quantity"]
+        product_uom_qty = breakdown["quantity"]
+
+        # line.write({
+        #     'cpq_configuration_json': config_json,
+        #     'cpq_configuration_summary': summary_html,
+        #     'product_uom_qty': configuration.get("quantity_to_make", 1),
+        #     'name': configuration.get("name") or line.name,
+        # })
+
         line.write({
             'cpq_configuration_json': config_json,
             'cpq_configuration_summary': summary_html,
-            'product_uom_qty': configuration.get("quantity_to_make", 1),
+            'product_uom_qty': product_uom_qty,
+            'price_unit': price_unit, 
             'name': configuration.get("name") or line.name,
         })
 
