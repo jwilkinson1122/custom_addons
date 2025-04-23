@@ -871,14 +871,14 @@ export function ConfigureDialogAction(env, action) {
     const productTmplId = typeof rawTmpl === "object" ? rawTmpl.id : rawTmpl;
     const orderId = safeMany2One(context.active_sale_order_id || context.sale_order_id);
     const activeId = context.active_id;
-
-    if (!productTmplId || typeof productTmplId !== "object" || !productTmplId.id) {
+    
+    if (!productTmplId) {
         env.services.notification.add(_t("❌ Missing product template. Cannot open configurator."), { type: "danger" });
         return;
     }
 
-    if (!productTmplId || !orderId) {
-        env.services.notification.add(_t("Unable to open configurator: Missing data."), { type: "danger" });
+    if (!orderId) {
+        env.services.notification.add(_t("Unable to open configurator: Missing order ID."), { type: "danger" });
         return;
     }
 
