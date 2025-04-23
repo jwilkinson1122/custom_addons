@@ -11,7 +11,16 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
 import SummaryPanel from "./configurator_summary_panel.esm";
-import { validateProps, cleanGhostRecords, nextTick, useDebouncedInput, debounce, safeMany2One, computeLocalCPQPriceBreakdown } from "./utils.esm";
+import { 
+    validateProps, 
+    cleanGhostRecords, 
+    nextTick, 
+    useDebouncedInput, 
+    debounce, 
+    safeMany2One, 
+    computeLocalCPQPriceBreakdown,
+    stableStringify,
+ } from "./utils.esm";
 
 export class ConfigureDialog extends Component {
     static template = "cpq.ConfigureDialogDialog";
@@ -159,11 +168,20 @@ export class ConfigureDialog extends Component {
         this.registerSummaryPanel = api => { this.summaryApi = api; };
         // this.togglePrintPreview = () => { this.state.showPrintPreview = !this.state.showPrintPreview; };
 
+        // this.summaryKey = () => {
+        //     try {
+        //         return JSON.stringify(this.state.selected || {});
+        //     } catch (e) {
+        //         console.warn("⚠️ Failed to stringify selected:", e);
+        //         return "invalid-key";
+        //     }
+        // };
+
         this.summaryKey = () => {
             try {
-                return JSON.stringify(this.state.selected || {});
+                return stableStringify(this.state.selected || {});
             } catch (e) {
-                console.warn("⚠️ Failed to stringify selected:", e);
+                console.warn("⚠️ Failed to stable stringify selected:", e);
                 return "invalid-key";
             }
         };

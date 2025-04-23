@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_uom']" position="after">
                 <field name="cpq_product_created" widget="boolean_button" readonly="1" options="{'terminology': 'Promoted'}"/>
+                <field name="cpq_configuration_hash" readonly="1"/>
             </xpath>
         </field>
     </record>

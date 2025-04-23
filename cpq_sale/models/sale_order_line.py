@@ -4,8 +4,13 @@ from datetime import datetime
 from datetime import date, timedelta
 from odoo.fields import Field
 from odoo import _, api, fields, models
+from odoo.tools import image_process
+import qrcode
+import base64
+import hashlib
+from io import BytesIO
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown, get_cpq_config_dict
+from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown, get_cpq_config_dict, generate_cpq_qr_payload, get_partner_discount
 
 _logger = logging.getLogger(__name__)
 
@@ -67,6 +72,93 @@ class SaleOrderLine(models.Model):
     )
 
     cpq_summary_printable = fields.Html("Printable CPQ Summary")
+
+    cpq_qr_image = fields.Binary("CPQ QR Code", compute='_compute_cpq_qr_code', store=False)
+    
+    cpq_configuration_hash = fields.Char(
+        string="CPQ Configuration Hash",
+        compute="_compute_cpq_configuration_hash",
+        store=True
+    )
+
+    @api.depends('order_id', 'product_template_id', 'cpq_configuration_json')
+    def _compute_cpq_qr_code(self):
+        for line in self:
+            if line.product_template_id and line.order_id:
+                config_hash = None
+                if line.cpq_configuration_json:
+                    config_hash = line._get_configuration_hash(line.cpq_configuration_json)
+
+                payload = generate_cpq_qr_payload(
+                    order_id=line.order_id.id,
+                    line_id=line.id,
+                    template_id=line.product_template_id.id,
+                    config_hash=config_hash,
+                )
+
+                qr = qrcode.make(payload)
+                buffer = BytesIO()
+                qr.save(buffer, format="PNG")
+                line.cpq_qr_image = base64.b64encode(buffer.getvalue())
+            else:
+                line.cpq_qr_image = False
+
+    qr_uri = fields.Char(string="CPQ QR URI", compute="_compute_qr_uri")
+
+    def _compute_qr_uri(self):
+        for line in self:
+            config_data = line.cpq_configuration_json
+            config_hash = None
+            if config_data:
+                config_hash = line._get_configuration_hash(config_data)
+            line.qr_uri = generate_cpq_qr_payload(
+                order_id=line.order_id.id,
+                line_id=line.id,
+                template_id=line.product_template_id.id,
+                config_hash=config_hash,
+            )
+
+    @api.depends('cpq_configuration_json')
+    def _compute_cpq_configuration_hash(self):
+        for line in self:
+            if line.cpq_configuration_json:
+                line.cpq_configuration_hash = line._get_configuration_hash(line.cpq_configuration_json)
+            else:
+                line.cpq_configuration_hash = False
+
+    # def _get_configuration_hash(self, config_data):
+    #     if isinstance(config_data, dict):
+    #         config_data = json.dumps(config_data, sort_keys=True)
+    #     elif not isinstance(config_data, str):
+    #         config_data = str(config_data)
+    #     return hashlib.sha256(config_data.encode("utf-8")).hexdigest()[:16]
+
+    def _get_configuration_hash(self, config_data):
+        """
+        Generates a consistent SHA256 hash for the given CPQ configuration data.
+
+        Handles dict, str, and other data types safely with sorted keys for consistency.
+        """
+        def default_serializer(obj):
+            if isinstance(obj, (datetime, date)):
+                return obj.isoformat()
+            return str(obj)
+
+        try:
+            if isinstance(config_data, dict):
+                # Safe JSON serialization with stable key order
+                config_str = json.dumps(config_data, sort_keys=True, default=default_serializer)
+            elif isinstance(config_data, str):
+                config_str = config_data
+            else:
+                # Fallback: try to serialize other types safely
+                config_str = json.dumps(config_data, default=default_serializer)
+        except Exception as e:
+            _logger.warning(f"⚠️ [CPQ] Failed to serialize config for hashing: {e}. Falling back to string conversion.")
+            config_str = str(config_data)
+
+        return hashlib.sha256(config_str.encode("utf-8")).hexdigest()[:16]
+
 
     def toggle_debug_cpq_json(self):
         # Placeholder logic: in real use, you'd probably use context or a transient field to show/hide.

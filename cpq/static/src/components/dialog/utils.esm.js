@@ -1,6 +1,9 @@
 /** @odoo-module */
-
+import { registry } from "@web/core/registry";
 import { onWillUnmount } from "@odoo/owl";
+// import QRCode from 'qrcode';
+// import QRCode from 'web.qrcode';
+
 
 export function computeLocalCPQPriceBreakdown({ basePrice = 0, extras = 0, discountFactor = 1.0, quantity = 1 }) {
     const discountedBase = basePrice * discountFactor;
@@ -136,6 +139,151 @@ export function safeMany2One(value) {
     if (value && typeof value === "object" && "id" in value) return [value.id, value.display_name || ""];
     if (typeof value === "number") return [value, ""];  // Number only
     return [false, ""];  // Safe fallback
+}
+
+/**
+ * Recursively sorts keys of an object for consistent JSON output.
+ */
+// export function stableStringify(obj) {
+//     const allKeys = new Set();
+//     JSON.stringify(obj, (key, value) => {
+//         allKeys.add(key);
+//         return value;
+//     });
+
+//     return JSON.stringify(obj, Array.from(allKeys).sort());
+// }
+
+export function stableStringify(obj) {
+    const sortKeys = (input) => {
+        if (Array.isArray(input)) {
+            return input.map(sortKeys);
+        } else if (input && typeof input === "object" && input.constructor === Object) {
+            return Object.keys(input).sort().reduce((acc, key) => {
+                acc[key] = sortKeys(input[key]);
+                return acc;
+            }, {});
+        }
+        return input;
+    };
+    return JSON.stringify(sortKeys(obj));
+}
+
+
+
+export function generateCpqQrPayload({ orderId, lineId, templateId, configHash = null, version = 1 }) {
+    let uri = `cpq://order/${orderId}/line/${lineId}/template/${templateId}`;
+    const params = [];
+    if (configHash) params.push(`config=${encodeURIComponent(configHash)}`);
+    if (version) params.push(`v=${version}`);
+    if (params.length) uri += `?${params.join("&")}`;
+    return uri;
+}
+
+/**
+ * Generates a QR Code directly onto a canvas element.
+ * @param {string} payload - The QR URI payload string.
+ * @param {HTMLCanvasElement} canvasElement - The target canvas element.
+ */
+export async function generateQrCanvas(payload, canvasElement) {
+    if (!canvasElement) {
+        console.warn("⚠️ Missing canvas element for QR code generation.");
+        return;
+    }
+
+    const qrService = registry.category("services").get("qr_code");
+    if (!qrService || !qrService.makeQR) {
+        console.error("❌ QR code service not found.");
+        return;
+    }
+
+    // Clear the canvas or container first
+    canvasElement.innerHTML = ""; // Needed if using divs/SVG
+
+    try {
+        qrService.makeQR(canvasElement, payload);  // This will auto-render into the element.
+    } catch (err) {
+        console.error("❌ Failed to generate QR Code via Odoo QR service:", err);
+    }
+}
+
+export async function generateQrCodeInElement(props, el) {
+    if (props.orderId && props.lineId && props.templateId) {
+        const payload = generateCpqQrPayload({
+            orderId: props.orderId,
+            lineId: props.lineId,
+            templateId: props.templateId,
+            configHash: props.configHash || null,
+        });
+        const canvas = el.querySelector('.cpq-qr-canvas');
+        if (canvas) {
+            generateQrCanvas(payload, canvas);
+        }
+    }
+};
+
+/**
+ * Safely generates a QR code with debug logging.
+ * @param {string} payload - The QR code payload (URI-style string).
+ * @param {HTMLElement} el - The parent element to search for the QR canvas.
+ * @param {boolean} [debug=false] - Enable verbose logging.
+ */
+export async function safeGenerateQrWithDebug(payload, el, debug = false) {
+    if (!payload) {
+        console.error("❌ QR Generation skipped: Missing payload.");
+        return;
+    }
+
+    const canvas = el.querySelector('.cpq-qr-canvas');
+    if (!canvas) {
+        console.warn("⚠️ QR Generation skipped: .cpq-qr-canvas element not found.");
+        return;
+    }
+
+    if (debug) {
+        console.log("🟢 Generating QR with payload:", payload);
+        console.log("🟢 Canvas found:", !!canvas);
+    }
+
+    try {
+        await generateQrCanvas(payload, canvas);
+        if (debug) {
+            console.log("✅ QR Code successfully rendered to canvas.");
+        }
+    } catch (err) {
+        console.error("❌ Failed to generate QR Code on canvas:", err);
+    }
+}
+
+/**
+ * Unified QR generation with optional debug logging.
+ * @param {Object} props - Props object including orderId, lineId, templateId, configHash.
+ * @param {HTMLElement} el - The DOM element where the QR code canvas lives.
+ * @param {boolean} debug - Whether to log debug info (default: false).
+ */
+export async function generateQrCodeUnified(props, el, debug = false) {
+    if (props.orderId && props.lineId && props.templateId) {
+        const payload = generateCpqQrPayload({
+            orderId: props.orderId,
+            lineId: props.lineId,
+            templateId: props.templateId,
+            configHash: props.configHash || null,
+        });
+
+        const canvas = el.querySelector('.cpq-qr-canvas');
+        if (debug) {
+            console.log("🟢 QR Payload:", payload);
+            console.log("🟢 Canvas found:", !!canvas);
+        }
+
+        if (canvas) {
+            await generateQrCanvas(payload, canvas);
+        } else if (debug) {
+            console.warn("⚠️ QR Canvas not found — skipping QR generation.");
+        }
+    } else if (debug) {
+        console.warn("❌ Missing one or more identifiers (orderId, lineId, templateId) — QR not generated.");
+    }
 }
 
 

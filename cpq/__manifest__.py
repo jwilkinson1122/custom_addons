@@ -13,7 +13,7 @@
         "views/product_product.xml",
         "views/product_attribute.xml",
         "views/product_options.xml",
-        "views/menu.xml",
+        # "views/menu.xml",
     ],
     "demo": [],
     "license": "LGPL-3",

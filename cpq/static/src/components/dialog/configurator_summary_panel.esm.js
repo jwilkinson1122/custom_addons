@@ -1,7 +1,16 @@
 /** @odoo-module **/
 
 import { Component, useState, useRef, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
-import { debounce } from "./utils.esm";
+import { 
+    debounce, 
+    generateCpqQrPayload, 
+    generateQrCanvas, 
+    generateQrCodeInElement, 
+    safeGenerateQrWithDebug,
+    generateQrCodeUnified, 
+} from "./utils.esm";
+// import QRCode from 'qrcode';
+
 
 function formatCurrency(amount) {
     const number = typeof amount === "number" ? amount : parseFloat(amount) || 0;
@@ -73,6 +82,26 @@ export default class ConfiguratorSummaryPanel extends Component {
             }
 
             this.adjustHeight();
+
+            // 🎯 Generate QR code on mount with debug ON for development:
+            generateQrCodeUnified(props, this.el, true);  // Set 'false' for production
+
+            // const payload = generateCpqQrPayload({
+            //     orderId: props.orderId,
+            //     lineId: props.lineId,
+            //     templateId: props.templateId,
+            //     configHash: props.configHash || null,
+            // });
+
+            
+
+            // 🎯 Generate QR code on mount if identifiers are available
+            // safeGenerateQrWithDebug(payload, this.el, true); 
+
+            // when ready for production
+            // generateQrCodeInElement(props, this.el);  // No extra logging.
+
+
         });
 
         onWillUpdateProps((nextProps) => {
@@ -115,6 +144,9 @@ export default class ConfiguratorSummaryPanel extends Component {
 
             if (needsRecompute) debouncedRecomputeSummary();
             if (needsHeightAdjust) debouncedAdjustHeight();
+
+            // ➕ Add this to handle QR refresh when props change:
+            generateQrCodeInElement(nextProps, this.el);
         });
 
         onWillUnmount(() => {
