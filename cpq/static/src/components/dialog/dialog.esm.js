@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
 import SummaryPanel from "./configurator_summary_panel.esm";
-import { validateProps, cleanGhostRecords, nextTick, useDebouncedInput, debounce, computeLocalCPQPriceBreakdown } from "./utils.esm";
+import { validateProps, cleanGhostRecords, nextTick, useDebouncedInput, debounce, safeMany2One, computeLocalCPQPriceBreakdown } from "./utils.esm";
 
 export class ConfigureDialog extends Component {
     static template = "cpq.ConfigureDialogDialog";
@@ -445,16 +445,34 @@ export class ConfigureDialog extends Component {
 
             const summary = this.summaryApi?.getSummaryState?.() || {};
 
+            // const config = {
+            //     name: this.productTemplateName,
+            //     laterality: this.state.laterality,
+            //     split: this.state.split,
+            //     selected: this.state.selected,
+            //     quantity_to_make: this.state.quantityToMake,
+            //     left_price: summary.left || 0,
+            //     right_price: summary.right || 0,
+            //     total_price: summary.total || 0,
+            // };
+
             const config = {
                 name: this.productTemplateName,
                 laterality: this.state.laterality,
                 split: this.state.split,
                 selected: this.state.selected,
                 quantity_to_make: this.state.quantityToMake,
+                product_uom_qty: this.state.quantityToMake,                        
+                product_uom: this.productTemplate?.uom_id?.[0] || this.props.productUOMId,
+                price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0, 
                 left_price: summary.left || 0,
                 right_price: summary.right || 0,
                 total_price: summary.total || 0,
             };
+
+            if (!config.product_uom) {
+                console.warn("⚠️ UoM is missing from configuration result — fallback applied.");
+            }
 
             const contextPayload = {
                 active_model: "sale.order.line",
@@ -823,8 +841,6 @@ export class ConfigureDialog extends Component {
         return this.productTemplate.display_name || "Configured Product";
     }
     
-    
-
     pulseElement(selector) {
         const element = document.querySelector(selector);
         if (!element) return;
@@ -847,7 +863,7 @@ export class ConfigureDialog extends Component {
 }
 
 export function ConfigureDialogAction(env, action) {
-    const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
+    // const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
     const context = action.context || {};
 
     // const productTmplId = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;

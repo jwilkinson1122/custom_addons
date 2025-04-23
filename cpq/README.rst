@@ -58,3 +58,16 @@ Manual Product Creation & Promotion from CPQ Configurations
 - 🔜 Optional advanced security groups
 - 🔜 Optional multi-line configuration print/export
 - 🔜 Optional PDF merge for bulk printing summaries
+
+## 🛠️ cpq_cleanup_action
+
+Go to Settings → Technical → Automation → Server Actions.
+You will see “Cleanup CPQ Flags on Product Templates”.
+Run it manually any time you want to clean up the CPQ flags.
+The result will be shown as a popup with the summary of what was done.
+
+🟢 menu item:
+Products → Configuration → CPQ Cleanup Tool
+Opens the product.template list view (tree view).
+The server action will run immediately (since it uses code).
+You’ll get a popup message showing which templates were cleaned up or skipped.

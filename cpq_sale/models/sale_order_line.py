@@ -75,9 +75,11 @@ class SaleOrderLine(models.Model):
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_configuration(self):
         for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_configuration_json = False  # 💯 Non-CPQ? Kill any stray config.
+                continue
             if not line.cpq_configuration_json:
                 continue
-
             try:
                 config = get_cpq_config_dict(line)  # ✅ Cleaner and safe
 
@@ -105,36 +107,64 @@ class SaleOrderLine(models.Model):
     @api.depends('cpq_configuration_json')
     def _compute_cpq_laterality(self):
         for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_laterality = False
+                continue  # ✅ Skip non-CPQ lines!
             config = get_cpq_config_dict(line.cpq_configuration_json)
-            line.cpq_laterality = config.get('laterality') 
-
+            line.cpq_laterality = config.get('laterality')
+            
     @api.depends("cpq_configuration_json")
     def _compute_cpq_quantity_to_make(self):
         for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_laterality = False
+                continue  # ✅ Skip non-CPQ lines!
             config = get_cpq_config_dict(line.cpq_configuration_json)
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
     @api.onchange("product_id")
     def _onchange_product_id_warning(self):
         res = super()._onchange_product_id_warning()
-        if self.product_id.cpq_ok and self.product_id.cpq_description_sale_tmpl:
-            product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
 
-            name = product.product_tmpl_id._cpq_render_inline_template(
-                product.cpq_description_sale_tmpl,
-                extras={
-                    "record": product,
-                    "tmpl": self,
-                },
-            )
+        for line in self:
+            if not line.product_id:
+                continue  # 🟡 No product selected → nothing to do
 
-            if name:
-                self.name = name
+            if line.product_id.cpq_ok:
+                # ✅ CPQ Product → skip price/UoM, configurator will handle this later
+                partner_lang = line.order_id.partner_id.lang if line.order_id.partner_id else self.env.user.lang
+                if line.product_id.cpq_description_sale_tmpl:
+                    product = line.product_id.with_context(lang=partner_lang)
+                    name = product.product_tmpl_id._cpq_render_inline_template(
+                        product.cpq_description_sale_tmpl,
+                        extras={"record": product, "tmpl": line},
+                    )
+                    if name:
+                        line.name = name
+                # 🛑 Do NOT set price_unit or product_uom here — handled by CPQ.
+            else:
+                # 🟢 Non-CPQ Product → force apply Odoo pricing & UoM behavior:
+                product = line.product_id.with_company(line.company_id)
+                partner = line.order_id.partner_id
+                pricelist = line.order_id.pricelist_id
+
+                # 🟢 Use Odoo's native price logic:
+                product_context = dict(self.env.context, partner_id=partner.id, quantity=1, uom=product.uom_id.id)
+                price = pricelist._get_product_price(product.with_context(product_context), 1.0, partner)
+
+                line.price_unit = price or product.lst_price or 0.0
+                line.product_uom = product.uom_id
+                line.name = product.get_product_multiline_description_sale() or product.name
+                line.cpq_configuration_json = False  # 🚫 Clear CPQ config if it was hanging around.
+
         return res
 
     @api.depends("cpq_configuration_json")
     def _compute_cpq_name_suffix(self):
         for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_laterality = False
+                continue  # ✅ Skip non-CPQ lines!
             config = self._parse_json_field(line.cpq_configuration_json)
             if not config:
                 line.name = line.product_id.display_name or line.product_id.name
@@ -154,33 +184,25 @@ class SaleOrderLine(models.Model):
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_pricing(self):
         for line in self:
-            config = get_cpq_config_dict(line.cpq_configuration_json)
+            if not line.product_id.cpq_ok:
+                # 🚫 Skip pricing logic entirely for non-CPQ products
+                return
 
+            config = get_cpq_config_dict(line.cpq_configuration_json)
             result = compute_cpq_price_breakdown(self.env, line, config) or {}
             quantity = result.get("quantity", 1)
             total = result.get("total")
             subtotal = result.get("subtotal")
 
-            if total is not None:
-                line.price_unit = total / quantity if quantity else 0.0
-            elif subtotal is not None:
-                line.price_unit = subtotal
-            else:
-                line.price_unit = 0.0  
-
+            line.price_unit = total / quantity if total and quantity else subtotal or 0.0
             line.product_uom_qty = quantity
-
-    # @api.onchange('cpq_configuration_json')
-    # def _onchange_cpq_pricing(self):
-    #     for line in self:
-    #         config = get_cpq_config_dict(line.cpq_configuration_json)
-    #         result = compute_cpq_price_breakdown(self.env, line, config)
-    #         line.price_unit = result["total"] / result["quantity"]
-    #         line.product_uom_qty = result["quantity"]
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_configuration_summary(self):
         for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_laterality = False
+                continue  # ✅ Skip non-CPQ lines!
             config = line._parse_config()
             if not config:
                 line.cpq_configuration_summary = "No configuration available."
@@ -353,6 +375,9 @@ class SaleOrderLine(models.Model):
     @api.depends("cpq_configuration_json")
     def _compute_cpq_total_price(self):
         for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_laterality = False
+                continue  # ✅ Skip non-CPQ lines!
             config = get_cpq_config_dict(line.cpq_configuration_json)
             breakdown = compute_cpq_price_breakdown(self.env, line, config)
             line.cpq_total_price = breakdown.get("total", 0.0)

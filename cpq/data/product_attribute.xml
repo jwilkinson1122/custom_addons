@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- == Product Attributes == -->
+    <record id="attribute_arch_height" model="product.attribute">
+        <field name="name">Arch Height</field>
+        <field name="create_variant">no_variant</field>
+    </record>
+    <!-- == Product Attribute Values == -->
+    <!-- == Arch Height Attribute Values == -->
+    <record id="attribute_arch_height_very_high" model="product.attribute.value">
+        <field name="name">Very High</field>
+        <field name="attribute_id" ref="attribute_arch_height"/>
+        <field name="is_custom">True</field>
+        <field name="cpq_custom_type">options</field> <!-- Could be: integer, float, char, many2one, options -->
+        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="cpq_options_relaxed_validation">False</field>
+        <field name="default_extra_price">5.00</field>
+    </record>
+    <record id="attribute_arch_height_high" model="product.attribute.value">
+        <field name="name">High</field>
+        <field name="attribute_id" ref="attribute_arch_height"/>
+        <field name="is_custom">True</field>
+        <field name="cpq_custom_type">options</field> 
+        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="cpq_options_relaxed_validation">False</field>
+        <field name="default_extra_price">5.00</field>
+    </record>
+    <record id="attribute_arch_height_standard" model="product.attribute.value">
+        <field name="name">Standard</field>
+        <field name="attribute_id" ref="attribute_arch_height"/>
+        <field name="is_custom">True</field>
+        <field name="cpq_custom_type">options</field> 
+        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="cpq_options_relaxed_validation">False</field>
+        <field name="default_extra_price">5.00</field>
+    </record>
+    <record id="attribute_arch_height_low" model="product.attribute.value">
+        <field name="name">Low</field>
+        <field name="attribute_id" ref="attribute_arch_height"/>
+        <field name="is_custom">True</field>
+        <field name="cpq_custom_type">options</field>
+        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="cpq_options_relaxed_validation">False</field>
+        <field name="default_extra_price">5.00</field>
+    </record>
+
+    <!-- == X-Guard Attribute Values == -->
+    <!-- == Product Template (CPQ-enabled product) == -->
+    <record id="product_template_superglass" model="product.template">
+        <field name="name">Superglass Everyday</field>
+        <field name="type">product</field>
+        <field name="sale_ok">1</field>
+        <field name="purchase_ok">1</field>
+        <field name="list_price">59.25</field>
+        <field name="cpq_ok">1</field> 
+    </record>
+
+    <!-- == Link Attribute Lines to Product Template == -->
+    <record id="ptal_arch_height" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="product_template_superglass"/>
+        <field name="attribute_id" ref="attribute_arch_height"/>
+        <field name="value_ids" eval="[(6, 0, [
+        ref('attribute_arch_height_very_high'), 
+        ref('attribute_arch_height_high'), 
+        ref('attribute_arch_height_standard'),
+        ref('attribute_arch_height_low')
+        ])]"/>
+    </record>
+
+
+
+</odoo>

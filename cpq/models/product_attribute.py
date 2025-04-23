@@ -6,12 +6,35 @@ class ProductAttribute(models.Model):
     _inherit = "product.attribute"
     _order = "sequence"
 
-    active = fields.Boolean(
-        default=True,
-    )
+    create_variant = fields.Selection(
+        selection=[
+            ('always', 'Instantly'),
+            ('dynamic', 'Dynamically'),
+            ('no_variant', 'Never (option)'),
+        ],
+        default='no_variant',
+        string="Variants Creation Mode",
+        help="""- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.
+        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.
+        - Never: Variants are never created for the attribute.
+        Note: the variants creation mode cannot be changed once the attribute is used on at least one product.""",
+        required=True)
+    # display_type = fields.Selection(
+    #     selection=[
+    #         ('radio', 'Radio'),
+    #         ('pills', 'Pills'),
+    #         ('select', 'Select'),
+    #         ('color', 'Color'),
+    #         ('multi', 'Multi-checkbox (option)'),
+    #     ],
+    #     default='radio',
+    #     required=True,
+    #     help="The display type used in the Product Configurator.")
+
+    active = fields.Boolean(default=True, string="Active")
     cpq_propagate_to_variant = fields.Boolean(
         string="Propagate to the Variant",
-        default=True,
+        default=False,
     )
 
     @api.returns("self", lambda value: value.id)
@@ -42,14 +65,14 @@ class ProductAttributeValue(models.Model):
             ("float", "Float"),
             ("char", "Text"),
             ("many2one", "Many2one"),
-            ("options", "Options"),
+            ("options", "Option"),
         ],
         string="Configurable custom type",
     )
 
     cpq_options_id = fields.Many2one(
         comodel_name="product.options",
-        string="Options",
+        string="Option",
         domain="[('is_leaf', '=', False)]",
     )
 

@@ -16,7 +16,6 @@ export function computeLocalCPQPriceBreakdown({ basePrice = 0, extras = 0, disco
     };
 }
 
-
 export function useDebouncedInput(delay = 300) {
     let timeout = null;
 
@@ -111,4 +110,32 @@ export async function cleanGhostRecords(record, activeId) {
         console.log("✅ Cleared orderRoot isDirty flag.");
     }
 }
+
+export function  getSafeConfiguratorValues(config, fallbackUomId) {
+    const uomId = config.product_uom || fallbackUomId;
+    if (!uomId) {
+        console.warn("⚠️ Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
+    }
+
+    const quantity = config.quantity_to_make || 1;
+    const priceUnit = config.price_unit || (config.total_price / quantity) || 0;
+
+    return {
+        product_uom_qty: quantity,
+        product_uom: uomId,
+        price_unit: priceUnit,
+        name: config.name || "Configured Product",
+        cpq_configuration_json: JSON.stringify(config),
+        cpq_configuration_summary: config.configuration_summary || "",
+    };
+}
+
+export function safeMany2One(value) {
+    if (Array.isArray(value) && value.length === 2) return value;  // Proper format
+    if (Array.isArray(value) && value.length === 1) return [value[0], ""];  // Only ID, missing name
+    if (value && typeof value === "object" && "id" in value) return [value.id, value.display_name || ""];
+    if (typeof value === "number") return [value, ""];  // Number only
+    return [false, ""];  // Safe fallback
+}
+
 

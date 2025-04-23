@@ -2,6 +2,21 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
+class ProductPreconfigured(models.Model):
+    _name = "product.preconfigured"
+    _description = "Pre-Configured Product"
+
+    @api.onchange("product_id")
+    def product_id_onchange(self):
+        return {"domain": {"product_id": [("is_pre_configured", "=", False)]}}
+
+    name = fields.Char("name")
+    product_template_id = fields.Many2one("product.template", "Item")
+    product_quantity = fields.Float("Quantity", default="1", required=True)
+    product_id = fields.Many2one("product.product", "Product", required=True)
+    uom_id = fields.Many2one("uom.uom", related="product_id.uom_id")
+    price = fields.Float("Product_price")
+
 class ProductOptions(models.Model):
     _name = "product.options"
     _description = "CPQ Product Options"
@@ -9,9 +24,15 @@ class ProductOptions(models.Model):
 
     _parent_name = "parent_id"
     _parent_store = True
-    _order = "display_name asc"
+    _order = "display_name asc, sequence"
 
-    name = fields.Char(required=True)
+    name = fields.Char(
+        string="Title",
+        help="Title for the product option.",
+        required=True,
+        translate=True,
+    )
+    sequence = fields.Integer(string="Sequence", default=10)
 
     display_name = fields.Char(
         compute="_compute_display_name",
@@ -42,10 +63,10 @@ class ProductOptions(models.Model):
                 "warning": {
                     "title": _("Warning"),
                     "message": _(
-                        "Changing the parent of a options record may"
+                        "Changing the parent of an option record may"
                         " have unexpected results if this has been"
                         " used on a product.\n"
-                        "Recommended action is to archive this options and"
+                        "Recommended action is to archive this option and"
                         " create a new one"
                     ),
                 }
@@ -99,7 +120,7 @@ class ProductOptions(models.Model):
     def action_view_children(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id(
-            "cpq_options.product_options_action"
+            "cpq.product_options_action"
         )
         action["domain"] = [
             ("parent_path", "ilike", self.parent_path + "%"),
@@ -109,6 +130,6 @@ class ProductOptions(models.Model):
         return action
 
     @api.constrains("parent_id")
-    def _check_category_recursion(self):
+    def _check_option_recursion(self):
         if not self._check_recursion():
-            raise ValidationError(_("You cannot create recursive optionss."))
+            raise ValidationError(_("You cannot create recursive options."))

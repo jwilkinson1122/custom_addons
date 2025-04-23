@@ -36,7 +36,7 @@ ref = ""
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    cpq_ok = fields.Boolean(string="Configurable Product?")
+    cpq_ok = fields.Boolean(string="Configurable Product?", default=False)
     cpq_ref = fields.Char(
         string="Configurable Internal Reference",
         index=True,
@@ -111,6 +111,56 @@ class ProductTemplate(models.Model):
             _logger.info("✅ Created fallback CPQ product: %s", product)
 
         return product
+
+    @api.model
+    def get_single_product_variant(self):
+        if self.cpq_ok not in [True, False]:
+            _logger.warning(f"⚠️ cpq_ok is undefined or incorrect on template {self.id} ({self.name}) — forcing to False.")
+            self.cpq_ok = False  # Safety fallback
+
+        self.ensure_one()
+        _logger.info(f"🚀 get_single_product_variant called for template {self.id} ({self.name}), cpq_ok={self.cpq_ok}")
+
+        # ✅ CPQ Products: Skip variant lookup entirely
+        if self.cpq_ok:
+            _logger.info(f"⚙️ CPQ product detected (template {self.id}), skipping variant resolution.")
+            return {
+                'product_id': False,                # No variant on purpose
+                'product_name': self.name,          # Use template name for display
+                'uom_id': self.uom_id.id,          # Provide UoM so that frontend can still show it
+                'price_unit': 0.0,                 # Configurator will handle pricing
+                'mode': 'configurator',          # Indicate that this is a configurator product
+                'has_optional_products': False,   # Optional: flag for frontend if needed
+            }
+
+        # 🟢 Standard non-CPQ product fallback:
+        product = self.env['product.product'].search([('product_tmpl_id', '=', self.id)], limit=1)
+        if not product:
+            _logger.warning(f"⚠️ Non-CPQ template {self.id} ({self.name}) has no variants.")
+            return {
+                'product_id': False,
+                'product_name': self.name,
+                'uom_id': self.uom_id.id,
+                'price_unit': 0.0,
+                'has_optional_products': False,
+            }
+
+        partner = self.env.context.get('partner_id') and self.env['res.partner'].browse(self.env.context['partner_id'])
+        pricelist = self.env.context.get('pricelist_id') and self.env['product.pricelist'].browse(self.env.context['pricelist_id'])
+
+        price = (
+            pricelist._get_product_price(product.with_context(uom=product.uom_id.id), 1.0, partner)
+            if pricelist else product.lst_price
+        )
+
+        return {
+            'product_id': [product.id, product.display_name],
+            'product_name': product.display_name,
+            'uom_id': product.uom_id.id,
+            'price_unit': price or product.lst_price or 0.0,
+            'has_optional_products': bool(product.optional_product_ids),
+        }
+
 
     @api.model
     def _name_search(self, name, args=None, operator="ilike", limit=100, order=None):
@@ -357,7 +407,7 @@ class ProductTemplate(models.Model):
 
             if len(combination_ptav_ids) != len(is_possible_ptals):
                 extra_info = _(
-                    "Missing configuration options. Found %(found)s,"
+                    "Missing configuration category. Found %(found)s,"
                     " expected %(expected)s. "
                 ) % {
                     "found": len(combination_ptav_ids),
@@ -368,7 +418,7 @@ class ProductTemplate(models.Model):
                     is_possible_ptals - combination_ptav_ids.attribute_line_id
                 )
                 if is_possible_ptals_missing_ids:
-                    extra_info += _("Suspected missing options: %(suspected)s ") % {
+                    extra_info += _("Suspected missing category: %(suspected)s ") % {
                         "suspected": ", ".join(
                             is_possible_ptals_missing_ids.mapped("display_name")
                         )
@@ -607,3 +657,14 @@ class ProductTemplate(models.Model):
 
         return archived
 
+    @api.model
+    def action_clean_cpq_flags(self):
+        templates_to_fix = self.search([('cpq_ok', '=', True)])
+        logs = []
+        for tmpl in templates_to_fix:
+            if not tmpl.cpq_ref and not tmpl.valid_product_template_attribute_line_ids:
+                tmpl.cpq_ok = False
+                logs.append(f"✅ Disabled cpq_ok for: {tmpl.name} (ID: {tmpl.id})")
+            else:
+                logs.append(f"🟢 Kept cpq_ok=True for: {tmpl.name} (ID: {tmpl.id}) - cpq_ref: {tmpl.cpq_ref}, attrib lines: {tmpl.valid_product_template_attribute_line_ids.ids}")
+        return '\n'.join(logs)

@@ -7,6 +7,7 @@
         "depends": ["product", "sale_stock"],
     # "depends": ["product", "web", "sale", "stock", "sale_stock"],
     "data": [
+        # 'data/cpq_cleanup_action.xml',
         "security/ir.model.access.csv",
         "views/product_template.xml",
         "views/product_product.xml",
