@@ -81,9 +81,10 @@ export class ConfigureDialog extends Component {
             // showPrintPreview: false,
         });
 
+        this.orderId = this.props.orderId || this.props.context?.active_sale_order_id || this.props.context?.sale_order_id || this.props.record?.model?.root?.data?.id;
+        this.lineId = this.props.context?.active_id || this.props.record?.resId;
         this.state.productTmplId = this.props.productTmplId;
         this.state.productTemplate = this.props.productTemplate || {}; // fallback
-
 
         this.state.priceBreakdown = {
             base: 0,
@@ -350,6 +351,13 @@ export class ConfigureDialog extends Component {
 
     }
 
+    _resolveOrderAndLineContext() {
+        return {
+            orderId: this.orderId,
+            lineId: this.lineId,
+        };
+    }
+    
     _setupAutoRefresh() {
         useEffect(() => {
             this._refreshHandler();
@@ -436,11 +444,9 @@ export class ConfigureDialog extends Component {
 
         if (this.state.isLoading) return;
     
-        const activeId = this.props.context?.active_id || this.props.record?.resId;
-        const orderId = this.props.orderId;
-
-        if (!activeId || !orderId) {
-            this.notification.add("Missing order context. Please reload the order.", { type: "danger" });
+        const { orderId, lineId } = this._resolveOrderAndLineContext();
+        if (!orderId || !lineId) {
+            this.notification.add("Missing order or line context. Please reload the order.", { type: "danger" });
             return;
         }
 
@@ -494,7 +500,7 @@ export class ConfigureDialog extends Component {
 
             const contextPayload = {
                 active_model: "sale.order.line",
-                active_id: activeId,
+                active_id: lineId,
                 active_sale_order_id: orderId,
                 ...(this.props.context || {}),
             };
@@ -518,7 +524,25 @@ export class ConfigureDialog extends Component {
                     this.pulseElement(".cpq-config-summary");
                     console.log("✅ Frontend record reloaded after configuration save");
                 }
-            
+                try {
+                    const orderId = this.props.orderId;
+                    const lineId = this.props.record?.resId;
+                    const templateId = this.state.productTemplate?.id || this.props.productTemplate?.id;
+                    const configHash = this.props.record?.data?.cpq_configuration_hash || null;
+
+                    const valid = typeof orderId === "number" && typeof lineId === "number" && typeof templateId === "number";
+                    const canvas = document.querySelector('.cpq-qr-canvas');
+
+                    if (valid && canvas) {
+                        console.log("🟢 Refreshing QR after configuration confirm:", { orderId, lineId, templateId, configHash });
+                        await generateQrCodeUnified({ orderId, lineId, templateId, configHash }, canvas, true); // true = debug
+                    } else {
+                        console.warn("⚠️ Skipping QR generation — missing identifiers or QR canvas:", { orderId, lineId, templateId, hasCanvas: !!canvas });
+                    }
+                } catch (err) {
+                    console.error("❌ QR refresh after save failed:", err);
+                }
+
                 this._redirectToOrder(orderId);
             } else {
                 this.notification.add("Unexpected server response. Please try again.", { type: "danger" });
@@ -531,6 +555,8 @@ export class ConfigureDialog extends Component {
         } finally {
             this.state.isLoading = false;
         }
+
+        
     });
 
     async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
@@ -665,10 +691,10 @@ export class ConfigureDialog extends Component {
     async _applyConfigurationResult(result) {
         console.log("🧩 Applying configuration result:", result);
     
-        const activeId = result?.sale_order_line_id || this.context?.active_id;
+        const lineId = result?.sale_order_line_id || this.context?.active_id;
         const orderId = result?.sale_order_id || this.props.orderId;
     
-        if (!activeId || !orderId) {
+        if (!lineId || !orderId) {
             this.notification.add("Missing order line or order context. Please reload the page.", { type: "danger" });
             return false;
         }
@@ -677,13 +703,13 @@ export class ConfigureDialog extends Component {
             await this.env.services.ui.block();
     
             const staleResId = this.props.record?.resId;
-            if (staleResId && staleResId !== activeId) {
+            if (staleResId && staleResId !== lineId) {
                 console.log(`🧹 Cleaning up stale native line: ${staleResId}`);
                 await this.orm.call("sale.order.line", "unlink", [[staleResId]]);
             }
     
             try {
-                await cleanGhostRecords(this.props.record, activeId);
+                await cleanGhostRecords(this.props.record, lineId);
             } catch (error) {
                 console.warn("⚠️ cleanGhostRecords failed:", error);
             }
@@ -692,7 +718,7 @@ export class ConfigureDialog extends Component {
             const orderModel = this.props.record?.model?.root;
             if (orderModel?.data?.order_line?.records) {
                 orderModel.data.order_line.records = orderModel.data.order_line.records.filter(
-                    (line) => line.resId === activeId
+                    (line) => line.resId === lineId
                 );
                 orderModel.data.order_line.leaveEditMode?.();
                 console.log("✅ Final frontend cleanup: Cleared virtual lines from order model");
@@ -700,9 +726,9 @@ export class ConfigureDialog extends Component {
 
             this.notification.add("✅ Configuration successfully saved to order line.", { type: "success" });
             this.pulseElement(".cpq-config-summary");
-            this.pulseElement(`[data-id="${activeId}"]`);
+            this.pulseElement(`[data-id="${lineId}"]`);
     
-            const lineEl = document.querySelector(`[data-id="${activeId}"]`);
+            const lineEl = document.querySelector(`[data-id="${lineId}"]`);
             if (lineEl) {
                 lineEl.scrollIntoView({ behavior: "smooth", block: "center" });
                 lineEl.classList.add("highlight-success");
@@ -743,16 +769,34 @@ export class ConfigureDialog extends Component {
             const confirmed = await this._showConfirmDialog("⚠️ You have unsaved configuration changes. Exit anyway?");
             if (!confirmed) return;
         }
-
+    
         this.state.ptalIds = [];
         this.state.selected = {};
-        this.productTemplateId = null;
+        // this.productTemplateId = null;  // ❌ REMOVE THIS LINE
+        this.state.productTmplId = null;   // ✅ USE THIS IF YOU NEED TO RESET IT
         this.state.valid = false;
         this.state.errors = {};
-
+    
         this.props.discard?.();
         this.props.close?.();
     }
+    
+
+    // async _closeDialog(force = false) {
+    //     if (!force && this._hasUnsavedChanges?.()) {
+    //         const confirmed = await this._showConfirmDialog("⚠️ You have unsaved configuration changes. Exit anyway?");
+    //         if (!confirmed) return;
+    //     }
+
+    //     this.state.ptalIds = [];
+    //     this.state.selected = {};
+    //     this.productTemplateId = null;
+    //     this.state.valid = false;
+    //     this.state.errors = {};
+
+    //     this.props.discard?.();
+    //     this.props.close?.();
+    // }
 
     async resetOnlySelections() {
         if (!this.initialState) {
@@ -884,12 +928,18 @@ export function ConfigureDialogAction(env, action) {
     // const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
     const context = action.context || {};
 
-    // const productTmplId = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
     const rawTmpl = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
     const productTmplId = typeof rawTmpl === "object" ? rawTmpl.id : rawTmpl;
     const orderId = safeMany2One(context.active_sale_order_id || context.sale_order_id);
-    const activeId = context.active_id;
-    
+
+    // 🟡 New fallback logic:
+    let lineId = context.active_id;
+    if (!lineId && context.active_model === "sale.order") {
+        // If coming from order, try to find the first order_line
+        const orderLineData = env.services.model?.root?.data?.order_line?.records || [];
+        lineId = orderLineData.length ? orderLineData[0]?.resId : undefined;
+    }
+
     if (!productTmplId) {
         env.services.notification.add(_t("❌ Missing product template. Cannot open configurator."), { type: "danger" });
         return;
@@ -900,10 +950,14 @@ export function ConfigureDialogAction(env, action) {
         return;
     }
 
+    if (!lineId) {
+        env.services.notification.add(_t("Unable to open configurator: Missing order line ID."), { type: "danger" });
+        return;
+    }
     // Frontend cleanup for ghost records
     const orderLineData = env.services.model?.root?.data?.order_line;
     if (orderLineData && orderLineData.records) {
-        orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
+        orderLineData.records = orderLineData.records.filter(line => line.resId === lineId);
         orderLineData.leaveEditMode?.();
         console.log("✅ Cleaned frontend order line data");
     }
@@ -917,7 +971,7 @@ export function ConfigureDialogAction(env, action) {
         context,
         edit: true,
         save: async (res) => {
-            if (context.active_model === "sale.order.line" && activeId) {
+            if (context.active_model === "sale.order.line" && lineId) {
                 try {
                     const values = {
                         product_id: res.configuration.product_id,
@@ -929,13 +983,13 @@ export function ConfigureDialogAction(env, action) {
 
                     console.log("📝 Writing configuration to sale.order.line:", values);
 
-                    await env.services.orm.call("sale.order.line", "onchange", [activeId, values]);
-                    await env.services.orm.call("sale.order.line", "write", [activeId, values]);
+                    await env.services.orm.call("sale.order.line", "onchange", [lineId, values]);
+                    await env.services.orm.call("sale.order.line", "write", [lineId, values]);
 
                     env.services.notification.add(_t("✅ Configuration applied successfully."), { type: "success" });
                     
                     setTimeout(() => {
-                        const lineEl = document.querySelector(`[data-id="${activeId}"]`);
+                        const lineEl = document.querySelector(`[data-id="${lineId}"]`);
                         if (lineEl) {
                             lineEl.scrollIntoView({ behavior: "smooth", block: "center" });
                             lineEl.classList.add("highlight-success");

@@ -3,10 +3,12 @@
 import { Component, useState, useRef, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
 import { 
     debounce, 
+    pollQrWhenReady,
     generateCpqQrPayload, 
     generateQrCanvas, 
     generateQrCodeInElement, 
     safeGenerateQrWithDebug,
+    waitForRealResIdFromRecord,
     generateQrCodeUnified, 
 } from "./utils.esm";
 // import QRCode from 'qrcode';
@@ -18,15 +20,16 @@ function formatCurrency(amount) {
 }
 
 export default class ConfiguratorSummaryPanel extends Component {
+
     setup() {
         super.setup();
-
+    
         const props = this.props;
         this.productTemplate = props.productTemplate;
         this.formatCurrency = formatCurrency;
         this.summaryWrapper = useRef("summaryWrapper");
         this.toastQueue = [];
-
+    
         this.state = useState({
             summary: [],
             priceSummary: {
@@ -43,8 +46,23 @@ export default class ConfiguratorSummaryPanel extends Component {
             quantityToMake: props.quantityToMake || 1,
             toastMessage: "",
         });
-
-        // 🔥 Register external API if provided
+    
+        this._registerExternalApi();
+        this._setupDebouncers();
+        this.debouncedQrGeneration = debounce(() => {
+            this._handleQrGeneration();
+        }, 200);
+        
+    
+        // onMounted(this._onMountedHandler.bind(this));
+        onWillUpdateProps(this._onPropsUpdateHandler.bind(this));
+        onWillUnmount(this._onWillUnmountHandler.bind(this));
+    
+        this.computeSummary();
+        console.log("🧠 Initial computeSummary:", this.state.quantityToMake);
+    }
+    
+    _registerExternalApi() {
         if (this.props.register) {
             this.props.register({
                 showToast: (msg) => this.showToast(msg),
@@ -60,105 +78,135 @@ export default class ConfiguratorSummaryPanel extends Component {
                 getCombinedTotal: () => this.state.priceSummary.total,
             });
         }
-
-        const debouncedRecomputeSummary = debounce(() => {
+    }
+    
+    _setupDebouncers() {
+        this.debouncedRecomputeSummary = debounce(() => {
             console.log("🧩 Debounced recompute summary");
             requestAnimationFrame(() => {
                 this._preserveScroll(() => this.computeSummary());
             });
         }, 150);
-
-        const debouncedAdjustHeight = debounce(() => {
+    
+        this.debouncedAdjustHeight = debounce(() => {
             console.log("📏 Debounced adjustHeight");
             this.adjustHeight();
         }, 150);
-
-        onMounted(() => {
-            console.log("📌 SummaryPanel mounted");
-
-            if (props.ptalIds?.length > 0) {
-                console.log("🧩 Initial ptalIds detected, computing summary...");
-                this.computeSummary();
-            }
-
-            this.adjustHeight();
-
-            // 🎯 Generate QR code on mount with debug ON for development:
-            generateQrCodeUnified(props, this.el, true);  // Set 'false' for production
-
-            // const payload = generateCpqQrPayload({
-            //     orderId: props.orderId,
-            //     lineId: props.lineId,
-            //     templateId: props.templateId,
-            //     configHash: props.configHash || null,
-            // });
-
-            
-
-            // 🎯 Generate QR code on mount if identifiers are available
-            // safeGenerateQrWithDebug(payload, this.el, true); 
-
-            // when ready for production
-            // generateQrCodeInElement(props, this.el);  // No extra logging.
-
-
-        });
-
-        onWillUpdateProps((nextProps) => {
-            let needsRecompute = false;
-            let needsHeightAdjust = false;
-
-            if (nextProps.quantityToMake !== this.state.quantityToMake) {
-                console.log("🔄 Quantity changed:", nextProps.quantityToMake);
-                this.state.quantityToMake = nextProps.quantityToMake;
-                needsRecompute = true;
-                needsHeightAdjust = true;
-            }
-
-            if (nextProps.laterality !== props.laterality) {
-                console.log("🔄 Laterality changed:", nextProps.laterality);
-                props.laterality = nextProps.laterality;
-                needsRecompute = true;
-                needsHeightAdjust = true;
-            }
-
-            if (nextProps.split !== props.split) {
-                console.log("🔄 Split mode changed:", nextProps.split);
-                props.split = nextProps.split;
-                needsRecompute = true;
-                needsHeightAdjust = true;
-            }
-
-            if (nextProps.selected !== props.selected) {
-                console.log("🔄 Selected attributes changed.");
-                props.selected = nextProps.selected;
-                needsRecompute = true;
-            }
-
-            if (nextProps.ptalIds !== props.ptalIds) {
-                console.log("🔄 PTAL IDs changed (attribute structure).");
-                props.ptalIds = nextProps.ptalIds;
-                needsRecompute = true;
-                needsHeightAdjust = true;
-            }
-
-            if (needsRecompute) debouncedRecomputeSummary();
-            if (needsHeightAdjust) debouncedAdjustHeight();
-
-            // ➕ Add this to handle QR refresh when props change:
-            generateQrCodeInElement(nextProps, this.el);
-        });
-
-        onWillUnmount(() => {
-            clearTimeout(this._heightTimeout);
-            clearTimeout(this._toastTimeout);
-            this.toastQueue = [];
-        });
-
-        this.computeSummary();
-        console.log("🧠 Initial computeSummary:", this.state.quantityToMake);
     }
+    
+    _onPropsUpdateHandler(nextProps) {
+        const { quantityToMake, laterality, split, selected, ptalIds } = nextProps;
+        let needsRecompute = false;
+        let needsHeightAdjust = false;
+    
+        if (quantityToMake !== this.state.quantityToMake) {
+            this.state.quantityToMake = quantityToMake;
+            needsRecompute = true;
+            needsHeightAdjust = true;
+        }
+        if (laterality !== this.props.laterality) {
+            this.props.laterality = laterality;
+            needsRecompute = true;
+            needsHeightAdjust = true;
+        }
+        if (split !== this.props.split) {
+            this.props.split = split;
+            needsRecompute = true;
+            needsHeightAdjust = true;
+        }
+        if (selected !== this.props.selected) {
+            this.props.selected = selected;
+            needsRecompute = true;
+        }
+        if (ptalIds !== this.props.ptalIds) {
+            this.props.ptalIds = ptalIds;
+            needsRecompute = true;
+            needsHeightAdjust = true;
+        }
+    
+        if (needsRecompute) this.debouncedRecomputeSummary();
+        if (needsHeightAdjust) this.debouncedAdjustHeight();
+    
+        // ✅ Add the QR refresh call here:
+        // this.debouncedQrGeneration();
+        this._handleQrGeneration(nextProps);
+        
+    }
+    
+    _onWillUnmountHandler() {
+        if (this.debouncedQrGeneration) {
+            this.debouncedQrGeneration = null;
+        }
+        
+        clearTimeout(this._heightTimeout);
+        clearTimeout(this._toastTimeout);
+        this.toastQueue = [];
+    }
+    
+    // async _handleQrGeneration(props = this.props) {
+        
+    //     const lineId = props.record?.resId;
+    //     const orderId = props.orderId;
+    //     const templateId = props.productTemplate?.id;
+    //     const configHash = props.record?.data?.cpq_configuration_hash || null;
+    
+    //     const validLineId = typeof lineId === "number" && lineId > 0;
+    //     const validOrderId = typeof orderId === "number";
+    //     const validTemplateId = typeof templateId === "number";
+    //     const canvas = this.el.querySelector('.cpq-qr-canvas');
+    
+    //     if (validLineId && validOrderId && validTemplateId && canvas) {
+    //         console.log("🟢 QR refresh on props update:", { orderId, lineId, templateId, configHash });
+    //         await generateQrCodeUnified(
+    //             { orderId, lineId, templateId, configHash },
+    //             canvas,
+    //             true 
+    //         );
+    //     } else {
+    //         console.warn("⚠️ Skipping QR generation — missing identifiers or canvas:", {
+    //             orderId, lineId, templateId, hasCanvas: !!canvas
+    //         });
+    //     }
+    // }
 
+    async _handleQrGeneration(props = this.props) {
+        if (!this.el || !this.el.querySelector('.cpq-qr-canvas')) {
+            console.warn("🚫 Skipping QR generation — QR canvas not found in this context.");
+            return;
+        }
+        
+    
+        const lineId = props.record?.resId;
+        const orderId = props.orderId;
+        const templateId = props.productTemplate?.id;
+    
+        const validLineId = typeof lineId === "number" && lineId > 0;
+        const validOrderId = typeof orderId === "number";
+        const validTemplateId = typeof templateId === "number";
+    
+        if (validLineId && validOrderId && validTemplateId) {
+            console.log("🟢 Generating QR with:", { orderId, lineId, templateId });
+            await generateQrCodeUnified(
+                {
+                    orderId,
+                    lineId,
+                    templateId,
+                    configHash: props.record?.data?.cpq_configuration_hash || null,
+                },
+                this.el,
+                true // debug
+            );
+        } else {
+            console.warn("⚠️ Skipping QR generation — invalid identifiers", {
+                orderId,
+                lineId,
+                templateId,
+            });
+        }
+    }
+    
+    
+    
     adjustHeight() {
         clearTimeout(this._heightTimeout);
         this._heightTimeout = setTimeout(() => {

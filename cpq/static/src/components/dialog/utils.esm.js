@@ -49,6 +49,67 @@ export function debounce(func, wait = 300) {
     };
 }
 
+// let qrGenerationTimeout = null;
+
+// export function debounceQrWhenReady(getProps, el, delay = 300) {
+//     if (qrGenerationTimeout) clearTimeout(qrGenerationTimeout);
+
+//     qrGenerationTimeout = setTimeout(() => {
+//         const props = getProps();
+
+//         const validLineId = props.lineId && typeof props.lineId === "number";
+//         const validOrderId = props.orderId && typeof props.orderId === "number";
+//         const validTemplateId = props.templateId && typeof props.templateId === "number";
+
+//         if (validOrderId && validLineId && validTemplateId) {
+//             generateQrCodeUnified(props, el);
+//         } else {
+//             console.warn("⚠️ Skipping debounced QR generation — missing valid identifiers:", {
+//                 orderId: props.orderId,
+//                 lineId: props.lineId,
+//                 templateId: props.templateId,
+//             });
+//         }
+//     }, delay);
+// }
+
+/**
+ * Polls for valid QR identifiers (orderId, lineId, templateId) and generates QR when ready.
+ * Stops automatically after success.
+ * 
+ * @param {Function} getProps - Function returning current props.
+ * @param {HTMLElement} el - Element where the QR should be generated.
+ * @param {number} interval - Polling interval in ms (default 300).
+ * @param {number} maxAttempts - Maximum attempts before giving up (default 20).
+ */
+export function pollQrWhenReady(getProps, el, interval = 300, maxAttempts = 20) {
+    let attempts = 0;
+
+    const checkAndGenerate = async () => {
+        const props = getProps();
+
+        const validLineId = props.lineId && typeof props.lineId === "number";
+        const validOrderId = props.orderId && typeof props.orderId === "number";
+        const validTemplateId = props.templateId && typeof props.templateId === "number";
+
+        if (validOrderId && validLineId && validTemplateId) {
+            console.log("✅ QR identifiers ready — generating QR code.");
+            await generateQrCodeUnified(props, el);
+        } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(checkAndGenerate, interval);
+        } else {
+            console.warn(`❌ QR generation skipped after ${attempts} attempts — still missing identifiers:`, {
+                orderId: props.orderId,
+                lineId: props.lineId,
+                templateId: props.templateId,
+            });
+        }
+    };
+
+    checkAndGenerate();
+}
+
 export function nextTick() {
     return new Promise(resolve => setTimeout(resolve, 0));
 }
@@ -85,15 +146,37 @@ export async function waitForTargetRecord(targetResId, recordList, maxAttempts =
     return null;
 }
 
-export async function cleanGhostRecords(record, activeId) {
+/**
+ * Waits for a single record's `resId` to become a valid number.
+ * @param {Object} record - The record object (not a list).
+ * @param {number} maxAttempts - Max retries.
+ * @param {number} interval - Delay between attempts (ms).
+ * @returns {Promise<number|null>} - The resId if found, or null.
+ */
+export async function waitForRealResIdFromRecord(record, maxAttempts = 20, interval = 150) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        const resId = record?.resId;
+        if (typeof resId === "number" && resId > 0) {
+            console.log(`✅ Got real resId: ${resId} after ${attempt} attempt(s).`);
+            return resId;
+        }
+        console.log(`⏳ Waiting for real resId (attempt ${attempt})...`, resId);
+        await new Promise((resolve) => setTimeout(resolve, interval));
+    }
+    console.warn("❌ Failed to get a real resId after maximum attempts.");
+    return null;
+}
+
+
+export async function cleanGhostRecords(record, lineId) {
     if (!record?.model?.root?.data?.order_line) return;
 
     const orderLineData = record.model.root.data.order_line;
-    const staleRecords = orderLineData.records?.filter(line => line.resId !== activeId) || [];
+    const staleRecords = orderLineData.records?.filter(line => line.resId !== lineId) || [];
 
     if (staleRecords.length > 0) {
         console.log(`🧹 Cleaning ${staleRecords.length} ghost frontend records...`);
-        orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
+        orderLineData.records = orderLineData.records.filter(line => line.resId === lineId);
     } else {
         console.log("✅ No ghost records found.");
     }
@@ -114,10 +197,12 @@ export async function cleanGhostRecords(record, activeId) {
     }
 }
 
-export function  getSafeConfiguratorValues(config, fallbackUomId) {
+export function getSafeConfiguratorValues(config, fallbackUomId) {
     const uomId = config.product_uom || fallbackUomId;
-    if (!uomId) {
-        console.warn("⚠️ Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
+    const safeUomId = Array.isArray(uomId) ? uomId[0] : uomId;
+
+    if (!safeUomId) {
+        console.warn("⚠️ Missing Unit of Measure (UoM) — fallback applied.");
     }
 
     const quantity = config.quantity_to_make || 1;
@@ -125,13 +210,33 @@ export function  getSafeConfiguratorValues(config, fallbackUomId) {
 
     return {
         product_uom_qty: quantity,
-        product_uom: uomId,
+        product_uom: safeUomId || null,  // ✅ Never false — either number or null
         price_unit: priceUnit,
         name: config.name || "Configured Product",
         cpq_configuration_json: JSON.stringify(config),
         cpq_configuration_summary: config.configuration_summary || "",
     };
 }
+
+
+// export function  getSafeConfiguratorValues(config, fallbackUomId) {
+//     const uomId = config.product_uom || fallbackUomId;
+//     if (!uomId) {
+//         console.warn("⚠️ Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
+//     }
+
+//     const quantity = config.quantity_to_make || 1;
+//     const priceUnit = config.price_unit || (config.total_price / quantity) || 0;
+
+//     return {
+//         product_uom_qty: quantity,
+//         product_uom: uomId,
+//         price_unit: priceUnit,
+//         name: config.name || "Configured Product",
+//         cpq_configuration_json: JSON.stringify(config),
+//         cpq_configuration_summary: config.configuration_summary || "",
+//     };
+// }
 
 export function safeMany2One(value) {
     if (Array.isArray(value) && value.length === 2) return value;  // Proper format
@@ -144,16 +249,6 @@ export function safeMany2One(value) {
 /**
  * Recursively sorts keys of an object for consistent JSON output.
  */
-// export function stableStringify(obj) {
-//     const allKeys = new Set();
-//     JSON.stringify(obj, (key, value) => {
-//         allKeys.add(key);
-//         return value;
-//     });
-
-//     return JSON.stringify(obj, Array.from(allKeys).sort());
-// }
-
 export function stableStringify(obj) {
     const sortKeys = (input) => {
         if (Array.isArray(input)) {

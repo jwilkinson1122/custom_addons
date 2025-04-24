@@ -14,7 +14,7 @@
                     </t> -->
                     <!-- 🔹 Product Header -->
                     <h3 class="fw-bold mb-3">
-                         <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
+                        <div t-if="!state.valid &amp;&amp; Object.keys(state.errors).length &gt; 0" class="alert alert-warning" role="alert">
                             <ul t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]" class="list-unstyled mb-0">
                                 <li t-esc="e[1]" />
                             </ul>
@@ -28,29 +28,37 @@
                     <div class="mb-4 border-bottom pb-3">
                         <label class="form-label fw-bold">Laterality</label>
                         <div class="d-flex gap-4">
-                            <label class="form-check-label"><input type="radio" name="laterality" class="form-check-input" value="left" t-att-checked="state.laterality === 'left' ? 'checked' : undefined" t-on-change="onLateralityChange"/> Left Only</label>
-                            <label class="form-check-label"><input type="radio" name="laterality" class="form-check-input" value="right" t-att-checked="state.laterality === 'right' ? 'checked' : undefined" t-on-change="onLateralityChange"/> Right Only</label>
-                            <label class="form-check-label"><input type="radio" name="laterality" class="form-check-input" value="bilateral" t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined" t-on-change="onLateralityChange"/> Bilateral</label>
+                            <label class="form-check-label">
+                                <input type="radio" name="laterality" class="form-check-input" value="left" t-att-checked="state.laterality === 'left' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
+ Left Only</label>
+                            <label class="form-check-label">
+                                <input type="radio" name="laterality" class="form-check-input" value="right" t-att-checked="state.laterality === 'right' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
+ Right Only</label>
+                            <label class="form-check-label">
+                                <input type="radio" name="laterality" class="form-check-input" value="bilateral" t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
+ Bilateral</label>
                         </div>
                     </div>
                     <!-- 🔸 Split + Quantity Box -->
                     <div class="p-3 bg-light border rounded shadow-sm mb-4">
                         <t t-if="state.laterality === 'bilateral'">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-check-label"><input type="checkbox" t-att-checked="state.split ? 'checked' : undefined" t-on-click="onSplitToggle" /> Customize Left / Right Separately</label>
+                                <label class="form-check-label">
+                                    <input type="checkbox" t-att-checked="state.split ? 'checked' : undefined" t-on-click="onSplitToggle" />
+ Customize Left / Right Separately</label>
                                 <div class="d-flex gap-2 align-items-center">
-                                <button class="btn btn-sm btn-outline-secondary" t-on-click="() => onDecreaseQuantity()">➖</button>
-                                <input class="form-control text-center" style="width: 50px;" name="product_quantity" type="number" t-att-value="state.quantityToMake" t-on-change="onQuantityChange" />
-                                <button class="btn btn-sm btn-outline-secondary" t-on-click="() => onIncreaseQuantity()">➕</button>
+                                    <button class="btn btn-sm btn-outline-secondary" t-on-click="() => onDecreaseQuantity()">➖</button>
+                                    <input class="form-control text-center" style="width: 50px;" name="product_quantity" type="number" t-att-value="state.quantityToMake" t-on-change="onQuantityChange" />
+                                    <button class="btn btn-sm btn-outline-secondary" t-on-click="() => onIncreaseQuantity()">➕</button>
                                 </div>
                             </div>
                             <t t-if="state.split" t-set="hasCopyButtons" t-value="true">
                                 <div class="d-flex gap-2 mt-2">
-                                <button class="btn btn-sm btn-outline-primary" t-on-click="copyLeftToRight">⬅️ Copy Left → Right</button>
-                                <button class="btn btn-sm btn-outline-primary" t-on-click="copyRightToLeft">➡️ Copy Right → Left</button>
-                                <t t-if="state.undoCache.left or state.undoCache.right">
-                                    <button class="btn btn-sm btn-outline-warning" t-on-click="_restoreUndoCache">↩️ Undo Last Split</button>
-                                </t>
+                                    <button class="btn btn-sm btn-outline-primary" t-on-click="copyLeftToRight">⬅️ Copy Left → Right</button>
+                                    <button class="btn btn-sm btn-outline-primary" t-on-click="copyRightToLeft">➡️ Copy Right → Left</button>
+                                    <t t-if="state.undoCache.left or state.undoCache.right">
+                                        <button class="btn btn-sm btn-outline-warning" t-on-click="_restoreUndoCache">↩️ Undo Last Split</button>
+                                    </t>
                                 </div>
                             </t>
                         </t>
@@ -96,19 +104,21 @@
                 <div class="col-md-4 border-start ps-3">
                     <div class="sticky-summary shadow-sm p-2 bg-white rounded">
                         <t t-set="summaryKeyVal" t-value="summaryKey()" />
+                        <!-- <SummaryPanel ptalIds="state.ptalIds" selected="state.selected" laterality="state.laterality" split="state.split" productTemplate="state.productTemplate" quantityToMake="state.quantityToMake" orderId="props.orderId" lineId="props.record?.resId" templateId="state.productTemplate?.id" configHash="props.record?.data?.cpq_configuration_hash" register="registerSummaryPanel" t-key="summaryKeyVal"/> -->
                         <SummaryPanel 
-                        ptalIds="state.ptalIds" 
-                        selected="state.selected" 
-                        laterality="state.laterality" 
-                        split="state.split" 
-                        productTemplate="state.productTemplate"
-                        quantityToMake="state.quantityToMake"
-                        orderId="props.orderId"
-                        lineId="props.record?.resId"
-                        templateId="state.productTemplate?.id"
-                        configHash="props.record?.data?.cpq_configuration_hash"
-                        register="registerSummaryPanel" 
-                        t-key="summaryKeyVal"/>
+                            ptalIds="state.ptalIds"
+                            selected="state.selected"
+                            laterality="state.laterality"
+                            split="state.split"
+                            productTemplate="state.productTemplate"
+                            quantityToMake="state.quantityToMake"
+                            orderId="props.orderId"
+                            lineId="props.record?.resId"
+                            templateId="state.productTemplate?.id"
+                            configHash="props.record?.data?.cpq_configuration_hash"
+                            register="registerSummaryPanel"
+                            t-key="summaryKeyVal"
+                        />
                     </div>
                 </div>
                 <t t-if="isInitializing">
@@ -201,7 +211,8 @@
                                         </t>
                                     </td>
                                     <td>
-                                        <span t-esc="(s.priceExtra ?? 0).toFixed(2)" />$</td>
+                                        <span t-esc="(s.priceExtra ?? 0).toFixed(2)" />
+$</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -226,7 +237,8 @@
                                         <span t-esc="s.shared || '-'"/>
                                     </td>
                                     <td>
-                                        <span t-esc="s.priceExtra.toFixed(2)" />$</td>
+                                        <span t-esc="s.priceExtra.toFixed(2)" />
+$</td>
                                 </tr>
                             </t>
                         </tbody>
@@ -253,21 +265,22 @@
                         </li>
                     </t>
                     <li class="list-group-item d-flex justify-content-between">
-                        📊 Total x <t t-esc="props.quantityToMake"/>:
+                        📊 Total x <t t-esc="props.quantityToMake"/>
+:
                     <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
-                    </li>
-                </ul>
-            </div>
-            <div class="text-end mt-2">
-                <a href="#" class="small text-decoration-none" t-on-click.prevent="toggleExpand">
-                    <t t-esc="state.expanded ? '▲ Show Less' : '▼ Show More'" />
-                </a>
-            </div>
-            <div class="cpq-qr-canvas" width="128" height="128"></div>
+                </li>
+            </ul>
         </div>
-    </t>
+        <div class="text-end mt-2">
+            <a href="#" class="small text-decoration-none" t-on-click.prevent="toggleExpand">
+                <t t-esc="state.expanded ? '▲ Show Less' : '▼ Show More'" />
+            </a>
+        </div>
+        <div class="cpq-qr-canvas" width="128" height="128"></div>
+    </div>
+</t>
 
-    <!-- <t t-call="web.html_container">
+<!-- <t t-call="web.html_container">
       <t t-set="config" t-value="ctx.get('configuration')"/>
       <t t-set="summary" t-value="ctx.get('summary')"/>
       <div class="container my-5 print-preview cpq-rx-sheet">
@@ -317,61 +330,73 @@
       </div>
     </t> -->
 
-    <t t-name="cpq.PrintPreviewPanel">
-        <div class="rx-preview p-4 border rounded bg-white text-dark" t-att-class="printOnly ? 'print-mode' : ''">
-            <h2 class="fw-bold mb-3 text-center">Custom Orthotic Rx</h2>
+<t t-name="cpq.PrintPreviewPanel">
+    <div class="rx-preview p-4 border rounded bg-white text-dark" t-att-class="printOnly ? 'print-mode' : ''">
+        <h2 class="fw-bold mb-3 text-center">Custom Orthotic Rx</h2>
 
-            <div class="row mb-4">
-                <div class="col">
-                    <strong>Patient Name:</strong> <t t-esc="patientName || '________________'"/>
-                </div>
-                <div class="col">
-                    <strong>Date:</strong> <t t-esc="orderDate || '__________'"/>
-                </div>
+        <div class="row mb-4">
+            <div class="col">
+                <strong>Patient Name:</strong>
+                <t t-esc="patientName || '________________'"/>
             </div>
-
-            <div class="mb-3">
-                <strong>Laterality:</strong>
-                <ul class="list-unstyled mb-0">
-                    <li><t t-if="laterality === 'left'">✅</t> Left Only</li>
-                    <li><t t-if="laterality === 'right'">✅</t> Right Only</li>
-                    <li><t t-if="laterality === 'bilateral'">✅</t> Bilateral</li>
-                </ul>
+            <div class="col">
+                <strong>Date:</strong>
+                <t t-esc="orderDate || '__________'"/>
             </div>
-
-            <!-- Quantity -->
-            <div class="mb-3">
-                <strong>Pairs to Make:</strong> <t t-esc="quantity || 1"/>
-            </div>
-
-            <!-- Selections by Attribute -->
-            <t t-foreach="summary" t-as="row">
-                <div class="mb-2">
-                    <strong><t t-esc="row.attribute"/>:</strong>
-                    <span><t t-esc="row.left === row.right ? row.left : ''"/></span>
-                    <t t-if="split and row.left !== row.right">
-                        <div class="ms-3">
-                            <div>👈 Left: <t t-esc="row.left || '-'"/></div>
-                            <div>👉 Right: <t t-esc="row.right || '-'"/></div>
-                        </div>
-                    </t>
-                </div>
-            </t>
-
-            <!-- Price Summary (Optional) -->
-            <t t-if="priceSummary">
-                <hr/>
-                <div>
-                    <strong>💵 Left Total:</strong> $<t t-esc="priceSummary.left.toFixed(2)"/>
-                </div>
-                <div>
-                    <strong>💵 Right Total:</strong> $<t t-esc="priceSummary.right.toFixed(2)"/>
-                </div>
-                <div class="fw-bold">
-                    <strong>📊 Combined Total:</strong> $<t t-esc="priceSummary.total.toFixed(2)"/>
-                </div>
-            </t>
         </div>
-    </t>
+
+        <div class="mb-3">
+            <strong>Laterality:</strong>
+            <ul class="list-unstyled mb-0">
+                <li>
+                    <t t-if="laterality === 'left'">✅</t> Left Only</li>
+                <li>
+                    <t t-if="laterality === 'right'">✅</t> Right Only</li>
+                <li>
+                    <t t-if="laterality === 'bilateral'">✅</t> Bilateral</li>
+            </ul>
+        </div>
+
+        <!-- Quantity -->
+        <div class="mb-3">
+            <strong>Pairs to Make:</strong>
+            <t t-esc="quantity || 1"/>
+        </div>
+
+        <!-- Selections by Attribute -->
+        <t t-foreach="summary" t-as="row">
+            <div class="mb-2">
+                <strong>
+                    <t t-esc="row.attribute"/>
+:</strong>
+                <span>
+                    <t t-esc="row.left === row.right ? row.left : ''"/>
+                </span>
+                <t t-if="split and row.left !== row.right">
+                    <div class="ms-3">
+                        <div>👈 Left: <t t-esc="row.left || '-'"/>
+                        </div>
+                        <div>👉 Right: <t t-esc="row.right || '-'"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+
+        <!-- Price Summary (Optional) -->
+        <t t-if="priceSummary">
+            <hr/>
+            <div>
+                <strong>💵 Left Total:</strong> $                <t t-esc="priceSummary.left.toFixed(2)"/>
+            </div>
+            <div>
+                <strong>💵 Right Total:</strong> $                <t t-esc="priceSummary.right.toFixed(2)"/>
+            </div>
+            <div class="fw-bold">
+                <strong>📊 Combined Total:</strong> $                <t t-esc="priceSummary.total.toFixed(2)"/>
+            </div>
+        </t>
+    </div>
+</t>
 
 </templates>

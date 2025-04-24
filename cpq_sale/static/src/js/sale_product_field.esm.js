@@ -113,10 +113,10 @@ patch(SaleOrderLineProductField.prototype, {
             return record;
         };
 
-        let activeId = this.props.record.resId || null;
+        let lineId = this.props.record.resId || null;
         let orderId = this.props.record.model.root.resId || null;
         const productTmplId = safeMany2One(this.props.record.data.product_template_id)[0];
-        const isVirtual = activeId && typeof activeId === 'string' && activeId.startsWith('virtual');
+        const isVirtual = lineId && typeof lineId === 'string' && lineId.startsWith('virtual');
 
         if (!productTmplId || !orderId) {
             this.notification.add("Cannot open configurator: missing product template or order ID.", { type: "danger" });
@@ -125,7 +125,7 @@ patch(SaleOrderLineProductField.prototype, {
 
         const safeFrontendUpdate = async (record, backendData) => {
             const frontendFields = Object.keys(record.data || {});
-            const safeData = { id: activeId };
+            const safeData = { id: lineId };
             const skippedFields = [];
 
             for (const [key, value] of Object.entries(backendData)) {
@@ -141,7 +141,7 @@ patch(SaleOrderLineProductField.prototype, {
         try {
             await this.env.services.ui.block();
 
-            if (!activeId || isVirtual) {
+            if (!lineId || isVirtual) {
                 const createdId = await this.orm.call("sale.order.line", "create", [{
                     order_id: orderId,
                     product_template_id: productTmplId,
@@ -152,9 +152,9 @@ patch(SaleOrderLineProductField.prototype, {
                     price_unit: 0.0,
                 }]);
 
-                activeId = Array.isArray(createdId) ? createdId[0] : createdId;
+                lineId = Array.isArray(createdId) ? createdId[0] : createdId;
 
-                const lineData = await safeRead("sale.order.line", activeId, [
+                const lineData = await safeRead("sale.order.line", lineId, [
                     "order_id", "product_template_id", "product_uom_qty",
                     "currency_id", "company_id", "name", "product_uom",
                 ]);
@@ -170,7 +170,7 @@ patch(SaleOrderLineProductField.prototype, {
                 });
 
                 this.notification.add(_t("✅ Order line created! Opening configurator..."), { type: "success" });
-                this._pulseLine(activeId);
+                this._pulseLine(lineId);
             }
 
             const initialConfig = this.props.record.data.cpq_configuration_json ? JSON.parse(this.props.record.data.cpq_configuration_json) : {};
@@ -181,6 +181,11 @@ patch(SaleOrderLineProductField.prototype, {
                 productTmplId,
                 edit: true,
                 cpqInitialConfig: initialConfig,
+                context: {
+                    active_model: 'sale.order.line',
+                    active_id: lineId,
+                    active_sale_order_id: orderId,
+                },
                 save: async (configResult) => {
                     this.skipNextProductTemplateUpdate = true;
                     const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
