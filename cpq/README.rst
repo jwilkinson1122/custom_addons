@@ -10,7 +10,7 @@ This module provides the base functionality:
 - An Owl based UI to configure products (read: create variants)
 
 Additional modules should almost always be installed:
-- cpq_sale for sale integration
+- cpq for sale integration
 - cpq_mrp for dynamic BoM generation
 - cpq_account for accounts integration
 
@@ -31,9 +31,9 @@ Manual Product Creation & Promotion from CPQ Configurations
 
 ## 🛠️ Installation
 
-1. Copy the `cpq_sale/` folder into your Odoo `addons/` directory.
+1. Copy the `cpq/` folder into your Odoo `addons/` directory.
 2. Update the Odoo Apps List.
-3. Install the **CPQ Sale** module.
+3. Install the **CPQ** module.
 
 ## 🔍 Usage
 

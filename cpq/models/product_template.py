@@ -32,7 +32,6 @@ DEFAULT_CPQ_REF_CODE = """# Available variables:
 ref = ""
 """
 
-
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
@@ -62,6 +61,10 @@ class ProductTemplate(models.Model):
         help="Code for generating dynamic variant internal reference",
     )
     cpq_tooltip = fields.Html(compute="_compute_cpq_tooltip")
+
+    cpq_description_sale_tmpl = fields.Text(
+        string="Configurable Sale Description Template"
+    )
 
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
 
@@ -161,6 +164,23 @@ class ProductTemplate(models.Model):
             'has_optional_products': bool(product.optional_product_ids),
         }
 
+    @api.onchange("product_id")
+    def _onchange_product_id_warning(self):
+        res = super()._onchange_product_id_warning()
+        if self.product_id.cpq_ok and self.product_id.cpq_description_sale_tmpl:
+            product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
+
+            name = product.product_tmpl_id._cpq_render_inline_template(
+                product.cpq_description_sale_tmpl,
+                extras={
+                    "record": product,
+                    "tmpl": self,
+                },
+            )
+
+            if name:
+                self.name = name
+        return res
 
     @api.model
     def _name_search(self, name, args=None, operator="ilike", limit=100, order=None):

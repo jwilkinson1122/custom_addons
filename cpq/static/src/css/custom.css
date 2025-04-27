@@ -1,0 +1,268 @@
+/* .cpq-summary-box {
+    border: 1px solid #ccc;
+    padding: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+} */
+
+/* CPQ Configuration Summary in tree view */
+.cpq-config-summary-tree {
+    white-space: normal;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* font-size: 12px; */
+    font-size: 14px;
+    line-height: 1.2;
+    color: #555;
+}
+
+/* Config summary in form view */
+/* .cpq-config-summary {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.3;
+} */
+
+
+/* CPQ Sale Order Line Config Summary Column Styling */
+.o_list_view .cpq-config-summary {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.o_kanban_view .btn-primary,
+.o_list_view .btn-primary {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.o_list_view .btn-primary {
+    padding: 2px 8px;
+    font-size: 90%;
+}
+
+.o_kanban_view .btn-primary {
+    padding: 4px 10px;
+    font-size: 90%;
+}
+
+.cpq-summary-table td, .cpq-summary-table th {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: center;
+}
+
+.cpq-summary-header {
+    background-color: #f7f7f7;
+    font-weight: bold;
+    text-align: center;
+}
+
+.summary-table-wrapper {
+    transition: height 0.4s ease;
+    overflow: hidden;
+}
+
+/* .config-summary-sidebar {
+    position: sticky;
+    top: 80px;
+} */
+
+.sticky-summary {
+    position: sticky;
+    top: 1rem;
+    z-index: 1;
+    /* z-index: 100; */
+    background-color: #fff;
+    border-radius: 0.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.highlight-price {
+    background-color: #fffbe6;  
+    font-weight: 500;
+}
+
+.highlight-price .text-warning {
+    font-weight: bold;
+}
+
+.cpq-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cpq-loading-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+}
+
+.cpq-loading-overlay .loading-text {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+
+/* .o_list_view .o_data_cell[style*="white-space: normal"] {
+    white-space: normal !important;
+    word-break: break-word;
+} */
+
+.highlight-success {
+    animation: highlightSuccess 1s ease;
+}
+
+@keyframes highlightSuccess {
+    0% {
+        background-color: #d4edda;
+    }
+    50% {
+        background-color: #c3e6cb;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.cpq-toast-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0.95;
+    animation: fadeOutToast 2s ease-out forwards;
+}
+
+@keyframes fadeOutToast {
+    0% { opacity: 0.95; }
+    75% { opacity: 0.95; }
+    100% { opacity: 0; }
+}
+
+.cpq-config-summary:hover {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 rgba(0, 123, 255, 0.7); }
+    70% { box-shadow: 0 0 10px rgba(0, 123, 255, 0.7); }
+    100% { box-shadow: 0 0 0 rgba(0, 123, 255, 0.7); }
+}
+
+.pricing-summary-box {
+    transition: all 0.3s ease;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-summary-box .badge {
+    padding: 0.4em 0.75em;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+}
+
+.pricing-summary-box.fade-in {
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.config-section {
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    background: #fcfcfc;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.config-section:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.config-section label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.config-section .form-check-label {
+    margin-right: 1.5rem;
+}
+
+/* .config-summary-sidebar {
+    position: sticky;
+    top: 80px;
+} */
+
+.cpq-rx-sheet {
+    font-size: 14px;
+    max-width: 850px;
+    margin: auto;
+    background: #fff;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  @media print {
+    .o_web_client, .o_main_navbar, .breadcrumb, .o_control_panel, .btn, .o_action_manager {
+      display: none !important;
+    }
+    .cpq-rx-sheet {
+      box-shadow: none;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+}
+
+/* @media print {
+    body * {
+        visibility: hidden;
+    }
+    .cpq-print-preview, .cpq-print-preview * {
+        visibility: visible;
+    }
+    .cpq-print-preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+} */

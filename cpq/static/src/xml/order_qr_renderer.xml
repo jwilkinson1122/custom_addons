@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="cpq.OrderQrRenderer">
+        <div class="cpq-order-qr-wrapper" style="margin-top: 12px;">
+            <p><strong>Order QR Code:</strong></p>
+            <canvas class="cpq-order-qr-canvas" width="128" height="128"/>
+            <p t-if="isUnsaved" style="color: #888; margin-top: 8px;">
+                (Save the order to generate the QR code)
+            </p>
+        </div>
+    </t>
+</templates>
+
+<!-- <templates xml:space="preserve">
+    <t t-name="cpq.OrderQrRenderer">
+        <div class="cpq-qr-wrapper" style="margin-top: 12px;">
+            <p><strong>Scan to Track Order:</strong></p>
+            <canvas class="cpq-order-qr-canvas" width="128" height="128"/>
+            <p t-if="isUnsaved" style="color: #888; margin-top: 8px;">
+                (Save the order to generate the QR code)
+            </p>
+        </div>
+    </t>
+</templates> -->

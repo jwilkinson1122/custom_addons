@@ -1,6 +1,18 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <odoo>
-
+    <!-- <record id="product_template_only_form_view_inherited" model="ir.ui.view">
+        <field name="name">product_template_only_form_view_inherited</field>
+        <field name="model">product.template</field>
+        <field name="priority">75</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description_sale']/parent::group" position="after">
+                <group string="Configurable Sale Description Template" name="cpq_description" invisible="cpq_ok == False">
+                    <field name="cpq_description_sale_tmpl" nolabel="1" />
+                </group>
+            </xpath>
+        </field>
+    </record> -->
     <record id="product_template_only_form_view_inherited" model="ir.ui.view">
         <field name="name">product_template_only_form_view_inherited</field>
         <field name="model">product.template</field>
@@ -35,6 +47,11 @@
             </xpath>
             <xpath expr="//field[@name='default_code']" position="attributes">
                 <attribute name="invisible">product_variant_count &gt; 1 or cpq_ok == True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='description_sale']/parent::group" position="after">
+                <group string="Configurable Sale Description Template" name="cpq_description" invisible="cpq_ok == False">
+                    <field name="cpq_description_sale_tmpl" nolabel="1" />
+                </group>
             </xpath>
             <xpath expr="//page[@name='variants']" position="inside">
                 <p class="oe_grey oe_edit_only" invisible="cpq_ok != True">

@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8' ?>
-<odoo>
-    <report id="action_cpq_configuration_summary" string="CPQ Configuration Summary" model="sale.order.line" report_type="qweb-pdf" name="cpq_sale.report_cpq_configuration_summary" file="cpq_sale.report_cpq_configuration_summary" print_report_name="'CPQ Summary - %s' % (object.order_id.name or 'Order')" />
-    <!-- <report id="action_cpq_configuration_summary" model="sale.order.line" string="CPQ Configuration Summary" report_type="qweb-pdf" name="cpq_sale.report_cpq_configuration_summary" file="cpq_sale.report_cpq_configuration_summary" print_report_name="'CPQ Summary - %s' % (object.order_id.name or 'Order')" /> -->
-</odoo>

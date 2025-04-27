@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import json
+import hashlib
 from markupsafe import Markup
 from odoo.tools.translate import _
 from odoo import _
@@ -10,7 +11,15 @@ from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
 
-
+def generate_cpq_hash(cpq_configuration_json):
+    """Generate a SHA256 hash from the JSON string (sorted keys for consistency)."""
+    try:
+        config_obj = json.loads(cpq_configuration_json) if isinstance(cpq_configuration_json, str) else cpq_configuration_json
+        normalized = json.dumps(config_obj, sort_keys=True)
+        return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+    except Exception as e:
+            return None
+    
 def generate_cpq_qr_payload(order_id, line_id, template_id, config_hash=None, version=1):
     """
     Backend equivalent of generateCpqQrPayload from frontend utils.
@@ -228,12 +237,6 @@ def get_partner_discount(env, partner, template):
     # Future: implement customer category discounting
     return 1.0
 
-# You can expand this to support:
-# pricelists
-# tags
-# partner categories
-# volume tiers
-# custom partner fields (e.g., partner.cpq_discount_pct)
-
+ 
 
 

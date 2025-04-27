@@ -240,7 +240,7 @@ class ProductAttributeCustomValue(models.Model):
         return res
 
 
-class ProductAttributeLine(models.Model):
+class ProductTemplateAttributeLine(models.Model):
     _inherit = "product.template.attribute.line"
     _order = "product_tmpl_id, sequence, id"
 
@@ -265,6 +265,9 @@ class ProductAttributeLine(models.Model):
             ],
         }
 
+    def _cpq_get_combination_info_list(self):
+        return [line._cpq_get_combination_info() for line in self]
+
 
 class ProductTemplateAttributeValue(models.Model):
     _inherit = "product.template.attribute.value"
@@ -275,43 +278,31 @@ class ProductTemplateAttributeValue(models.Model):
     cpq_custom_type = fields.Selection(
         related="product_attribute_value_id.cpq_custom_type"
     )
-
     cpq_options_id = fields.Many2one(
         related="product_attribute_value_id.cpq_options_id"
     )
 
-    # Refactored to remove duplicate code
     def _cpq_get_combination_info(self):
-        res = super()._cpq_get_combination_info()
+        self.ensure_one()
+        res = {
+            "id": self.id,
+            "name": self.name,
+            "html_color": self.html_color,
+            "is_custom": self.is_custom,
+            "price_extra": self.price_extra,
+            "excluded": False,
+            "cpq_custom_type": self.cpq_custom_type,
+        }
+
         if self.is_custom and self.cpq_custom_type == "options":
-            optionss = self.env["product.options"].search(
-                [
-                    ("parent_id", "child_of", self.cpq_options_id.id),
-                    ("is_leaf", "=", True),
-                ]
+            options = self.env["product.options"].search(
+                [("parent_id", "child_of", self.cpq_options_id.id), ("is_leaf", "=", True)]
             )
-            res.update(
-                {
-                    "cpq_selection_values": [
-                        (options.id, options.display_name) for options in optionss
-                    ]
-                }
-            )
+            res["cpq_selection_values"] = [
+                (opt.id, opt.display_name) for opt in options
+            ]
 
         return res
 
 
-    def _cpq_get_combination_info(self):
-        self.ensure_one()
-        ptav_id = self
-
-        return {
-            "id": ptav_id.id,
-            "name": ptav_id.name,
-            "html_color": ptav_id.html_color,
-            "is_custom": ptav_id.is_custom,
-            "price_extra": ptav_id.price_extra,  # ✅ Fix is here
-            "excluded": False,
-            "cpq_custom_type": ptav_id.cpq_custom_type,
-        }
-
+    
