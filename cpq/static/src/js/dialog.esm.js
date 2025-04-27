@@ -523,12 +523,20 @@ export class ConfigureDialog extends Component {
                     console.warn("⚠️ Could not fetch updated sale order line data after configuration save.");
                 } else {
                     data = refreshed[0];
-                    await this.props.record.update({
-                        id: data.id,
-                        cpq_configuration_summary: data.cpq_configuration_summary,
-                        cpq_configuration_hash: data.cpq_configuration_hash,
-                        name: data.name,
-                    });
+                    // Directly set the fields in the frontend record:
+                    this.props.record.data.cpq_configuration_summary = data.cpq_configuration_summary;
+                    this.props.record.data.cpq_configuration_hash = data.cpq_configuration_hash;
+                    this.props.record.data.name = data.name;
+
+                    // ✅ Then call save with stayInEdit!
+                    await this.props.record.save({ stayInEdit: true });
+
+                    // await this.props.record.update({
+                    //     id: data.id,
+                    //     cpq_configuration_summary: data.cpq_configuration_summary,
+                    //     cpq_configuration_hash: data.cpq_configuration_hash,
+                    //     name: data.name,
+                    // });
     
                     console.log("✅ Frontend record refreshed with updated summary and hash.");
                     this.pulseElement(".cpq-config-summary");

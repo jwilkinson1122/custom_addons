@@ -4,6 +4,20 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+def generate_cpq_qr_payload(order_id, line_id, template_id, config_hash=None, version=1):
+    """
+    Backend equivalent of generateCpqQrPayload from frontend utils.
+    """
+    uri = f"cpq://order/{order_id}/line/{line_id}/template/{template_id}"
+    params = []
+    if config_hash:
+        params.append(f"config={config_hash}")
+    if version:
+        params.append(f"v={version}")
+    if params:
+        uri += f"?{'&'.join(params)}"
+    return uri
+
 def parse_cpq_qr_payload(payload):
     """
     Parses CPQ QR code payloads of the form:

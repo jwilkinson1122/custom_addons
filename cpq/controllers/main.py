@@ -114,8 +114,6 @@ class ProductConfiguratorController(http.Controller):
         active_model = context.get("active_model")
         active_id = context.get("active_id")
 
-        _logger.debug("🧩 Context received: %s", json.dumps(context, indent=2))
-
         if active_model != "sale.order.line" or not active_id:
             _logger.error("❌ Invalid active model or active ID: %s", context)
             raise UserError(_("Invalid active model or active ID."))
@@ -127,7 +125,7 @@ class ProductConfiguratorController(http.Controller):
 
         try:
             config_json = json.dumps(configuration)
-        except Exception as e:
+        except Exception:
             _logger.exception("❌ Failed to serialize configuration:")
             raise UserError(_("Configuration could not be saved. Please check your selections."))
 
@@ -136,60 +134,169 @@ class ProductConfiguratorController(http.Controller):
         price_unit = breakdown["final_price"] / breakdown["quantity"]
         product_uom_qty = breakdown["quantity"]
 
+        # 🚩 Resolve product variant from template
+        product_template = request.env['product.template'].sudo().browse(product_tmpl_id)
+        product_variant = product_template.product_variant_id
+
+        # 🟢 Safe update logic:
         vals = {
             'cpq_configuration_json': config_json,
             'cpq_configuration_summary': summary_html,
             'name': configuration.get("name") or line.name,
         }
 
-        if not line.display_type:  # Only apply these on product lines (accountable)
+        if product_variant:
+            # ✅ Convert placeholder to real product line:
             vals.update({
+                'display_type': False,  # ← clear line_section
+                'product_template_id': product_tmpl_id,
+                'product_id': product_variant.id,
+                'product_uom': product_variant.uom_id.id,
                 'product_uom_qty': product_uom_qty,
                 'price_unit': price_unit,
             })
+        else:
+            # 🚩 Stay as section line if no variant available:
+            vals.update({
+                'display_type': "line_section",
+                'name': configuration.get("name") or "CPQ Configuration Placeholder (no variant)",
+            })
+            # 🧹 Prevent invalid field errors:
+            for field in ["product_id", "product_template_id", "product_uom", "product_uom_qty", "price_unit"]:
+                vals.pop(field, None)
 
-        # 💾 Apply values first
         line.write(vals)
         _logger.info("✅ Configuration saved to line %s", line.id)
 
-
-        # 🛠️ Enforce recompute just in case (safety net)
+        # 🛠️ Extra safety: force recompute
         line._invalidate_cache()
         line._compute_cpq_configuration_summary()
-      
+
         return {
             'configuration': configuration,
             'sale_order_line_id': line.id,
             'sale_order_id': line.order_id.id,
         }
 
+
+    # @route('/cpq_product_configurator/<int:product_tmpl_id>/configure', type='json', auth='user')
+    # def configure(self, product_tmpl_id, configuration=None, **kwargs):
+    #     _logger.info("🧩 [CPQ] Configure called for template ID %s", product_tmpl_id)
+    #     _logger.debug("📦 Config payload: %s", json.dumps(configuration, indent=2))
+
+    #     context = request.params.get("context") or {}
+    #     active_model = context.get("active_model")
+    #     active_id = context.get("active_id")
+
+    #     _logger.debug("🧩 Context received: %s", json.dumps(context, indent=2))
+
+    #     if active_model != "sale.order.line" or not active_id:
+    #         _logger.error("❌ Invalid active model or active ID: %s", context)
+    #         raise UserError(_("Invalid active model or active ID."))
+
+    #     line = request.env['sale.order.line'].sudo().browse(active_id)
+    #     if not line.exists():
+    #         _logger.error("❌ Sale order line not found for ID %s", active_id)
+    #         raise UserError(_("Sale order line not found."))
+
+    #     try:
+    #         config_json = json.dumps(configuration)
+    #     except Exception as e:
+    #         _logger.exception("❌ Failed to serialize configuration:")
+    #         raise UserError(_("Configuration could not be saved. Please check your selections."))
+
+    #     summary_html = render_summary_html(request.env, line, configuration)
+    #     breakdown = compute_cpq_price_breakdown(request.env, line, configuration)
+    #     price_unit = breakdown["final_price"] / breakdown["quantity"]
+    #     product_uom_qty = breakdown["quantity"]
+
+    #     vals = {
+    #         'cpq_configuration_json': config_json,
+    #         'cpq_configuration_summary': summary_html,
+    #         'name': configuration.get("name") or line.name,
+    #     }
+
+    #     if not line.display_type:
+    #         vals.update({
+    #             'product_uom_qty': product_uom_qty,
+    #             'price_unit': price_unit,
+    #         })
+
+    #     if line.display_type:
+    #         _logger.info("🟡 Line %s is a section (non-accountable). Skipping product-related fields.", line.id)
+    #         safe_vals = {
+    #             key: vals[key]
+    #             for key in vals
+    #             if key not in ["product_uom_qty", "price_unit", "product_uom", "product_id", "product_template_id"]
+    #         }
+    #         line.write(safe_vals)
+    #     else:
+    #         _logger.info("🟢 Line %s is a product line. Applying full configuration.", line.id)
+    #         line.write(vals)
+
+    #     _logger.info("✅ Configuration saved to line %s", line.id)
+
+    #     line._invalidate_cache()
+    #     line._compute_cpq_configuration_summary()
+
+    #     return {
+    #         'configuration': configuration,
+    #         'sale_order_line_id': line.id,
+    #         'sale_order_id': line.order_id.id,
+    #     }
+    
     @route('/cpq/configurator/start', type='json', auth='user')
     def cpq_configurator_start(self, order_id, product_template_id, **kwargs):
         SaleOrderLine = request.env['sale.order.line']
+        product_template = request.env['product.template'].sudo().browse(product_template_id)
+        product_variant = product_template.product_variant_id
 
-        # Attempt to resolve product variant
-        product_variant = request.env['product.template'].sudo().browse(product_template_id).product_variant_id
+        # 🚩 If no variant exists, use line_section safely.
+        if not product_variant or not product_variant.exists():
+            line = SaleOrderLine.create({
+                "order_id": order_id,
+                "display_type": "line_section",
+                "name": "CPQ Configuration Placeholder (no variant)",
+            })
+            return {"line_id": line.id}
 
-        vals = {
+        # ✅ If variant exists, create an actual product line.
+        line = SaleOrderLine.create({
             "order_id": order_id,
             "product_template_id": product_template_id,
-        }
-
-        if product_variant and product_variant.id:
-            vals.update({
-                "product_id": product_variant.id,
-                "product_uom": product_variant.uom_id.id,
-                "name": product_variant.name,
-            })
-        else:
-            # 🚩 This is the key fix:
-            vals.update({
-                "display_type": "line_section",
-                "name": "CPQ Configuration Placeholder",
-            })
-
-        line = SaleOrderLine.create(vals)
+            "product_id": product_variant.id,
+            "product_uom": product_variant.uom_id.id,
+            "name": product_variant.name,
+            "product_uom_qty": 1,
+        })
         return {"line_id": line.id}
+
+
+   
+    # @route('/cpq/configurator/start', type='json', auth='user')
+    # def cpq_configurator_start(self, order_id, product_template_id, **kwargs):
+    #     SaleOrderLine = request.env['sale.order.line']
+    #     product_variant = request.env['product.template'].sudo().browse(product_template_id).product_variant_id
+
+    #     vals = {
+    #         "order_id": order_id,
+    #         "product_template_id": product_template_id,
+    #     }
+
+    #     if product_variant and product_variant.id:
+    #         vals.update({
+    #             "product_id": product_variant.id,
+    #             "product_uom": product_variant.uom_id.id,
+    #             "name": product_variant.name,
+    #         })
+    #     else:
+    #         vals.update({
+    #             "display_type": "line_section",
+    #             "name": "CPQ Configuration Placeholder",
+    #         })
+
+    #     line = SaleOrderLine.create(vals)
+    #     return {"line_id": line.id}
 
     @route('/cpq/<int:product_tmpl_id>/price_preview', type='json', auth='user')
     def cpq_price_preview(self, product_tmpl_id, configuration, context=None):

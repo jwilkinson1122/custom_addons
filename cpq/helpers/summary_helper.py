@@ -11,28 +11,42 @@ from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
 
-def generate_cpq_hash(cpq_configuration_json):
-    """Generate a SHA256 hash from the JSON string (sorted keys for consistency)."""
+def generate_cpq_hash(cpq_configuration_json, env=None):
+    """
+    Generate a SHA256 hash for the given configuration JSON.
+    Uses system parameter 'cpq.hash_truncate' to determine truncation behavior.
+
+    Args:
+        cpq_configuration_json (str or dict): The configuration data.
+        env (Environment): Optional Odoo environment to read system parameters.
+
+    Returns:
+        str: The configuration hash (truncated or full length based on system setting).
+    """
     try:
         config_obj = json.loads(cpq_configuration_json) if isinstance(cpq_configuration_json, str) else cpq_configuration_json
         normalized = json.dumps(config_obj, sort_keys=True)
-        return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+        full_hash = hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+
+        # If env provided, check system parameters
+        truncate = True  # Default behavior: truncate
+        length = 16      # Default truncate length
+
+        if env:
+            truncate = env['ir.config_parameter'].sudo().get_param('cpq.hash_truncate', 'True') == 'True'
+            length = int(env['ir.config_parameter'].sudo().get_param('cpq.hash_truncate_length', '16'))
+
+        if truncate:
+            if length > len(full_hash):
+                _logger.warning(f"[CPQ HASH] Truncate length {length} exceeds hash length. Using full hash.")
+                return full_hash
+            return full_hash
+
+        return full_hash
+
     except Exception as e:
-            return None
-    
-def generate_cpq_qr_payload(order_id, line_id, template_id, config_hash=None, version=1):
-    """
-    Backend equivalent of generateCpqQrPayload from frontend utils.
-    """
-    uri = f"cpq://order/{order_id}/line/{line_id}/template/{template_id}"
-    params = []
-    if config_hash:
-        params.append(f"config={config_hash}")
-    if version:
-        params.append(f"v={version}")
-    if params:
-        uri += f"?{'&'.join(params)}"
-    return uri
+        _logger.warning(f"[CPQ HASH] Failed to generate hash: {e} for config: {cpq_configuration_json}")
+        return None
 
 def get_cpq_config_dict(raw):
     try:

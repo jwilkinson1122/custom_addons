@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="cpq_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">cpq.res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Target the existing "Quotations & Orders" block -->
+            <xpath expr="//block[@name='quotation_order_setting_container']" position="inside">
+                <setting id="cpq_hash_truncate_setting"
+                         string="Truncate CPQ Configuration Hash"
+                         help="Enable or disable truncating the configuration hash used for CPQ lines (useful for QR codes and easier debugging).">
+                    <field name="cpq_hash_truncate"/>
+                </setting>
+                <setting id="cpq_hash_truncate_length_setting"
+                         string="CPQ Hash Truncate Length"
+                         help="Specify the number of characters to keep if truncation is enabled.">
+                    <field name="cpq_hash_truncate_length"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_cpq_config_settings" model="ir.actions.act_window">
+        <field name="name">CPQ Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="cpq_res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'cpq'}</field>
+    </record>
+
+    <!-- <menuitem id="cpq_root_settings" name="CPQ Settings" parent="sale.menu_sale_general_settings" action="action_cpq_config_settings" sequence="35" groups="base.group_system"/> -->
+
+</odoo>

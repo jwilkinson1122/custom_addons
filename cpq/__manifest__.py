@@ -18,6 +18,7 @@
     "data": [
         # 'data/cpq_cleanup_action.xml',
         "security/ir.model.access.csv",
+        "views/res_config_settings.xml",
         "views/product_template.xml",
         "views/product_product.xml",
         "views/product_attribute.xml",
