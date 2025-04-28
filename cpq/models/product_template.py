@@ -89,6 +89,22 @@ class ProductTemplate(models.Model):
         if not templates:
             return True
         return super(ProductTemplate, templates)._create_variant_ids()
+    
+    # @api.model
+    # def create_single_variant_if_missing(self):
+    #     """
+    #     Ensure each CPQ-enabled product.template has at least one product.product variant.
+    #     This satisfies Odoo's product constraint requirements without interfering with CPQ JSON logic.
+    #     """
+    #     cpq_templates = self.search([('cpq_ok', '=', True)])
+    #     for template in cpq_templates:
+    #         if not template.product_variant_id:
+    #             variant = self.env['product.product'].create({
+    #                 'product_tmpl_id': template.id,
+    #                 'name': template.name + " (Default Variant)",
+    #             })
+    #             _logger.info(f"✅ Created variant {variant.name} (ID {variant.id}) for template {template.name}")
+    #             print(f"✅ Created variant {variant.name} (ID {variant.id}) for template {template.name}")
 
     @api.model
     def ensure_configurator_product(self, product_tmpl_id):

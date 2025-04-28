@@ -195,36 +195,88 @@ export async function cleanGhostRecords(record, lineId) {
     }
 }
 
+// export function getSafeConfiguratorValues(config, fallbackUomId) {
+//     if (!config || typeof config !== "object") {
+//         console.error("❌ Invalid configuration object provided:", config);
+//         return {};
+//     }
+
+//     const uomId = config.product_uom || fallbackUomId || null;
+//     const safeUomId = Array.isArray(uomId) ? uomId[0] : uomId;
+
+//     if (!safeUomId && config.display_type !== "line_section") {
+//         console.warn("⚠️ Missing Unit of Measure (UoM) — fallback applied.");
+//     }
+
+//     const quantity = parseInt(config.quantity_to_make || config.product_uom_qty || 1, 10);
+//     const totalPrice = typeof config.total_price === "number" ? config.total_price : 0;
+//     const priceUnit =
+//         typeof config.price_unit === "number" && !isNaN(config.price_unit)
+//             ? config.price_unit
+//             : totalPrice && quantity
+//             ? totalPrice / quantity
+//             : 0;
+
+//     const name = typeof config.name === "string" ? config.name : "Configured Product";
+//     const summary =
+//         typeof config.configuration_summary === "string" ? config.configuration_summary : "";
+
+//     const laterality = ["left", "right", "bilateral"].includes(config.laterality)
+//         ? config.laterality
+//         : null;
+
+//     const result = {
+//         product_uom_qty: quantity,
+//         product_uom: safeUomId || null,
+//         price_unit: priceUnit,
+//         name: name,
+//         cpq_configuration_json: JSON.stringify(config),
+//         cpq_configuration_summary: summary,
+//         cpq_laterality: laterality,
+//         cpq_quantity_to_make: quantity,
+//         product_template_id: config.product_template_id || null,
+//         product_id: config.product_id || null,
+//     };
+
+//     if (config.display_type === "line_section") {
+//         console.debug("🚩 Section line detected — removing product-related fields.");
+//         delete result.product_uom;
+//         delete result.price_unit;
+//         delete result.product_id;
+//         delete result.product_template_id;
+//     }
+
+//     console.debug("🟢 Prepared safe configurator values:", result);
+//     return result;
+// }
+
 export function getSafeConfiguratorValues(config, fallbackUomId) {
     if (!config || typeof config !== "object") {
         console.error("❌ Invalid configuration object provided:", config);
         return {};
     }
 
-    const uomId = config.product_uom || fallbackUomId || null;
-    const safeUomId = Array.isArray(uomId) ? uomId[0] : uomId;
+    const uomIdRaw = config.product_uom || fallbackUomId || null;
+    const safeUomId = Array.isArray(uomIdRaw) ? uomIdRaw[0] : uomIdRaw;
 
-    if (!safeUomId) {
+    if (!safeUomId && config.display_type !== "line_section") {
         console.warn("⚠️ Missing Unit of Measure (UoM) — fallback applied.");
     }
 
-    const quantity = parseInt(config.quantity_to_make || config.product_uom_qty || 1, 10);
+    const quantity = Number.isInteger(config.quantity_to_make)
+        ? config.quantity_to_make
+        : Number.isInteger(config.product_uom_qty)
+        ? config.product_uom_qty
+        : 1;
+
     const totalPrice = typeof config.total_price === "number" ? config.total_price : 0;
-    // const priceUnit =
-    //     typeof config.price_unit === "number"
-    //         ? config.price_unit
-    //         : totalPrice && quantity
-    //         ? totalPrice / quantity
-    //         : 0;
-
     const priceUnit =
-    typeof config.price_unit === "number" && !isNaN(config.price_unit)
-        ? config.price_unit
-        : totalPrice && quantity
-        ? totalPrice / quantity
-        : 0;
+        typeof config.price_unit === "number" && !isNaN(config.price_unit)
+            ? config.price_unit
+            : totalPrice && quantity
+            ? totalPrice / quantity
+            : 0;
 
-    // Defensive string fallback for name and summary
     const name = typeof config.name === "string" ? config.name : "Configured Product";
     const summary =
         typeof config.configuration_summary === "string" ? config.configuration_summary : "";
@@ -232,6 +284,14 @@ export function getSafeConfiguratorValues(config, fallbackUomId) {
     const laterality = ["left", "right", "bilateral"].includes(config.laterality)
         ? config.laterality
         : null;
+
+    const safeProductId = Array.isArray(config.product_id)
+        ? config.product_id[0]
+        : config.product_id || null;
+
+    const safeProductTemplateId = Array.isArray(config.product_template_id)
+        ? config.product_template_id[0]
+        : config.product_template_id || null;
 
     const result = {
         product_uom_qty: quantity,
@@ -242,7 +302,18 @@ export function getSafeConfiguratorValues(config, fallbackUomId) {
         cpq_configuration_summary: summary,
         cpq_laterality: laterality,
         cpq_quantity_to_make: quantity,
+        product_template_id: safeProductTemplateId,
+        product_id: safeProductId,
     };
+
+    // 🟥 Remove product-related fields if it's a section line:
+    if (config.display_type === "line_section") {
+        console.debug("🚩 Section line detected — removing product-related fields.");
+        delete result.product_uom;
+        delete result.price_unit;
+        delete result.product_id;
+        delete result.product_template_id;
+    }
 
     console.debug("🟢 Prepared safe configurator values:", result);
     return result;
@@ -332,6 +403,11 @@ export async function generateQrCodeInElement(props, el) {
     }
 };
 
+export function generateQrCodeUnified(identifiers, el, debug = false) {
+    const payload = generateCpqQrPayload(identifiers);
+    renderCpqQrToElement(payload, el, debug);
+}
+
 export async function safeGenerateQrWithDebug(payload, el, debug = false) {
     if (!payload) {
         console.error("❌ QR Generation skipped: Missing payload.");
@@ -359,10 +435,23 @@ export async function safeGenerateQrWithDebug(payload, el, debug = false) {
     }
 }
 
-export function generateQrCodeUnified(identifiers, el, debug = false) {
-    const payload = generateCpqQrPayload(identifiers);
-    renderCpqQrToElement(payload, el, debug);
+export async function handleQrGenerationUnified({ orderId, lineId, templateId, configHash }, canvasSelector = '.cpq-order-line-qr-canvas') {
+    const canvas = typeof canvasSelector === "string"
+        ? document.querySelector(canvasSelector)
+        : canvasSelector;
+
+    if (!canvas) {
+        console.warn("🚫 Skipping QR generation — component element not available.");
+        return;
+    }
+    if (orderId && lineId && templateId) {
+        console.log("🟢 Generating QR code with:", { orderId, lineId, templateId, configHash });
+        generateQrCodeUnified({ orderId, lineId, templateId, configHash }, canvas, true);
+    } else {
+        console.warn("⚠️ Skipping QR generation — missing identifiers:", { orderId, lineId, templateId });
+    }
 }
+
 
 export async function startCpqQrScan(onScanResult) {
     const video = document.createElement("video");

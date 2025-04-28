@@ -44,6 +44,11 @@ export default class ConfiguratorSummaryPanel extends Component {
         
     
         // onMounted(this._onMountedHandler.bind(this));
+        onMounted(() => {
+            this._handleQrGeneration();
+            this.adjustHeight();
+        });
+        
         onWillUpdateProps(this._onPropsUpdateHandler.bind(this));
         onWillUnmount(this._onWillUnmountHandler.bind(this));
     
@@ -151,7 +156,15 @@ export default class ConfiguratorSummaryPanel extends Component {
         const canvas =
             this.el.querySelector('.cpq-order-line-qr-canvas') ||
             this.el.querySelector('.cpq-order-qr-canvas');
-    
+
+        console.log("🚩 QR Generation Context:", {
+            orderId,
+            lineId,
+            templateId,
+            configHash
+        });
+
+
         if (!canvas) {
             console.warn("⚠️ Skipping QR generation — no QR canvas found.");
             return;

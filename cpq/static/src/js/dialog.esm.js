@@ -18,11 +18,14 @@ import {
     useDebouncedInput, 
     debounce, 
     safeMany2One, 
+    getSafeConfiguratorValues,
     computeLocalCPQPriceBreakdown,
     stableStringify,
     waitForRealResIdFromRecord,
     generateQrCodeUnified,
+    handleQrGenerationUnified,
  } from "./utils.esm";
+
 
 export class ConfigureDialog extends Component {
     static template = "cpq.ConfigureDialogDialog";
@@ -438,144 +441,217 @@ export class ConfigureDialog extends Component {
 
     canCreate() { return this.state.valid; }
 
+    // onCreate = debounce(async () => {
+    //     console.log("🧩 onCreate() running");
+    
+    //     if (this.state.isLoading) return;
+    
+    //     const { orderId, lineId: existingLineId } = this._resolveOrderAndLineContext();
+    //     if (!orderId) {
+    //         this.notification.add("Missing order context. Please reload the order.", { type: "danger" });
+    //         return;
+    //     }
+    
+    //     this.state.isLoading = true;
+    
+    //     try {
+    //         const confirmed = await this._showConfirmDialog("Save this configuration to the order?");
+    //         if (!confirmed) return;
+    
+    //         if (!this.state.valid) {
+    //             this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
+    //             return;
+    //         }
+    
+    //         await this._validate();
+    //         await nextTick();
+    //         this.summaryApi?.computeSummary?.();
+    //         this.updatePricePreview();
+    
+    //         const summary = this.summaryApi?.getSummaryState?.() || {};
+    //         const productTemplate = this.productTemplate;
+    //         const productTmplId = productTemplate?.id || this.props.productTmplId;
+    //         const productVariantId = Array.isArray(productTemplate?.product_variant_id)
+    //             ? productTemplate.product_variant_id[0]
+    //             : productTemplate?.product_variant_id || null;
+    //         const productUom = Array.isArray(productTemplate?.uom_id)
+    //             ? productTemplate.uom_id[0]
+    //             : productTemplate?.uom_id || this.props.productUOMId || null;
+    
+    //         const rawConfig = {
+    //             name: this.productTemplateName,
+    //             laterality: this.state.laterality,
+    //             split: this.state.split,
+    //             selected: this.state.selected,
+    //             quantity_to_make: this.state.quantityToMake,
+    //             product_uom_qty: this.state.quantityToMake,
+    //             product_uom: productUom,
+    //             price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0,
+    //             left_price: summary.left || 0,
+    //             right_price: summary.right || 0,
+    //             total_price: summary.total || 0,
+    //             product_template_id: productTmplId,
+    //             product_id: productVariantId,
+    //             display_type: productVariantId ? false : "line_section",
+    //         };
+    
+    //         const safeValues = getSafeConfiguratorValues(rawConfig, productUom);
+    
+    //         if (safeValues.product_id) {
+    //             safeValues.product_id = [safeValues.product_id, productTemplate?.display_name || "Product"];
+    //         }
+    //         if (safeValues.product_template_id) {
+    //             safeValues.product_template_id = [safeValues.product_template_id, productTemplate?.display_name || "Template"];
+    //         }
+    //         if (safeValues.product_uom) {
+    //             const uomName = Array.isArray(productTemplate?.uom_id)
+    //                 ? productTemplate.uom_id[1]
+    //                 : productTemplate?.uom_id?.[1] || "Unit";
+    //             safeValues.product_uom = [safeValues.product_uom, uomName];
+    //         }
+    
+    //         console.log("💾 Applying safe configurator values:", safeValues);
+    //         await this.props.record.update(safeValues);
+    //         await this.props.record.save({ stayInEdit: true });
+    //         console.log("✅ Configuration saved to record.");
+    
+    //         const refreshed = await this.orm.call(
+    //             "sale.order.line",
+    //             "read",
+    //             [[this.props.record.resId], ["id", "cpq_configuration_summary", "cpq_configuration_hash", "name"]]
+    //         );
+    
+    //         const data = refreshed && refreshed[0];
+    //         if (data) {
+    //             const configHash = data.cpq_configuration_hash;
+    //             const canvas = document.querySelector(".cpq-order-line-qr-canvas");
+    
+    //             if (canvas && orderId && this.props.record.resId && productTmplId) {
+    //                 console.log("🟢 Generating QR code with:", { orderId, lineId: this.props.record.resId, templateId: productTmplId, configHash });
+    //                 generateQrCodeUnified(
+    //                     { orderId, lineId: this.props.record.resId, templateId: productTmplId, configHash },
+    //                     canvas,
+    //                     true
+    //                 );
+    //             } else {
+    //                 console.warn("⚠️ Skipping QR generation — missing identifiers or canvas.");
+    //             }
+    //         } else {
+    //             console.warn("⚠️ Could not fetch refreshed line data for QR generation.");
+    //         }
+    
+    //         this.pulseElement(".cpq-config-summary");
+    //     } catch (error) {
+    //         console.error("❌ Failed to submit configuration:", error);
+    //         this.notification.add("An error occurred while saving configuration.", { type: "danger" });
+    //     } finally {
+    //         this.state.isLoading = false;
+    //     }
+    // }, 300);
+    
+
     onCreate = debounce(async () => {
         console.log("🧩 onCreate() running");
-        console.log("🧩 onCreate() props:", this.props);
-        console.log("🧩 onCreate() context:", this.props.context);
-    
+
         if (this.state.isLoading) return;
-    
+
         const { orderId, lineId: existingLineId } = this._resolveOrderAndLineContext();
         if (!orderId) {
             this.notification.add("Missing order context. Please reload the order.", { type: "danger" });
             return;
         }
-    
+
         this.state.isLoading = true;
-    
+
         try {
             const confirmed = await this._showConfirmDialog("Save this configuration to the order?");
             if (!confirmed) return;
-    
+
             if (!this.state.valid) {
                 this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
                 return;
             }
-    
+
             await this._validate();
             await nextTick();
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
-    
+
             const summary = this.summaryApi?.getSummaryState?.() || {};
-            const config = {
+            const productTemplate = this.productTemplate;
+            const productTmplId = productTemplate?.id || this.props.productTmplId;
+            const productVariantId = Array.isArray(productTemplate?.product_variant_id)
+                ? productTemplate.product_variant_id[0]
+                : productTemplate?.product_variant_id || null;
+            const productUom = Array.isArray(productTemplate?.uom_id)
+                ? productTemplate.uom_id[0]
+                : productTemplate?.uom_id || this.props.productUOMId || null;
+
+            const rawConfig = {
                 name: this.productTemplateName,
                 laterality: this.state.laterality,
                 split: this.state.split,
                 selected: this.state.selected,
                 quantity_to_make: this.state.quantityToMake,
                 product_uom_qty: this.state.quantityToMake,
-                product_uom: this.productTemplate?.uom_id?.[0] || this.props.productUOMId,
+                product_uom: productUom,
                 price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0,
                 left_price: summary.left || 0,
                 right_price: summary.right || 0,
                 total_price: summary.total || 0,
+                product_template_id: productTmplId,
+                product_id: productVariantId,
+                display_type: productVariantId ? false : "line_section",
             };
-    
-            if (!config.product_uom) {
-                console.warn("⚠️ UoM is missing from configuration result — fallback applied.");
-            }
-    
-            const contextPayload = {
-                active_model: "sale.order.line",
-                active_id: existingLineId,
-                active_sale_order_id: orderId,
-                ...(this.props.context || {}),
-            };
-    
-            console.log("🚀 Submitting CPQ config:", config);
-            console.log("🧩 Context for RPC:", contextPayload);
-    
-            const productTmplId = this.productTemplate?.id || this.productTemplate;
-            const response = await this.rpc(
-                `/cpq_product_configurator/${productTmplId}/configure`,
-                { configuration: config, context: contextPayload }
+
+            const safeValues = getSafeConfiguratorValues(rawConfig, productUom);
+
+            // 🚩 Prevent the Many2one 'type' error:
+            ["product_id", "product_template_id", "product_uom"].forEach((field) => {
+                const value = safeValues[field];
+                if (value && (!Array.isArray(value) || value.length < 2)) {
+                    console.error(`❌ Invalid Many2one value for ${field}:`, value);
+                    safeValues[field] = null;  // This prevents the crash
+                }
+            });
+
+            console.log("💾 Applying safe configurator values:", safeValues);
+            await this.props.record.update(safeValues);
+            await this.props.record.save({ stayInEdit: true });
+            console.log("✅ Configuration saved to record.");
+
+            // 🟢 Fetch refreshed backend data for QR generation:
+            const refreshed = await this.orm.call(
+                "sale.order.line",
+                "read",
+                [[this.props.record.resId], ["id", "cpq_configuration_summary", "cpq_configuration_hash", "name"]]
             );
-    
-            console.log("✅ CPQ configure response:", response);
-    
-            const realLineId = response?.sale_order_line_id;
-            if (!realLineId) {
-                this.notification.add("❌ Could not determine the order line ID after configuration save.", { type: "danger" });
-                return;
-            }
-    
-            // 🟢 Refreshed record sync and data safely scoped
-            let data = null;
-            if (this.props.record?.load) {
-                const refreshed = await this.orm.call(
-                    "sale.order.line",
-                    "read",
-                    [[realLineId], ["id", "cpq_configuration_summary", "cpq_configuration_hash", "name"]],
-                );
-    
-                if (!refreshed || !refreshed.length) {
-                    console.warn("⚠️ Could not fetch updated sale order line data after configuration save.");
-                } else {
-                    data = refreshed[0];
-                    // Directly set the fields in the frontend record:
-                    this.props.record.data.cpq_configuration_summary = data.cpq_configuration_summary;
-                    this.props.record.data.cpq_configuration_hash = data.cpq_configuration_hash;
-                    this.props.record.data.name = data.name;
 
-                    // ✅ Then call save with stayInEdit!
-                    await this.props.record.save({ stayInEdit: true });
-
-                    // await this.props.record.update({
-                    //     id: data.id,
-                    //     cpq_configuration_summary: data.cpq_configuration_summary,
-                    //     cpq_configuration_hash: data.cpq_configuration_hash,
-                    //     name: data.name,
-                    // });
-    
-                    console.log("✅ Frontend record refreshed with updated summary and hash.");
-                    this.pulseElement(".cpq-config-summary");
-                }
-            }
-    
-            // 🟢 Safe QR generation (only if data available)
+            const data = refreshed && refreshed[0];
             if (data) {
-                const templateId = this.state.productTemplate?.id || this.props.productTemplate?.id;
-                const configHash = data?.cpq_configuration_hash || null;
-                const valid = typeof orderId === "number" && typeof realLineId === "number" && typeof templateId === "number";
-                const canvas = document.querySelector('.cpq-order-line-qr-canvas');
-    
-                if (!canvas) {
-                    console.warn("QR canvas missing, skipping QR generation.");
-                    return;
-                }
-    
-                if (valid) {
-                    console.log("🟢 Refreshing QR after configuration confirm:", { orderId, lineId: realLineId, templateId, configHash });
-                    generateQrCodeUnified({ orderId, lineId: realLineId, templateId, configHash }, canvas, true);
-                } else {
-                    console.warn("⚠️ Skipping QR generation — missing identifiers or QR canvas:", { orderId, lineId: realLineId, templateId, hasCanvas: !!canvas });
-                }
+                const configHash = data.cpq_configuration_hash;
+
+                await handleQrGenerationUnified({
+                    orderId,
+                    lineId: this.props.record.resId,
+                    templateId: productTmplId,
+                    configHash,
+                });
             } else {
-                console.warn("⚠️ No refreshed data available, skipping QR generation.");
+                console.warn("⚠️ Could not fetch refreshed line data for QR generation.");
             }
-    
-            this._redirectToOrder(orderId);
-    
+
+            this.pulseElement(".cpq-config-summary");
+
         } catch (error) {
             console.error("❌ Failed to submit configuration:", error);
             this.notification.add("An error occurred while saving configuration.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
         }
-    });
-    
-   
+    }, 300);
+
+
     async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         const isSplit = typeof sideOrId === "string" && ["left", "right"].includes(sideOrId);
         const side = isSplit ? sideOrId : null;

@@ -127,14 +127,20 @@ patch(SaleOrderLineProductField.prototype, {
             const frontendFields = Object.keys(record.data || {});
             const safeData = { id: lineId };
             const skippedFields = [];
-    
+        
             for (const [key, value] of Object.entries(backendData)) {
                 if (frontendFields.includes(key)) safeData[key] = value;
                 else skippedFields.push(key);
             }
+            if (backendData.display_type === "line_section") {
+                delete safeData.product_id;
+                delete safeData.product_template_id;
+                delete safeData.product_uom;
+            }
             if (skippedFields.length) console.warn(`🚧 Skipped fields (not in view):`, skippedFields);
             if (Object.keys(safeData).length > 0) await record.update(safeData);
         };
+        
     
         this.notification.add(_t("🔧 Preparing your configuration..."), { type: "info" });
     
@@ -213,10 +219,17 @@ patch(SaleOrderLineProductField.prototype, {
                     }
     
                     const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
-    
+
                     updatedValues.name = configResult.configuration.name 
                         || this.props.record.data.name 
                         || "Configured Product";
+                
+                    if (configResult.configuration.display_type === "line_section") {
+                        delete updatedValues.product_id;
+                        delete updatedValues.product_template_id;
+                        delete updatedValues.product_uom;
+                    }
+                
     
                     if (configResult.configuration_summary) {
                         updatedValues.cpq_configuration_summary = configResult.configuration_summary;

@@ -85,21 +85,23 @@ class SaleOrderLine(models.Model):
         store=True
     )
 
+    qr_uri = fields.Char(string="CPQ QR URI", compute="_compute_qr_uri", readonly=True)
+
+    # ----------------------------
+    # HASH / QR Computation Logic
+    # ----------------------------
+
     @api.depends('order_id', 'product_template_id', 'cpq_configuration_json')
     def _compute_cpq_qr_code(self):
         for line in self:
             if line.product_template_id and line.order_id:
-                config_hash = None
-                if line.cpq_configuration_json:
-                    config_hash = line._get_configuration_hash(line.cpq_configuration_json)
-
+                config_hash = line._get_configuration_hash(line.cpq_configuration_json) if line.cpq_configuration_json else None
                 payload = generate_cpq_qr_payload(
                     order_id=line.order_id.id,
                     line_id=line.id,
                     template_id=line.product_template_id.id,
                     config_hash=config_hash,
                 )
-
                 qr = qrcode.make(payload)
                 buffer = BytesIO()
                 qr.save(buffer, format="PNG")
@@ -107,14 +109,9 @@ class SaleOrderLine(models.Model):
             else:
                 line.cpq_qr_image = False
 
-    qr_uri = fields.Char(string="CPQ QR URI", compute="_compute_qr_uri", readonly=True)
-
     def _compute_qr_uri(self):
         for line in self:
-            config_data = line.cpq_configuration_json
-            config_hash = None
-            if config_data:
-                config_hash = line._get_configuration_hash(config_data)
+            config_hash = line._get_configuration_hash(line.cpq_configuration_json) if line.cpq_configuration_json else None
             line.qr_uri = generate_cpq_qr_payload(
                 order_id=line.order_id.id,
                 line_id=line.id,
@@ -126,9 +123,7 @@ class SaleOrderLine(models.Model):
     def _compute_cpq_configuration_hash(self):
         for line in self:
             if line.cpq_configuration_json:
-                hash_value = generate_cpq_hash(line.cpq_configuration_json)
-                _logger.debug(f"[CPQ] Generated hash for line {line.id}: {hash_value}")
-                line.cpq_configuration_hash = hash_value
+                line.cpq_configuration_hash = line._get_configuration_hash(line.cpq_configuration_json)
             else:
                 line.cpq_configuration_hash = False
 
@@ -139,35 +134,28 @@ class SaleOrderLine(models.Model):
         # Placeholder logic: in real use, you'd probably use context or a transient field to show/hide.
         raise UserError("This would show/hide CPQ JSON — placeholder.")
     
+    # ----------------------------
+    # CPQ Logic
+    # ----------------------------
+
     @api.onchange('cpq_configuration_json')
     def _onchange_cpq_configuration(self):
         for line in self:
             if not line.product_id.cpq_ok:
-                line.cpq_configuration_json = False  # 💯 Non-CPQ? Kill any stray config.
+                line.cpq_configuration_json = False  # ✅ Non-CPQ product → clear config
                 continue
             if not line.cpq_configuration_json:
                 continue
             try:
-                config = get_cpq_config_dict(line)  # ✅ Cleaner and safe
-
+                config = get_cpq_config_dict(line)
                 _logger.info("🧩 [CPQ] Applying configuration to order line: %s", json.dumps(config, indent=2))
-
                 line.name = config.get("name") or line.name
                 line.product_uom_qty = config.get("quantity_to_make", line.product_uom_qty)
-
-                # Optional: add to chatter only after save
                 summary_html = render_summary_html(self.env, line.order_id, config, mode="chatter")
-
-                _logger.info("🖨️ [CPQ] Generated Summary HTML:\n%s", summary_html)
-
                 line.message_post(
-                    body=f"""
-                        <b>🛠️ CPQ Configuration Applied:</b><br/>
-                        {summary_html}
-                    """,
+                    body=f"<b>🛠️ CPQ Configuration Applied:</b><br/>{summary_html}",
                     subtype_xmlid="mail.mt_note",
                 )
-
             except Exception as e:
                 _logger.warning(f"⚠️ Failed to parse CPQ config JSON: {e}")
 
@@ -176,7 +164,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue
             config = get_cpq_config_dict(line.cpq_configuration_json)
             line.cpq_laterality = config.get('laterality')
             
@@ -185,56 +173,37 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue
             config = get_cpq_config_dict(line.cpq_configuration_json)
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
     @api.onchange("product_id")
     def _onchange_product_id_warning(self):
-        """
-        Prevent Odoo from overriding price, UoM, and name
-        if this line is CPQ-configured (has configuration JSON).
-        """
         res = super()._onchange_product_id_warning()
-
         for line in self:
-            # 🟡 If no product, nothing to do.
             if not line.product_id:
                 continue
-
-            # 🟢 Debugging info to confirm context on each line:
-            _logger.debug(
-                f"[CPQ] Onchange triggered on line {line.id} — product_id: {line.product_id.id}, "
-                f"cpq_ok: {line.product_id.cpq_ok}, has config: {bool(line.cpq_configuration_json)}"
-            )
-
-            # ✅ Skip standard behavior if CPQ config is present
-            if line.cpq_configuration_json:
-                _logger.debug(f"🛠️ [CPQ] Skipping standard onchange behavior on line {line.id} (CPQ-configured).")
-                continue
-
-            # 🟢 For non-CPQ lines, apply standard pricing/UoM logic:
-            if not line.product_id.cpq_ok:
+            if line.product_id.cpq_ok:
+                partner_lang = line.order_id.partner_id.lang if line.order_id.partner_id else self.env.user.lang
+                if line.product_id.cpq_description_sale_tmpl:
+                    product = line.product_id.with_context(lang=partner_lang)
+                    name = product.product_tmpl_id._cpq_render_inline_template(
+                        product.cpq_description_sale_tmpl,
+                        extras={"record": product, "tmpl": line},
+                    )
+                    if name:
+                        line.name = name
+            else:
                 product = line.product_id.with_company(line.company_id)
                 partner = line.order_id.partner_id
                 pricelist = line.order_id.pricelist_id
-
-                product_context = dict(
-                    self.env.context,
-                    partner_id=partner.id,
-                    quantity=1,
-                    uom=product.uom_id.id,
-                )
-
+                product_context = dict(self.env.context, partner_id=partner.id, quantity=1, uom=product.uom_id.id)
                 price = pricelist._get_product_price(product.with_context(product_context), 1.0, partner)
                 line.price_unit = price or product.lst_price or 0.0
                 line.product_uom = product.uom_id
                 line.name = product.get_product_multiline_description_sale() or product.name
-
-                # 🧹 Safety net: if any stray CPQ config remains on non-CPQ lines, clear it
-                line.cpq_configuration_json = False
+                line.cpq_configuration_json = False  # 🧹 Clear CPQ config on standard products
                 line.cpq_configuration_hash = False
-
         return res
 
     @api.depends("cpq_configuration_json")
@@ -242,16 +211,14 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue
             config = self._parse_config(line.cpq_configuration_json)
             if not config:
                 line.name = line.product_id.display_name or line.product_id.name
                 continue
-
             selections = config.get("selected", {})
             side = config.get("laterality", "").capitalize()
             summary = ", ".join(str(v) for v in selections.values()) if isinstance(selections, dict) else ""
-
             if side and summary:
                 line.name = f"{line.product_id.name} - {side} ({summary})"
             elif side:
@@ -263,15 +230,12 @@ class SaleOrderLine(models.Model):
     def _onchange_cpq_pricing(self):
         for line in self:
             if not line.product_id.cpq_ok:
-                # 🚫 Skip pricing logic entirely for non-CPQ products
                 return
-
             config = get_cpq_config_dict(line.cpq_configuration_json)
             result = compute_cpq_price_breakdown(self.env, line, config) or {}
             quantity = result.get("quantity", 1)
             total = result.get("total")
             subtotal = result.get("subtotal")
-
             line.price_unit = total / quantity if total and quantity else subtotal or 0.0
             line.product_uom_qty = quantity
 
@@ -280,23 +244,18 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  
+                line.cpq_configuration_summary = False
+                continue
             config = line._parse_config()
             if not config:
                 line.cpq_configuration_summary = "No configuration available."
                 continue
             try:
-                config = line._parse_config()
-                _logger.info(f"🧩 Generating summary for Sale Order Line {line.id}")
-                _logger.info(f"Config Data: {config}")
-
                 summary_html = render_summary_html(self.env, line.order_id, config)
-
                 line.cpq_configuration_summary = summary_html
-
             except Exception as e:
-                _logger.warning(f"⚠️ Failed to generate summary HTML: {e}")
-                config = line._parse_config()
+                _logger.warning(f"⚠️ [CPQ Summary] Failed to generate summary HTML: {e}")
+                line.cpq_configuration_summary = "⚠️ Error generating configuration summary."
 
     def _parse_config(self):
         try:
@@ -356,7 +315,8 @@ class SaleOrderLine(models.Model):
     def action_create_product_from_configuration(self):
         self.ensure_one()
 
-        config = get_cpq_config_dict(self)
+        # ✅ Fixed here: pass the correct cpq_configuration_json
+        config = get_cpq_config_dict(self.cpq_configuration_json)
         if not config:
             raise UserError("No CPQ configuration found or it could not be parsed.")
 
