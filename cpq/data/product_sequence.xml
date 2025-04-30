@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- CPQ Product Sequence -->
+    <record id="seq_cpq_product" model="ir.sequence">
+        <field name="name">CPQ Product Code</field>
+        <field name="code">product.product.default_code.cpq</field>
+        <field name="prefix">CPQ-</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Non-CPQ Product Sequence -->
+    <record id="seq_non_cpq_product" model="ir.sequence">
+        <field name="name">Non-CPQ Product Code</field>
+        <field name="code">product.product.default_code.non_cpq</field>
+        <field name="prefix">P-</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>

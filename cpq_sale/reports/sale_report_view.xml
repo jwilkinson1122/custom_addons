@@ -16,6 +16,21 @@
         <!-- <xpath expr="//div[@id='informations']" position="attributes">
             <attribute name="class">row mt-4 mb-2 sale-order-informations</attribute>
         </xpath> -->
+        <xpath expr="//td[@name='td_priceunit']" position="replace">
+            <td class="text-end" name="td_priceunit">
+                <t t-if="line.product_template_id.cpq_ok and not line.cpq_configuration_json">
+                    <span class="text-danger">⚠️ Not configured</span>
+                </t>
+                <t t-elif="line.product_template_id.cpq_ok and line.price_unit == 0.0">
+                    <span class="text-muted">⚙️ Configure to see price</span>
+                </t>
+                <t t-else="">
+                    <span t-field="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                </t>
+            </td>
+        </xpath>
+
+
     </template>
 
 

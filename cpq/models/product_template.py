@@ -90,13 +90,24 @@ class ProductTemplate(models.Model):
     @api.model
     def ensure_configurator_product(self, product_tmpl_id):
         product_tmpl = self.sudo().browse(product_tmpl_id)
+
         if not product_tmpl.exists():
             raise UserError("Product template not found.")
+
+        if not product_tmpl.cpq_ok:
+            raise UserError("Only CPQ-enabled templates can use configurator fallback.")
+
         product = product_tmpl._ensure_configurator_product()
         return {"product_id": product.id}
 
     def _ensure_configurator_product(self):
         self.ensure_one()
+
+        if not self.cpq_ok:
+            raise UserError(_(
+                "Cannot call _ensure_configurator_product on a non-CPQ product template: %s"
+            ) % self.display_name)
+
         Product = self.env["product.product"]
         product = Product.search([("product_tmpl_id", "=", self.id)], limit=1)
 
@@ -104,36 +115,43 @@ class ProductTemplate(models.Model):
             product = Product.create({
                 "product_tmpl_id": self.id,
                 "name": self.name,
-                "default_code": f"CPQ-{self.id}",
-                "uom_id": self.uom_id.id,  # ✅ Ensure UoM is copied
-                "uom_po_id": self.uom_po_id.id,  # ✅ Just in case
+                "default_code": self._generate_cpq_default_code(),
+                "uom_id": self.uom_id.id,
+                "uom_po_id": self.uom_po_id.id,
             })
             _logger.info("✅ Created fallback CPQ product: %s", product)
 
         return product
+    
+    # Allow prefix to be customized while still using the sequential ID from the CPQ sequence.
+    def _generate_cpq_default_code(self):
+        self.ensure_one()
+        prefix = self.env["ir.config_parameter"].sudo().get_param("cpq.default_code_prefix", default="CPQ-")
+        seq = self.env["ir.sequence"].sudo().next_by_code("product.product.default_code.cpq")
+        return f"{prefix}{seq.split('-')[-1]}"  # Ensures no double prefixing if sequence has one
 
     @api.model
     def get_single_product_variant(self):
+        self.ensure_one()
         if self.cpq_ok not in [True, False]:
             _logger.warning(f"⚠️ cpq_ok is undefined or incorrect on template {self.id} ({self.name}) — forcing to False.")
             self.cpq_ok = False  # Safety fallback
 
-        self.ensure_one()
-        _logger.info(f"🚀 get_single_product_variant called for template {self.id} ({self.name}), cpq_ok={self.cpq_ok}")
-
+        # self.ensure_one()
+        _logger.info("🔧 [CPQ] Returning CPQ variant resolution for template %s", self.display_name)
         # ✅ CPQ Products: Skip variant lookup entirely
         if self.cpq_ok:
-            _logger.info(f"⚙️ CPQ product detected (template {self.id}), skipping variant resolution.")
             return {
-                'product_id': False,                # No variant on purpose
-                'product_name': self.name,          # Use template name for display
-                'uom_id': self.uom_id.id,          # Provide UoM so that frontend can still show it
-                'price_unit': 0.0,                 # Configurator will handle pricing
-                'mode': 'configurator',          # Indicate that this is a configurator product
-                'has_optional_products': False,   # Optional: flag for frontend if needed
+                "product_id": False,
+                "mode": "configurator",
+                "product_name": self.name,
+                "uom_id": self.uom_id.id,
+                "price_unit": 0.0,
+                "has_optional_products": False,
             }
 
         # 🟢 Standard non-CPQ product fallback:
+        _logger.info("📦 [Standard] Returning real variant for template %s", self.display_name)
         product = self.env['product.product'].search([('product_tmpl_id', '=', self.id)], limit=1)
         if not product:
             _logger.warning(f"⚠️ Non-CPQ template {self.id} ({self.name}) has no variants.")
@@ -145,7 +163,9 @@ class ProductTemplate(models.Model):
                 'has_optional_products': False,
             }
 
-        partner = self.env.context.get('partner_id') and self.env['res.partner'].browse(self.env.context['partner_id'])
+        # partner = self.env.context.get('partner_id') and self.env['res.partner'].browse(self.env.context['partner_id'])
+        partner = self.env.context.get('partner_id') and self.env['res.partner'].sudo().browse(self.env.context['partner_id'])
+
         pricelist = self.env.context.get('pricelist_id') and self.env['product.pricelist'].browse(self.env.context['pricelist_id'])
 
         price = (
@@ -215,10 +235,28 @@ class ProductTemplate(models.Model):
             todo -= record
         return super(ProductTemplate, todo)._compute_default_code()
 
+    # def _set_default_code(self):
+    #     return super(
+    #         ProductTemplate, self.filtered(lambda r: not r.cpq_ok)
+    #     )._set_default_code()
+    
     def _set_default_code(self):
-        return super(
-            ProductTemplate, self.filtered(lambda r: not r.cpq_ok)
-        )._set_default_code()
+        # For standard (non-CPQ) variants only
+        Sequence = self.env['ir.sequence']
+        for template in self.filtered(lambda t: not t.cpq_ok):
+            for variant in template.product_variant_ids:
+                if not variant.default_code:
+                    variant.default_code = Sequence.next_by_code("product.product.default_code.non_cpq")
+        return super(ProductTemplate, self.filtered(lambda r: r.cpq_ok))._set_default_code()
+
+    @api.constrains('default_code')
+    def _check_unique_prefixes(self):
+        for product in self:
+            if product.default_code and product.default_code.startswith("CPQ-") and not product.product_tmpl_id.cpq_ok:
+                raise ValidationError("CPQ-style reference used on non-CPQ product.")
+            if product.default_code and product.default_code.startswith("P-") and product.product_tmpl_id.cpq_ok:
+                raise ValidationError("Standard reference used on CPQ product.")
+
 
     def _onchange_cpq_ok_warning_msg(self):
         self.ensure_one()
@@ -622,7 +660,7 @@ class ProductTemplate(models.Model):
             render_context.update(extras)
 
         return render_context
-
+    
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

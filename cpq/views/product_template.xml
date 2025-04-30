@@ -46,7 +46,9 @@
             </xpath>
             <xpath expr="//page[@name='variants']//field[@name='attribute_line_ids']" position="before">
                 <group>
-                    <field name="no_create_variants"/>
+                    <field name="no_create_variants" force_save="1" default="yes"/>
+
+                    <!-- <field name="no_create_variants"/> -->
                 </group>
             </xpath>
         </field>

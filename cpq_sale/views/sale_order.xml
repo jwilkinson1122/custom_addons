@@ -9,6 +9,7 @@
                 <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" invisible="state != 'draft'"/>
             </xpath> -->
             <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="cpq_unconfigured" invisible="1"/>
                 <field name="cpq_laterality" column_invisible="1"/>
                 <button name="edit_cpq_configuration" title="Reconfigure" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
             </xpath>
@@ -30,6 +31,15 @@
                 <attribute name="readonly">1</attribute>
                 <attribute name="class">cpq-config-summary-tree</attribute>
             </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="after">
+                <field name="cpq_unconfigured" string="⚠️ Missing Config" widget="boolean" readonly="1" invisible="not cpq_unconfigured" options="{'terminology': 'Alert'}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="replace">
+                <!-- Standard price field for non-CPQ -->
+                <field name="price_unit" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="product_template_id_cpq_ok" readonly="1"/>
+                <!-- CPQ-friendly display for CPQ lines -->
+                <field name="price_unit_display" string="Unit Price" readonly="1" invisible="not product_template_id_cpq_ok"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='tax_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
@@ -49,6 +59,8 @@
                     </page>
                 </notebook>
             </xpath>
+            
+
         </field>
     </record>
 </odoo>

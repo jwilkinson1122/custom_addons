@@ -68,6 +68,33 @@ class SaleOrderLine(models.Model):
 
     cpq_summary_printable = fields.Html("Printable CPQ Summary")
 
+    cpq_unconfigured = fields.Boolean(
+        string="Missing CPQ Config",
+        compute="_compute_cpq_unconfigured",
+        store=False,
+    )
+
+    @api.depends("product_template_id.cpq_ok", "cpq_configuration_json")
+    def _compute_cpq_unconfigured(self):
+        for line in self:
+            line.cpq_unconfigured = bool(line.product_template_id.cpq_ok and not line.cpq_configuration_json)
+
+
+    price_unit_display = fields.Char(
+        string="Display Price",
+        compute="_compute_price_unit_display",
+        store=False,
+    )
+
+    @api.depends("price_unit", "product_template_id.cpq_ok")
+    def _compute_price_unit_display(self):
+        for line in self:
+            if line.product_template_id.cpq_ok and line.price_unit == 0.0:
+                line.price_unit_display = "⚙️ Configure to see price"
+            else:
+                line.price_unit_display = f"{line.price_unit:.2f}"
+
+
     def toggle_debug_cpq_json(self):
         # Placeholder logic: in real use, you'd probably use context or a transient field to show/hide.
         raise UserError("This would show/hide CPQ JSON — placeholder.")
@@ -349,7 +376,6 @@ class SaleOrderLine(models.Model):
         _logger.info(f"🧩 Total extras calculated: {total_extra}")
         return total_extra
     
-
     @api.model
     def _generate_cpq_description(self, config, total_extra):
         parts = [
@@ -399,3 +425,20 @@ class SaleOrderLine(models.Model):
         })
 
         _logger.info(f"🧩 Applied CPQ attributes to product {product.display_name}: {ptav_records.mapped('name')}")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Skip if product is already provided or this is a display line
+            if vals.get("product_id") or vals.get("display_type"):
+                continue
+
+            tmpl_id = vals.get("product_template_id")
+            if tmpl_id:
+                tmpl = self.env["product.template"].browse(tmpl_id)
+                if tmpl and tmpl.cpq_ok:
+                    product = tmpl._ensure_configurator_product()
+                    vals["product_id"] = product.id
+                    _logger.info("⚙️ Injected fallback product_id=%s for CPQ template_id=%s", product.id, tmpl.id)
+
+        return super().create(vals_list)
