@@ -220,23 +220,28 @@ export class ConfigureDialog extends Component {
             this.state.laterality,
             this.state.split,
         ]);
-        
+
         onWillStart(async () => {
             console.log("🧩 onWillStart props:", this.props);
             console.log("🧩 onWillStart context:", this.context);
-            // console.log("🧩 onWillStart state:", this.state);
-            // console.log("🧩 onWillStart orderId:", this.orderId);
             this.state.isInitializing = true;
+        
             try {
-                const data = await this._loadData();
+                const loadedData = await this._loadData();
                 this.title = this.props.edit
-                    ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
-                    : _t("Configure: %s", data.product_tmpl_id.display_name);
-
-                this.state.ptalIds = data.ptal_ids;
-                this.state.productTemplateId = data.product_tmpl_id.id;
-                this.state.productTemplate = data.product_tmpl_id;
-
+                    ? _t("Edit Configuration: %s", loadedData.product_tmpl_id.display_name)
+                    : _t("Configure: %s", loadedData.product_tmpl_id.display_name);
+        
+                this.state.ptalIds = loadedData.ptal_ids;
+                this.state.productTemplateId = loadedData.product_tmpl_id.id;
+                this.state.productTemplate = loadedData.product_tmpl_id;
+        
+                // 🔍 Fallback if somehow productTemplate is still missing or invalid
+                if (!this.state.productTemplate?.id && this.state.productTemplateId) {
+                    const fallback = await this.orm.call("product.template", "read", [[this.state.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
+                    this.state.productTemplate = fallback?.[0] || {};
+                }
+        
                 const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
                 if (initialConfigRaw) {
                     const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
@@ -244,7 +249,7 @@ export class ConfigureDialog extends Component {
                     this.state.laterality = parsed.laterality || "bilateral";
                     this.state.split = parsed.split || false;
                     this.state.quantityToMake = parsed.quantity_to_make || 1;
-
+        
                     this.initialState = {
                         laterality: this.state.laterality,
                         split: this.state.split,
@@ -252,16 +257,15 @@ export class ConfigureDialog extends Component {
                         quantityToMake: this.state.quantityToMake,
                     };
                 }
-
+        
                 await nextTick();
                 if (Object.keys(this.state.selected).length > 0) {
                     console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
                     await this._validate();
                     this.summaryApi?.computeSummary?.();
                     this.updatePricePreview();
-
                 }
-
+        
             } catch (error) {
                 console.error("❌ Initialization error:", error);
                 this.notification.add("Initialization failed. Please try again.", { type: "danger" });
@@ -269,6 +273,60 @@ export class ConfigureDialog extends Component {
                 this.state.isInitializing = false;
             }
         });
+        
+        
+        // onWillStart(async () => {
+        //     console.log("🧩 onWillStart props:", this.props);
+        //     console.log("🧩 onWillStart context:", this.context);
+        //     this.state.isInitializing = true;
+        //     try {
+        //         const data = await this._loadData();
+        //         this.title = this.props.edit
+        //             ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
+        //             : _t("Configure: %s", data.product_tmpl_id.display_name);
+
+        //         this.state.ptalIds = data.ptal_ids;
+        //         this.state.productTemplateId = data.product_tmpl_id.id;
+        //         this.state.productTemplate = data.product_tmpl_id;
+
+        //         if (!this.state.productTemplate?.id && this.productTemplateId) {
+        //             const data = await this.orm.call("product.template", "read", [[this.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
+        //             this.state.productTemplate = data[0];
+        //         }
+                
+
+        //         const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
+        //         if (initialConfigRaw) {
+        //             const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
+        //             this.state.selected = parsed.selected || {};
+        //             this.state.laterality = parsed.laterality || "bilateral";
+        //             this.state.split = parsed.split || false;
+        //             this.state.quantityToMake = parsed.quantity_to_make || 1;
+
+        //             this.initialState = {
+        //                 laterality: this.state.laterality,
+        //                 split: this.state.split,
+        //                 selected: JSON.parse(JSON.stringify(this.state.selected)),
+        //                 quantityToMake: this.state.quantityToMake,
+        //             };
+        //         }
+
+        //         await nextTick();
+        //         if (Object.keys(this.state.selected).length > 0) {
+        //             console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
+        //             await this._validate();
+        //             this.summaryApi?.computeSummary?.();
+        //             this.updatePricePreview();
+
+        //         }
+
+        //     } catch (error) {
+        //         console.error("❌ Initialization error:", error);
+        //         this.notification.add("Initialization failed. Please try again.", { type: "danger" });
+        //     } finally {
+        //         this.state.isInitializing = false;
+        //     }
+        // });
 
         this.onSplitToggle = async () => {
             const goingToShared = this.state.split;
@@ -1007,6 +1065,7 @@ export function ConfigureDialogAction(env, action) {
     // console.log("🧪 isVirtual:", isVirtual);
 
     const rawTmpl = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
+    const productTemplate = typeof rawTmpl === "object" ? rawTmpl : undefined;
     const productTemplateId = typeof rawTmpl === "object" ? rawTmpl.id : rawTmpl;
 
     const orderLineData = env.services.model?.root?.data?.order_line;
@@ -1067,7 +1126,8 @@ export function ConfigureDialogAction(env, action) {
 
     const dialogProps = {
         productTemplateId,
-        productTemplate: typeof rawTmpl === "object" ? rawTmpl : null,
+        // productTemplate: typeof rawTmpl === "object" ? rawTmpl : null,
+        productTemplate, // only if real object
         orderId,
         currencyId,
         soDate,
