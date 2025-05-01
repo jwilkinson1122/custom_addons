@@ -121,8 +121,8 @@ class ProductConfiguratorController(http.Controller):
             _logger.error("❌ Invalid active model or active ID: %s", context)
             raise UserError(_("Invalid active model or active ID."))
 
-        line = request.env['sale.order.line'].sudo().browse(active_id)
-        # line = request.env["sale.order.line"].browse(line_id)
+        # line = request.env['sale.order.line'].sudo().browse(active_id)
+        line = request.env["sale.order.line"].browse(active_id)
         if not line.exists():
             _logger.error("❌ Sale order line not found for ID %s", active_id)
             raise UserError(_("Sale order line not found."))
@@ -137,15 +137,10 @@ class ProductConfiguratorController(http.Controller):
         
         # ✅ Compute correct price breakdown
         breakdown = compute_cpq_price_breakdown(request.env, line, configuration)
-        price_unit = breakdown["final_price"] / breakdown["quantity"]
+        # price_unit = breakdown["final_price"] / breakdown["quantity"]
+        quantity = breakdown.get("quantity") or 1.0
+        price_unit = breakdown.get("final_price", 0.0) / quantity
         product_uom_qty = breakdown["quantity"]
-
-        # line.write({
-        #     'cpq_configuration_json': config_json,
-        #     'cpq_configuration_summary': summary_html,
-        #     'product_uom_qty': configuration.get("quantity_to_make", 1),
-        #     'name': configuration.get("name") or line.name,
-        # })
 
         line.write({
             'cpq_configuration_json': config_json,
@@ -170,7 +165,25 @@ class ProductConfiguratorController(http.Controller):
 
         order_id = ctx.get("active_sale_order_id")
         if not order_id:
-            return {"error": "Missing order context."}
+            return {
+                "price": 0.0,
+                "breakdown": {
+                    "base_price": 0.0,
+                    "discount_factor": 1.0,
+                    "quantity": configuration.get("quantity_to_make", 1),
+                    "laterality": configuration.get("laterality", "bilateral"),
+                    "split": configuration.get("split", False),
+                    "left": 0.0,
+                    "right": 0.0,
+                    "extras_total": 0.0,
+                    "subtotal": 0.0,
+                    "final_price": 0.0,
+                    "total": 0.0,
+                }
+            }
+
+        # if not order_id:
+        #     return {"error": "Missing order context."}
 
         order_line = env['sale.order.line'].with_context(ctx).new({
             'order_id': order_id,
@@ -178,19 +191,16 @@ class ProductConfiguratorController(http.Controller):
         })
 
         result = compute_cpq_price_breakdown(env, order_line, configuration)
-
-        return {
-            "price": result["final_price"],
-            "breakdown": result,
-        }
-
+        return {"price": result["final_price"], "breakdown": result}
+    
+  
  
 # Helper extension for attribute lines
-class ProductTemplateAttributeLine(models.Model):
-    _inherit = "product.template.attribute.line"
+# class ProductTemplateAttributeLine(models.Model):
+#     _inherit = "product.template.attribute.line"
 
-    def _cpq_get_combination_info_list(self):
-        return [line._cpq_get_combination_info() for line in self]
+#     def _cpq_get_combination_info_list(self):
+#         return [line._cpq_get_combination_info() for line in self]
 
 
  

@@ -36,21 +36,23 @@ export default class ConfiguratorSummaryPanel extends Component {
         });
 
         // 🔥 Register external API if provided
-        if (this.props.register) {
-            this.props.register({
-                showToast: (msg) => this.showToast(msg),
-                getSummaryState: () => ({
-                    selections: this.state.summary,
-                    priceSummary: this.state.priceSummary,
-                    left: this.state.priceSummary.left,
-                    right: this.state.priceSummary.right,
-                    total: this.state.priceSummary.total,
-                }),
-                getLeftTotal: () => this.state.priceSummary.left,
-                getRightTotal: () => this.state.priceSummary.right,
-                getCombinedTotal: () => this.state.priceSummary.total,
-            });
-        }
+        // if (this.props.register) {
+        //     this.props.register({
+        //         showToast: (msg) => this.showToast(msg),
+        //         getSummaryState: () => ({
+        //             selections: this.state.summary,
+        //             priceSummary: this.state.priceSummary,
+        //             left: this.state.priceSummary.left,
+        //             right: this.state.priceSummary.right,
+        //             total: this.state.priceSummary.total,
+        //         }),
+        //         getLeftTotal: () => this.state.priceSummary.left,
+        //         getRightTotal: () => this.state.priceSummary.right,
+        //         getCombinedTotal: () => this.state.priceSummary.total,
+        //     });
+        // }
+
+        this._registerExternalApi();
 
         const debouncedRecomputeSummary = debounce(() => {
             console.log("🧩 Debounced recompute summary");
@@ -125,6 +127,40 @@ export default class ConfiguratorSummaryPanel extends Component {
 
         this.computeSummary();
         console.log("🧠 Initial computeSummary:", this.state.quantityToMake);
+    }
+
+    // if (this.props.register) {
+    //     this.props.register({
+    //         showToast: (msg) => this.showToast(msg),
+    //         getSummaryState: () => ({
+    //             selections: this.state.summary,
+    //             priceSummary: this.state.priceSummary,
+    //             left: this.state.priceSummary.left,
+    //             right: this.state.priceSummary.right,
+    //             total: this.state.priceSummary.total,
+    //         }),
+    //         getLeftTotal: () => this.state.priceSummary.left,
+    //         getRightTotal: () => this.state.priceSummary.right,
+    //         getCombinedTotal: () => this.state.priceSummary.total,
+    //     });
+    // }
+
+    _registerExternalApi() {
+        if (this.props.register) {
+            this.props.register({
+                showToast: (msg) => this.showToast(msg),
+                getSummaryState: () => ({
+                    selections: this.state.summary,
+                    priceSummary: this.state.priceSummary,
+                    left: this.state.priceSummary.left,
+                    right: this.state.priceSummary.right,
+                    total: this.state.priceSummary.total,
+                }),
+                getLeftTotal: () => this.state.priceSummary.left,
+                getRightTotal: () => this.state.priceSummary.right,
+                getCombinedTotal: () => this.state.priceSummary.total,
+            });
+        }
     }
 
     adjustHeight() {

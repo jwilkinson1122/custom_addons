@@ -4,10 +4,15 @@ from datetime import datetime
 from datetime import date, timedelta
 from odoo.fields import Field
 from odoo import _, api, fields, models
+from odoo.models import NewId
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_cpq_price_breakdown, get_cpq_config_dict
 
 _logger = logging.getLogger(__name__)
+
+
+
+
 
 # class SaleOrder(models.Model):
 #     _inherit = "sale.order"
@@ -256,32 +261,74 @@ class SaleOrderLine(models.Model):
 
     def edit_cpq_configuration(self):
         self.ensure_one()
-        
-        # tmpl = self.product_template_id
-        # if not tmpl:
-        #     raise UserError("No product template linked to this line.")
 
+        # 🛑 Ensure line is saved (no virtual/unsaved IDs)
+        if not self.id or isinstance(self.id, NewId):
+            raise UserError("⚠️ Please save the order before editing this configuration.")
+
+        # 🔍 Validate template
         tmpl = self.product_template_id or self.product_id.product_tmpl_id
         if not tmpl:
-            raise UserError("No product template linked to this line.")
+            raise UserError("⚠️ No product template linked to this line.")
 
+        # 🔍 Validate order context
+        if not self.order_id or not self.order_id.id:
+            raise UserError("⚠️ This line is not linked to a valid order.")
+        if not self.order_id.currency_id:
+            raise UserError("⚠️ Missing currency on the order.")
+
+        # 🧩 Compose safe JS context
         return {
             "type": "ir.actions.client",
             "tag": "cpq.ConfigureDialogAction",
             "context": {
                 "active_model": "sale.order.line",
-                "active_id": self.id,
+                "active_id": self.id,  # ✅ Must be numeric, not virtual
+
+                # 🚀 CPQ metadata
                 "cpq_product_template_id": tmpl.id,
-                "cpq_initial_config": self.cpq_configuration_json,
+                "cpq_initial_config": self.cpq_configuration_json or {},
+
+                # ✅ Dialog behavior
                 "from_sale_order": True,
                 "redirect_to_line": True,
+                # "edit": bool(self.id and not isinstance(self.id, NewId)),
+                # "edit": self.env.registry['ir.model.data'].sudo()._is_numeric_id(self.id),
+                "edit": not isinstance(self.id, NewId),
+
+                # 🔑 Required JS props
                 "orderId": self.order_id.id,
                 "currencyId": self.order_id.currency_id.id,
-                "soDate": str(self.order_id.date_order),
+                "soDate": str(self.order_id.date_order or fields.Date.today()),
                 "companyId": self.order_id.company_id.id,
+                "quantity": self.product_uom_qty or 1,
             },
-            
         }
+
+    # def edit_cpq_configuration(self):
+    #     self.ensure_one()
+        
+    #     tmpl = self.product_template_id or self.product_id.product_tmpl_id
+    #     if not tmpl:
+    #         raise UserError("No product template linked to this line.")
+
+    #     return {
+    #         "type": "ir.actions.client",
+    #         "tag": "cpq.ConfigureDialogAction",
+    #         "context": {
+    #             "active_model": "sale.order.line",
+    #             "active_id": self.id,
+    #             "cpq_product_template_id": tmpl.id,
+    #             "cpq_initial_config": self.cpq_configuration_json,
+    #             "from_sale_order": True,
+    #             "redirect_to_line": True,
+    #             "orderId": self.order_id.id,
+    #             "currencyId": self.order_id.currency_id.id,
+    #             "soDate": str(self.order_id.date_order),
+    #             "companyId": self.order_id.company_id.id,
+    #         },
+            
+    #     }
     
     def _compute_cpq_product_created(self):
         for line in self:

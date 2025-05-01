@@ -66,39 +66,6 @@ patch(SaleOrderLineProductField.prototype, {
         }
     },
     
-
-    // async _onProductTemplateUpdate() {
-    //     if (this.skipNextProductTemplateUpdate) {
-    //         this.skipNextProductTemplateUpdate = false;
-    //         return;
-    //     }
-
-    //     const result = await this.orm.call(
-    //         "product.template",
-    //         "get_single_product_variant",
-    //         [this.props.record.data.product_template_id[0]],
-    //         { context: this.context }
-    //     );
-
-    //     console.log("🟢 Resolved product variant:", result);
-
-    //     if (this._isBackendCpq(result) && this._isFrontendCpq()) {
-    //         console.log("✅ CPQ product detected — opening configurator dialog.");
-    //         return this._cpqConfigureDialog(result);
-    //     }
-
-    //     if (result && result.product_id) {
-    //         await this.props.record.update({
-    //             product_id: Array.isArray(result.product_id) ? result.product_id : [result.product_id, result.product_name],
-    //             product_uom: safeMany2One(result.uom_id),
-    //             price_unit: result.price_unit,
-    //         });
-    //         await this._onProductUpdate();
-    //     } else {
-    //         this.notification.add("No variant found for this product. Please check the template.", { type: "danger" });
-    //     }
-    // },
-
     async _onProductUpdate() {
         if (this._isFrontendCpq()) {
             console.log("⚙️ CPQ Product selected — skipping native product update handling.");
@@ -129,8 +96,6 @@ patch(SaleOrderLineProductField.prototype, {
         return super.onProductChange(...arguments);
     },
     
-    
-
     _editProductConfiguration() {
         if (this._isFrontendCpq()) {
             console.log("✅ CPQ Product detected — opening configurator.");
@@ -166,39 +131,53 @@ patch(SaleOrderLineProductField.prototype, {
     
         let activeId = this.props.record.resId || null;
         let orderId = this.props.record.model.root.resId || null;
-        const productTmplId = safeMany2One(this.props.record.data.product_template_id)[0];
-        const isVirtual = activeId && typeof activeId === "string" && activeId.startsWith("virtual");
-    
-        if (!productTmplId || !orderId) {
+        const productTemplateId = safeMany2One(this.props.record.data.product_template_id)[0];
+        let isVirtual = activeId && typeof activeId === "string" && activeId.startsWith("virtual");
+
+        if (!productTemplateId || !orderId) {
             this.notification.add("Cannot open configurator: missing product template or order ID.", { type: "danger" });
             return;
         }
+
+        // let isVirtual = typeof activeId === "string" && activeId.startsWith("virtual_");
     
         const safeFrontendUpdate = async (record, backendData) => {
             const frontendFields = Object.keys(record.data || {});
-            const safeData = { id: activeId };
+            const safeData = {};
             const skippedFields = [];
-    
+        
             for (const [key, value] of Object.entries(backendData)) {
-                if (frontendFields.includes(key)) safeData[key] = value;
-                else skippedFields.push(key);
+                if (frontendFields.includes(key)) {
+                    safeData[key] = value;
+                } else {
+                    skippedFields.push(key);
+                }
             }
-            if (skippedFields.length) console.warn(`🚧 Skipped fields (not in view):`, skippedFields);
-            if (Object.keys(safeData).length > 0) await record.update(safeData);
+        
+            if (skippedFields.length) {
+                console.warn(`🚧 Skipped fields (not in view):`, skippedFields);
+            }
+        
+            // ✅ Safe way to update the record's ID without assigning to .resId
+            if (backendData.id && !record.resId) {
+                safeData.id = backendData.id;
+            }
+        
+            if (Object.keys(safeData).length > 0) {
+                await record.update(safeData);
+            }
         };
-    
+        
         this.notification.add(_t("🔧 Preparing your configuration..."), { type: "info" });
     
         try {
-            await this.env.services.ui.block();
-    
             if (!activeId || isVirtual) {
-                const { product_id } = await this.orm.call("product.template", "ensure_configurator_product", [productTmplId]);
-                const { uom_id } = await safeRead("product.template", productTmplId, ["uom_id"]);
+                const { product_id } = await this.orm.call("product.template", "ensure_configurator_product", [productTemplateId]);
+                const { uom_id } = await safeRead("product.template", productTemplateId, ["uom_id"]);
     
                 const createdId = await this.orm.call("sale.order.line", "create", [{
                     order_id: orderId,
-                    product_template_id: productTmplId,
+                    product_template_id: productTemplateId,
                     product_id: product_id,
                     product_uom: uom_id[0],
                     product_uom_qty: 1,
@@ -207,7 +186,8 @@ patch(SaleOrderLineProductField.prototype, {
                 }]);
     
                 activeId = Array.isArray(createdId) ? createdId[0] : createdId;
-    
+                // isVirtual = false; 
+
                 const lineData = await safeRead("sale.order.line", activeId, [
                     "order_id", "product_template_id", "product_uom_qty",
                     "currency_id", "company_id", "name", "product_uom", "product_id"
@@ -217,23 +197,43 @@ patch(SaleOrderLineProductField.prototype, {
     
                 this.notification.add(_t("✅ Order line created! Opening configurator..."), { type: "success" });
                 this._pulseLine(activeId);
+
+                isVirtual = false;  // 🔁 just created, so no longer virtual
             }
-    
+
+            // const isEdit = typeof activeId === "number" && !isVirtual;
+            const isEdit = activeId && typeof activeId === "number" && !isVirtual;
+
             const initialConfig = this.props.record.data.cpq_configuration_json
                 ? JSON.parse(this.props.record.data.cpq_configuration_json)
                 : {};
-    
+            
+
+            console.log("✅ Final record.resId before dialog:", this.props.record.resId);
+
             this.dialogService.add(ConfigureDialog, {
                 record: this.props.record,
                 orderId,
-                productTmplId,
-                edit: true,
+                activeId,
+                productTemplateId,
+                edit: isEdit,
                 cpqInitialConfig: initialConfig,
+                // save: async (configResult) => {
+                //     this.skipNextProductTemplateUpdate = true;
+                //     const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
+                //     await this.props.record.update(updatedValues);
+                //     this.notification.add("✅ Configuration applied successfully.", { type: "success" });
+                // },
                 save: async (configResult) => {
-                    this.skipNextProductTemplateUpdate = true;
-                    const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
-                    await this.props.record.update(updatedValues);
-                    this.notification.add("✅ Configuration applied successfully.", { type: "success" });
+                    try {
+                        this.skipNextProductTemplateUpdate = true;
+                        const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
+                        await this.props.record.update(updatedValues);
+                        this.notification.add("✅ Configuration applied successfully.", { type: "success" });
+                    } catch (err) {
+                        console.error("❌ Failed to apply config update:", err);
+                        this.notification.add("Failed to save configuration.", { type: "danger" });
+                    }
                 },
                 close: () => this.notification.add("Configurator closed.", { type: "info", title: "CPQ Close" }),
                 discard: () => this.notification.add("Configurator discarded.", { type: "warning", title: "CPQ Cancelled" }),

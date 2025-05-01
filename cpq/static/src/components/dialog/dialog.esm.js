@@ -2,6 +2,26 @@
 
 /* eslint-disable sort-imports */
 
+/**
+ * Resolves the current order and line context for saving CPQ configurations.
+ * 
+ * ✅ Accepts virtual or missing `activeId` if creating (edit: false)
+ * ❌ Throws error if editing (edit: true) but activeId is missing or virtual
+ * 
+ * Sources values from:
+ *   - this.props.orderId / this.context.active_sale_order_id
+ *   - this.props.activeId / this.context.active_id
+ *   - this.props.record?.resId (fallback)
+ *
+ * Returns:
+ *   {
+ *     orderId: number | null,
+ *     activeId: number | string | null,
+ *     isVirtual: boolean
+ *   }
+ */
+
+
 import { scrollTo } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -20,24 +40,24 @@ export class ConfigureDialog extends Component {
 
     static props = {
         orderId: Number,
-        productTmplId: Number,  // ✅ Only pass the ID
-        productTemplate: { type: Object, optional: true },  
-        quantity: Number,
-        currencyId: Number,
-        soDate: String,
+        productTemplateId: Number,
+        productTemplate: { type: Object, optional: true },
+        quantity: { type: Number, optional: true },          
+        currencyId: { type: Number, optional: true },      
+        soDate: { type: String, optional: true },             
         productUOMId: { type: Number, optional: true },
         pricelistId: { type: Number, optional: true },
-        companyId: { type: Number, optional: true },  // or drop entirely if not used
-        cpqInitialConfig: { type: Object, optional: true },
-        record: { type: Object, optional: true },
+        companyId: { type: Number, optional: true },
+        cpqInitialConfig: { type: Object, optional: true },   
+        record: { type: Object, optional: true },             
         context: { type: Object, optional: true, default: () => ({}) },
-        edit: Boolean,
+        edit: { type: Boolean, optional: true },             
+        activeId: { type: [Number, String], optional: true },  
+        save: { type: Function, optional: true },            
         close: Function,
         discard: Function,
-        save: { type: Function, optional: true },
     };
     
-
     setup() {
         super.setup();
         validateProps(this, ConfigureDialog.props);
@@ -47,14 +67,17 @@ export class ConfigureDialog extends Component {
         this.notification = useService("notification");
         this.dialogService = useService("dialog");
         this.actionService = useService("action");
-        // Context fallback
         this.context = this.props.context || this.props.record?.model?.root?.context || {};
+        this.quantity = this.props.quantity ?? 1;
+        this.currencyId = this.props.currencyId ?? this.props.record?.data?.currency_id?.[0] ?? this.productTemplate?.currency_id?.[0] ?? 1;
+        this.soDate = this.props.soDate || new Date().toISOString().split("T")[0];
+
         // Initial State
         this.state = useState({
             isLoading: false,
             isInitializing: true,
             valid: false,
-            productTmplId: this.props.productTmplId, 
+            productTemplateId: this.props.productTemplateId, 
             productTemplate: null, 
             selected: {},
             quantityToMake: this.props.quantity || 1,
@@ -71,10 +94,11 @@ export class ConfigureDialog extends Component {
             undoCache: { left: null, right: null },
             // showPrintPreview: false,
         });
-
-        this.state.productTmplId = this.props.productTmplId;
+        
+        this.orderId = this.props.orderId || this.context?.active_sale_order_id;
+        this.activeId = this.context?.active_id || this.props.record?.resId;
+        this.state.productTemplateId = this.props.productTemplateId;
         this.state.productTemplate = this.props.productTemplate || {}; // fallback
-
 
         this.state.priceBreakdown = {
             base: 0,
@@ -91,8 +115,11 @@ export class ConfigureDialog extends Component {
         };
 
         this.updatePricePreview = async () => {
-            const productTmplId = this.productTemplateId;
-            // const combination = this.state.selected;
+            const productTemplateId = this.productTemplateId;
+            if (!productTemplateId) {
+                console.warn("⛔ Skipping price preview: productTemplateId is undefined.");
+                return;
+            }
             const combination = this._flattenCombination(this.state.selected);
             const contextPayload = {
                 active_model: "sale.order.line",
@@ -102,7 +129,7 @@ export class ConfigureDialog extends Component {
             };
         
             try {
-                const response = await this.rpc(`/cpq/${productTmplId}/price_preview`, {
+                const response = await this.rpc(`/cpq/${productTemplateId}/price_preview`, {
                     configuration: combination,
                     context: contextPayload,
                 });
@@ -195,6 +222,10 @@ export class ConfigureDialog extends Component {
         ]);
         
         onWillStart(async () => {
+            console.log("🧩 onWillStart props:", this.props);
+            console.log("🧩 onWillStart context:", this.context);
+            // console.log("🧩 onWillStart state:", this.state);
+            // console.log("🧩 onWillStart orderId:", this.orderId);
             this.state.isInitializing = true;
             try {
                 const data = await this._loadData();
@@ -203,7 +234,8 @@ export class ConfigureDialog extends Component {
                     : _t("Configure: %s", data.product_tmpl_id.display_name);
 
                 this.state.ptalIds = data.ptal_ids;
-                this.state.productTemplate = data.product_tmpl_id; // ✅ store full object here
+                this.state.productTemplateId = data.product_tmpl_id.id;
+                this.state.productTemplate = data.product_tmpl_id;
 
                 const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
                 if (initialConfigRaw) {
@@ -329,6 +361,7 @@ export class ConfigureDialog extends Component {
             }, () => [this.state.quantityToMake]);
         };
         this._setupAutoRefresh();
+  
 
     }
 
@@ -366,17 +399,22 @@ export class ConfigureDialog extends Component {
 
 
     async _loadData() {
-        const productTmplId = this.props.productTmplId;
-        console.log("🔍 productTmplId received:", this.props.productTmplId);
+        const productTemplateId = this.props.productTemplateId;
+        console.log("🔍 productTemplateId received:", this.props.productTemplateId);
 
-        if (!productTmplId) {
+        if (!productTemplateId) {
             console.error("❌ Missing product template ID in _loadData()");
             throw new Error("Missing product template ID");
         }
-        return this.rpc(`/cpq_product_configurator/${productTmplId}/data`, {});
+        return this.rpc(`/cpq_product_configurator/${productTemplateId}/data`, {});
     }
 
     async _validate() {
+        const productTemplateId = this.productTemplateId;
+        if (!productTemplateId) {
+            console.warn("⛔ Skipping validation: productTemplateId is undefined.");
+            return;
+        }
         const combination = this._flattenCombination(this.state.selected || {});
         if (!Object.keys(combination).length) {
             console.log("⏭️ Skipping validation — selected is empty.");
@@ -394,127 +432,218 @@ export class ConfigureDialog extends Component {
             this.state.errors = { general: "Validation RPC error." };
         }
     }
-    
-    async _showConfirmDialog(message) {
-        return new Promise(resolve => {
-            this.dialogService.add(ConfirmationDialog, {
-                title: _t("Please Confirm"),
-                body: message,
-                confirmLabel: _t("Yes, continue"),
-                cancelLabel: _t("Cancel"),
-                confirm: () => resolve(true),
-                cancel: () => resolve(false),
-            });
-        });
-    }
 
     canCreate() { return this.state.valid; }
 
-  
     onCreate = debounce(async () => {
         console.log("🧩 onCreate() running");
-        console.log("🧩 onCreate() props:", this.props);
-        console.log("🧩 onCreate() context:", this.props.context);
-
-        if (this.state.isLoading) return;
+        console.log("🧩 props:", this.props);
+        console.log("🧩 context:", this.context);
     
-        const activeId = this.props.context?.active_id || this.props.record?.resId;
-        const orderId = this.props.orderId;
+        if (this.state.isLoading) return;
 
-        if (!activeId || !orderId) {
-            this.notification.add("Missing order context. Please reload the order.", { type: "danger" });
+        const { orderId, activeId, isVirtual } = this._resolveOrderAndLineContext();
+        if (this.props.edit && (!activeId || isVirtual)) {
+            console.warn("⛔ Cannot proceed: trying to edit without valid order line ID.");
             return;
         }
 
-        this.state.isLoading = true;
+        if (!orderId) {
+            this.notification.add("Missing order ID. Please reload the order.", { type: "danger" });
+            return;
+        }
+    
+        if (!activeId) {
+            this.notification.add("Missing order line ID. Cannot continue.", { type: "danger" });
+            return;
+        }
 
+        if (isVirtual) {
+            this.notification.add("⚠️ You’re configuring a new product before saving the order.", {
+                type: "warning",
+                sticky: true,
+            });
+        }
+
+        // Proceed even if `activeId` is virtual
+        const productTemplate = this.productTemplate || this.props.productTemplate;
+        const productTemplateId = productTemplate?.id || this.props.productTemplateId;
+    
+        if (!productTemplateId) {
+            console.error("❌ Missing productTemplate. Aborting.");
+            this.notification.add("Product template is missing or invalid.", { type: "danger" });
+            return;
+        }
+    
         try {
             const confirmed = await this._showConfirmDialog("Save this configuration to the order?");
             if (!confirmed) return;
 
-
+            this.state.isLoading = true;
+            await this.env.services.ui.block();  
+        
+            // if (!this.state.valid) {
+            //     this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
+            //     return;
+            // }
+    
+            await this._validate();
             if (!this.state.valid) {
                 this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
                 return;
             }
-
-            await this._validate();
             await nextTick();
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
-
+    
             const summary = this.summaryApi?.getSummaryState?.() || {};
 
-            // const config = {
-            //     name: this.productTemplateName,
-            //     laterality: this.state.laterality,
-            //     split: this.state.split,
-            //     selected: this.state.selected,
-            //     quantity_to_make: this.state.quantityToMake,
-            //     left_price: summary.left || 0,
-            //     right_price: summary.right || 0,
-            //     total_price: summary.total || 0,
-            // };
+            const productUom = Array.isArray(productTemplate?.uom_id)
+                ? productTemplate.uom_id[0]
+                : productTemplate?.uom_id
+                || this.props.record?.data?.product_uom?.[0]
+                || this.props.productUOMId
+                || null;
 
+    
+            // const productUom = Array.isArray(productTemplate?.uom_id)
+            //     ? productTemplate.uom_id[0]
+            //     : productTemplate?.uom_id || this.props.productUOMId || null;
+    
             const config = {
                 name: this.productTemplateName,
                 laterality: this.state.laterality,
                 split: this.state.split,
                 selected: this.state.selected,
                 quantity_to_make: this.state.quantityToMake,
-                product_uom_qty: this.state.quantityToMake,                        
-                product_uom: this.productTemplate?.uom_id?.[0] || this.props.productUOMId,
-                price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0, 
+                product_uom_qty: this.state.quantityToMake,
+                product_uom: productUom,
+                price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0,
                 left_price: summary.left || 0,
                 right_price: summary.right || 0,
                 total_price: summary.total || 0,
+                product_template_id: productTemplateId,
             };
 
-            if (!config.product_uom) {
-                console.warn("⚠️ UoM is missing from configuration result — fallback applied.");
-            }
+            console.warn("🧪 Fallback chain: uom_id from props.record", this.props.record?.data?.product_uom);
+            console.warn("🧪 Fallback chain: uom_id from productTemplate", productTemplate?.uom_id);
+            console.warn("🧪 Final resolved product_uom:", productUom);
 
+            if (!config.product_uom) {
+                this.notification.add("Product UoM is missing. Cannot continue.", { type: "danger" });
+                return;
+            }
+            
             const contextPayload = {
                 active_model: "sale.order.line",
                 active_id: activeId,
                 active_sale_order_id: orderId,
-                ...(this.props.context || {}),
+                ...(this.context || {}),
             };
-
+    
             console.log("🚀 Submitting CPQ config:", config);
             console.log("🧩 Context for RPC:", contextPayload);
     
-            const productTmplId = this.productTemplate?.id || this.productTemplate;
-
             const response = await this.rpc(
-                `/cpq_product_configurator/${productTmplId}/configure`,
+                `/cpq_product_configurator/${productTemplateId}/configure`,
                 { configuration: config, context: contextPayload }
             );
-            
+    
             console.log("✅ CPQ configure response:", response);
-
+    
             if (response?.configuration) {
                 this.notification.add("✅ Configuration successfully saved to order line.", { type: "success" });
+    
                 if (this.props.record?.load) {
                     await this.props.record.load();
                     this.pulseElement(".cpq-config-summary");
                     console.log("✅ Frontend record reloaded after configuration save");
                 }
-            
+    
                 this._redirectToOrder(orderId);
             } else {
                 this.notification.add("Unexpected server response. Please try again.", { type: "danger" });
             }
-            
-
+    
         } catch (error) {
             console.error("❌ Failed to submit configuration:", error);
             this.notification.add("An error occurred while saving configuration.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
+            await this.env.services.ui.unblock();  // 🔓 Always unblock even on error
         }
     });
+    
+    _resolveOrderAndLineContext() {
+        const context = this.context || {};
+        const props = this.props || {};
+    
+        const orderId =
+            this.orderId ||
+            props.orderId ||
+            context.active_sale_order_id ||
+            context.sale_order_id ||
+            props.record?.model?.root?.resId ||
+            null;
+    
+        console.log("🧪 props.record:", props.record);
+        console.log("🧪 props.record?.resId:", props.record?.resId, typeof props.record?.resId);
 
+        // let activeId =
+        //     context.active_id ||
+        //     props.activeId ||
+        //     this.activeId ||
+        //     (props.record?.resId !== false ? props.record?.resId : null);
+
+        // let activeId =
+        //     context.active_id ||
+        //     props.activeId ||  
+        //     this.activeId ||
+        //     (props.record?.resId !== false ? props.record?.resId : null);
+
+        let activeId =
+            props.activeId ||  // ✅ Trust this first if explicitly passed
+            context.active_id ||
+            (props.record?.resId && typeof props.record.resId === "number" ? props.record.resId : null);
+
+        // const isVirtual = typeof activeId === "string" && activeId.startsWith("virtual_");
+        const isVirtual = !activeId || (typeof activeId === "string" && activeId.startsWith("virtual_"));
+
+        // 🔍 Log for diagnostics
+        console.warn("🧩 [_resolveOrderAndLineContext] Inputs:", { orderId, activeId, isVirtual });
+        console.log("props.record?.resId:", props.record?.resId, typeof props.record?.resId);
+        console.log("props.orderId:", props.orderId);
+        console.log("props.activeId:", props.activeId);
+        console.log("props.record?.resId:", props.record?.resId);
+        console.log("context.active_sale_order_id:", context.active_sale_order_id);
+        console.log("context.active_id:", context.active_id);
+        console.log("→ resolved orderId:", orderId);
+        console.log("→ resolved activeId:", activeId);
+    
+        // 🚫 Only warn if we're editing (not creating) and activeId is truly missing
+        if (!orderId) {
+            console.warn("⚠️ _resolveOrderAndLineContext: Missing orderId");
+        }
+        if (!activeId) {
+            console.warn("⚠️ _resolveOrderAndLineContext: Missing activeId entirely");
+        }
+
+        // if (this.props.edit && isVirtual) {
+        //     this.notification.add("Missing order line ID. Cannot continue.", { type: "danger" });
+        //     throw new Error("Missing order line ID in edit mode.");
+        // }
+
+        if (this.props.edit) {
+            if (!activeId || isVirtual) {
+                this.notification.add("⚠️ This configuration must be saved before editing.", { type: "danger" });
+                throw new Error("Missing order line ID in edit mode.");
+            }
+        }
+
+        return { orderId, activeId, isVirtual };
+    }
+    
+    
     async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
         const isSplit = typeof sideOrId === "string" && ["left", "right"].includes(sideOrId);
         const side = isSplit ? sideOrId : null;
@@ -582,6 +711,19 @@ export class ConfigureDialog extends Component {
         this.updatePricePreview();
     }
 
+    async _showConfirmDialog(message) {
+        return new Promise(resolve => {
+            this.dialogService.add(ConfirmationDialog, {
+                title: _t("Please Confirm"),
+                body: message,
+                confirmLabel: _t("Yes, continue"),
+                cancelLabel: _t("Cancel"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+    }
+
     _handleSharedSelect(attributeId, ev) {
         const ptavId = parseInt(ev.target.value, 10);
         if (isNaN(ptavId)) {
@@ -642,8 +784,6 @@ export class ConfigureDialog extends Component {
         return result;
     }
     
-    
-
     async _applyConfigurationResult(result) {
         console.log("🧩 Applying configuration result:", result);
     
@@ -692,7 +832,6 @@ export class ConfigureDialog extends Component {
             }
 
             console.log("🚀 Redirecting to Sale Order:", orderId);
-
             await this.env.services.action.doAction({
                 type: "ir.actions.act_window",
                 res_model: "sale.order",
@@ -701,11 +840,7 @@ export class ConfigureDialog extends Component {
                 target: "current",
             });
             await this.env.services.notification.add("✅ Order line updated!", { type: "success" });
-
             return true;
-
-            
-    
         } catch (error) {
             console.error("❌ Failed to apply configuration result:", error);
             this.notification.add("An error occurred while updating the order line.", { type: "danger" });
@@ -715,7 +850,6 @@ export class ConfigureDialog extends Component {
         }
     }
     
-
     async onClose() {
         await this._closeDialog();
     }
@@ -728,9 +862,13 @@ export class ConfigureDialog extends Component {
 
         this.state.ptalIds = [];
         this.state.selected = {};
-        this.productTemplateId = null;
+        this.state.productTemplateId = null;  
         this.state.valid = false;
         this.state.errors = {};
+        this.state.productTemplate = {};
+        this.context = {};
+        this.props.context = {};
+        // await this.props.record?.discard?.();  // revert virtual changes
 
         this.props.discard?.();
         this.props.close?.();
@@ -791,7 +929,6 @@ export class ConfigureDialog extends Component {
             this.state.selected = JSON.parse(JSON.stringify(this.initialState.selected));
         
             await nextTick();
-        
             await this._validate();
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
@@ -828,18 +965,18 @@ export class ConfigureDialog extends Component {
         return this.state.isLoading || this.state.isInitializing;
     }
 
-
-    get productTemplateId() {
-        return this.state.productTmplId;  // just the ID
+    get productTemplate() {
+        return this.state?.productTemplate || this.props?.productTemplate || {};
     }
     
-    get productTemplate() {
-        return this.state.productTemplate || {};  // full object for UI
+    get productTemplateId() {
+        return this.state?.productTemplateId || this.props?.productTemplateId || null;
     }
     
     get productTemplateName() {
         return this.productTemplate.display_name || "Configured Product";
     }
+    
     
     pulseElement(selector) {
         const element = document.querySelector(selector);
@@ -863,43 +1000,82 @@ export class ConfigureDialog extends Component {
 }
 
 export function ConfigureDialogAction(env, action) {
-    // const safeMany2One = (val) => Array.isArray(val) ? val[0] : val;
     const context = action.context || {};
+    console.log("🧪 [ConfigureDialogAction] context:", context);
+    console.log("🧪 activeId (from context):", context.active_id);
+    // console.log("🧪 isEdit:", isEdit);
+    // console.log("🧪 isVirtual:", isVirtual);
 
-    // const productTmplId = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
     const rawTmpl = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
-    const productTmplId = typeof rawTmpl === "object" ? rawTmpl.id : rawTmpl;
-    const orderId = safeMany2One(context.active_sale_order_id || context.sale_order_id);
-    const activeId = context.active_id;
-    
-    if (!productTmplId) {
-        env.services.notification.add(_t("❌ Missing product template. Cannot open configurator."), { type: "danger" });
-        return;
-    }
+    const productTemplateId = typeof rawTmpl === "object" ? rawTmpl.id : rawTmpl;
 
-    if (!orderId) {
-        env.services.notification.add(_t("Unable to open configurator: Missing order ID."), { type: "danger" });
-        return;
-    }
-
-    // Frontend cleanup for ghost records
     const orderLineData = env.services.model?.root?.data?.order_line;
-    if (orderLineData && orderLineData.records) {
+    const orderId = context.orderId || context.active_sale_order_id || context.sale_order_id;
+    let activeId = context.active_id;
+
+    // Fallback: resolve from sale.order's first line if needed
+    if (!activeId && context.active_model === "sale.order") {
+        activeId = orderLineData?.length ? orderLineData[0]?.resId : null;
+    }
+
+    const currencyId = context.currencyId || context.currency_id;
+    const soDate = context.soDate || context.so_date || new Date().toISOString().split("T")[0];
+    const quantity = typeof context.quantity === "number" ? context.quantity : 1;
+    const isVirtual = typeof activeId === "string" && activeId.startsWith("virtual_");
+    const isEdit = context.edit === true && typeof activeId === "number" && activeId > 0;
+
+    console.log("🧪 isEdit:", isEdit);
+    console.log("🧪 isVirtual:", isVirtual);
+
+    // Reject editing virtual lines
+    if (isEdit && (!activeId || isVirtual)) {
+        env.services.notification.add(
+            _t("This configuration must be saved before editing."),
+            { type: "warning" }
+        );
+        return;
+    }
+
+    const missingProps = [];
+    if (!productTemplateId) missingProps.push("productTemplateId");
+    if (!orderId) missingProps.push("orderId");
+    if (!currencyId) missingProps.push("currencyId");
+    if (!soDate) missingProps.push("soDate");
+
+    if (missingProps.length) {
+        console.error("❌ Missing required fields for ConfigureDialog:", missingProps);
+        env.services.notification.add(
+            _t("Cannot open configurator. Missing: ") + missingProps.join(", "),
+            { type: "danger" }
+        );
+        return;
+    }
+
+    const fullContext = {
+        ...context,
+        active_model: "sale.order.line",
+        active_id: activeId,
+        active_sale_order_id: orderId,
+    };
+
+    // Optional: clean up frontend lines if resId present
+    if (activeId && orderLineData?.records) {
         orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
         orderLineData.leaveEditMode?.();
         console.log("✅ Cleaned frontend order line data");
     }
 
-    env.services.dialog.add(ConfigureDialog, {
-        productTmplId,
+    const dialogProps = {
+        productTemplateId,
         productTemplate: typeof rawTmpl === "object" ? rawTmpl : null,
-        // productTmplId: productTmplId.id,
-        // productTemplate: productTmplId,
         orderId,
-        context,
-        edit: true,
+        currencyId,
+        soDate,
+        quantity,
+        context: fullContext,
+        edit: isEdit,
         save: async (res) => {
-            if (context.active_model === "sale.order.line" && activeId) {
+            if (!isEdit || (activeId && !isVirtual)) {
                 try {
                     const values = {
                         product_id: res.configuration.product_id,
@@ -915,15 +1091,6 @@ export function ConfigureDialogAction(env, action) {
                     await env.services.orm.call("sale.order.line", "write", [activeId, values]);
 
                     env.services.notification.add(_t("✅ Configuration applied successfully."), { type: "success" });
-                    
-                    setTimeout(() => {
-                        const lineEl = document.querySelector(`[data-id="${activeId}"]`);
-                        if (lineEl) {
-                            lineEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                            lineEl.classList.add("highlight-success");
-                            setTimeout(() => lineEl.classList.remove("highlight-success"), 1500);
-                        }
-                    }, 500);
 
                     env.services.action.doAction({
                         type: "ir.actions.act_window",
@@ -932,19 +1099,32 @@ export function ConfigureDialogAction(env, action) {
                         views: [[false, "form"]],
                         target: "current",
                     });
-
                 } catch (error) {
-                    console.error("❌ Failed to write configuration to sale.order.line:", error);
+                    console.error("❌ Failed to write configuration:", error);
                     env.services.notification.add(_t("Failed to apply configuration to the order line."), { type: "danger" });
                 }
             } else {
                 env.services.action.doAction({ type: "ir.actions.act_window_close" });
             }
         },
+        close: () => env.services.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "sale.order",
+            res_id: orderId,
+            views: [[false, "form"]],
+            target: "current",
+        }),
+        discard: () => env.services.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "sale.order",
+            res_id: orderId,
+            views: [[false, "form"]],
+            target: "current",
+        }),
+    };
 
-        close: () => env.services.action.doAction({ type: "ir.actions.act_window", res_model: "sale.order", res_id: orderId, views: [[false, "form"]], target: "current" }),
-        discard: () => env.services.action.doAction({ type: "ir.actions.act_window", res_model: "sale.order", res_id: orderId, views: [[false, "form"]], target: "current" }),
-    });
+    console.log("🧩 Opening ConfigureDialog with props:", dialogProps);
+    env.services.dialog.add(ConfigureDialog, dialogProps);
 }
 
 registry.category("actions").add("cpq.ConfigureDialogAction", ConfigureDialogAction);

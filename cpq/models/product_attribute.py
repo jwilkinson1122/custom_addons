@@ -240,6 +240,12 @@ class ProductAttributeCustomValue(models.Model):
         return res
 
 
+# class ProductTemplateAttributeLine(models.Model):
+#     _inherit = "product.template.attribute.line"
+
+#     def _cpq_get_combination_info_list(self):
+#         return [line._cpq_get_combination_info() for line in self]
+    
 class ProductAttributeLine(models.Model):
     _inherit = "product.template.attribute.line"
     _order = "product_tmpl_id, sequence, id"
@@ -248,6 +254,9 @@ class ProductAttributeLine(models.Model):
     cpq_propagate_to_variant = fields.Boolean(
         related="attribute_id.cpq_propagate_to_variant", store=True
     )
+
+    def _cpq_get_combination_info_list(self):
+        return [line._cpq_get_combination_info() for line in self]
 
     def _cpq_get_combination_info(self):
         self.ensure_one()
