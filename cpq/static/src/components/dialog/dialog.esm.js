@@ -221,27 +221,81 @@ export class ConfigureDialog extends Component {
             this.state.split,
         ]);
 
+        // onWillStart(async () => {
+        //     console.log("🧩 onWillStart props:", this.props);
+        //     console.log("🧩 onWillStart context:", this.context);
+        //     this.state.isInitializing = true;
+        
+        //     try {
+        //         const loadedData = await this._loadData();
+        //         this.title = this.props.edit
+        //             ? _t("Edit Configuration: %s", loadedData.product_tmpl_id.display_name)
+        //             : _t("Configure: %s", loadedData.product_tmpl_id.display_name);
+        
+        //         this.state.ptalIds = loadedData.ptal_ids;
+        //         this.state.productTemplateId = loadedData.product_tmpl_id.id;
+        //         this.state.productTemplate = loadedData.product_tmpl_id;
+        
+        //         if (!this.state.productTemplate?.id && this.state.productTemplateId) {
+        //             const fallback = await this.orm.call("product.template", "read", [[this.state.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
+        //             this.state.productTemplate = fallback?.[0] || {};
+        //         }
+        
+        //         const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
+        //         if (initialConfigRaw) {
+        //             const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
+        //             this.state.selected = parsed.selected || {};
+        //             this.state.laterality = parsed.laterality || "bilateral";
+        //             this.state.split = parsed.split || false;
+        //             this.state.quantityToMake = parsed.quantity_to_make || 1;
+        
+        //             this.initialState = {
+        //                 laterality: this.state.laterality,
+        //                 split: this.state.split,
+        //                 selected: JSON.parse(JSON.stringify(this.state.selected)),
+        //                 quantityToMake: this.state.quantityToMake,
+        //             };
+        //         }
+        
+        //         await nextTick();
+        //         if (Object.keys(this.state.selected).length > 0) {
+        //             console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
+        //             await this._validate();
+        //             this.summaryApi?.computeSummary?.();
+        //             this.updatePricePreview();
+        //         }
+        
+        //     } catch (error) {
+        //         console.error("❌ Initialization error:", error);
+        //         this.notification.add("Initialization failed. Please try again.", { type: "danger" });
+        //     } finally {
+        //         this.state.isInitializing = false;
+        //     }
+        // });
+        
         onWillStart(async () => {
-            console.log("🧩 onWillStart props:", this.props);
-            console.log("🧩 onWillStart context:", this.context);
             this.state.isInitializing = true;
         
             try {
-                const loadedData = await this._loadData();
+                const data = await this._loadData();
+        
                 this.title = this.props.edit
-                    ? _t("Edit Configuration: %s", loadedData.product_tmpl_id.display_name)
-                    : _t("Configure: %s", loadedData.product_tmpl_id.display_name);
+                    ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
+                    : _t("Configure: %s", data.product_tmpl_id.display_name);
         
-                this.state.ptalIds = loadedData.ptal_ids;
-                this.state.productTemplateId = loadedData.product_tmpl_id.id;
-                this.state.productTemplate = loadedData.product_tmpl_id;
+                this.state.ptalIds = data.ptal_ids;
+                this.state.productTemplateId = data.product_tmpl_id.id;
         
-                // 🔍 Fallback if somehow productTemplate is still missing or invalid
-                if (!this.state.productTemplate?.id && this.state.productTemplateId) {
-                    const fallback = await this.orm.call("product.template", "read", [[this.state.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
-                    this.state.productTemplate = fallback?.[0] || {};
+                // Primary assignment
+                this.state.productTemplate = data.product_tmpl_id;
+        
+                // Fallback: force-read if missing or incomplete
+                if (!this.state.productTemplate?.uom_id) {
+                    const [tpl] = await this.orm.call("product.template", "read", [[this.state.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
+                    this.state.productTemplate = tpl;
                 }
         
+                // Load config from props/context if present
                 const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
                 if (initialConfigRaw) {
                     const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
@@ -259,8 +313,8 @@ export class ConfigureDialog extends Component {
                 }
         
                 await nextTick();
+        
                 if (Object.keys(this.state.selected).length > 0) {
-                    console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
                     await this._validate();
                     this.summaryApi?.computeSummary?.();
                     this.updatePricePreview();
@@ -275,59 +329,6 @@ export class ConfigureDialog extends Component {
         });
         
         
-        // onWillStart(async () => {
-        //     console.log("🧩 onWillStart props:", this.props);
-        //     console.log("🧩 onWillStart context:", this.context);
-        //     this.state.isInitializing = true;
-        //     try {
-        //         const data = await this._loadData();
-        //         this.title = this.props.edit
-        //             ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
-        //             : _t("Configure: %s", data.product_tmpl_id.display_name);
-
-        //         this.state.ptalIds = data.ptal_ids;
-        //         this.state.productTemplateId = data.product_tmpl_id.id;
-        //         this.state.productTemplate = data.product_tmpl_id;
-
-        //         if (!this.state.productTemplate?.id && this.productTemplateId) {
-        //             const data = await this.orm.call("product.template", "read", [[this.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
-        //             this.state.productTemplate = data[0];
-        //         }
-                
-
-        //         const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
-        //         if (initialConfigRaw) {
-        //             const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
-        //             this.state.selected = parsed.selected || {};
-        //             this.state.laterality = parsed.laterality || "bilateral";
-        //             this.state.split = parsed.split || false;
-        //             this.state.quantityToMake = parsed.quantity_to_make || 1;
-
-        //             this.initialState = {
-        //                 laterality: this.state.laterality,
-        //                 split: this.state.split,
-        //                 selected: JSON.parse(JSON.stringify(this.state.selected)),
-        //                 quantityToMake: this.state.quantityToMake,
-        //             };
-        //         }
-
-        //         await nextTick();
-        //         if (Object.keys(this.state.selected).length > 0) {
-        //             console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
-        //             await this._validate();
-        //             this.summaryApi?.computeSummary?.();
-        //             this.updatePricePreview();
-
-        //         }
-
-        //     } catch (error) {
-        //         console.error("❌ Initialization error:", error);
-        //         this.notification.add("Initialization failed. Please try again.", { type: "danger" });
-        //     } finally {
-        //         this.state.isInitializing = false;
-        //     }
-        // });
-
         this.onSplitToggle = async () => {
             const goingToShared = this.state.split;
             const goingToSplit = !this.state.split;
@@ -456,16 +457,33 @@ export class ConfigureDialog extends Component {
     //---------------------------------------------------------------------
 
 
-    async _loadData() {
-        const productTemplateId = this.props.productTemplateId;
-        console.log("🔍 productTemplateId received:", this.props.productTemplateId);
+    // async _loadData() {
+    //     const productTemplateId = this.props.productTemplateId;
+    //     console.log("🔍 productTemplateId received:", this.props.productTemplateId);
 
+    //     if (!productTemplateId) {
+    //         console.error("❌ Missing product template ID in _loadData()");
+    //         throw new Error("Missing product template ID");
+    //     }
+    //     return this.rpc(`/cpq_product_configurator/${productTemplateId}/data`, {});
+    // }
+
+    async _loadData() {
+        let productTemplateId =
+            this.state?.productTemplateId ||
+            this.props?.productTemplateId ||
+            this.productTemplateId ||
+            this.props?.productTemplate?.id ||
+            null;
+    
         if (!productTemplateId) {
-            console.error("❌ Missing product template ID in _loadData()");
+            console.error("❌ _loadData: Missing product template ID");
             throw new Error("Missing product template ID");
         }
+    
         return this.rpc(`/cpq_product_configurator/${productTemplateId}/data`, {});
     }
+    
 
     async _validate() {
         const productTemplateId = this.productTemplateId;
@@ -499,13 +517,13 @@ export class ConfigureDialog extends Component {
         console.log("🧩 context:", this.context);
     
         if (this.state.isLoading) return;
-
+    
         const { orderId, activeId, isVirtual } = this._resolveOrderAndLineContext();
         if (this.props.edit && (!activeId || isVirtual)) {
             console.warn("⛔ Cannot proceed: trying to edit without valid order line ID.");
             return;
         }
-
+    
         if (!orderId) {
             this.notification.add("Missing order ID. Please reload the order.", { type: "danger" });
             return;
@@ -515,58 +533,70 @@ export class ConfigureDialog extends Component {
             this.notification.add("Missing order line ID. Cannot continue.", { type: "danger" });
             return;
         }
-
+    
         if (isVirtual) {
             this.notification.add("⚠️ You’re configuring a new product before saving the order.", {
                 type: "warning",
                 sticky: true,
             });
         }
-
-        // Proceed even if `activeId` is virtual
-        const productTemplate = this.productTemplate || this.props.productTemplate;
-        const productTemplateId = productTemplate?.id || this.props.productTemplateId;
+    
+        // --- Force-resolve productTemplateId ---
+        let productTemplateId =
+            this.state?.productTemplateId ||
+            this.props?.productTemplateId ||
+            this.productTemplateId ||
+            this.props?.productTemplate?.id ||
+            null;
     
         if (!productTemplateId) {
-            console.error("❌ Missing productTemplate. Aborting.");
-            this.notification.add("Product template is missing or invalid.", { type: "danger" });
+            this.notification.add("Missing product template ID. Cannot continue.", { type: "danger" });
             return;
+        }
+    
+        // --- Force-resolve productTemplate object ---
+        let productTemplate =
+            this.state?.productTemplate ||
+            this.props?.productTemplate ||
+            null;
+    
+        if (!productTemplate || !productTemplate.uom_id) {
+            const [tpl] = await this.orm.call("product.template", "read", [[productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
+            productTemplate = tpl;
         }
     
         try {
             const confirmed = await this._showConfirmDialog("Save this configuration to the order?");
             if (!confirmed) return;
-
+    
             this.state.isLoading = true;
-            await this.env.services.ui.block();  
-        
-            // if (!this.state.valid) {
-            //     this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
-            //     return;
-            // }
+            await this.env.services.ui.block();
     
             await this._validate();
             if (!this.state.valid) {
                 this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
                 return;
             }
+    
             await nextTick();
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
     
             const summary = this.summaryApi?.getSummaryState?.() || {};
-
+    
             const productUom = Array.isArray(productTemplate?.uom_id)
                 ? productTemplate.uom_id[0]
                 : productTemplate?.uom_id
                 || this.props.record?.data?.product_uom?.[0]
                 || this.props.productUOMId
                 || null;
-
     
-            // const productUom = Array.isArray(productTemplate?.uom_id)
-            //     ? productTemplate.uom_id[0]
-            //     : productTemplate?.uom_id || this.props.productUOMId || null;
+            console.warn("🧪 Resolved product_uom:", productUom);
+    
+            if (!productUom) {
+                this.notification.add("Product UoM is missing. Cannot continue.", { type: "danger" });
+                return;
+            }
     
             const config = {
                 name: this.productTemplateName,
@@ -582,16 +612,7 @@ export class ConfigureDialog extends Component {
                 total_price: summary.total || 0,
                 product_template_id: productTemplateId,
             };
-
-            console.warn("🧪 Fallback chain: uom_id from props.record", this.props.record?.data?.product_uom);
-            console.warn("🧪 Fallback chain: uom_id from productTemplate", productTemplate?.uom_id);
-            console.warn("🧪 Final resolved product_uom:", productUom);
-
-            if (!config.product_uom) {
-                this.notification.add("Product UoM is missing. Cannot continue.", { type: "danger" });
-                return;
-            }
-            
+    
             const contextPayload = {
                 active_model: "sale.order.line",
                 active_id: activeId,
@@ -628,9 +649,10 @@ export class ConfigureDialog extends Component {
             this.notification.add("An error occurred while saving configuration.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
-            await this.env.services.ui.unblock();  // 🔓 Always unblock even on error
+            await this.env.services.ui.unblock();
         }
     });
+    
     
     _resolveOrderAndLineContext() {
         const context = this.context || {};

@@ -34,6 +34,7 @@
             <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="after">
                 <field name="cpq_unconfigured" string="⚠️ Missing Config" widget="boolean" readonly="1" invisible="not cpq_unconfigured" options="{'terminology': 'Alert'}"/>
             </xpath>
+
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="replace">
                 <!-- Standard price field for non-CPQ -->
                 <field name="price_unit" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="product_template_id_cpq_ok" readonly="1"/>
