@@ -139,8 +139,6 @@ patch(SaleOrderLineProductField.prototype, {
             return;
         }
 
-        // let isVirtual = typeof activeId === "string" && activeId.startsWith("virtual_");
-    
         const safeFrontendUpdate = async (record, backendData) => {
             const frontendFields = Object.keys(record.data || {});
             const safeData = {};
@@ -218,12 +216,6 @@ patch(SaleOrderLineProductField.prototype, {
                 productTemplateId,
                 edit: isEdit,
                 cpqInitialConfig: initialConfig,
-                // save: async (configResult) => {
-                //     this.skipNextProductTemplateUpdate = true;
-                //     const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
-                //     await this.props.record.update(updatedValues);
-                //     this.notification.add("✅ Configuration applied successfully.", { type: "success" });
-                // },
                 save: async (configResult) => {
                     try {
                         this.skipNextProductTemplateUpdate = true;

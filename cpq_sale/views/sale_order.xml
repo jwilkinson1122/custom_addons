@@ -8,9 +8,13 @@
             <!-- <xpath expr="//field[@name='order_line']" position="before">
                 <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" invisible="state != 'draft'"/>
             </xpath> -->
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="decoration-warning">cpq_unconfigured</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree" position="inside">
                 <field name="cpq_unconfigured" invisible="1"/>
                 <field name="cpq_laterality" column_invisible="1"/>
+                <!-- <field name="cpq_laterality" column_invisible="1"/> -->
                 <button name="edit_cpq_configuration" title="Reconfigure" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree/field[@name='product_template_id']" position="before">
@@ -60,7 +64,7 @@
                     </page>
                 </notebook>
             </xpath>
-            
+
 
         </field>
     </record>

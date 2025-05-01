@@ -1,4 +1,9 @@
-.summary-table-wrapper {
+/* =====================
+   cpq/static/src/css/custom.css
+   Core configurator + summary styling (shared)
+   ===================== */
+
+   .summary-table-wrapper {
     transition: height 0.4s ease;
     overflow: hidden;
 }
@@ -12,7 +17,6 @@
     position: sticky;
     top: 1rem;
     z-index: 1;
-    /* z-index: 100; */
     background-color: #fff;
     border-radius: 0.5rem;
     max-height: 90vh;
@@ -91,10 +95,6 @@
     0% { opacity: 0.95; }
     75% { opacity: 0.95; }
     100% { opacity: 0; }
-}
-
-.cpq-config-summary:hover {
-    animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
@@ -198,3 +198,52 @@
         width: 100%;
     }
 } */
+
+.cpq-config-summary:hover {
+    animation: pulse 1s infinite;
+}
+
+.cpq-summary-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 10px 14px;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    white-space: normal;
+    word-break: break-word;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+}
+
+/* .cpq-summary-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 10px 14px;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    min-width: 300px;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+} */
+
+
+.cpq-summary-card ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.cpq-summary-card li {
+    margin: 4px 0;
+}
+
+.o_list_view .cpq-config-summary-tree {
+    max-width: 600px;
+    white-space: normal;
+    word-break: break-word;
+}

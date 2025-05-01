@@ -22,96 +22,6 @@ def get_cpq_config_dict(raw):
 def format_currency(amount, env):
     return formatLang(env, amount, currency_obj=env.user.company_id.currency_id)
 
-
-# def render_summary_html(env, order, config):
-#     if not isinstance(order, BaseModel) or order._name != "sale.order.line":
-#         raise ValueError("Expected a sale.order.line record in render_summary_html()")
-    
-#     laterality = config.get("laterality", "bilateral")
-#     split = config.get("split", False)
-#     selected = config.get("selected", {}) or {}
-#     quantity = config.get("quantity_to_make", 1)
-
-#     def get_ptav(ptav_id):
-#         return env["product.template.attribute.value"].sudo().browse(int(ptav_id))
-
-#     def get_price(ptav_id):
-#         ptav = get_ptav(ptav_id)
-#         return ptav.price_extra if ptav.exists() else 0.0
-
-#     def get_label_and_value(ptav_id):
-#         ptav = get_ptav(ptav_id)
-#         if not ptav.exists():
-#             return str(ptav_id), str(ptav_id)
-#         return ptav.attribute_id.name, ptav.name
-
-#     def line(attr_label, laterality_label, val, price=None):
-#         label = f"{attr_label} - {laterality_label}"
-#         price_html = f"<span class='float-end text-muted'>+ ${price:.2f}</span>" if price else ""
-#         return f"<li>{label}: <b>{val}</b>{price_html}</li>"
-
-#     lines = []
-#     left_total = right_total = 0.0
-
-#     if laterality == "bilateral" and split:
-#         left = selected.get("left", {})
-#         right = selected.get("right", {})
-#         all_attr_ids = set(left.keys()).union(right.keys())
-#         for attr_id in all_attr_ids:
-#             attr_label, _ = get_label_and_value(attr_id)
-#             lval = get_label_and_value(attr_id)[1] if attr_id in left else "-"
-#             rval = get_label_and_value(attr_id)[1] if attr_id in right else "-"
-#             price = 0.0
-#             if attr_id in left:
-#                 price += get_price(attr_id)
-#                 left_total += get_price(attr_id)
-#             if attr_id in right:
-#                 price += get_price(attr_id)
-#                 right_total += get_price(attr_id)
-#             lines.append(
-#                 f"<li>{attr_label} - Bilateral: <b>L:</b> {lval}, <b>R:</b> {rval} "
-#                 f"<span class='float-end text-muted'>+ ${price:.2f}</span></li>"
-#             )
-#     else:
-#         side_label = {"left": "Left", "right": "Right", "bilateral": "Bilateral"}.get(laterality, "Shared")
-#         for attr_id, val in selected.items():
-#             attr_label, value_label = get_label_and_value(attr_id)
-#             price = get_price(attr_id)
-#             lines.append(line(attr_label, side_label, value_label, price))
-#             if laterality == "left":
-#                 left_total += price
-#             elif laterality == "right":
-#                 right_total += price
-#             elif laterality == "bilateral":
-#                 left_total += price
-#                 right_total += price
-
-#     base_price = order.product_id.product_tmpl_id.list_price
-#     base_multiplier = 2 if laterality == "bilateral" else 1
-#     base = base_price * base_multiplier * quantity
-#     extras = (left_total + right_total) * quantity
-#     total = base + extras
-
-#     base_hint = ""
-#     if laterality == "bilateral":
-#         base_hint = f" (${base_price:.2f} x 2)"
-#     elif laterality in ("left", "right"):
-#         base_hint = f" (${base_price:.2f} x {quantity})"
-
-#     pricing_lines = []
-#     if laterality == "bilateral" and split:
-#         pricing_lines += [
-#             f"<li>🦶 <b>Left Extras:</b> ${left_total:.2f}</li>",
-#             f"<li>🦶 <b>Right Extras:</b> ${right_total:.2f}</li>",
-#         ]
-#     pricing_lines += [
-#         f"<li><b>💵 Base:</b> ${base:.2f}{base_hint}</li>",
-#         f"<li><b>➕ Extras:</b> ${extras:.2f}</li>",
-#         f"<li><b>📊 Total (x{quantity}):</b> <b>${total:.2f}</b></li>",
-#     ]
-
-#     return Markup(f"<ul>{''.join(lines)}<hr/>{''.join(pricing_lines)}</ul>")
-
 def render_summary_html(env, order, config):
     if not isinstance(order, BaseModel) or order._name != "sale.order.line":
         raise ValueError("Expected a sale.order.line record in render_summary_html()")
@@ -185,21 +95,20 @@ def render_summary_html(env, order, config):
 
     # 🧾 Price Explanation
     breakdown_note = f"(${unit_base_price:.2f} x {base_multiplier})"
-    base_row = f"<li><b>💵 Base:</b> ${base_price:.2f} <span class='text-muted'>{breakdown_note}</span></li>"
-
     price_block = f"""
-        <hr/>
-        <ul class='mt-2 mb-0'>
-            {'<li><b>🦶 Left Extras:</b> $%.2f</li>' % left_total if left_total else ''}
-            {'<li><b>🦶 Right Extras:</b> $%.2f</li>' % right_total if right_total else ''}
-            {base_row}
-            <li><b>➕ Extras:</b> ${extras_total:.2f}</li>
-            <li><b>📊 Total (x{quantity}):</b> <b>${total:.2f}</b></li>
-        </ul>
+        <div class="cpq-summary-card mt-2">
+            {'<div><b>🦶 Left Extras:</b> $%.2f</div>' % left_total if left_total else ''}
+            {'<div><b>🦶 Right Extras:</b> $%.2f</div>' % right_total if right_total else ''}
+            <div><b>💵 Base:</b> ${base_price:.2f} <span class='text-muted'>{breakdown_note}</span></div>
+            <div><b>➕ Extras:</b> ${extras_total:.2f}</div>
+            <div><b>📊 Total (x{quantity}):</b> <b>${total:.2f}</b></div>
+        </div>
     """
 
-    return Markup(f"<div class='cpq-summary'>{''.join(lines)}{price_block}</div>")
 
+    return Markup(f"""<div class='cpq-summary-card'>{''.join(lines)}{price_block}</div>""")
+
+    # return Markup(f"<div class='cpq-summary'>{''.join(lines)}{price_block}</div>")
 
 def render_summary_plaintext(env, order, config):
     html = render_summary_html(env, order, config)

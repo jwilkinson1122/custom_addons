@@ -283,19 +283,14 @@ class SaleOrderLine(models.Model):
             "tag": "cpq.ConfigureDialogAction",
             "context": {
                 "active_model": "sale.order.line",
-                "active_id": self.id,  # ✅ Must be numeric, not virtual
-
+                "active_id": self.id, 
                 # 🚀 CPQ metadata
                 "cpq_product_template_id": tmpl.id,
                 "cpq_initial_config": self.cpq_configuration_json or {},
-
                 # ✅ Dialog behavior
                 "from_sale_order": True,
                 "redirect_to_line": True,
-                # "edit": bool(self.id and not isinstance(self.id, NewId)),
-                # "edit": self.env.registry['ir.model.data'].sudo()._is_numeric_id(self.id),
                 "edit": not isinstance(self.id, NewId),
-
                 # 🔑 Required JS props
                 "orderId": self.order_id.id,
                 "currencyId": self.order_id.currency_id.id,
