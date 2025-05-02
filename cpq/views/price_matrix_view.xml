@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_price_matrix_tree" model="ir.ui.view">
+        <field name="name">price.matrix.tree</field>
+        <field name="model">price.matrix</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="material_id"/>
+                <field name="length_id"/>
+                <field name="color_id"/>
+                <field name="thickness_id"/>
+                <field name="price_extra"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_price_matrix_form" model="ir.ui.view">
+        <field name="name">price.matrix.form</field>
+        <field name="model">price.matrix</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="material_id"/>
+                    <field name="length_id"/>
+                    <field name="color_id"/>
+                    <field name="thickness_id"/>
+                    <field name="price_extra"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_price_matrix" model="ir.actions.act_window">
+        <field name="name">CPQ Price Matrix</field>
+        <field name="res_model">price.matrix</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_price_matrix_root" name="CPQ Pricing" parent="sale.prod_config_main" sequence="50"/>
+    <menuitem id="menu_price_matrix" name="Top Cover Pricing" parent="menu_price_matrix_root" action="action_price_matrix" sequence="10"/>
+</odoo>

@@ -177,6 +177,8 @@
                         split="state.split" 
                         productTemplate="state.productTemplate"
                         quantityToMake="state.quantityToMake" 
+                        matrixPriceTotal="state.matrixPriceTotal"
+                        matrixOverrideActive="state.matrixOverrideActive"
                         register="registerSummaryPanel" 
                         t-key="summaryKeyVal"/>
                     </div>
@@ -324,8 +326,13 @@
                     </t>
                     <li class="list-group-item d-flex justify-content-between">
                         📊 Total x <t t-esc="props.quantityToMake"/>:
-                    <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
+                        <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
                     </li>
+                    <t t-if="props.matrixOverrideActive">
+                        <li class="list-group-item text-center bg-warning-subtle text-dark">
+                            ⚡ Price overridden by matrix
+                        </li>
+                    </t>
                 </ul>
             </div>
             <div class="text-end mt-2">

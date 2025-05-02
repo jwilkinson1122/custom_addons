@@ -29,7 +29,7 @@
     </record>
 
     <!-- Menu Item -->
-    <menuitem id="menu_cpq_cleanup_action" name="CPQ Cleanup Tool" parent="product.menu_product_config" action="action_cpq_cleanup_manual" sequence="100" groups="base.group_system"/>
+    <menuitem id="menu_cpq_cleanup_action" name="CPQ Cleanup Tool" parent="sale.prod_config_main" action="action_cpq_cleanup_manual" sequence="100" groups="base.group_system"/>
     <!-- 🔒 Restrict menu to Settings group -->
     
     <!-- Add to Product Configuration Menu -->

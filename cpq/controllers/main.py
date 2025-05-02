@@ -156,6 +156,8 @@ class ProductConfiguratorController(http.Controller):
             'configuration': configuration,
             'sale_order_line_id': line.id,
             'sale_order_id': line.order_id.id,
+            'price_breakdown': breakdown,  # 👈 optional if used in frontend
+            'matrix_override': breakdown.get("from_matrix", False),  
         }
 
     @route('/cpq/<int:product_tmpl_id>/price_preview', type='json', auth='user')

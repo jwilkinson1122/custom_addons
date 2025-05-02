@@ -45,19 +45,12 @@ class ProductAttribute(models.Model):
             default["name"] = _("%s (copy)") % (self.name)
         return super().copy(default=default)
 
-
 class ProductAttributeValue(models.Model):
     _inherit = "product.attribute.value"
 
     active = fields.Boolean(
         default=True,
     )
-
-    # cpq_custom_type = fields.Selection(
-    #     selection_add=[
-    #         ("options", "Options"),
-    #     ]
-    # )
 
     cpq_custom_type = fields.Selection(
         [
@@ -70,21 +63,11 @@ class ProductAttributeValue(models.Model):
         string="Configurable custom type",
     )
 
-    # cpq_options_id = fields.Many2one(
-    #     comodel_name="product.options",
-    #     string="Option",
-    #     domain="[('is_leaf', '=', False)]",
-    # )
-
     cpq_options_id = fields.Many2one(
         comodel_name="product.options",
         string="Option",
         domain="[('is_leaf', '=', True)]",  # ✅ Show actual assignable sub-options
     )
-
-    # domain="[('parent_id', 'child_of', <custom_options_root_id>)]"
-
-
 
     cpq_options_relaxed_validation = fields.Boolean(
         default=False,
@@ -236,7 +219,6 @@ class ProductAttributeValue(models.Model):
     def _cpq_validate_custom_many2one(self, value):
         raise NotImplementedError()
 
-
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.product.cpq.custom.value"
 
@@ -249,13 +231,6 @@ class ProductAttributeCustomValue(models.Model):
             record.name = f"{record.ptav_id.display_name}: {options_id.display_name}"
         return res
 
-
-# class ProductTemplateAttributeLine(models.Model):
-#     _inherit = "product.template.attribute.line"
-
-#     def _cpq_get_combination_info_list(self):
-#         return [line._cpq_get_combination_info() for line in self]
-    
 class ProductAttributeLine(models.Model):
     _inherit = "product.template.attribute.line"
     _order = "product_tmpl_id, sequence, id"
@@ -283,7 +258,6 @@ class ProductAttributeLine(models.Model):
                 )
             ],
         }
-
 
 class ProductTemplateAttributeValue(models.Model):
     _inherit = "product.template.attribute.value"

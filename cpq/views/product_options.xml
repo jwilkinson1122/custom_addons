@@ -124,8 +124,6 @@
     </record> -->
 
 
-    <menuitem id="menu_sale_options" name="Options" parent="sale.prod_config_main" action="product_options_action" sequence="8" />
-    <menuitem id="menu_stock_options" name="Options" parent="stock.menu_product_in_config_stock" action="product_options_action" sequence="8" />
 
     <!-- <record id="action_product_dummy_cpq" model="ir.actions.act_window">
         <field name="name">Dummy CPQ Products</field>
@@ -134,6 +132,11 @@
         <field name="domain">[('default_code', '=', '__CPQ_DUMMY__')]</field>
         <field name="context">{}</field>
     </record> -->
+
+
+        <!-- <menuitem id="menu_sale_options" name="Product Options" parent="sale.prod_config_main" action="product_options_action" sequence="8" />
+    <menuitem id="menu_stock_options" name="Product Options" parent="stock.menu_product_in_config_stock" action="product_options_action" sequence="8" />
+ -->
 
     <!-- <menuitem id="menu_dummy_cpq_products" name="Developer: Dummy CPQ Products" parent="sale.prod_config_main" action="action_product_dummy_cpq" sequence="9" groups="base.group_no_one" /> -->
     <!-- Then temporarily remove groups or set to base.group_system for actual devs later. -->

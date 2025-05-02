@@ -47,10 +47,18 @@
             <xpath expr="//page[@name='variants']//field[@name='attribute_line_ids']" position="before">
                 <group>
                     <field name="no_create_variants" force_save="1" default="yes"/>
+                </group>
+                <group string="Configurator Settings">
+                    <!-- <field name="cpq_attribute_set_id"/> -->
+                    <field name="cpq_attribute_set_id" invisible="not cpq_ok"/>
 
-                    <!-- <field name="no_create_variants"/> -->
                 </group>
             </xpath>
+            <!-- <xpath expr="//group[@name='product_specifications']" position="after">
+                <group string="Configurator Settings">
+                    <field name="cpq_attribute_set_id"/>
+                </group>
+            </xpath> -->
         </field>
     </record>
 

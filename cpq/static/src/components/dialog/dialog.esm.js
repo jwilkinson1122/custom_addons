@@ -136,6 +136,12 @@ export class ConfigureDialog extends Component {
         
                 if (response?.breakdown) {
                     this.state.priceBreakdown = response.breakdown;
+
+                    this.matrixPriceTotal = response.breakdown.from_matrix
+                        ? response.breakdown.total
+                        : null;
+                    this.matrixOverrideActive = response.breakdown.from_matrix;
+
                     return;
                 }
             } catch (err) {
@@ -629,7 +635,17 @@ export class ConfigureDialog extends Component {
             );
     
             console.log("✅ CPQ configure response:", response);
-    
+
+            // ✅ Handle matrix price override
+            if (response.matrix_override === true) {
+                this.state.matrixOverrideActive = true;
+                this.state.matrixPriceTotal = response.price_breakdown?.total || null;
+                console.log("⚡ Matrix price override active:", this.state.matrixPriceTotal);
+            } else {
+                this.state.matrixOverrideActive = false;
+                this.state.matrixPriceTotal = null;
+            }
+        
             if (response?.configuration) {
                 this.notification.add("✅ Configuration successfully saved to order line.", { type: "success" });
     

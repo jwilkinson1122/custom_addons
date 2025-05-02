@@ -35,23 +35,6 @@ export default class ConfiguratorSummaryPanel extends Component {
             toastMessage: "",
         });
 
-        // 🔥 Register external API if provided
-        // if (this.props.register) {
-        //     this.props.register({
-        //         showToast: (msg) => this.showToast(msg),
-        //         getSummaryState: () => ({
-        //             selections: this.state.summary,
-        //             priceSummary: this.state.priceSummary,
-        //             left: this.state.priceSummary.left,
-        //             right: this.state.priceSummary.right,
-        //             total: this.state.priceSummary.total,
-        //         }),
-        //         getLeftTotal: () => this.state.priceSummary.left,
-        //         getRightTotal: () => this.state.priceSummary.right,
-        //         getCombinedTotal: () => this.state.priceSummary.total,
-        //     });
-        // }
-
         this._registerExternalApi();
 
         const debouncedRecomputeSummary = debounce(() => {
@@ -128,22 +111,6 @@ export default class ConfiguratorSummaryPanel extends Component {
         this.computeSummary();
         console.log("🧠 Initial computeSummary:", this.state.quantityToMake);
     }
-
-    // if (this.props.register) {
-    //     this.props.register({
-    //         showToast: (msg) => this.showToast(msg),
-    //         getSummaryState: () => ({
-    //             selections: this.state.summary,
-    //             priceSummary: this.state.priceSummary,
-    //             left: this.state.priceSummary.left,
-    //             right: this.state.priceSummary.right,
-    //             total: this.state.priceSummary.total,
-    //         }),
-    //         getLeftTotal: () => this.state.priceSummary.left,
-    //         getRightTotal: () => this.state.priceSummary.right,
-    //         getCombinedTotal: () => this.state.priceSummary.total,
-    //     });
-    // }
 
     _registerExternalApi() {
         if (this.props.register) {
@@ -307,14 +274,32 @@ export default class ConfiguratorSummaryPanel extends Component {
         const total = totalBase + totalExtras;
     
         this.state.summary = result;
-        this.state.priceSummary = {
-            base: totalBase,
-            left: leftTotal,
-            right: rightTotal,
-            total,
-            extrasSubtotal: totalExtras,
-        };
-    
+
+        // After computing totalBase, totalExtras, total...
+
+        // 🔁 Use matrix price if provided via props
+        if (typeof this.props.matrixPriceTotal === "number") {
+            const matrixTotal = this.props.matrixPriceTotal;
+        
+            this.state.priceSummary = {
+                base: 0,
+                left: 0,
+                right: 0,
+                total: matrixTotal,
+                extrasSubtotal: 0,
+            };
+        
+            console.log("📦 Matrix price override applied:", matrixTotal);
+        } else {
+            this.state.priceSummary = {
+                base: totalBase,
+                left: leftTotal,
+                right: rightTotal,
+                total,
+                extrasSubtotal: totalExtras,
+            };
+        }
+        
         if (this.summaryApi?.updateTotals) {
             this.summaryApi.updateTotals(this.state.priceSummary);
         }
@@ -347,7 +332,14 @@ export default class ConfiguratorSummaryPanel extends Component {
                 <td>$${(s.priceExtra || 0).toFixed(2)}</td>
             </tr>`;
         }).join("");
-    
+
+        const matrixBadge = this.props.matrixOverrideActive
+        ? `<p><span class="badge bg-warning text-dark">⚡ Price overridden by matrix</span></p>`
+        : "";
+
+        // ${this.props.matrixOverrideActive ? `<p><strong>⚡ Price overridden by matrix</strong></p>` : ""}
+
+
         return `
             <html>
             <head>
@@ -358,6 +350,7 @@ export default class ConfiguratorSummaryPanel extends Component {
                     th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
                     th { background: #f0f0f0; }
                     .totals { font-weight: bold; }
+                    .badge { display: inline-block; padding: 5px 10px; background: #ffc107; color: #000; border-radius: 4px; font-size: 0.9em; }
                 </style>
             </head>
             <body>
@@ -376,13 +369,14 @@ export default class ConfiguratorSummaryPanel extends Component {
                     </thead>
                     <tbody>${rows}</tbody>
                 </table>
-    
+
                 <div class="totals">
                     <p>💸 Base Price: $${pb.base?.toFixed(2) || "0.00"}</p>
                     <p>➕ Extras: $${pb.extrasSubtotal?.toFixed(2) || "0.00"}</p>
                     <p>📦 Subtotal: $${pb.subtotal?.toFixed(2) || "0.00"}</p>
                     <p>× Quantity: ${pb.quantity || this.props.quantityToMake}</p>
                     <p>📊 Final Total: <b>$${pb.total?.toFixed(2) || "0.00"}</b></p>
+                    ${matrixBadge}
                 </div>
             </body>
             </html>
@@ -408,4 +402,6 @@ ConfiguratorSummaryPanel.props = {
     productTemplate: Object,
     quantityToMake: Number,
     register: Function,
+    matrixPriceTotal: { type: Number, optional: true },
+    matrixOverrideActive: { type: Boolean, optional: true },  
 };

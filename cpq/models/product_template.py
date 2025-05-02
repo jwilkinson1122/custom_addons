@@ -65,6 +65,12 @@ class ProductTemplate(models.Model):
 
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
 
+    cpq_attribute_set_id = fields.Many2one(
+        "attribute.set",
+        string="Attribute Set",
+        help="Defines the group of configurable attributes for this product template.",
+    )
+
     no_create_variants = fields.Selection(
         [
             ("yes", "Don't create them automatically"),
@@ -76,6 +82,70 @@ class ProductTemplate(models.Model):
         default="yes",
         help="Control automatic variant creation behavior.",
     )
+
+
+    # @api.onchange("cpq_attribute_set_id")
+    # def _onchange_cpq_attribute_set_id(self):
+    #     """
+    #     When an attribute set is selected, auto-fill attribute lines,
+    #     preserving only attributes that do not trigger variant generation.
+    #     """
+    #     if not self.cpq_attribute_set_id:
+    #         return
+
+    #     if self.attribute_line_ids:
+    #         warning_msg = _(
+    #             "This will replace all current attributes on this product.\n"
+    #             "Do you want to continue?"
+    #         )
+    #         return {
+    #             "warning": {
+    #                 "title": _("Warning"),
+    #                 "message": warning_msg,
+    #             }
+    #         }
+
+    #     lines = []
+
+    #     for attr in self.cpq_attribute_set_id.attribute_ids:
+    #         if attr.create_variant != "no_variant":
+    #             continue
+
+    #         values = attr.value_ids.filtered(lambda v: v.active)
+    #         if not values:
+    #             continue
+
+    #         lines.append((0, 0, {
+    #             "attribute_id": attr.id,
+    #             "value_ids": [(6, 0, values.ids)],
+    #         }))
+
+    #     self.attribute_line_ids = lines
+
+    @api.onchange("cpq_attribute_set_id")
+    def _onchange_cpq_attribute_set_id(self):
+        """
+        Load only CPQ-safe attributes (create_variant == 'no_variant') and active values.
+        Overwrites current attribute lines.
+        """
+        if not self.cpq_attribute_set_id:
+            return
+
+        lines = []
+        for attr in self.cpq_attribute_set_id.attribute_ids:
+            if attr.create_variant != "no_variant":
+                continue  # 🚫 skip variant-generating attributes
+
+            values = attr.value_ids.filtered(lambda v: v.active)
+            if not values:
+                continue
+
+            lines.append((0, 0, {
+                "attribute_id": attr.id,
+                "value_ids": [(6, 0, values.ids)],
+            }))
+
+        self.attribute_line_ids = lines
 
     def _create_variant_ids(self):
         """
