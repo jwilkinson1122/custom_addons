@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates xml:space="preserve">
+    <!-- Extend List Renderer Header -->
+    <t t-name="recursive_tree_view.Renderer" t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//th[hasclass('o_list_record_selector')]" position="before">
+            <th t-if="recursive" class="o_recursive_expand_column cursor-default o_list_button">
+                <div style="min-width: 100px;" />
+            </th>
+        </xpath>
+    </t>
+
+    <!-- Recursive Record Row -->
+    <t t-name="recursive_tree_view.RecordRow">
+        <tr t-att-class="rowClasses" draggable="true" t-on-dragstart="onDragStart" t-on-dragenter="onDragEnter" t-on-dragleave="onDragLeave" t-on-dragover.prevent="onDragOver" t-on-drop="onDrop">
+
+            <!-- Expand/collapse icon -->
+            <td class="o_recursive_expand_column">
+                <t t-if="props.record.children">
+                    <button t-if="props.record.children" t-att-data-depth="props.record.depth" class="o_expand_button" t-on-click="onToggleExpand">
+                        <span role="img" t-att-class="'fa ' + (state.expanded ? 'fa-angle-down' : 'fa-angle-right')" />
+                    </button>
+                </t>
+                <t t-else="">None</t>
+            </td>
+
+            <!-- Field: display_name -->
+            <td>
+                <t t-esc="props.record.data?.display_name || '(no name)'"/>
+            </td>
+
+            <!-- Field: depth -->
+            <td>
+                <t t-esc="props.record.data?.depth"/>
+            </td>
+
+            <!-- Field: child_count -->
+            <td>
+                <t t-esc="props.record.data?.child_count"/>
+            </td>
+        </tr>
+
+        <!-- Render children recursively -->
+        <t t-if="props.record.children and state.expanded">
+            <t t-foreach="props.record.children" t-as="child" t-key="child.id">
+                <RecursiveRecordRow record="child" onReparent="props.onReparent" recursive="props.recursive" depth="(props.depth || 0) + 1" />
+            </t>
+        </t>
+    </t>
+</templates>

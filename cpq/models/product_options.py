@@ -26,6 +26,10 @@ class ProductOptions(models.Model):
     _parent_store = True
     _order = "display_name asc, sequence"
 
+    # _order = "parent_path, sequence"
+
+    
+
     name = fields.Char(
         string="Title",
         help="Title for the product option.",
@@ -56,6 +60,36 @@ class ProductOptions(models.Model):
     comment = fields.Text()
     active = fields.Boolean(default=True)
 
+    # @api.model
+    # def reparent_node(self, dragged_id, target_id):
+    #     dragged = self.browse(dragged_id)
+    #     dragged.write({"parent_id": target_id})
+    #     return True
+    
+    # @api.model
+    # def reorder_node(self, dragged_id, target_id):
+    #     dragged = self.browse(dragged_id)
+    #     target = self.browse(target_id)
+
+    #     if dragged.parent_id != target.parent_id:
+    #         raise ValueError("Can't reorder across different parents.")
+
+    #     siblings = self.search([
+    #         ('parent_id', '=', dragged.parent_id.id)
+    #     ], order='sequence')
+
+    #     new_order = []
+    #     for sibling in siblings:
+    #         if sibling.id == target.id:
+    #             new_order.append(dragged.id)
+    #         if sibling.id != dragged.id:
+    #             new_order.append(sibling.id)
+
+    #     for index, rec_id in enumerate(new_order):
+    #         self.browse(rec_id).sequence = (index + 1) * 10
+
+    #     return True
+ 
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
         if self._origin and self._origin.parent_id != self.parent_id:
@@ -128,8 +162,27 @@ class ProductOptions(models.Model):
         ]
         action["name"] = "Children"
         return action
-
+    
     @api.constrains("parent_id")
     def _check_option_recursion(self):
         if not self._check_recursion():
             raise ValidationError(_("You cannot create recursive options."))
+
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get("parent_id") and "sequence" not in vals:
+    #         siblings = self.search([("parent_id", "=", vals["parent_id"])])
+    #         max_seq = max(siblings.mapped("sequence") or [0])
+    #         vals["sequence"] = max_seq + 10
+
+    #     return super().create(vals)
+
+    # def write(self, vals):
+    #     if "parent_id" in vals and "sequence" not in vals:
+    #         for record in self:
+    #             if record.parent_id.id != vals["parent_id"]:
+    #                 siblings = self.search([("parent_id", "=", vals["parent_id"])])
+    #                 max_seq = max(siblings.mapped("sequence") or [0])
+    #                 vals["sequence"] = max_seq + 10
+
+    #     return super().write(vals)

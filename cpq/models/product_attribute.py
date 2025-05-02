@@ -70,11 +70,21 @@ class ProductAttributeValue(models.Model):
         string="Configurable custom type",
     )
 
+    # cpq_options_id = fields.Many2one(
+    #     comodel_name="product.options",
+    #     string="Option",
+    #     domain="[('is_leaf', '=', False)]",
+    # )
+
     cpq_options_id = fields.Many2one(
         comodel_name="product.options",
         string="Option",
-        domain="[('is_leaf', '=', False)]",
+        domain="[('is_leaf', '=', True)]",  # ✅ Show actual assignable sub-options
     )
+
+    # domain="[('parent_id', 'child_of', <custom_options_root_id>)]"
+
+
 
     cpq_options_relaxed_validation = fields.Boolean(
         default=False,

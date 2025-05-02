@@ -28,13 +28,20 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                 <field name="cpq_laterality" string="Side" column_invisible="1"/>
-                <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 500px; word-break: break-word; padding: 4px; line-height: 1.4;" string="Configuration Summary" widget="html" readonly="1"/>
+                <field name="cpq_configuration_summary" class="cpq-config-summary-tree" string="Configuration Summary" widget="html" readonly="1"/>
+
+                <!-- <field name="cpq_configuration_summary" class="cpq-config-summary-tree" style="white-space: normal; width: 500px; word-break: break-word; padding: 4px; line-height: 1.4;" string="Configuration Summary" widget="html" readonly="1"/> -->
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="attributes">
                 <attribute name="widget">html</attribute>
                 <attribute name="readonly">1</attribute>
                 <attribute name="class">cpq-config-summary-tree</attribute>
+                <attribute name="style">width: 600px; max-width: 800px; white-space: normal;</attribute>
             </xpath>
+            <!-- <xpath expr="//field[@name='cpq_configuration_summary']" position="attributes">
+                <attribute name="style">width: 600px; max-width: 800px; white-space: normal;</attribute>
+            </xpath> -->
+
             <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="after">
                 <field name="cpq_unconfigured" string="⚠️ Missing Config" widget="boolean" readonly="1" invisible="not cpq_unconfigured" options="{'terminology': 'Alert'}"/>
             </xpath>

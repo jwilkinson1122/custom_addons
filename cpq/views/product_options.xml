@@ -1,5 +1,50 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <odoo>
+
+    <record id="product_options_tree" model="ir.ui.view">
+        <field name="name">product.options.tree</field>
+        <field name="model">product.options</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" />
+                <field name="depth" />
+                <field name="child_count" />
+                <field name="is_leaf" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+<!-- 
+    <record id="product_options_tree" model="ir.ui.view">
+        <field name="name">product.options.tree</field>
+        <field name="model">product.options</field>
+        <field name="arch" type="xml">
+            <tree string="Options" recursive="true">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" />
+                <field name="depth" />
+                <field name="child_count" />
+                <field name="is_leaf" optional="hide" />
+            </tree>
+        </field>
+    </record> -->
+
+    <!-- <record id="product_options_tree" model="ir.ui.view">
+        <field name="name">product.options.tree</field>
+        <field name="model">product.options</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="1" delete="1">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" />
+                <field name="depth" />
+                <field name="child_count" />
+                <field name="is_leaf" optional="hide" />
+            </tree>
+        </field>
+    </record> -->
+
+
     <record id="product_options_form" model="ir.ui.view">
         <field name="name">product.options.form</field>
         <field name="model">product.options</field>
@@ -19,7 +64,7 @@
                     <div class="oe_title">
                         <label for="name" string="Option" />
                         <h1>
-                            <field name="name" placeholder="e.g. Cushion" />
+                            <field name="name" placeholder="e.g. Forefoot Options" />
                         </h1>
                     </div>
 
@@ -42,18 +87,6 @@
             </form>
         </field>
     </record>
-    <record id="product_options_tree" model="ir.ui.view">
-        <field name="name">product.options.tree</field>
-        <field name="model">product.options</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="display_name" />
-                <field name="depth" />
-                <field name="child_count" />
-                <field name="is_leaf" optional="hide" />
-            </tree>
-        </field>
-    </record>
 
     <record id="view_product_options_search" model="ir.ui.view">
         <field name="name">view_product_options_search</field>
@@ -71,6 +104,16 @@
         <field name="name">Options</field>
         <field name="res_model">product.options</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('cpq.product_options_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('cpq.product_options_form')})]"/>
+        <field name="search_view_id" ref="view_product_options_search"/>
+    </record>
+
+    <!-- <record id="product_options_action" model="ir.actions.act_window">
+        <field name="name">Options</field>
+        <field name="res_model">product.options</field>
+        <field name="view_mode">tree,form</field>
         <field name="domain" />
         <field name="view_ids" eval="False" />
         <field name="help" type="html">
@@ -78,7 +121,8 @@
                 Create Options
             </p>
         </field>
-    </record>
+    </record> -->
+
 
     <menuitem id="menu_sale_options" name="Options" parent="sale.prod_config_main" action="product_options_action" sequence="8" />
     <menuitem id="menu_stock_options" name="Options" parent="stock.menu_product_in_config_stock" action="product_options_action" sequence="8" />
@@ -92,7 +136,7 @@
     </record> -->
 
     <!-- <menuitem id="menu_dummy_cpq_products" name="Developer: Dummy CPQ Products" parent="sale.prod_config_main" action="action_product_dummy_cpq" sequence="9" groups="base.group_no_one" /> -->
-<!-- Then temporarily remove groups or set to base.group_system for actual devs later. -->
+    <!-- Then temporarily remove groups or set to base.group_system for actual devs later. -->
 
     <!-- <menuitem id="menu_sale_options" name="Options" parent="sale.prod_config_main" action="product_options_action" sequence="8" /> -->
     <!-- <menuitem id="menu_dummy_cpq_products" name="Developer: Dummy CPQ Products" parent="sale.prod_config_main" action="action_product_dummy_cpq" sequence="9" /> -->

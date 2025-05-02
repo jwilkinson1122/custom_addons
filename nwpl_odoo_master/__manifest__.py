@@ -9,7 +9,7 @@
     "description": """ Full Custom Orthotics Manufacturing System """,
     "depends": [
         "account",
-        # "account_avatax",
+        "account_avatax",
         "base",
         "base_automation",
         "base_setup",

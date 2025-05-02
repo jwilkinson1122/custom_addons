@@ -5,6 +5,6 @@
     "category": "Uncategorized",
     "version": "17.0.1.1.0",
     "depends": ["mrp_account", "cpq"],
-    "auto_install": True,
+    "auto_install": False,
     "license": "LGPL-3",
 }

@@ -4,8 +4,8 @@
     "author": "NWPL",
     "category": "Sales/Sales",
     "version": "17.0.1.0.0",
-        "depends": ["product", "stock", "sale_stock"],
-    # "depends": ["product", "web", "sale", "stock", "sale_stock"],
+    "depends": ["product", "stock", "sale_stock"],
+    # "depends": ["product", "stock", "sale_stock", "recursive_tree_view"],
     "data": [
         # 'data/cpq_cleanup_action.xml',
         "data/product_sequence.xml",
