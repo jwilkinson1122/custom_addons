@@ -3,3 +3,7 @@ access_product_product_cpq_value,access_product_product_cpq_value,model_product_
 access_product_product_cpq_value_base_group_user,access_product_product_cpq_value_base_group_user,model_product_product_cpq_custom_value,base.group_user,1,1,1,1
 access_product_options,access_product_options,model_product_options,base.group_user,1,1,1,1
 access_product_options_public,access_product_options_public,model_product_options,,1,0,0,0
+access_cpq_attribute_user,access_cpq_attribute_user,model_cpq_attribute,base.group_user,1,1,1,1
+access_cpq_attribute_value_user,access_cpq_attribute_value_user,model_cpq_attribute_value,base.group_user,1,1,1,1
+access_cpq_attribute,access_cpq_attribute,model_cpq_attribute,,1,0,0,0
+access_cpq_attribute_value,access_cpq_attribute_value,model_cpq_attribute_value,,1,0,0,0

@@ -91,7 +91,7 @@ class ProductConfiguratorController(http.Controller):
         _logger.info("🔍 Flattened combination received for validation: %s", combination)
 
         template = request.env['product.template'].sudo().browse(product_tmpl_id)
-        if not template or not template.cpq_ok:
+        if not template.exists() or not template.cpq_ok:
             return {"valid": False, "errors": {"general": _("Invalid CPQ product.")}}
         
         # _logger.info("🔍 Flattened combination received for validation: %s", combination)
@@ -167,6 +167,7 @@ class ProductConfiguratorController(http.Controller):
 
         order_id = ctx.get("active_sale_order_id")
         if not order_id:
+            _logger.warning("Missing order ID in context for price preview. Context: %s", ctx)
             return {
                 "price": 0.0,
                 "breakdown": {
@@ -195,8 +196,63 @@ class ProductConfiguratorController(http.Controller):
         result = compute_cpq_price_breakdown(env, order_line, configuration)
         return {"price": result["final_price"], "breakdown": result}
     
-  
- 
+
+class CPQAttributeController(http.Controller):
+
+    @route('/cpq/attribute/tree/<int:product_template_id>', type='json', auth='user')
+    def cpq_attribute_tree(self, product_template_id):
+        template = request.env['product.template'].sudo().browse(product_template_id)
+        if not template.exists():
+            raise UserError("Product template not found.")
+
+        root_attrs = template.cpq_root_attribute_ids.filtered(lambda a: a.active)
+        return self._build_attribute_tree(root_attrs)
+
+    def _build_attribute_tree(self, attrs, seen=None):
+        seen = seen or set()
+        result = []
+
+        for attr in attrs:
+            if attr.id in seen:
+                continue  # Avoid cycles
+            seen.add(attr.id)
+
+            node = {
+                "id": attr.id,
+                "name": attr.name,
+                "display_type": attr.display_type,
+                "required": attr.required,
+                "sequence": attr.sequence,
+                "is_group": attr.is_group,
+                "values": [],
+            }
+
+            if not attr.is_group:
+                for val in attr.value_ids.filtered(lambda v: v.active):
+                    children = self._build_attribute_tree(val.triggers_child_attribute_ids, seen)
+                    node["values"].append({
+                        "id": val.id,
+                        "name": val.name,
+                        "price_extra": val.price_extra,
+                        "triggers": [a.id for a in val.triggers_child_attribute_ids],
+                        "children": children,
+                    })
+
+
+            # for val in attr.value_ids.filtered(lambda v: v.active):
+            #     children = self._build_attribute_tree(val.triggers_child_attribute_ids, seen)
+            #     node["values"].append({
+            #         "id": val.id,
+            #         "name": val.name,
+            #         "price_extra": val.price_extra,
+            #         "triggers": [a.id for a in val.triggers_child_attribute_ids],
+            #         "children": children,
+            #     })
+
+            result.append(node)
+        return result
+
+
 # Helper extension for attribute lines
 # class ProductTemplateAttributeLine(models.Model):
 #     _inherit = "product.template.attribute.line"

@@ -134,6 +134,12 @@
     }
 }
 
+.config-group-header {
+    font-size: 1rem;
+    border-left: 5px solid var(--bs-secondary);
+}
+
+
 .config-section {
     padding: 1.5rem;
     border: 1px solid #ddd;
@@ -198,3 +204,10 @@
         width: 100%;
     }
 } */
+
+.border-start {
+    border-left: 2px solid #ccc;
+}
+.ps-3 {
+    padding-left: 1rem;
+}

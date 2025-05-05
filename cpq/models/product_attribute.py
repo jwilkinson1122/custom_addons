@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.osv import expression
-
+# from .cpq_custom_field_utils import CPQCustomFieldMixin
+from ..helpers.cpq_custom_field_utils import CPQCustomFieldMixin
 
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
@@ -19,17 +20,6 @@ class ProductAttribute(models.Model):
         - Never: Variants are never created for the attribute.
         Note: the variants creation mode cannot be changed once the attribute is used on at least one product.""",
         required=True)
-    # display_type = fields.Selection(
-    #     selection=[
-    #         ('radio', 'Radio'),
-    #         ('pills', 'Pills'),
-    #         ('select', 'Select'),
-    #         ('color', 'Color'),
-    #         ('multi', 'Multi-checkbox (option)'),
-    #     ],
-    #     default='radio',
-    #     required=True,
-    #     help="The display type used in the Product Configurator.")
 
     active = fields.Boolean(default=True, string="Active")
     cpq_propagate_to_variant = fields.Boolean(
@@ -44,29 +34,23 @@ class ProductAttribute(models.Model):
         if "name" not in default:
             default["name"] = _("%s (copy)") % (self.name)
         return super().copy(default=default)
-
-class ProductAttributeValue(models.Model):
+    
+class ProductAttributeValue(models.Model, CPQCustomFieldMixin):  
     _inherit = "product.attribute.value"
 
-    active = fields.Boolean(
-        default=True,
-    )
-
-    cpq_custom_type = fields.Selection(
-        [
-            ("integer", "Integer"),
-            ("float", "Float"),
-            ("char", "Text"),
-            ("many2one", "Many2one"),
-            ("options", "Option"),
-        ],
-        string="Configurable custom type",
-    )
+    active = fields.Boolean(default=True)
+    cpq_custom_type = fields.Selection([
+        ("integer", "Integer"),
+        ("float", "Float"),
+        ("char", "Text"),
+        ("many2one", "Many2one"),
+        ("options", "Option"),
+    ], string="Custom Input Type")
 
     cpq_options_id = fields.Many2one(
         comodel_name="product.options",
-        string="Option",
-        domain="[('is_leaf', '=', True)]",  # ✅ Show actual assignable sub-options
+        string="Option Group",
+        domain="[('is_leaf', '=', True)]"
     )
 
     cpq_options_relaxed_validation = fields.Boolean(
@@ -79,145 +63,182 @@ class ProductAttributeValue(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {})
-        if "name" not in default:
-            default["name"] = _("%s (copy)") % (self.name)
+        default.setdefault("name", _("%s (copy)") % self.name)
         return super().copy(default=default)
 
-    def _cpq_cast_custom(self, value):
-        """
-        Cast the stored custom_value into the real value.
-        i.e. custom_value may store a int, which we need to cast into an Odoo
-        record
-        """
-        self.ensure_one()
+# class ProductAttributeValue(models.Model):
+#     _inherit = "product.attribute.value"
 
-        if not self.is_custom or not self.cpq_custom_type:
-            return value
+#     active = fields.Boolean(
+#         default=True,
+#     )
 
-        method = f"_cpq_cast_custom_{self.cpq_custom_type}"
-        return getattr(self, method)(value)
+#     cpq_custom_type = fields.Selection(
+#         [
+#             ("integer", "Integer"),
+#             ("float", "Float"),
+#             ("char", "Text"),
+#             ("many2one", "Many2one"),
+#             ("options", "Option"),
+#         ],
+#         string="Configurable custom type",
+#     )
 
-    def _cpq_cast_custom_options(self, value):
-        try:
-            return self.env["product.options"].search(
-                self._cpq_sanitise_options_domain(
-                    [
-                        ("id", "=", int(value)),
-                    ]
-                )
-            )
-        except (ValueError, TypeError):
-            return self.env["product.options"]
+#     cpq_options_id = fields.Many2one(
+#         comodel_name="product.options",
+#         string="Option",
+#         domain="[('is_leaf', '=', True)]", 
+#     )
 
-    def _cpq_cast_custom_integer(self, value):
-        return self._cpq_sanitise_custom_integer(value)
+#     cpq_options_relaxed_validation = fields.Boolean(
+#         default=False,
+#         string="Relax Options Validation",
+#         help="Allow a options record to be moved between parents",
+#     )
 
-    def _cpq_cast_custom_float(self, value):
-        return self._cpq_sanitise_custom_integer(value)
+#     @api.returns("self", lambda value: value.id)
+#     def copy(self, default=None):
+#         self.ensure_one()
+#         default = dict(default or {})
+#         if "name" not in default:
+#             default["name"] = _("%s (copy)") % (self.name)
+#         return super().copy(default=default)
 
-    def _cpq_cast_custom_char(self, value):
-        return self._cpq_sanitise_custom_char(value)
+#     def _cpq_cast_custom(self, value):
+#         """
+#         Cast the stored custom_value into the real value.
+#         i.e. custom_value may store a int, which we need to cast into an Odoo
+#         record
+#         """
+#         self.ensure_one()
 
-    def _cpq_cast_custom_many2one(self, _value):
-        return NotImplementedError()
+#         if not self.is_custom or not self.cpq_custom_type:
+#             return value
 
-    def _cpq_sanitise_custom(self, value):
-        self.ensure_one()
+#         method = f"_cpq_cast_custom_{self.cpq_custom_type}"
+#         return getattr(self, method)(value)
 
-        if not self.is_custom or not self.cpq_custom_type:
-            return value
+#     def _cpq_cast_custom_options(self, value):
+#         try:
+#             return self.env["product.options"].search(
+#                 self._cpq_sanitise_options_domain(
+#                     [
+#                         ("id", "=", int(value)),
+#                     ]
+#                 )
+#             )
+#         except (ValueError, TypeError):
+#             return self.env["product.options"]
 
-        method = f"_cpq_sanitise_custom_{self.cpq_custom_type}"
-        return getattr(self, method)(value)
+#     def _cpq_cast_custom_integer(self, value):
+#         return self._cpq_sanitise_custom_integer(value)
 
-    def _cpq_sanitise_options_domain(self, domain):
-        self.ensure_one()
-        if not self.cpq_options_relaxed_validation:
-            return expression.AND(
-                [
-                    domain,
-                    [
-                        ("parent_id", "child_of", self.cpq_options_id.id),
-                        ("is_leaf", "=", True),
-                    ],
-                ]
-            )
+#     def _cpq_cast_custom_float(self, value):
+#         return self._cpq_sanitise_custom_integer(value)
 
-        return domain
+#     def _cpq_cast_custom_char(self, value):
+#         return self._cpq_sanitise_custom_char(value)
 
-    def _cpq_sanitise_custom_options(self, value):
-        try:
-            return (
-                self.env["product.options"]
-                .search(
-                    self._cpq_sanitise_options_domain(
-                        [
-                            ("id", "=", int(value)),
-                        ]
-                    )
-                )
-                .id
-            )
-        except (ValueError, TypeError):
-            return False
+#     def _cpq_cast_custom_many2one(self, _value):
+#         return NotImplementedError()
 
-    def _cpq_sanitise_custom_integer(self, value):
-        return int(value)
+#     def _cpq_sanitise_custom(self, value):
+#         self.ensure_one()
 
-    def _cpq_sanitise_custom_float(self, value):
-        return float(value)
+#         if not self.is_custom or not self.cpq_custom_type:
+#             return value
 
-    def _cpq_sanitise_custom_char(self, value):
-        if value is None:
-            return ""
-        return value.strip()
+#         method = f"_cpq_sanitise_custom_{self.cpq_custom_type}"
+#         return getattr(self, method)(value)
 
-    def _cpq_sanitise_custom_many2one(self, value):
-        raise NotImplementedError()
+#     def _cpq_sanitise_options_domain(self, domain):
+#         self.ensure_one()
+#         if not self.cpq_options_relaxed_validation:
+#             return expression.AND(
+#                 [
+#                     domain,
+#                     [
+#                         ("parent_id", "child_of", self.cpq_options_id.id),
+#                         ("is_leaf", "=", True),
+#                     ],
+#                 ]
+#             )
 
-    def _cpq_validate_custom(self, value):
-        self.ensure_one()
+#         return domain
 
-        if not self.is_custom or not self.cpq_custom_type:
-            return True
+#     def _cpq_sanitise_custom_options(self, value):
+#         try:
+#             return (
+#                 self.env["product.options"]
+#                 .search(
+#                     self._cpq_sanitise_options_domain(
+#                         [
+#                             ("id", "=", int(value)),
+#                         ]
+#                     )
+#                 )
+#                 .id
+#             )
+#         except (ValueError, TypeError):
+#             return False
 
-        method = f"_cpq_validate_custom_{self.cpq_custom_type}"
-        return getattr(self, method)(value)
+#     def _cpq_sanitise_custom_integer(self, value):
+#         return int(value)
 
-    def _cpq_validate_custom_options(self, value):
-        try:
-            value_as_int = int(value)
-        except (ValueError, TypeError):
-            return False
+#     def _cpq_sanitise_custom_float(self, value):
+#         return float(value)
 
-        count = self.env["product.options"].search_count(
-            self._cpq_sanitise_options_domain(
-                [
-                    ("id", "=", value_as_int),
-                ]
-            )
-        )
-        return count == 1
+#     def _cpq_sanitise_custom_char(self, value):
+#         if value is None:
+#             return ""
+#         return value.strip()
 
-    def _cpq_validate_custom_integer(self, value):
-        try:
-            int(value)
-            return True
-        except (ValueError, TypeError):
-            return False
+#     def _cpq_sanitise_custom_many2one(self, value):
+#         raise NotImplementedError()
 
-    def _cpq_validate_custom_float(self, value):
-        try:
-            float(value)
-            return True
-        except (ValueError, TypeError):
-            return False
+#     def _cpq_validate_custom(self, value):
+#         self.ensure_one()
 
-    def _cpq_validate_custom_char(self, value):
-        return isinstance(value, str) and len(value) > 0
+#         if not self.is_custom or not self.cpq_custom_type:
+#             return True
 
-    def _cpq_validate_custom_many2one(self, value):
-        raise NotImplementedError()
+#         method = f"_cpq_validate_custom_{self.cpq_custom_type}"
+#         return getattr(self, method)(value)
+
+#     def _cpq_validate_custom_options(self, value):
+#         try:
+#             value_as_int = int(value)
+#         except (ValueError, TypeError):
+#             return False
+
+#         count = self.env["product.options"].search_count(
+#             self._cpq_sanitise_options_domain(
+#                 [
+#                     ("id", "=", value_as_int),
+#                 ]
+#             )
+#         )
+#         return count == 1
+
+#     def _cpq_validate_custom_integer(self, value):
+#         try:
+#             int(value)
+#             return True
+#         except (ValueError, TypeError):
+#             return False
+
+#     def _cpq_validate_custom_float(self, value):
+#         try:
+#             float(value)
+#             return True
+#         except (ValueError, TypeError):
+#             return False
+
+#     def _cpq_validate_custom_char(self, value):
+#         return isinstance(value, str) and len(value) > 0
+
+#     def _cpq_validate_custom_many2one(self, value):
+#         raise NotImplementedError()
 
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.product.cpq.custom.value"

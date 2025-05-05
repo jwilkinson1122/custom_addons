@@ -50,7 +50,9 @@
                 </group>
                 <group string="Configurator Settings">
                     <!-- <field name="cpq_attribute_set_id"/> -->
-                    <field name="cpq_attribute_set_id" invisible="not cpq_ok"/>
+                    <!-- <field name="cpq_attribute_set_id" invisible="not cpq_ok"/> -->
+                    <!-- <field name="cpq_root_attribute_ids" widget="many2many_tags"/> -->
+                    <field name="cpq_root_attribute_ids" widget="many2many_tags" string="Root Configurator Attributes" invisible="not cpq_ok" help="These are the top-level CPQ attributes shown in the configurator UI."/>
 
                 </group>
             </xpath>
@@ -59,6 +61,10 @@
                     <field name="cpq_attribute_set_id"/>
                 </group>
             </xpath> -->
+            <xpath expr="//field[@name='attribute_line_ids']" position="attributes">
+                <attribute name="invisible">cpq_ok</attribute>
+            </xpath>
+
         </field>
     </record>
 
@@ -118,7 +124,8 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('cpq_ok', '=', True)]</field>
-        <field name="context">{}</field>
+        <field name="context">{'default_cpq_ok': True}</field>
+        <!-- <field name="context">{}</field> -->
     </record>
     
 </odoo>

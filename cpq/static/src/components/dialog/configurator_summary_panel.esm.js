@@ -180,7 +180,49 @@ export default class ConfiguratorSummaryPanel extends Component {
             }
         }, 0);
     }
-    
+
+
+    renderGroup(group) {
+        const selected = this.props.selected || {};
+        const isSplit = this.props.split;
+        const laterality = this.props.laterality;
+        const quantityToMake = this.props.quantityToMake || 1;
+
+        const renderChild = (attr) => {
+            if (attr.is_group) {
+                return this.renderGroup(attr);  // 🔁 recursion for nested groups
+            }
+
+            const ptavs = attr.ptav_ids || [];
+            const findSelectedPtav = (dict) => ptavs.find(ptav => dict[ptav.id]);
+            const selLeft = findSelectedPtav(selected.left || {});
+            const selRight = findSelectedPtav(selected.right || {});
+            const selShared = findSelectedPtav(selected);
+
+            let left = "-", right = "-", shared = "-";
+            if (laterality === "bilateral" && isSplit) {
+                left = selLeft?.name || "-";
+                right = selRight?.name || "-";
+            } else {
+                shared = selShared?.name || "-";
+            }
+
+            return html`
+                <div class="ps-3">
+                    <strong>${attr.name}</strong>: 
+                    ${isSplit ? html`<span>L: ${left}, R: ${right}</span>` : html`${shared}`}
+                </div>
+            `;
+        };
+
+        return html`
+            <div class="mb-3 border-start ps-3">
+                <h5 class="mb-1">${group.name}</h5>
+                ${group.child_ids.map(renderChild)}
+            </div>
+        `;
+    }
+
     // Handles shared and split + proper bilateral pricing logic
     computeSummary() {
         console.log("🧠 Computing summary...");

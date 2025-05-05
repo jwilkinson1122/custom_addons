@@ -65,11 +65,19 @@ class ProductTemplate(models.Model):
 
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
 
-    cpq_attribute_set_id = fields.Many2one(
-        "attribute.set",
-        string="Attribute Set",
-        help="Defines the group of configurable attributes for this product template.",
+    # cpq_attribute_set_id = fields.Many2one(
+    #     "attribute.set",
+    #     string="Attribute Set",
+    #     help="Defines the group of configurable attributes for this product template.",
+    # )
+
+    cpq_root_attribute_ids = fields.Many2many(
+        "cpq.attribute",
+        string="Root CPQ Attributes",
+        help="Top-level CPQ attributes for this product template.",
+        domain="[('parent_id', '=', False)]",
     )
+
 
     no_create_variants = fields.Selection(
         [
@@ -319,13 +327,24 @@ class ProductTemplate(models.Model):
                     variant.default_code = Sequence.next_by_code("product.product.default_code.non_cpq")
         return super(ProductTemplate, self.filtered(lambda r: r.cpq_ok))._set_default_code()
 
-    @api.constrains('default_code')
+    # @api.constrains('default_code')
+    # def _check_unique_prefixes(self):
+    #     for product in self:
+    #         if product.default_code and product.default_code.startswith("CPQ-") and not product.product_tmpl_id.cpq_ok:
+    #             raise ValidationError("CPQ-style reference used on non-CPQ product.")
+    #         if product.default_code and product.default_code.startswith("P-") and product.product_tmpl_id.cpq_ok:
+    #             raise ValidationError("Standard reference used on CPQ product.")
+
+    @api.constrains('product_variant_ids')
     def _check_unique_prefixes(self):
-        for product in self:
-            if product.default_code and product.default_code.startswith("CPQ-") and not product.product_tmpl_id.cpq_ok:
-                raise ValidationError("CPQ-style reference used on non-CPQ product.")
-            if product.default_code and product.default_code.startswith("P-") and product.product_tmpl_id.cpq_ok:
-                raise ValidationError("Standard reference used on CPQ product.")
+        for tmpl in self:
+            for variant in tmpl.product_variant_ids:
+                if variant.default_code:
+                    if variant.default_code.startswith("CPQ-") and not tmpl.cpq_ok:
+                        raise ValidationError("CPQ-style reference used on non-CPQ product.")
+                    if variant.default_code.startswith("P-") and tmpl.cpq_ok:
+                        raise ValidationError("Standard reference used on CPQ product.")
+
 
 
     def _onchange_cpq_ok_warning_msg(self):
