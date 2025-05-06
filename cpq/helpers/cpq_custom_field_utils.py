@@ -59,7 +59,7 @@ class CPQCustomFieldMixin(models.AbstractModel):
                 [
                     domain,
                     [
-                        ("parent_id", "child_of", self.cpq_options_id.id),
+                        ("parent_id", "child_of", self.linked_option_id.id),
                         ("is_leaf", "=", True),
                     ],
                 ]

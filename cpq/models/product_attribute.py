@@ -47,9 +47,9 @@ class ProductAttributeValue(models.Model, CPQCustomFieldMixin):
         ("options", "Option"),
     ], string="Custom Input Type")
 
-    cpq_options_id = fields.Many2one(
+    linked_option_id = fields.Many2one(
         comodel_name="product.options",
-        string="Option Group",
+        string="Linked Option",
         domain="[('is_leaf', '=', True)]"
     )
 
@@ -84,7 +84,7 @@ class ProductAttributeValue(models.Model, CPQCustomFieldMixin):
 #         string="Configurable custom type",
 #     )
 
-#     cpq_options_id = fields.Many2one(
+#     linked_option_id = fields.Many2one(
 #         comodel_name="product.options",
 #         string="Option",
 #         domain="[('is_leaf', '=', True)]", 
@@ -158,7 +158,7 @@ class ProductAttributeValue(models.Model, CPQCustomFieldMixin):
 #                 [
 #                     domain,
 #                     [
-#                         ("parent_id", "child_of", self.cpq_options_id.id),
+#                         ("parent_id", "child_of", self.linked_option_id.id),
 #                         ("is_leaf", "=", True),
 #                     ],
 #                 ]
@@ -290,8 +290,8 @@ class ProductTemplateAttributeValue(models.Model):
         related="product_attribute_value_id.cpq_custom_type"
     )
 
-    cpq_options_id = fields.Many2one(
-        related="product_attribute_value_id.cpq_options_id"
+    linked_option_id = fields.Many2one(
+        related="product_attribute_value_id.linked_option_id"
     )
 
     # Refactored to remove duplicate code
@@ -300,7 +300,7 @@ class ProductTemplateAttributeValue(models.Model):
         if self.is_custom and self.cpq_custom_type == "options":
             optionss = self.env["product.options"].search(
                 [
-                    ("parent_id", "child_of", self.cpq_options_id.id),
+                    ("parent_id", "child_of", self.linked_option_id.id),
                     ("is_leaf", "=", True),
                 ]
             )

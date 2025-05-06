@@ -14,7 +14,8 @@
           </group>
           <group name="display">
             <field name="display_type"/>
-            <field name="is_group" invisible="not is_group"/>
+            <field name="is_group"/>
+            <!-- <field name="is_group" invisible="not is_group"/> -->
             <field name="note"/>
             <field name="parent_id" string="Parent Group" domain="[('is_group', '=', True)]" context="{'default_is_group': True}"/>
           </group>
@@ -22,8 +23,24 @@
             <field name="parent_id" string="Parent Group" domain="[('is_group', '=', True)]" context="{'default_is_group': True}"/>
           </group> -->
           <notebook>
-            <page string="Sub-Attributes">
-              <field name="child_ids">
+            <page string="Attribute Values" invisible="is_group">
+              <field name="value_ids">
+                <tree editable="bottom">
+                  <field name="sequence" widget="handle"/>
+                  <field name="name"/>
+                  <field name="code"/>
+                  <field name="price_extra"/>
+                  <field name="is_custom"/>
+                  <field name="cpq_custom_type" invisible="not is_custom"/>
+                  <field name="linked_option_id" invisible="not is_custom or cpq_custom_type != 'options'" help="Select a predefined product option this attribute value should be associated with. Used to map free-form or selectable values to structured configuration options under Custom Options (e.g., 'Heel Options', 'Top Cover Options')."/>
+                  <!-- <field name="linked_option_id" invisible="not is_custom or cpq_custom_type != 'options'", help="Select a predefined product option this attribute value should be associated with. Used to map free-form or selectable values to structured configuration options under Custom Options (e.g., 'Heel Options', 'Top Cover Options')."/> -->
+                  <field name="cpq_options_relaxed_validation" invisible="not is_custom or cpq_custom_type != 'options'"/>
+                  <field name="triggers_child_attribute_ids" widget="many2many_tags"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Sub-Groups" invisible="not is_group">
+              <field name="child_ids" domain="[('is_group', '=', True)]">
                 <tree editable="bottom">
                   <field name="sequence" widget="handle"/>
                   <field name="name"/>
@@ -34,18 +51,15 @@
                 </tree>
               </field>
             </page>
-            <page string="Values" invisible="is_group">
-              <field name="value_ids">
+            <page string="Sub-Attributes" invisible="is_group">
+              <field name="child_ids" domain="[('is_group', '=', False)]">
                 <tree editable="bottom">
                   <field name="sequence" widget="handle"/>
                   <field name="name"/>
-                  <field name="code"/>
-                  <field name="price_extra"/>
-                  <field name="is_custom"/>
-                  <field name="cpq_custom_type" invisible="not is_custom"/>
-                  <field name="cpq_options_id" invisible="not is_custom or cpq_custom_type != 'options'"/>
-                  <field name="cpq_options_relaxed_validation" invisible="not is_custom or cpq_custom_type != 'options'"/>
-                  <field name="triggers_child_attribute_ids" widget="many2many_tags"/>
+                  <field name="is_group"/>
+                  <field name="parent_id"/>
+                  <field name="display_type"/>
+                  <field name="active"/>
                 </tree>
               </field>
             </page>
@@ -145,7 +159,7 @@
             <field name="child_attribute_id"/>
             <field name="is_custom"/>
             <field name="cpq_custom_type" invisible="not is_custom"/>
-            <field name="cpq_options_id" invisible="not is_custom or cpq_custom_type != 'options'"/>
+            <field name="linked_option_id" invisible="not is_custom or cpq_custom_type != 'options'"/>
             <field name="cpq_options_relaxed_validation" invisible="not is_custom or cpq_custom_type != 'options'"/>
             <field name="triggers_child_attribute_ids" widget="many2many_tags"/>
           </group>
@@ -165,7 +179,7 @@
         <field name="price_extra"/>
         <field name="is_custom"/>
         <field name="cpq_custom_type" invisible="is_custom == False"/>
-        <field name="cpq_options_id" invisible="is_custom == False or cpq_custom_type != 'options'"/>
+        <field name="linked_option_id" invisible="is_custom == False or cpq_custom_type != 'options'"/>
         <field name="cpq_options_relaxed_validation" invisible="is_custom == False or cpq_custom_type != 'options'"/>
         <field name="triggers_child_attribute_ids" widget="many2many_tags"/>
       </tree>

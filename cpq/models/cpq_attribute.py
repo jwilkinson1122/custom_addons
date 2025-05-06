@@ -152,15 +152,6 @@ class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
     html_color = fields.Char("Color Code", help="Hex or HTML color code (for swatch display)")
     is_custom = fields.Boolean("Allow Free Input")
     
-    # is_custom = fields.Boolean(
-    #     string="Is custom value",
-    #     help="Allow users to input custom values for this attribute value")
-
-    # cpq_custom_type = fields.Selection([
-    #     ("text", "Text Input"),
-    #     ("options", "Options Dropdown"),
-    # ], string="Custom Input Type")
-
     cpq_custom_type = fields.Selection([
         ("integer", "Integer"),
         ("float", "Float"),
@@ -169,10 +160,13 @@ class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
         ("options", "Option"),
     ], string="Custom Input Type")
 
-    cpq_options_id = fields.Many2one(
+    linked_option_id = fields.Many2one(
         "product.options",
-        string="Option Group",
-        domain="[('is_leaf', '=', True)]"
+        string="Linked Option",
+        domain="[('is_leaf', '=', True)]",
+        help="Select a predefined product option this attribute value should be associated with. "
+         "Used to map free-form or selectable values to structured configuration options under "
+         "Custom Options (e.g., 'Heel Options', 'Top Cover Options')."
     )
 
     cpq_options_relaxed_validation = fields.Boolean(

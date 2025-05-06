@@ -13,7 +13,7 @@
         <field name="attribute_id" ref="attribute_arch_height"/>
         <field name="is_custom">True</field>
         <field name="cpq_custom_type">options</field> <!-- Could be: integer, float, char, many2one, options -->
-        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="linked_option_id" ref="cpq.arch_height_options"/>
         <field name="cpq_options_relaxed_validation">False</field>
         <field name="default_extra_price">0.00</field>
     </record>
@@ -23,7 +23,7 @@
         <field name="is_custom">True</field>
         <field name="active">True</field>
         <field name="cpq_custom_type">options</field> 
-        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="linked_option_id" ref="cpq.arch_height_options"/>
         <field name="cpq_options_relaxed_validation">False</field>
         <field name="default_extra_price">0.00</field>
     </record>
@@ -32,7 +32,7 @@
         <field name="attribute_id" ref="attribute_arch_height"/>
         <field name="is_custom">True</field>
         <field name="cpq_custom_type">options</field> 
-        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="linked_option_id" ref="cpq.arch_height_options"/>
         <field name="cpq_options_relaxed_validation">False</field>
         <field name="default_extra_price">0.00</field>
     </record>
@@ -41,7 +41,7 @@
         <field name="attribute_id" ref="attribute_arch_height"/>
         <field name="is_custom">True</field>
         <field name="cpq_custom_type">options</field>
-        <field name="cpq_options_id" ref="cpq.arch_height_options"/>
+        <field name="linked_option_id" ref="cpq.arch_height_options"/>
         <field name="cpq_options_relaxed_validation">False</field>
         <field name="default_extra_price">0.00</field>
     </record>
