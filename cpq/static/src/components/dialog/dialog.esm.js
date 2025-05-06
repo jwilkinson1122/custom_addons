@@ -289,16 +289,20 @@ export class ConfigureDialog extends Component {
                     ? _t("Edit Configuration: %s", data.product_tmpl_id.display_name)
                     : _t("Configure: %s", data.product_tmpl_id.display_name);
         
-                this.state.ptalIds = data.ptal_ids;
-                this.state.productTemplateId = data.product_tmpl_id.id;
+                // this.state.ptalIds = data.ptal_ids;
+                
+                // this.state.productTemplateId = data.product_tmpl_id.id;
 
                 // ⬇️ Load recursive CPQ attributes
                 const tree = await this.rpc(`/cpq/attribute/tree/${this.state.productTemplateId}`, {});
                 console.log("🌳 Loaded attribute tree:", tree);
 
                 // You can store the tree if needed:
-                this.state.attributeTree = tree;
-        
+                // this.state.attributeTree = tree;
+
+                this.state.ptalIds = tree;  // ✅ Use this as your UI render source
+                this.state.productTemplateId = data.product_tmpl_id.id;
+                        
                 // Primary assignment
                 this.state.productTemplate = data.product_tmpl_id;
         

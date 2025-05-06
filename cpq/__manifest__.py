@@ -19,7 +19,7 @@
         "security/ir.model.access.csv",
         "views/res_config_settings.xml",
         # "views/menu.xml",
-        "views/price_matrix_view.xml",
+        "views/cpq_price_matrix_view.xml",
         "views/product_template.xml",
         "views/product_product.xml",
         "views/product_attribute.xml",

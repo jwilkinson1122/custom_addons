@@ -115,7 +115,7 @@ def render_summary_plaintext(env, order, config):
     return Markup(html).striptags()
 
 def compute_cpq_price_breakdown(env, order_line, config):
-    template = order_line.product_template_id
+    product_template = order_line.product_template_id
     partner = order_line.order_id.partner_id
     currency = order_line.currency_id or env.user.company_id.currency_id
     currency = currency.ensure_one()
@@ -132,11 +132,14 @@ def compute_cpq_price_breakdown(env, order_line, config):
         ptav_ids = [int(pid) for pid in selected.keys() if str(pid).isdigit()]
 
     # 🔁 Check for matrix override
-    matrix = env["price.matrix"].sudo()
-    matrix_record = matrix.search([
-        ("product_tmpl_id", "=", template.id),
-        ("ptav_ids", "subset_of", ptav_ids),
-    ], limit=1)
+    matrix = env["cpq.price.matrix"].sudo()
+    candidate_matrices = matrix.search([
+    ("product_tmpl_id", "=", product_template.id),
+    ])
+    matrix_record = candidate_matrices.filtered(
+        lambda rec: set(rec.ptav_ids.ids).issubset(set(config["ptav_ids"]))
+    )
+
 
     if matrix_record:
         matrix_price = matrix_record.price_total
@@ -159,7 +162,7 @@ def compute_cpq_price_breakdown(env, order_line, config):
         }
 
     # ⛳️ Fallback: manual price breakdown
-    base_price = template.list_price or 0.0
+    base_price = product_template.list_price or 0.0
     base_multiplier = 2 if laterality == "bilateral" else 1
     raw_base = base_price * base_multiplier
 
@@ -183,7 +186,7 @@ def compute_cpq_price_breakdown(env, order_line, config):
             left_total += ptav.price_extra
             right_total += ptav.price_extra
 
-    discount_factor = get_partner_discount(env, partner, template)
+    discount_factor = get_partner_discount(env, partner, product_template)
     discounted_base = raw_base * discount_factor
     extras_total = left_total + right_total
     subtotal = discounted_base + extras_total
@@ -203,95 +206,6 @@ def compute_cpq_price_breakdown(env, order_line, config):
         "total": final_price,
         "from_matrix": False,
     }
-
-
-# def compute_cpq_price_breakdown(env, order_line, config):
-#     template = order_line.product_template_id
-#     partner = order_line.order_id.partner_id
-#     currency = order_line.currency_id or env.user.company_id.currency_id
-#     currency = currency.ensure_one()
-
-#     quantity = config.get("quantity_to_make", 1)
-#     laterality = config.get("laterality", "bilateral")
-#     split = config.get("split", False)
-#     selected = config.get("selected", {}) or {}
-
-#     if laterality == "bilateral" and split:
-#         ptav_ids = [
-#             int(pid)
-#             for side in ("left", "right")
-#             for pid in selected.get(side, {}).keys()
-#             if str(pid).isdigit()
-#         ]
-#     else:
-#         ptav_ids = [int(pid) for pid in selected.keys() if str(pid).isdigit()]
-
-#     matrix_model = env["price.matrix"].sudo()
-#     matrix_record = matrix_model.search([
-#         ("product_tmpl_id", "=", template.id),
-#         ("ptav_ids", "subset_of", ptav_ids),
-#     ], limit=1)
-
-#     if matrix_record:
-#         price_per_unit = matrix_record.price_total
-#         final_price = currency.round(price_per_unit * quantity)
-#         return {
-#             "base_price": 0.0,
-#             "discount_factor": 1.0,
-#             "quantity": quantity,
-#             "laterality": laterality,
-#             "split": split,
-#             "left": 0.0,
-#             "right": 0.0,
-#             "extras_total": 0.0,
-#             "subtotal": price_per_unit,
-#             "final_price": final_price,
-#             "total": final_price,
-#             "from_matrix": True,
-#         }
-
-#     base_price = template.list_price or 0.0
-#     ptavs = env["product.template.attribute.value"].sudo().browse(ptav_ids)
-#     left_total = right_total = 0.0
-
-#     for ptav in ptavs:
-#         if laterality == "bilateral" and split:
-#             if str(ptav.id) in selected.get("left", {}):
-#                 left_total += ptav.price_extra
-#             if str(ptav.id) in selected.get("right", {}):
-#                 right_total += ptav.price_extra
-#         elif laterality == "left":
-#             left_total += ptav.price_extra
-#         elif laterality == "right":
-#             right_total += ptav.price_extra
-#         elif laterality == "bilateral":
-#             left_total += ptav.price_extra
-#             right_total += ptav.price_extra
-
-#     base_multiplier = 2 if laterality == "bilateral" else 1
-#     raw_base = base_price * base_multiplier
-#     discount_factor = get_partner_discount(env, partner, template)
-#     discounted_base = raw_base * discount_factor
-
-#     extras_total = left_total + right_total
-#     subtotal = discounted_base + extras_total
-#     final_price = currency.round(subtotal * quantity)
-
-#     return {
-#         "base_price": round(raw_base, 2),
-#         "discount_factor": discount_factor,
-#         "quantity": quantity,
-#         "laterality": laterality,
-#         "split": split,
-#         "left": round(left_total * quantity, 2),
-#         "right": round(right_total * quantity, 2),
-#         "extras_total": round(extras_total * quantity, 2),
-#         "subtotal": round(subtotal, 2),
-#         "final_price": final_price,
-#         "total": final_price,
-#         "from_matrix": False,
-#     }
-
 
 def get_partner_discount(env, partner, template):
     if not partner:

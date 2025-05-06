@@ -1,17 +1,14 @@
 <odoo>
     <!-- <menuitem id="menu_cpq_root" name="CPQ" sequence="10" parent="sale.sale_order_menu"/> -->
     <menuitem id="menu_cpq_products" name="Configurable Products" parent="sale.product_menu_catalog" action="action_cpq_product_templates_only" sequence="11"/>
-
-
-
     <!-- <menuitem id="menu_cpq_attribute_groups" name="CPQ Attribute Groups" parent="sale.prod_config_main" action="action_cpq_attribute_groups" sequence="12"/> -->
     <!-- <menuitem id="menu_cpq_attributes" name="CPQ Attributes" parent="sale.prod_config_main" action="action_cpq_attributes" sequence="13"/> -->
-    
+    <menuitem id="menu_cpq_price_matrix" name="CPQ Price Matrix" parent="sale.prod_config_main" action="action_cpq_price_matrix" sequence="11"/>
     <menuitem id="menu_cpq_attributes" name="CPQ Attributes" parent="sale.prod_config_main" action="action_cpq_attribute" sequence="12"/>
     <menuitem id="menu_cpq_attribute_values" name="CPQ Attribute Values" parent="sale.prod_config_main" action="action_cpq_attribute_values" sequence="13"/>
+
     <menuitem id="menu_sale_options" name="CPQ Product Options" parent="sale.prod_config_main" action="product_options_action" sequence="14" />
     <menuitem id="menu_stock_options" name="CPQ Product Options" parent="stock.menu_product_in_config_stock" action="product_options_action" sequence="14" />
-
 
     <!-- <menuitem id="menu_dummy_cpq_products" name="Developer: Dummy CPQ Products" parent="sale.prod_config_main" action="action_product_dummy_cpq" sequence="9" groups="base.group_no_one" /> -->
     <!-- Then temporarily remove groups or set to base.group_system for actual devs later. -->

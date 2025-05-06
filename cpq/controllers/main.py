@@ -205,53 +205,41 @@ class CPQAttributeController(http.Controller):
         if not template.exists():
             raise UserError("Product template not found.")
 
+        ptal_ids = []
+
         root_attrs = template.cpq_root_attribute_ids.filtered(lambda a: a.active)
-        return self._build_attribute_tree(root_attrs)
 
-    def _build_attribute_tree(self, attrs, seen=None):
-        seen = seen or set()
-        result = []
+        for group in root_attrs:
+            ptal_ids.append({
+                "id": group.id,
+                "name": group.name,
+                "is_group": True,
+                "sequence": group.sequence,
+            })
 
-        for attr in attrs:
-            if attr.id in seen:
-                continue  # Avoid cycles
-            seen.add(attr.id)
+            for attr in group.child_ids.filtered(lambda a: a.active and not a.is_group):
+                attr_data = {
+                    "id": attr.id,
+                    "name": attr.name,
+                    "is_group": False,
+                    "display_type": attr.display_type,
+                    "required": attr.required,
+                    "sequence": attr.sequence,
+                    "values": [],
+                }
 
-            node = {
-                "id": attr.id,
-                "name": attr.name,
-                "display_type": attr.display_type,
-                "required": attr.required,
-                "sequence": attr.sequence,
-                "is_group": attr.is_group,
-                "values": [],
-            }
-
-            if not attr.is_group:
                 for val in attr.value_ids.filtered(lambda v: v.active):
-                    children = self._build_attribute_tree(val.triggers_child_attribute_ids, seen)
-                    node["values"].append({
+                    attr_data["values"].append({
                         "id": val.id,
                         "name": val.name,
                         "price_extra": val.price_extra,
                         "triggers": [a.id for a in val.triggers_child_attribute_ids],
-                        "children": children,
+                        "children": [],  # Reserved for future nested support
                     })
 
+                ptal_ids.append(attr_data)
 
-            # for val in attr.value_ids.filtered(lambda v: v.active):
-            #     children = self._build_attribute_tree(val.triggers_child_attribute_ids, seen)
-            #     node["values"].append({
-            #         "id": val.id,
-            #         "name": val.name,
-            #         "price_extra": val.price_extra,
-            #         "triggers": [a.id for a in val.triggers_child_attribute_ids],
-            #         "children": children,
-            #     })
-
-            result.append(node)
-        return result
-
+        return ptal_ids
 
 # Helper extension for attribute lines
 # class ProductTemplateAttributeLine(models.Model):

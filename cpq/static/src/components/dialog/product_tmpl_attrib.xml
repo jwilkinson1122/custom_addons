@@ -7,8 +7,8 @@
             <div class="mb-3">
                 <t t-call="{{ getPTAVTemplate() }}" />
             </div>
-            <div class="mb-3" t-if="props.attribute.ptav_ids.some(e => e.is_custom and ['char', 'float', 'integer'].includes(e.cpq_custom_type))">
-                <div t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id">
+            <div class="mb-3" t-if="props.attribute.values.some(e => e.is_custom and ['char', 'float', 'integer'].includes(e.cpq_custom_type))">
+                <div t-foreach="props.attribute.values" t-as="ptav" t-key="ptav.id">
                     <t t-if="ptav.is_custom
                             and props.selected[ptav.id] !== undefined
                             and ['char', 'float', 'integer'].includes(ptav.cpq_custom_type)">
@@ -39,7 +39,7 @@
         </t>
         <select class="form-control" t-on-change="props.onSelect" t-att-name="'ptal-' + props.attribute.id + '-' + (props.side || 'shared')" t-att-id="'ptal-' + props.attribute.id + '-' + (props.side || 'shared')">
             <option />
-            <option t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id" t-att-value="ptav.id" t-att-selected="props.selected[ptav.id] !== undefined" t-att-class="{ 'css_not_available': ptav.excluded }" t-esc="ptav.name" />
+            <option t-foreach="props.attribute.values" t-as="ptav" t-key="ptav.id" t-att-value="ptav.id" t-att-selected="props.selected[ptav.id] !== undefined" t-att-class="{ 'css_not_available': ptav.excluded }" t-esc="ptav.name" />
         </select>
     </t>
     <!-- Radio Button Template -->
@@ -47,13 +47,13 @@
         <t t-if="!props.hideLabel">
             <strong t-esc="props.attribute.name" class="form-label d-block mb-2" />
         </t>
-        <div t-foreach="props.attribute.ptav_ids" t-as="ptav" class="form-check form-check-inline" t-key="ptav.id">
+        <div t-foreach="props.attribute.values" t-as="ptav" class="form-check form-check-inline" t-key="ptav.id">
             <input type="radio" class="form-check-input" t-att-id="'ptav-' + ptav.id + '-' + (props.side || 'shared')" t-att-value="ptav.id" t-att-checked="props.selected[ptav.id] !== undefined" t-att-name="'ptal-' + props.attribute.id + '-' + (props.side || 'shared')" t-on-change="props.onSelect" t-attf-style="accent-color: {{ ptav.html_color || '' }}" />
             <label class="form-check-label" t-att-for="'ptav-' + ptav.id + '-' + (props.side || 'shared')">
                 <span t-esc="ptav.name" />
             </label>
         </div>
-        <!-- <t t-foreach="attribute.ptav_ids" t-as="ptav" t-key="ptav.id">
+        <!-- <t t-foreach="attribute.values" t-as="ptav" t-key="ptav.id">
             <label class="form-check-label">
                 <input type="radio" name="attribute-{{ attribute.id }}" value="{{ ptav.id }}" class="form-check-input" t-on-change="(ev) => handleSelect(ev, ptav.id)" />
                 {{ ptav.formatted_name }}
@@ -67,7 +67,7 @@
             <strong t-esc="props.attribute.name" class="form-label d-block mb-2" />
         </t>
         <ul class="list-inline">
-            <li t-foreach="props.attribute.ptav_ids" t-as="ptav" t-key="ptav.id" class="list-inline-item me-1">
+            <li t-foreach="props.attribute.values" t-as="ptav" t-key="ptav.id" class="list-inline-item me-1">
                 <label t-attf-style="background-color: {{ptav.is_custom ? '' : ptav.html_color}}; width: 40px; height: 40px;" t-att-class="{ 'css_attribute_color': 1, 'active': props.selected.hasOwnProperty(ptav.id) }" t-att-title="ptav.name">
                     <input type="radio" class="form-check-input" t-att-id="ptav.id" t-att-value="ptav.id" t-att-checked="props.selected[ptav.id] !== undefined" t-att-name="'ptal-' + props.attribute.id" t-on-change="props.onSelect" t-attf-style="accent-color: {{ ptav.html_color || '' }}" />
                 </label>

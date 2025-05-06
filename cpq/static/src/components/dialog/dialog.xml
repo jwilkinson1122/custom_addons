@@ -57,40 +57,6 @@
                     </div>
                     <!-- 🔸 Attributes Group -->
                     <div class="config-section mb-4">
-                        <!-- <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                            <t t-if="state.laterality === 'bilateral' and state.split">
-                                <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
-                                    <div class="col-4">
-                                        <strong t-esc="i.name"/>
-                                    </div>
-                                    <div class="col text-muted">
-                                        <small>
-                                            <strong>Left</strong>
-                                        </small>
-                                    </div>
-                                    <div class="col text-muted">
-                                        <small>
-                                            <strong>Right</strong>
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-4"/>
-                                    <div class="col">
-                                        <ProductTmplAttrib id="'ptav_%s_left' % i.id" attribute="i" selected="state.selected.left || {}" side="'left'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)" />
-                                    </div>
-                                    <div class="col">
-                                        <ProductTmplAttrib id="'ptav_%s_right' % i.id" attribute="i" selected="state.selected.right || {}" side="'right'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)" />
-                                    </div>
-                                </div>
-                            </t>
-                            <t t-if="!(state.laterality === 'bilateral' and state.split)">
-                                <div class="mb-3">
-                                    <strong t-esc="i.name"/>
-                                    <ProductTmplAttrib id="'ptav_%s_shared' % i.id" attribute="i" selected="state.selected" side="'shared'" hideLabel="true" onSelect="(ev) => this._handleSharedSelect(i.id, ev)" onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, null, ptavId, ev.target.value)" />
-                                </div>
-                            </t>
-                        </t> -->
                         <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
                             <!-- Group Header -->
                             <t t-if="i.is_group">
@@ -134,90 +100,7 @@
                                 </t>
                             </t>
                         </t>
-
                     </div>
-
-
-                    <!-- <div class="mb-3">
-                        <strong>Laterality:</strong>
-                        <br/>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="laterality" class="form-check-input" value="left" t-att-checked="state.laterality === 'left' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
-                            <label class="form-check-label">Left Only</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="laterality" class="form-check-input" value="right" t-att-checked="state.laterality === 'right' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
-                            <label class="form-check-label">Right Only</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" name="laterality" class="form-check-input" value="bilateral" t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined" t-on-change="onLateralityChange"/>
-                            <label class="form-check-label">Bilateral</label>
-                        </div>
-                    </div> -->
-                    <!-- <t t-if="state.laterality === 'bilateral'">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <input type="checkbox" t-att-checked="state.split ? 'checked' : undefined" t-on-click="onSplitToggle"/>
-                            <label>Customize Left / Right Separately</label>
-                            <t t-if="state.split">
-                                <button type="button" class="btn btn-sm btn-outline-primary" t-on-click="copyLeftToRight">
-                                    ⬅️ Copy Left → Right
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" t-on-click="copyRightToLeft">
-                                    ➡️ Copy Right → Left
-                                </button>
-                                <t t-if="state.undoCache.left or state.undoCache.right">
-                                    <button type="button" class="btn btn-sm btn-outline-warning" t-on-click="_restoreUndoCache">
-                                        ↩️ Undo Last Split
-                                    </button>
-                                </t>
-                            </t>
-                        </div>
-                    </t> -->
-                    <!-- <div class="d-flex flex-column align-items-start">
-                        <div class="d-flex mb-2">
-                            <button class="btn btn-secondary d-none d-md-inline-block" aria-label="Remove one" t-on-click="() => onDecreaseQuantity()">
-                                <i class="fa fa-minus"/>
-                            </button>
-                            <input class="form-control quantity border-bottom border-top text-center" style="min-width: 30px;" name="product_quantity" type="number" t-att-value="state.quantityToMake" t-on-change="onQuantityChange" />
-                            <button class="btn btn-secondary d-none d-md-inline-block" aria-label="Add one" t-on-click="() => onIncreaseQuantity()">
-                                <i class="fa fa-plus"/>
-                            </button>
-                        </div>
-                    </div> -->
-                    <!-- <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                        <t t-if="state.laterality === 'bilateral' and state.split">
-                            <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
-                                <div class="col-4">
-                                    <strong t-esc="i.name"/>
-                                </div>
-                                <div class="col text-muted">
-                                    <small>
-                                        <strong>Left</strong>
-                                    </small>
-                                </div>
-                                <div class="col text-muted">
-                                    <small>
-                                        <strong>Right</strong>
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-4"/>
-                                <div class="col">
-                                    <ProductTmplAttrib id="'ptav_%s_left' % i.id" attribute="i" selected="state.selected.left || {}" side="'left'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)" />
-                                </div>
-                                <div class="col">
-                                    <ProductTmplAttrib id="'ptav_%s_right' % i.id" attribute="i" selected="state.selected.right || {}" side="'right'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)" />
-                                </div>
-                            </div>
-                        </t>
-                        <t t-if="!(state.laterality === 'bilateral' and state.split)">
-                            <div class="mb-3">
-                                <strong t-esc="i.name"/>
-                                <ProductTmplAttrib id="'ptav_%s_shared' % i.id" attribute="i" selected="state.selected" side="'shared'" hideLabel="true" onSelect="(ev) => this._handleSharedSelect(i.id, ev)" onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, null, ptavId, ev.target.value)" />
-                            </div>
-                        </t>
-                    </t> -->
                 </div>
                 <div class="col-md-4 border-start ps-3">
                     <div class="sticky-summary shadow-sm p-2 bg-white rounded">
@@ -394,56 +277,6 @@ $</td>
         </t>
     </div>
 </t>
-
-<!-- <t t-call="web.html_container">
-      <t t-set="config" t-value="ctx.get('configuration')"/>
-      <t t-set="summary" t-value="ctx.get('summary')"/>
-      <div class="container my-5 print-preview cpq-rx-sheet">
-        <h2 class="text-center mb-4">Prescription Configuration Preview</h2>
-  
-        <div class="d-flex justify-content-between mb-4">
-          <div><strong>Order #:</strong> <t t-esc="ctx.get('order_name', '-')"/></div>
-          <div><strong>Date:</strong> <t t-esc="ctx.get('date_order', '-')"/></div>
-        </div>
-  
-        <div class="mb-3">
-          <strong>Laterality:</strong> <t t-esc="config.get('laterality')"/>
-          <br/>
-          <strong>Customize Left/Right:</strong> <t t-esc="'Yes' if config.get('split') else 'No'"/>
-          <br/>
-          <strong>Pairs to Make:</strong> <t t-esc="config.get('quantity_to_make')"/>
-        </div>
-  
-        <div class="mb-4">
-          <h5 class="fw-bold">Selected Attributes</h5>
-          <table class="table table-bordered table-striped mt-2">
-            <thead>
-              <tr>
-                <th>Attribute</th>
-                <th>Left</th>
-                <th>Right</th>
-              </tr>
-            </thead>
-            <tbody>
-              <t t-foreach="summary or []" t-as="line">
-                <tr>
-                  <td><t t-esc="line.attribute"/></td>
-                  <td><t t-esc="line.left or '-'"/></td>
-                  <td><t t-esc="line.right or '-'"/></td>
-                </tr>
-              </t>
-            </tbody>
-          </table>
-        </div>
-  
-        <div class="mt-3">
-          <strong>Price per Foot:</strong><br/>
-          <strong>Left:</strong> <t t-esc="summary and summary[0].left_price or 'N/A'"/> &nbsp; | &nbsp;
-          <strong>Right:</strong> <t t-esc="summary and summary[0].right_price or 'N/A'"/> &nbsp; | &nbsp;
-          <strong>Total:</strong> <t t-esc="summary and summary[0].total_price or 'N/A'"/>
-        </div>
-      </div>
-    </t> -->
 
 <t t-name="cpq.PrintPreviewPanel">
     <div class="rx-preview p-4 border rounded bg-white text-dark" t-att-class="printOnly ? 'print-mode' : ''">

@@ -56,24 +56,18 @@ ProductTmplAttrib.props = {
                 validate: (type) =>
                     ["color", "pills", "radio", "select"].includes(type),
             },
-            ptav_ids: {
+            values: {
                 type: Array,
                 element: {
-                    type: Object,
-                    shape: {
-                        id: Number,
-                        name: String,
-                        html_color: [Boolean, String],
-                        is_custom: Boolean,
-                        price_extra: Number,
-                        excluded: { type: Boolean, optional: true },
-                        cpq_custom_type: [Boolean, String],
-                        cpq_selection_values: {
-                            optional: true,
-                            type: Array,
-                            element: { type: Array },
-                        },
-                    },
+                    id: Number,
+                    name: String,
+                    html_color: [Boolean, String],
+                    is_custom: Boolean,
+                    price_extra: Number,
+                    excluded: { type: Boolean, optional: true },
+                    cpq_custom_type: [Boolean, String],
+                    triggers: { type: Array, optional: true },
+                    children: { type: Array, optional: true },
                 },
             },
         },

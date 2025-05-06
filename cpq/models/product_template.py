@@ -795,3 +795,28 @@ class ProductTemplate(models.Model):
             else:
                 logs.append(f"🟢 Kept cpq_ok=True for: {tmpl.name} (ID: {tmpl.id}) - cpq_ref: {tmpl.cpq_ref}, attrib lines: {tmpl.valid_product_template_attribute_line_ids.ids}")
         return '\n'.join(logs)
+    
+
+    def action_add_price_matrix_line(self):
+        self.ensure_one()
+        return {
+            'name': "Add Price Matrix Line",
+            'type': 'ir.actions.act_window',
+            'res_model': 'cpq.price.matrix.line',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_product_tmpl_id': self.id
+            }
+        }
+    
+    def action_open_price_matrix_lines(self):
+        self.ensure_one()
+        return {
+            'name': "Price Matrix for %s" % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'cpq.price.matrix',
+            'view_mode': 'tree,form',
+            'domain': [('product_tmpl_id', '=', self.id)],
+            'context': {'default_product_tmpl_id': self.id},
+        }

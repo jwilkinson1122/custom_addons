@@ -7,3 +7,7 @@ access_cpq_attribute_user,access_cpq_attribute_user,model_cpq_attribute,base.gro
 access_cpq_attribute_value_user,access_cpq_attribute_value_user,model_cpq_attribute_value,base.group_user,1,1,1,1
 access_cpq_attribute,access_cpq_attribute,model_cpq_attribute,,1,0,0,0
 access_cpq_attribute_value,access_cpq_attribute_value,model_cpq_attribute_value,,1,0,0,0
+access_cpq_price_matrix,access_cpq_price_matrix,model_cpq_price_matrix,,1,0,0,0
+access_cpq_price_matrix_user,access_cpq_price_matrix_user,model_cpq_price_matrix,base.group_user,1,1,1,1
+access_cpq_price_matrix_line,access_cpq_price_matrix_line,model_cpq_price_matrix_line,,1,0,0,0
+access_cpq_price_matrix_line_user,access_cpq_price_matrix_line_user,model_cpq_price_matrix_line,base.group_user,1,1,1,1
