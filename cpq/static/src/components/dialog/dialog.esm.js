@@ -530,7 +530,7 @@ export class ConfigureDialog extends Component {
         }
     
         // --- Force-resolve productTemplateId ---
-        let productTemplateId =
+        const productTemplateId =
             this.state?.productTemplateId ||
             this.props?.productTemplateId ||
             this.productTemplateId ||
@@ -561,8 +561,8 @@ export class ConfigureDialog extends Component {
             await this.env.services.ui.block();
     
             await this._validate();
-            console.log("Validation status after _validate():", this.state.valid);
-            console.log("Selected combo before save:", this._flattenCombination(this.state.selected));
+            // console.log("Validation status after _validate():", this.state.valid);
+            // console.log("Selected combo before save:", this._flattenCombination(this.state.selected));
 
             if (!this.state.valid) {
                 this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
@@ -580,7 +580,7 @@ export class ConfigureDialog extends Component {
                 : productTemplate?.uom_id
                 || this.props.record?.data?.product_uom?.[0]
                 || this.props.productUOMId
-                || null;
+                // || null;
     
             console.warn("Resolved product_uom:", productUom);
     
@@ -588,13 +588,16 @@ export class ConfigureDialog extends Component {
                 this.notification.add("Product UoM is missing. Cannot continue.", { type: "danger" });
                 return;
             }
+
+            // 🔍 Safe deep copy of `selected`
+            const safeSelected = JSON.parse(JSON.stringify(this.state.selected || {}));
     
             const config = {
-                ...this._flattenCombination(this.state.selected), // ✅ injects { "35": 35, "36": 36, ... }
+                ...this._flattenCombination(safeSelected), // ✅ injects { "35": 35, "36": 36, ... }
+                selected: safeSelected,
                 name: this.productTemplateName,
                 laterality: this.state.laterality,
                 split: this.state.split,
-                // selected: this.state.selected,
                 quantity_to_make: this.state.quantityToMake,
                 product_uom_qty: this.state.quantityToMake,
                 product_uom: productUom,

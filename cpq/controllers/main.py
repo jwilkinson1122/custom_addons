@@ -44,7 +44,7 @@ class ProductConfiguratorController(http.Controller):
 
             # Try classic PTAV
             ptav_id = request.env["product.template.attribute.value"].sudo().browse(ptav_id_int)
-            if ptav_id.exists():
+            if ptav_id.exists() and ptav_id.product_tmpl_id.id == product_tmpl.id:
                 _logger.info("Found real PTAV: %s", ptav_id.display_name)
                 ptav_ids |= ptav_id
 

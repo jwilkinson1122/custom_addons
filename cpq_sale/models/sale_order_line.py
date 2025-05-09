@@ -307,31 +307,6 @@ class SaleOrderLine(models.Model):
             },
         }
 
-    # def edit_cpq_configuration(self):
-    #     self.ensure_one()
-        
-    #     tmpl = self.product_template_id or self.product_id.product_tmpl_id
-    #     if not tmpl:
-    #         raise UserError("No product template linked to this line.")
-
-    #     return {
-    #         "type": "ir.actions.client",
-    #         "tag": "cpq.ConfigureDialogAction",
-    #         "context": {
-    #             "active_model": "sale.order.line",
-    #             "active_id": self.id,
-    #             "cpq_product_template_id": tmpl.id,
-    #             "cpq_initial_config": self.cpq_configuration_json,
-    #             "from_sale_order": True,
-    #             "redirect_to_line": True,
-    #             "orderId": self.order_id.id,
-    #             "currencyId": self.order_id.currency_id.id,
-    #             "soDate": str(self.order_id.date_order),
-    #             "companyId": self.order_id.company_id.id,
-    #         },
-            
-    #     }
-    
     def _compute_cpq_product_created(self):
         for line in self:
             line.cpq_product_created = bool(
