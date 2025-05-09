@@ -9,7 +9,7 @@
                     <field name="cpq_code_prefix" placeholder="CPQ-"/>
                     <field name="cpq_code_preview" readonly="1" nolabel="1" class="text-muted"/>
                     <div class="alert alert-warning o_cpq_code_prefix_warning" style="margin-top: 8px;">
-                            ⚠️ Changing the prefix only affects **new** CPQ products. Existing products will retain their current references.
+                            Changing the prefix only affects **new** CPQ products. Existing products will retain their current references.
                     </div>
                 </setting>
             </xpath>

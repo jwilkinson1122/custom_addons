@@ -6,19 +6,17 @@ const {Component} = owl;
 
 class ProductTmplAttrib extends Component {
 
+    
+
     setup() {
         super.setup(...arguments);
         this.user = useService("user");
-
         onWillStart(this.onWillStart);
-
     }
 
     async onWillStart() {
-        console.log("🔍 Rendering", this.props.side, this.props.attribute.name, "with selected:", this.props.selected);
-
-        console.log("🔄 Rendering attribute", this.props.attribute.name, "with selected:", this.props.selected);
-        
+        console.log("Rendering", this.props.side, this.props.attribute.name, "with selected:", this.props.selected);
+        console.log("Rendering attribute", this.props.attribute.name, "with selected:", this.props.selected);
     }
 
     stringify() {
@@ -56,6 +54,9 @@ ProductTmplAttrib.props = {
                 validate: (type) =>
                     ["color", "pills", "radio", "select"].includes(type),
             },
+            is_group: { type: Boolean, optional: true },     
+            required: { type: Boolean, optional: true },     
+            sequence: { type: Number, optional: true },       
             values: {
                 type: Array,
                 element: {
@@ -78,5 +79,41 @@ ProductTmplAttrib.props = {
     onSelect: { type: "function" },
     onCustom: { type: "function" },
 };
+
+
+// ProductTmplAttrib.props = {
+//     id: Number,
+//     attribute: {
+//         type: Object,
+//         shape: {
+//             id: Number,
+//             name: String,
+//             display_type: {
+//                 type: String,
+//                 validate: (type) =>
+//                     ["color", "pills", "radio", "select"].includes(type),
+//             },
+//             values: {
+//                 type: Array,
+//                 element: {
+//                     id: Number,
+//                     name: String,
+//                     html_color: [Boolean, String],
+//                     is_custom: Boolean,
+//                     price_extra: Number,
+//                     excluded: { type: Boolean, optional: true },
+//                     cpq_custom_type: [Boolean, String],
+//                     triggers: { type: Array, optional: true },
+//                     children: { type: Array, optional: true },
+//                 },
+//             },
+//         },
+//     },
+//     selected: { type: Object, optional: true },
+//     side: { type: String, optional: true },
+//     hideLabel: { type: Boolean, optional: true },
+//     onSelect: { type: "function" },
+//     onCustom: { type: "function" },
+// };
 
 export default ProductTmplAttrib;

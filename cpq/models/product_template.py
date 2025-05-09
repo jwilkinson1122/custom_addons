@@ -37,11 +37,13 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     cpq_ok = fields.Boolean(string="Configurable Product?", default=False)
+
     cpq_ref = fields.Char(
         string="Configurable Internal Reference",
         index=True,
         help="Reference for this configurable template",
     )
+
     cpq_ref_mode = fields.Selection(
         [
             ("none", "No"),
@@ -52,24 +54,21 @@ class ProductTemplate(models.Model):
         required=True,
         string="Dynamic Configurable Variant Internal Reference",
     )
+
     cpq_ref_tmpl = fields.Text(
         string="Configurable Internal Reference Inline QWeb Template",
         help="Inline QWeb Template for generating dynamic variant internal reference",
     )
+
     cpq_ref_code = fields.Text(
         default=DEFAULT_CPQ_REF_CODE,
         string="Configurable Internal Reference using Python Code",
         help="Code for generating dynamic variant internal reference",
     )
+
     cpq_tooltip = fields.Html(compute="_compute_cpq_tooltip")
 
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
-
-    # cpq_attribute_set_id = fields.Many2one(
-    #     "attribute.set",
-    #     string="Attribute Set",
-    #     help="Defines the group of configurable attributes for this product template.",
-    # )
 
     cpq_root_attribute_ids = fields.Many2many(
         "cpq.attribute",
@@ -77,7 +76,6 @@ class ProductTemplate(models.Model):
         help="Top-level CPQ attributes for this product template.",
         domain="[('parent_id', '=', False)]",
     )
-
 
     no_create_variants = fields.Selection(
         [
@@ -90,70 +88,6 @@ class ProductTemplate(models.Model):
         default="yes",
         help="Control automatic variant creation behavior.",
     )
-
-
-    # @api.onchange("cpq_attribute_set_id")
-    # def _onchange_cpq_attribute_set_id(self):
-    #     """
-    #     When an attribute set is selected, auto-fill attribute lines,
-    #     preserving only attributes that do not trigger variant generation.
-    #     """
-    #     if not self.cpq_attribute_set_id:
-    #         return
-
-    #     if self.attribute_line_ids:
-    #         warning_msg = _(
-    #             "This will replace all current attributes on this product.\n"
-    #             "Do you want to continue?"
-    #         )
-    #         return {
-    #             "warning": {
-    #                 "title": _("Warning"),
-    #                 "message": warning_msg,
-    #             }
-    #         }
-
-    #     lines = []
-
-    #     for attr in self.cpq_attribute_set_id.attribute_ids:
-    #         if attr.create_variant != "no_variant":
-    #             continue
-
-    #         values = attr.value_ids.filtered(lambda v: v.active)
-    #         if not values:
-    #             continue
-
-    #         lines.append((0, 0, {
-    #             "attribute_id": attr.id,
-    #             "value_ids": [(6, 0, values.ids)],
-    #         }))
-
-    #     self.attribute_line_ids = lines
-
-    @api.onchange("cpq_attribute_set_id")
-    def _onchange_cpq_attribute_set_id(self):
-        """
-        Load only CPQ-safe attributes (create_variant == 'no_variant') and active values.
-        Overwrites current attribute lines.
-        """
-        if not self.cpq_attribute_set_id:
-            return
-
-        lines = []
-        for attr in self.cpq_attribute_set_id.attribute_ids:
-            if attr.create_variant != "no_variant":
-                continue  # 🚫 skip variant-generating attributes
-
-            values = attr.value_ids.filtered(lambda v: v.active)
-            if not values:
-                continue
-
-            lines.append((0, 0, {
-                "attribute_id": attr.id,
-                "value_ids": [(6, 0, values.ids)],
-            }))
-
-        self.attribute_line_ids = lines
 
     def _create_variant_ids(self):
         """
@@ -197,11 +131,10 @@ class ProductTemplate(models.Model):
                 "uom_id": self.uom_id.id,
                 "uom_po_id": self.uom_po_id.id,
             })
-            _logger.info("✅ Created fallback CPQ product: %s", product)
+            _logger.info("Created fallback CPQ product: %s", product)
 
         return product
     
-    # Allow prefix to be customized while still using the sequential ID from the CPQ sequence.
     def _generate_cpq_default_code(self):
         self.ensure_one()
         prefix = self.env["ir.config_parameter"].sudo().get_param("cpq.default_code_prefix", default="CPQ-")
@@ -212,12 +145,12 @@ class ProductTemplate(models.Model):
     def get_single_product_variant(self):
         self.ensure_one()
         if self.cpq_ok not in [True, False]:
-            _logger.warning(f"⚠️ cpq_ok is undefined or incorrect on template {self.id} ({self.name}) — forcing to False.")
+            _logger.warning(f"cpq_ok is undefined or incorrect on template {self.id} ({self.name}) — forcing to False.")
             self.cpq_ok = False  # Safety fallback
 
         # self.ensure_one()
         _logger.info("🔧 [CPQ] Returning CPQ variant resolution for template %s", self.display_name)
-        # ✅ CPQ Products: Skip variant lookup entirely
+        # CPQ Products: Skip variant lookup entirely
         if self.cpq_ok:
             return {
                 "product_id": False,
@@ -229,10 +162,10 @@ class ProductTemplate(models.Model):
             }
 
         # 🟢 Standard non-CPQ product fallback:
-        _logger.info("📦 [Standard] Returning real variant for template %s", self.display_name)
+        _logger.info("[Standard] Returning real variant for template %s", self.display_name)
         product = self.env['product.product'].search([('product_tmpl_id', '=', self.id)], limit=1)
         if not product:
-            _logger.warning(f"⚠️ Non-CPQ template {self.id} ({self.name}) has no variants.")
+            _logger.warning(f"Non-CPQ template {self.id} ({self.name}) has no variants.")
             return {
                 'product_id': False,
                 'product_name': self.name,
@@ -258,7 +191,6 @@ class ProductTemplate(models.Model):
             'price_unit': price or product.lst_price or 0.0,
             'has_optional_products': bool(product.optional_product_ids),
         }
-
 
     @api.model
     def _name_search(self, name, args=None, operator="ilike", limit=100, order=None):
@@ -313,11 +245,6 @@ class ProductTemplate(models.Model):
             todo -= record
         return super(ProductTemplate, todo)._compute_default_code()
 
-    # def _set_default_code(self):
-    #     return super(
-    #         ProductTemplate, self.filtered(lambda r: not r.cpq_ok)
-    #     )._set_default_code()
-    
     def _set_default_code(self):
         # For standard (non-CPQ) variants only
         Sequence = self.env['ir.sequence']
@@ -326,14 +253,6 @@ class ProductTemplate(models.Model):
                 if not variant.default_code:
                     variant.default_code = Sequence.next_by_code("product.product.default_code.non_cpq")
         return super(ProductTemplate, self.filtered(lambda r: r.cpq_ok))._set_default_code()
-
-    # @api.constrains('default_code')
-    # def _check_unique_prefixes(self):
-    #     for product in self:
-    #         if product.default_code and product.default_code.startswith("CPQ-") and not product.product_tmpl_id.cpq_ok:
-    #             raise ValidationError("CPQ-style reference used on non-CPQ product.")
-    #         if product.default_code and product.default_code.startswith("P-") and product.product_tmpl_id.cpq_ok:
-    #             raise ValidationError("Standard reference used on CPQ product.")
 
     @api.constrains('product_variant_ids')
     def _check_unique_prefixes(self):
@@ -344,8 +263,6 @@ class ProductTemplate(models.Model):
                         raise ValidationError("CPQ-style reference used on non-CPQ product.")
                     if variant.default_code.startswith("P-") and tmpl.cpq_ok:
                         raise ValidationError("Standard reference used on CPQ product.")
-
-
 
     def _onchange_cpq_ok_warning_msg(self):
         self.ensure_one()
@@ -423,180 +340,184 @@ class ProductTemplate(models.Model):
         raise_on_invalidity=True,
         validate_only=False,
     ):
-        # ensure that the values passed in are valid, and then extract out the
-        # data that we need to find any existing products, and also to validate
-        # and sanitise the inputs
         self.ensure_one()
+        # ✅ Ensure context includes allow_virtual_ptavs unless explicitly disabled
+        self = self.with_context(allow_virtual_ptavs=self.env.context.get("allow_virtual_ptavs", True))
+        # template.with_context(allow_virtual_ptavs=False)._cpq_ensure_valid_values(...)
 
-        errors = []
+        errors = {}
+        valid = True
 
         if not self.cpq_ok:
-            msg = _("%s is not a CPQ Enabled Product!") % (self.display_name)
+            msg = _("%s is not a CPQ Enabled Product!") % self.display_name
+            _logger.warning("[INVALID] cpq_ok is False: %s", msg)
             if raise_on_invalidity:
                 raise UserError(msg)
-            return (False, msg)
+            return False, msg
 
         if not ptav_ids:
             msg = _(
-                "%s could not be configured - did not receive any product"
-                "template attribute values!"
-            ) % (self.display_name)
+                "%s could not be configured — did not receive any product template attribute values!"
+            ) % self.display_name
+            _logger.warning("[INVALID] No PTAVs provided: %s", msg)
             if raise_on_invalidity:
                 raise UserError(msg)
-            return (False, msg)
+            return False, msg
 
-        errors = {}
-
-        # search_domain to help find an existing attribute
-        search_domain = [
-            ("product_tmpl_id", "=", self.id),
-            ("cpq_ok", "=", True),
-        ]
-
-        combination_ptav_ids = self.env["product.template.attribute.value"]
+        _logger.info("[OK] Using dynamic ptav_ids as valid set: %s", sorted(ptav_ids.ids))
+        _logger.info("[DEBUG] Incoming PTAVs: %s", [ptav.id for ptav in ptav_ids])
         matched_ptav_ids = self.env["product.template.attribute.value"]
-        matched_custom_ptav_ids = self.env["product.template.attribute.value"]
-        matched_custom_dict = {}
 
-        valid_product_tmpl_ptav_ids = (
-            self.valid_product_template_attribute_line_ids.mapped(
-                "product_template_value_ids"
-            )
-        )
+        for ptav in ptav_ids:
+            pav = ptav.product_attribute_value_id
 
-        for ptav_id in ptav_ids:
-            if not self.env.context.get("skip_cpq_validate_ptav_ids"):
-                # we allow this to be disabled for CoGs explosions
-                if ptav_id not in valid_product_tmpl_ptav_ids:
-                    msg = _(
-                        "Unknown product template attribute value %(key)s for %(tmpl)s"
-                    ) % {
-                        "key": ptav_id,
-                        "tmpl": self.display_name,
-                    }
-
+            # ✅ Gracefully skip if missing or virtual
+            if not pav or not pav.exists():
+                if not self.env.context.get("allow_virtual_ptavs"):
+                    msg = _("Invalid PTAV: linked product attribute value is missing or deleted (PTAV ID: %s)") % (ptav.id or "virtual")
+                    _logger.warning("[INVALID] %s", msg)
                     if raise_on_invalidity:
                         raise UserError(msg)
-                    errors[ptav_id.id] = msg
+                    errors[ptav.id] = msg
+                    valid = False
                     continue
+                else:
+                    _logger.info("[WARN] Allowing virtual PTAV: %s", ptav)
+                    continue  # ✅ Skip further validation for truly virtual records
 
-            # we need to pass all ptavs to _is_combination_possible_by_config,
-            # even if we're ignoring them
-            combination_ptav_ids |= ptav_id
-
-            if not ptav_id.attribute_id.cpq_propagate_to_variant:
-                # if it's not supposed to propagate, skip
-                continue
-
-            if ptav_id in matched_ptav_ids:
-                # have we seen this more than once when we should not have?
-                msg = _("%s - product template attribute value seen multiple times") % (
-                    self
-                )
-                if raise_on_invalidity:
-                    raise UserError(msg)
-                errors[ptav_id.id] = msg
-                continue
-
-            matched_ptav_ids |= ptav_id
-
-            if ptav_id.product_attribute_value_id.is_custom:
-                if not self.env.context.get(
-                    "skip_cpq_validate_ptav_ids"
-                ) and not ptav_id.product_attribute_value_id._cpq_validate_custom(
-                    custom_dict.get(ptav_id)
-                ):
+            if pav.is_custom:
+                custom_value = custom_dict.get(ptav)
+                is_valid = pav._cpq_validate_custom(custom_value)
+                _logger.info("[DEBUG] Custom value for PTAV %s: %s (valid=%s)", ptav.display_name, custom_value, is_valid)
+                if not self.env.context.get("skip_cpq_validate_ptav_ids") and not is_valid:
                     msg = _("Custom value '%(name)s' invalid: '%(value)s'") % {
-                        "name": ptav_id.display_name,
-                        "value": custom_dict.get(ptav_id),
+                        "name": ptav.display_name,
+                        "value": custom_value,
                     }
+                    _logger.warning("[INVALID] Custom validation failed: %s", msg)
                     if raise_on_invalidity:
                         raise UserError(msg)
-                    errors[ptav_id.id] = msg
-                    continue
+                    errors[ptav.id] = msg
+                    valid = False
+            else:
+                # Static validation using linked_option_id
+                cpq_val = self.env["cpq.attribute.value"].search([
+                    ("attribute_id.linked_product_attribute_id", "=", pav.attribute_id.id),
+                    ("linked_option_id", "=", pav.linked_option_id.id),
+                ], limit=1)
 
-                matched_custom_ptav_ids |= ptav_id
-                matched_custom_dict[
-                    ptav_id
-                ] = ptav_id.product_attribute_value_id._cpq_sanitise_custom(
-                    custom_dict.get(ptav_id)
-                )
-
-        is_possible = self._is_combination_possible_by_config(
-            combination=combination_ptav_ids,
-            ignore_no_variant=True,
-        )
-
-        if not is_possible and not self.env.context.get("skip_cpq_validate_ptav_ids"):
-            is_possible_ptals = self.valid_product_template_attribute_line_ids._without_no_variant_attributes()  # noqa: E501
-
-            extra_info = _("Likely exclusion is configured. Please check.")
-
-            if len(combination_ptav_ids) != len(is_possible_ptals):
-                extra_info = _(
-                    "Missing configuration category. Found %(found)s,"
-                    " expected %(expected)s. "
-                ) % {
-                    "found": len(combination_ptav_ids),
-                    "expected": len(is_possible_ptals),
-                }
-
-                is_possible_ptals_missing_ids = (
-                    is_possible_ptals - combination_ptav_ids.attribute_line_id
-                )
-                if is_possible_ptals_missing_ids:
-                    extra_info += _("Suspected missing category: %(suspected)s ") % {
-                        "suspected": ", ".join(
-                            is_possible_ptals_missing_ids.mapped("display_name")
-                        )
+                is_valid = bool(cpq_val)
+                _logger.info("[DEBUG] Static value for PTAV %s: %s (valid=%s)", ptav.display_name, pav.name, is_valid)
+                if not self.env.context.get("skip_cpq_validate_ptav_ids") and not is_valid:
+                    msg = _("Static value '%(name)s' invalid — no matching CPQ value.") % {
+                        "name": ptav.display_name,
                     }
+                    _logger.warning("[INVALID] Static validation failed: %s", msg)
+                    if raise_on_invalidity:
+                        raise UserError(msg)
+                    errors[ptav.id] = msg
+                    valid = False
 
-            msg = _(
-                "%(tmpl_name)s configuration is not possible by configuration.\n"
-                "Using configuration: %(configuration)s\n"
-                "%(extra_info)s\n"
-                "If this is not on your order or configuration, \
-                    please check the configuration of any child items."
-            ) % {
-                "tmpl_name": self.display_name,
-                "configuration": ", ".join(combination_ptav_ids.mapped("display_name")),
-                "extra_info": extra_info or "",
-            }
-            if raise_on_invalidity:
-                raise UserError(msg)
+            matched_ptav_ids |= ptav
+
+        if not valid and not errors:
+            errors["general"] = _("Configuration failed validation but no specific error was returned.")
 
         if validate_only:
-            if errors:
-                return (False, errors)
-            return (True, "")
+            if not valid:
+                _logger.warning("[RESULT] Validation failed with errors: %s", errors or "None provided")
+            else:
+                _logger.info("[RESULT] Validation passed for CPQ template %s", self.display_name)
+            return valid, errors
 
-        cpq_custom_combination_indices = ""
-        cpq_combination_indices = matched_ptav_ids._ids2str()
+        if not valid:
+            if raise_on_invalidity:
+                raise UserError("\n".join(errors.values() or [_("Invalid configuration.")]))
+            return False, errors or {"general": _("This configuration is not possible.")}
 
-        search_domain.append(("cpq_combination_indices", "=", cpq_combination_indices))
+        _logger.info("[OK] CPQ configuration accepted without errors.")
+        return True, {}
 
-        if matched_custom_ptav_ids:
-            cpq_custom_combination_indices = ",".join(
-                sorted(
-                    matched_custom_ptav_ids.mapped(
-                        lambda ptav_id: self.env[
-                            "product.product.cpq.custom.value"
-                        ]._generate_hash(ptav_id, matched_custom_dict.get(ptav_id))
-                    )
-                )
-            )
 
-        search_domain.append(
-            ("cpq_custom_combination_indices", "=", cpq_custom_combination_indices)
-        )
+    def _cpq_generate_virtual_ptavs(self, cpq_value_ids):
+        """Generate in-memory virtual PTAVs based on cpq.attribute.value records."""
+        self.ensure_one()
+        PTAV = self.env['product.template.attribute.value']
+        ProductAttr = self.env['product.attribute']
+        ProductAttrVal = self.env['product.attribute.value']
+        virtual_ptavs = PTAV.browse()
 
-        return (
-            search_domain,
-            matched_custom_dict,
-            matched_ptav_ids,
-            cpq_combination_indices,
-            cpq_custom_combination_indices,
-        )
+        for cpq_val in cpq_value_ids:
+            if not cpq_val.exists():
+                _logger.warning("⚠️ Skipping CPQ value ID %s: record not found.", cpq_val.id)
+                continue
+
+            cpq_attr = cpq_val.attribute_id
+            if not cpq_attr or not cpq_attr.exists():
+                _logger.warning("⚠️ Skipping CPQ value '%s' (ID: %s): missing attribute.", cpq_val.name, cpq_val.id)
+                continue
+
+            product_attr = cpq_attr.linked_product_attribute_id
+            if not product_attr:
+                product_attr = ProductAttr.create({
+                    "name": cpq_attr.name,
+                    "create_variant": "no_variant",
+                })
+                cpq_attr.linked_product_attribute_id = product_attr
+                _logger.info("🔗 Created product.attribute '%s' for CPQ attribute ID %s", product_attr.name, cpq_attr.id)
+
+            pav = ProductAttrVal.search([
+                ("name", "=", cpq_val.name),
+                ("attribute_id", "=", product_attr.id),
+            ], limit=1)
+
+            if not pav:
+                _logger.warning("X No matching product.attribute.value for CPQ value '%s' under attribute '%s'", cpq_val.name, product_attr.name)
+                continue
+
+            virtual_ptav = PTAV.new({
+                "product_tmpl_id": self.id,
+                "attribute_id": product_attr.id,
+                "product_attribute_value_id": pav.id,
+            })
+            virtual_ptavs += virtual_ptav
+
+        return virtual_ptavs
+
+
+    # def _cpq_generate_virtual_ptavs(self, cpq_value_ids):
+    #     """Generate in-memory virtual PTAVs based on cpq.attribute.value records."""
+    #     self.ensure_one()
+    #     PTAV = self.env['product.template.attribute.value']
+    #     ProductAttr = self.env['product.attribute']
+    #     virtual_ptavs = PTAV.browse()
+
+    #     for cpq_val in cpq_value_ids:
+    #         if not cpq_val.exists():
+    #             _logger.warning("Skipping CPQ value ID %s: record not found.", cpq_val.id)
+    #             continue
+
+    #         cpq_attr = cpq_val.attribute_id
+    #         if not cpq_attr or not cpq_attr.exists():
+    #             _logger.warning("Skipping CPQ value %s (ID: %s): missing attribute.", cpq_val.name, cpq_val.id)
+    #             continue
+
+    #         product_attr = cpq_attr.linked_product_attribute_id
+    #         if not product_attr:
+    #             product_attr = ProductAttr.create({
+    #                 "name": cpq_attr.name,
+    #             })
+    #             cpq_attr.linked_product_attribute_id = product_attr
+    #             _logger.info("🔗 Created product.attribute '%s' for CPQ attribute ID %s", product_attr.name, cpq_attr.id)
+
+    #         virtual_ptav = PTAV.new({
+    #             "product_tmpl_id": self.id,
+    #             "attribute_id": product_attr.id,
+    #             "product_attribute_value_id": cpq_val.id,
+    #         })
+    #         virtual_ptavs += virtual_ptav
+
+    #     return virtual_ptavs
 
     def _cpq_get_create_variant(self, ptav_ids, custom_dict):
         self.ensure_one()
@@ -791,12 +712,11 @@ class ProductTemplate(models.Model):
         for tmpl in templates_to_fix:
             if not tmpl.cpq_ref and not tmpl.valid_product_template_attribute_line_ids:
                 tmpl.cpq_ok = False
-                logs.append(f"✅ Disabled cpq_ok for: {tmpl.name} (ID: {tmpl.id})")
+                logs.append(f"Disabled cpq_ok for: {tmpl.name} (ID: {tmpl.id})")
             else:
                 logs.append(f"🟢 Kept cpq_ok=True for: {tmpl.name} (ID: {tmpl.id}) - cpq_ref: {tmpl.cpq_ref}, attrib lines: {tmpl.valid_product_template_attribute_line_ids.ids}")
         return '\n'.join(logs)
     
-
     def action_add_price_matrix_line(self):
         self.ensure_one()
         return {

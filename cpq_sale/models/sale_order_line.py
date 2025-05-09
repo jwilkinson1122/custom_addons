@@ -30,6 +30,13 @@ class SaleOrderLine(models.Model):
     #                                       "sale order line."
     #                                  )
 
+    linked_option_ids = fields.Many2many(
+        "product.options",
+        string="Linked Options",
+        help="Linked options for CPQ products.",
+        domain="[('is_leaf', '=', True)]",
+        )
+
     cpq_laterality = fields.Selection(
         selection=[
             ('left', 'Left Only'),
@@ -95,7 +102,7 @@ class SaleOrderLine(models.Model):
     def _compute_price_unit_display(self):
         for line in self:
             if line.product_template_id.cpq_ok and line.price_unit == 0.0:
-                line.price_unit_display = "⚙️ Configure to see price"
+                line.price_unit_display = "Configure to see price"
             else:
                 line.price_unit_display = f"{line.price_unit:.2f}"
 
@@ -113,9 +120,9 @@ class SaleOrderLine(models.Model):
             if not line.cpq_configuration_json:
                 continue
             try:
-                config = get_cpq_config_dict(line)  # ✅ Cleaner and safe
+                config = get_cpq_config_dict(line)  # Cleaner and safe
 
-                _logger.info("🧩 [CPQ] Applying configuration to order line: %s", json.dumps(config, indent=2))
+                _logger.info("[CPQ] Applying configuration to order line: %s", json.dumps(config, indent=2))
 
                 line.name = config.get("name") or line.name
                 line.product_uom_qty = config.get("quantity_to_make", line.product_uom_qty)
@@ -134,14 +141,14 @@ class SaleOrderLine(models.Model):
                 )
 
             except Exception as e:
-                _logger.warning(f"⚠️ Failed to parse CPQ config JSON: {e}")
+                _logger.warning(f"Failed to parse CPQ config JSON: {e}")
 
     @api.depends('cpq_configuration_json')
     def _compute_cpq_laterality(self):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue  # Skip non-CPQ lines!
             config = get_cpq_config_dict(line.cpq_configuration_json)
             line.cpq_laterality = config.get('laterality')
             
@@ -150,7 +157,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue  # Skip non-CPQ lines!
             config = get_cpq_config_dict(line.cpq_configuration_json)
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
@@ -163,7 +170,7 @@ class SaleOrderLine(models.Model):
                 continue  # 🟡 No product selected → nothing to do
 
             if line.product_id.cpq_ok:
-                # ✅ CPQ Product → skip price/UoM, configurator will handle this later
+                # CPQ Product → skip price/UoM, configurator will handle this later
                 partner_lang = line.order_id.partner_id.lang if line.order_id.partner_id else self.env.user.lang
                 if line.product_id.cpq_description_sale_tmpl:
                     product = line.product_id.with_context(lang=partner_lang)
@@ -196,7 +203,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue  # Skip non-CPQ lines!
             config = self._parse_json_field(line.cpq_configuration_json)
             if not config:
                 line.name = line.product_id.display_name or line.product_id.name
@@ -234,14 +241,14 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue  # Skip non-CPQ lines!
             config = line._parse_config()
             if not config:
                 line.cpq_configuration_summary = "No configuration available."
                 continue
             try:
                 config = line._parse_config()
-                _logger.info(f"🧩 Generating summary for Sale Order Line {line.id}")
+                _logger.info(f"Generating summary for Sale Order Line {line.id}")
                 _logger.info(f"Config Data: {config}")
 
                 summary_html = render_summary_html(self.env, line.order_id, config)
@@ -249,7 +256,7 @@ class SaleOrderLine(models.Model):
                 line.cpq_configuration_summary = summary_html
 
             except Exception as e:
-                _logger.warning(f"⚠️ Failed to generate summary HTML: {e}")
+                _logger.warning(f"Failed to generate summary HTML: {e}")
                 config = line._parse_config()
 
     def _parse_config(self):
@@ -264,30 +271,30 @@ class SaleOrderLine(models.Model):
 
         # 🛑 Ensure line is saved (no virtual/unsaved IDs)
         if not self.id or isinstance(self.id, NewId):
-            raise UserError("⚠️ Please save the order before editing this configuration.")
+            raise UserError("Please save the order before editing this configuration.")
 
-        # 🔍 Validate template
+        # Validate template
         tmpl = self.product_template_id or self.product_id.product_tmpl_id
         if not tmpl:
-            raise UserError("⚠️ No product template linked to this line.")
+            raise UserError("No product template linked to this line.")
 
-        # 🔍 Validate order context
+        # Validate order context
         if not self.order_id or not self.order_id.id:
-            raise UserError("⚠️ This line is not linked to a valid order.")
+            raise UserError("This line is not linked to a valid order.")
         if not self.order_id.currency_id:
-            raise UserError("⚠️ Missing currency on the order.")
+            raise UserError("Missing currency on the order.")
 
-        # 🧩 Compose safe JS context
+        # Compose safe JS context
         return {
             "type": "ir.actions.client",
             "tag": "cpq.ConfigureDialogAction",
             "context": {
                 "active_model": "sale.order.line",
                 "active_id": self.id, 
-                # 🚀 CPQ metadata
+                # CPQ metadata
                 "cpq_product_template_id": tmpl.id,
                 "cpq_initial_config": self.cpq_configuration_json or {},
-                # ✅ Dialog behavior
+                # Dialog behavior
                 "from_sale_order": True,
                 "redirect_to_line": True,
                 "edit": not isinstance(self.id, NewId),
@@ -356,9 +363,9 @@ class SaleOrderLine(models.Model):
         if not config:
             raise UserError("No CPQ configuration found or it could not be parsed.")
 
-        _logger.info("🧩 [CPQ] Creating product from configuration: %s", json.dumps(config, indent=2))
+        _logger.info("[CPQ] Creating product from configuration: %s", json.dumps(config, indent=2))
 
-        # ✅ Safety check: prevent duplicate CPQ product creation
+        # Safety check: prevent duplicate CPQ product creation
         if self.product_id and self.product_id.default_code and self.product_id.default_code.startswith("CFG-"):
             raise UserError("This line is already linked to a custom CPQ product.")
 
@@ -390,10 +397,10 @@ class SaleOrderLine(models.Model):
         self._apply_cpq_attributes_to_product(config, new_product)
 
         self.message_post(body=_(
-            f"🧩 Product <b>{new_product.display_name}</b> created from CPQ configuration."
+            f"Product <b>{new_product.display_name}</b> created from CPQ configuration."
         ))
         new_product.message_post(body=_(
-            f"🧩 Created from CPQ configuration on Sale Order <b>{self.order_id.name}</b>."
+            f"Created from CPQ configuration on Sale Order <b>{self.order_id.name}</b>."
         ))
 
         self.product_id = new_product.id
@@ -415,19 +422,19 @@ class SaleOrderLine(models.Model):
         ptavs = self.env['product.template.attribute.value'].browse(ptav_ids)
 
         total_extra = sum(ptav.price_extra for ptav in ptavs)
-        _logger.info(f"🧩 Total extras calculated: {total_extra}")
+        _logger.info(f"Total extras calculated: {total_extra}")
         return total_extra
     
     @api.model
     def _generate_cpq_description(self, config, total_extra):
         parts = [
             f"🦶 Laterality: {config.get('laterality', '').capitalize()}",
-            f"📦 Quantity: {config.get('quantity_to_make', 1)}",
+            f"Quantity: {config.get('quantity_to_make', 1)}",
         ]
 
         selected = config.get("selected", {})
         if selected:
-            parts.append("🧩 Selected Options:")
+            parts.append("Selected Options:")
             for _, value in selected.items():
                 parts.append(f"• {value}")
 
@@ -445,7 +452,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id.cpq_ok:
                 line.cpq_laterality = False
-                continue  # ✅ Skip non-CPQ lines!
+                continue  # Skip non-CPQ lines!
             config = get_cpq_config_dict(line.cpq_configuration_json)
             breakdown = compute_cpq_price_breakdown(self.env, line, config)
             line.cpq_total_price = breakdown.get("total", 0.0)
@@ -466,7 +473,7 @@ class SaleOrderLine(models.Model):
             'product_template_attribute_value_ids': [(6, 0, ptav_records.ids)],
         })
 
-        _logger.info(f"🧩 Applied CPQ attributes to product {product.display_name}: {ptav_records.mapped('name')}")
+        _logger.info(f"Applied CPQ attributes to product {product.display_name}: {ptav_records.mapped('name')}")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -481,6 +488,6 @@ class SaleOrderLine(models.Model):
                 if tmpl and tmpl.cpq_ok:
                     product = tmpl._ensure_configurator_product()
                     vals["product_id"] = product.id
-                    _logger.info("⚙️ Injected fallback product_id=%s for CPQ template_id=%s", product.id, tmpl.id)
+                    _logger.info("Injected fallback product_id=%s for CPQ template_id=%s", product.id, tmpl.id)
 
         return super().create(vals_list)

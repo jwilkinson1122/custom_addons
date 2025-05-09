@@ -1,5 +1,8 @@
+import logging
 from odoo import models
 from odoo.osv import expression
+
+_logger = logging.getLogger(__name__)
 
 class CPQCustomFieldMixin(models.AbstractModel):
     _name = "cpq.custom.field.mixin"
@@ -140,3 +143,5 @@ class CPQCustomFieldMixin(models.AbstractModel):
 
     def _cpq_validate_custom_many2one(self, value):
         raise NotImplementedError()
+    
+ 

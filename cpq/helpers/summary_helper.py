@@ -5,7 +5,7 @@ from odoo.tools.translate import _
 from odoo import _
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError
-from odoo.models import BaseModel
+from odoo.models import BaseModel, NewId
 
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def get_cpq_config_dict(raw):
         elif isinstance(raw, dict):
             return raw
     except Exception as e:
-        _logger.warning(f"⚠️ CPQ config decode failed: {e}")
+        _logger.warning(f"CPQ config decode failed: {e}")
     return {}
 
 def format_currency(amount, env):
@@ -37,8 +37,21 @@ def render_summary_html(env, order, config):
     def get_label_and_value(ptav_id):
         ptav = get_ptav(ptav_id)
         if ptav.exists():
-            return ptav.attribute_id.name, ptav.name, ptav.price_extra
-        return str(ptav_id), str(ptav_id), 0.0
+            linked_option = ptav.product_attribute_value_id.linked_option_id
+            return (
+                ptav.attribute_id.name,
+                ptav.name,
+                ptav.price_extra,
+                linked_option.name if linked_option else None,
+            )
+        return str(ptav_id), str(ptav_id), 0.0, None
+
+    def render_line(attr_label, value_label, side, price, linked_option):
+        label = f"{attr_label} - {side}: <b>{value_label}</b>"
+        if linked_option:
+            label += f" <span class='text-info'>[{linked_option}]</span>"
+        label += f"<span class='float-end text-muted'>+ ${price:.2f}</span>"
+        return f"<div>{label}</div>"
 
     lines = []
     left_total = right_total = 0.0
@@ -46,38 +59,21 @@ def render_summary_html(env, order, config):
     if laterality == "bilateral" and split:
         left = selected.get("left", {})
         right = selected.get("right", {})
-        combined = {}
-
-        for ptav_id in set(left.keys()).union(right.keys()):
-            attr_label, _, _ = get_label_and_value(ptav_id)
-            combined.setdefault(attr_label, {"left": None, "right": None, "ptav_id_left": None, "ptav_id_right": None})
-
+        all_ptav_ids = set(left.keys()) | set(right.keys())
+        for ptav_id in all_ptav_ids:
             if ptav_id in left:
-                _, val, price = get_label_and_value(ptav_id)
-                combined[attr_label]["left"] = val
-                combined[attr_label]["ptav_id_left"] = ptav_id
+                attr, val, price, opt = get_label_and_value(ptav_id)
+                lines.append(render_line(attr, val, "Left", price, opt))
                 left_total += price
-
             if ptav_id in right:
-                _, val, price = get_label_and_value(ptav_id)
-                combined[attr_label]["right"] = val
-                combined[attr_label]["ptav_id_right"] = ptav_id
+                attr, val, price, opt = get_label_and_value(ptav_id)
+                lines.append(render_line(attr, val, "Right", price, opt))
                 right_total += price
-
-        for attr_label, vals in combined.items():
-            if vals["left"]:
-                left_val = vals["left"]
-                price = get_label_and_value(vals["ptav_id_left"])[2]
-                lines.append(f"<div>{attr_label} - Left: <b>{left_val}</b> <span class='float-end text-muted'>+ ${price:.2f}</span></div>")
-            if vals["right"]:
-                right_val = vals["right"]
-                price = get_label_and_value(vals["ptav_id_right"])[2]
-                lines.append(f"<div>{attr_label} - Right: <b>{right_val}</b> <span class='float-end text-muted'>+ ${price:.2f}</span></div>")
     else:
         side_label = {"left": "Left", "right": "Right", "bilateral": "Bilateral"}.get(laterality, "Shared")
-        for ptav_id, val in selected.items():
-            attr_label, value_label, price = get_label_and_value(ptav_id)
-            lines.append(f"<div>{attr_label} - {side_label}: <b>{value_label}</b> <span class='float-end text-muted'>+ ${price:.2f}</span></div>")
+        for ptav_id, _ in selected.items():
+            attr, val, price, opt = get_label_and_value(ptav_id)
+            lines.append(render_line(attr, val, side_label, price, opt))
             if laterality == "left":
                 left_total += price
             elif laterality == "right":
@@ -93,7 +89,6 @@ def render_summary_html(env, order, config):
     extras_total = left_total + right_total
     total = (base_price + extras_total) * quantity
 
-    # 🧾 Price Explanation
     breakdown_note = f"(${unit_base_price:.2f} x {base_multiplier})"
     price_block = f"""
         <div class="cpq-summary-card mt-2">
@@ -105,10 +100,8 @@ def render_summary_html(env, order, config):
         </div>
     """
 
-
     return Markup(f"""<div class='cpq-summary-card'>{''.join(lines)}{price_block}</div>""")
 
-    # return Markup(f"<div class='cpq-summary'>{''.join(lines)}{price_block}</div>")
 
 def render_summary_plaintext(env, order, config):
     html = render_summary_html(env, order, config)
@@ -125,13 +118,13 @@ def compute_cpq_price_breakdown(env, order_line, config):
     split = config.get("split", False)
     selected = config.get("selected", {}) or {}
 
-    # 🔍 Extract all PTAV IDs from the configuration
+    # Extract all PTAV IDs from the configuration
     if laterality == "bilateral" and split:
         ptav_ids = [int(pid) for side in ("left", "right") for pid in selected.get(side, {}).keys()]
     else:
         ptav_ids = [int(pid) for pid in selected.keys() if str(pid).isdigit()]
 
-    # 🔁 Check for matrix override
+    # Check for matrix override
     matrix = env["cpq.price.matrix"].sudo()
     candidate_matrices = matrix.search([
     ("product_tmpl_id", "=", product_template.id),
@@ -224,6 +217,36 @@ def get_partner_discount(env, partner, template):
 # partner categories
 # volume tiers
 # custom partner fields (e.g., partner.cpq_discount_pct)
+
+def sanitize_for_json(obj):
+    """
+    Recursively sanitize any object for safe JSON serialization.
+    Converts Odoo recordsets, NewId, and other non-serializable objects
+    to safe representations (usually by `.id` or `None`).
+    """
+
+    if isinstance(obj, dict):
+        return {
+            sanitize_for_json(k): sanitize_for_json(v)
+            for k, v in obj.items()
+            if not isinstance(k, NewId)  # filter bad keys
+        }
+
+    elif isinstance(obj, list):
+        return [sanitize_for_json(i) for i in obj]
+
+    elif isinstance(obj, BaseModel):
+        # If the record is virtual, return None or string fallback
+        return obj.id if obj.id else None
+
+    elif isinstance(obj, NewId):
+        return None
+
+    elif isinstance(obj, set):
+        return list(map(sanitize_for_json, obj))
+
+    else:
+        return obj
 
 
 

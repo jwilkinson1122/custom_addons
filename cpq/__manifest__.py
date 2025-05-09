@@ -25,6 +25,7 @@
         "views/product_attribute.xml",
         "views/cpq_attribute.xml",
         "views/product_options.xml",
+        "views/cpq_repair_tools.xml",
         "views/menu.xml",
     ],
     "demo": [],
@@ -34,4 +35,5 @@
             "cpq/static/src/components/**/*",
         ],
     },
+    "post_init_hook": "post_init_hook",
 }

@@ -1,0 +1,82 @@
+<odoo>
+
+    <record id="action_cpq_repair_links_url" model="ir.actions.act_url">
+        <field name="name">Repair CPQ Links</field>
+        <field name="type">ir.actions.act_url</field>
+        <field name="url">/cpq/dev/repair_links</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_cpq_check_links_url" model="ir.actions.act_url">
+        <field name="name">Check CPQ Links</field>
+        <field name="type">ir.actions.act_url</field>
+        <field name="url">/cpq/dev/check_links</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="action_cleanup_cpq_values" model="ir.actions.server">
+        <field name="name">Cleanup Broken CPQ Values</field>
+        <field name="model_id" ref="cpq.model_cpq_attribute_value"/>
+        <field name="binding_model_id" ref="cpq.model_cpq_attribute_value"/>
+        <field name="state">code</field>
+        <field name="code">model.cleanup_cpq_values_ui()</field>
+    </record>
+
+    <record id="action_cleanup_orphaned_ptavs" model="ir.actions.server">
+        <field name="name">Cleanup Orphaned PTAVs</field>
+        <field name="model_id" ref="product.model_product_template_attribute_value"/>
+        <field name="binding_model_id" ref="product.model_product_template_attribute_value"/>
+        <field name="state">code</field>
+        <field name="code">model.cleanup_ptavs_ui()</field>
+    </record>
+
+    <record id="action_fix_cpq_links" model="ir.actions.server">
+        <field name="name">Fix CPQ Links</field>
+        <field name="model_id" ref="cpq.model_cpq_attribute_value"/>
+        <field name="binding_model_id" ref="cpq.model_cpq_attribute_value"/>
+        <field name="state">code</field>
+        <field name="code">action = model.fix_links_ui()</field>
+    </record>
+
+ 
+<!-- <record id="action_fix_cpq_links" model="ir.actions.server">
+    <field name="name">Fix CPQ Links</field>
+    <field name="model_id" ref="cpq.model_cpq_attribute_value"/>
+    <field name="binding_model_id" ref="cpq.model_cpq_attribute_value"/>
+    <field name="state">code</field>
+    <field name="code"><![CDATA[
+action = model.fix_links_ui()
+    ]]></field>
+</record> -->
+
+
+<record id="action_cpq_clean_orphaned_ptavs" model="ir.actions.server">
+    <field name="name">Clean Orphaned PTAVs</field>
+    <field name="model_id" ref="product.model_product_template_attribute_value"/>
+    <field name="binding_model_id" ref="product.model_product_template_attribute_value"/>
+    <field name="state">code</field>
+    <field name="code"><![CDATA[
+result = model.clean_orphaned_records()
+message = "PTAV Cleanup Complete:\n- Broken attribute_id: %s\n- Broken product_attribute_value_id: %s\n- Total removed: %s" % (
+    result["broken_attribute_ids"],
+    result["broken_value_ids"],
+    result["total_removed"]
+)
+action = {
+    "type": "ir.actions.client",
+    "tag": "display_notification",
+    "params": {
+        "title": "CPQ Cleanup",
+        "message": message,
+        "type": "success",
+        "sticky": False,
+    },
+}
+]]></field>
+</record>
+
+
+
+
+</odoo>

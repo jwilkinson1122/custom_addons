@@ -16,6 +16,7 @@ patch(SaleOrderLineProductField.prototype, {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.skipNextProductTemplateUpdate = false;
+        
     },
 
     _isBackendCpq(result) {
@@ -49,7 +50,7 @@ patch(SaleOrderLineProductField.prototype, {
         console.log("🟢 Resolved product variant:", result);
     
         if (this._isCpq(result)) {
-            console.log("✅ CPQ product detected — opening configurator dialog.");
+            console.log("CPQ product detected — opening configurator dialog.");
             return this._cpqConfigureDialog(result);
         }
     
@@ -61,15 +62,15 @@ patch(SaleOrderLineProductField.prototype, {
             });
             await this._onProductUpdate();
         } else {
-            console.warn("❌ Unexpected product resolution result:", result);
+            console.warn("Unexpected product resolution result:", result);
             this.notification.add("No variant found or invalid CPQ mode.", { type: "danger" });
         }
     },
     
     async _onProductUpdate() {
         if (this._isFrontendCpq()) {
-            console.log("⚙️ CPQ Product selected — skipping native product update handling.");
-            return; // ✅ Skip native logic entirely
+            console.log("CPQ Product selected — skipping native product update handling.");
+            return; // Skip native logic entirely
         }
     
         const productId = Array.isArray(this.props.record.data.product_id)
@@ -89,7 +90,7 @@ patch(SaleOrderLineProductField.prototype, {
 
     onProductChange(ev) {
         if (this._isFrontendCpq()) {
-            console.log("⚙️ CPQ Product selected — skipping onProductChange.");
+            console.log("CPQ Product selected — skipping onProductChange.");
             return;
         }
     
@@ -98,7 +99,7 @@ patch(SaleOrderLineProductField.prototype, {
     
     _editProductConfiguration() {
         if (this._isFrontendCpq()) {
-            console.log("✅ CPQ Product detected — opening configurator.");
+            console.log("CPQ Product detected — opening configurator.");
             return this._cpqConfigureDialog();
         }
         console.log("🛑 Non-CPQ product — using native Odoo flow.");
@@ -112,9 +113,10 @@ patch(SaleOrderLineProductField.prototype, {
         return this._cpqConfigureDialog();
     },
 
+
     async _cpqConfigureDialog(result = null) {
         if (result && !this._isCpq(result)) {
-            console.warn("❌ Tried to open CPQ configurator for a non-CPQ product. Aborting.");
+            console.warn("Tried to open CPQ configurator for a non-CPQ product. Aborting.");
             return;
         }
         this.skipNextProductTemplateUpdate = false;
@@ -156,7 +158,7 @@ patch(SaleOrderLineProductField.prototype, {
                 console.warn(`🚧 Skipped fields (not in view):`, skippedFields);
             }
         
-            // ✅ Safe way to update the record's ID without assigning to .resId
+            // Safe way to update the record's ID without assigning to .resId
             if (backendData.id && !record.resId) {
                 safeData.id = backendData.id;
             }
@@ -193,10 +195,10 @@ patch(SaleOrderLineProductField.prototype, {
     
                 await safeFrontendUpdate(this.props.record, lineData);
     
-                this.notification.add(_t("✅ Order line created! Opening configurator..."), { type: "success" });
+                this.notification.add(_t("Order line created! Opening configurator..."), { type: "success" });
                 this._pulseLine(activeId);
 
-                isVirtual = false;  // 🔁 just created, so no longer virtual
+                isVirtual = false;  // just created, so no longer virtual
             }
 
             // const isEdit = typeof activeId === "number" && !isVirtual;
@@ -207,7 +209,7 @@ patch(SaleOrderLineProductField.prototype, {
                 : {};
             
 
-            console.log("✅ Final record.resId before dialog:", this.props.record.resId);
+            console.log("Final record.resId before dialog:", this.props.record.resId);
 
             this.dialogService.add(ConfigureDialog, {
                 record: this.props.record,
@@ -221,9 +223,9 @@ patch(SaleOrderLineProductField.prototype, {
                         this.skipNextProductTemplateUpdate = true;
                         const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
                         await this.props.record.update(updatedValues);
-                        this.notification.add("✅ Configuration applied successfully.", { type: "success" });
+                        this.notification.add("Configuration applied successfully.", { type: "success" });
                     } catch (err) {
-                        console.error("❌ Failed to apply config update:", err);
+                        console.error("Failed to apply config update:", err);
                         this.notification.add("Failed to save configuration.", { type: "danger" });
                     }
                 },
@@ -231,14 +233,13 @@ patch(SaleOrderLineProductField.prototype, {
                 discard: () => this.notification.add("Configurator discarded.", { type: "warning", title: "CPQ Cancelled" }),
             });
         } catch (error) {
-            console.error("❌ Failed to open CPQ configurator:", error);
+            console.error("Failed to open CPQ configurator:", error);
             this.notification.add("An error occurred. Please try again.", { type: "danger" });
         } finally {
             await this.env.services.ui.unblock();
         }
     },
     
-
     _pulseLine(lineId) {
         setTimeout(() => {
             const lineEl = document.querySelector(`[data-id="${lineId}"]`);
@@ -255,4 +256,5 @@ patch(SaleOrderLineProductField.prototype, {
             }
         }, 300);
     },
+
 });

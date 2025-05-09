@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<t t-name="pos_modify_product.ProductTemplatePopup" owl="1">
+		<div class="popup popup-import">
+            <div class="modal-header">
+                <h4 class="modal-title title drag-handle" style="color: #714b67;font-weight: bold;">
+                    Products Variants
+                </h4>
+            </div>
+            <main class="body modal-body">
+                <div style="overflow : auto">
+                    <t t-if="props.variant_ids.length > 0">
+                        <div class="product-list d-grid" style="max-height: 360px;overflow: auto;">
+                            <t t-foreach="props.variant_ids" t-as="product" t-key="product.id">
+                                <article class="product-list d-grid gap-1 p-1" tabindex="0" t-on-click="() => this.add_product(product)" t-att-data-product-id="product.id" t-attf-aria-labelledby="article_product_{{product.id}}">
+                                    <div class="product-img">
+                                        <img t-att-src="imageUrl" t-att-alt="product.display_name" />
+                                    </div>
+                                    <div class="product-name" t-attf-id="article_product_{{product.id}}">
+                                        <t t-esc="product.display_name" />
+                                    </div>
+                                    <span class="price-tag">
+                                        <t t-esc="product.price" />
+                                    </span>
+                                </article>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <p>No Options Products are added.</p>
+                    </t>
+                </div>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="confirm">
+                    Cancel
+                </div>
+            </footer>
+        </div>
+	</t>
+	<t t-name="ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-content')]" position="replace">
+            <t t-set="product" t-value="this.env.services.pos.db.product_by_id[props.productId]"/>
+            <div class="product-content d-flex flex-column justify-content-between h-100 mx-2 py-1">
+                <div t-attf-class="#{props.class ? 'product-name' : 'product-name no-image' }" t-attf-id="article_product_{{props.productId}}">
+                    <t t-if="product.product_variant_count > 1">
+                        <t t-esc="product.template_name" />
+                    </t>
+                    <t t-else="">
+                        <t t-esc="props.name" />
+                    </t>
+                </div>
+                <span class="price-tag text-primary py-1 fw-bolder">
+                    <t t-if="product.product_variant_count > 1">
+                        <t t-esc="product.product_variant_count"/>Variants
+                    </t>
+                    <t t-else="">
+                        <t t-esc="props.price"/>
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </t>
+	<t t-name="ProductTemplateListWidget" owl="1">
+		<div class='productt-list-container'>
+			<div class="productt-list-scroller touch-scrollable  scrollable-y">
+				<div class="productt-list">
+				</div>
+			</div>
+			<span class="placeholder-ScrollbarWidget" />
+		</div>
+	</t>
+	<t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ul[hasclass('info-list')]" position="after">
+            <ul>
+				<t t-if="props.line.line_modifier">
+					<li class="package_info" style="margin-left: 0px; font-size: 14px; width: 100%;">
+						<t t-foreach="props.line.line_modifier" t-as="line" t-key="line.id">
+							<t t-if="line.laterality_type == 'bilateral'">
+								<span style="font-weight: bold;">
+									<t t-esc="line.display_name"/>
+								</span>
+								<span style="color:#888">
+									<t t-esc="(line.qty).toFixed(2)"/>
+									<t t-esc="line.uom_id[1]"/>
+									<t t-esc="line.laterality"/>
+									<br/>
+								</span>
+							</t>
+							<t t-if="line.laterality_type == 'left'">
+								<span style="font-weight: bold;">
+									<t t-esc="line.display_name"/>
+								</span>
+								<span style="color:#888">
+									<t t-esc="(line.qty).toFixed(1)"/>
+									<t t-esc="line.uom_id[1]"/>
+									<t t-esc="line.laterality"/>
+									<br/>
+								</span>
+							</t>
+							<t t-if="line.laterality_type == 'right'">
+								<span style="font-weight: bold;">
+									<t t-esc="line.display_name"/>
+								</span>
+								<span style="color:#888">
+									<t t-esc="(line.qty).toFixed(1)"/>
+									<t t-esc="line.uom_id[1]"/>
+									<t t-esc="line.laterality"/>
+									<br/>
+								</span>
+							</t>
+							<t t-if="line.is_sub">
+								<span style="font-weight: bold;">
+									<t t-esc="line.display_name"/>
+								</span>
+								<span style="color:#888">
+									<t t-esc="(line.qty)"/>
+									<t t-esc="line.uom_id[1]"/>
+									<br/>
+								</span>
+							</t>
+						</t>
+					</li>
+				</t>
+        	</ul>
+        </xpath>
+    </t>
+	<t t-name="ProductsWidget" t-inherit="point_of_sale.ProductsWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-list-empty')]" position="after">
+            <div class="modifiers-list" style="display:none;">
+            	<div class="partnerlist-screen screen h-100 d-flex flex-column bg-100">
+					<t t-if="!env.isMobile">
+                        <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                            <div class="button back btn btn-lg btn-secondary mx-2 w-25" t-on-click="closeModifierScreen">
+                                <i class="fa fa-angle-double-left fa-fw"></i>
+			                     Cancel
+                            </div>
+                            <div class="top-content-center flex-grow-1">
+                                <h1 class="mb-0">
+                                    <span id="modifier-product-name">
+                                    </span>
+                                </h1>
+                            </div>
+                            <div class="top-right-buttons d-flex gap-2 justify-content-end">
+                                <div class="button btn btn-lg btn-secondary mx-2" t-on-click="doneModifier">
+				                    Done
+                                    <i class="fa fa-angle-double-right fa-fw"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+					<div class="main-content modifier-full-content">
+                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                            <div class="device_info">
+                                <p id="ask">How Would you modify your item??</p>
+                                <p id="bilateral_device" style="display:none;">Please Choose Modifier for Bilateral.</p>
+                                <p id="left_device" style="display:none;">Please Choose Modifier For the Left.</p>
+                                <p id="right_device" style="display:none;">Please Choose Modifier For the Right.</p>
+                            </div>
+                            <div id="device_types">
+                                <div class="d-flex hiddenradio">
+                                    <div class="device-selection">
+                                        <label>
+                                            <input style="width: 30px; float: left;" type="radio" class="radio" name="x" value="left" id="z" t-on-click="left_side"/>
+                                            <img src="/pos_modify_product/static/src/img/left_device.png" style="margin:20px; width:120px; border-radius: 120px"/>
+                                        </label>
+                                        <div id="left_side_device" style="display:none;">
+                                            <input checked="checked" style="width: 30px; float: left;" type="radio" class="radio" name="left" value="left side" id="left_side"/>
+                                            <label for="left_side" class="oe_inline" style="font-weight:bold;">Left Side</label>
+                                        </div>
+                                    </div>
+                                    <div class="device-selection">
+                                        <label>
+                                            <input style="width: 30px; float: left;" type="radio" class="radio" name="x" value="bilateral" id="y" t-on-click="bilateral"/>
+                                            <img src="/pos_modify_product/static/src/img/pair_device.png" style="margin: 20px; width:220px; border-radius: 60px"/>
+                                        </label>
+                                        <div id="bilateral_pair_device" style="display:none;">
+                                            <input checked="checked" style="width: 30px; float: left;" type="radio" class="radio" name="bilateral" value="bilateral" id="bilateral"/>
+                                            <label for="bilateral" class="oe_inline" style="font-weight:bold; display: block;">Bilateral</label>
+                                        </div>
+                                    </div>
+                                    <div class="device-selection">
+                                        <label>
+                                            <input style="width: 30px; float: left;" type="radio" class="radio" name="x" value="right" id="x" t-on-click="right_side"/>
+                                            <img src="/pos_modify_product/static/src/img/right_device.png" style="margin:20px; width:120px; border-radius: 120px"/>
+                                        </label>
+                                        <div id="right_side_device" style="display:none;">
+                                            <input checked="checked" style="width: 30px; float: left;" type="radio" class="radio" name="right" value="right side" id="right_side"/>
+                                            <label for="right_side" style="font-weight:bold; display: block;">Right Side</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="button modifiers-product-list" style="border-top: dashed 1px gainsboro; width: 80%; display:none;">
+                                <t t-if="pos.modifier_attribute">
+                                    <div class="button-container">
+                                        <span class="button-modifier" t-foreach="pos.modifier_attribute" t-as="order" t-att-data-id="order.product_id[0]" t-key="order.id">
+                                            <button class="modiButton" t-att-data-product-id="order.product_id[0]" t-on-click="modifierSelection">
+                                                <t t-esc="order.display_name" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+            	</div>
+			</div>
+			<div class="side-prod-list" style="display:none;">
+                <div class="button_of_side">
+                    <button class="button-side" t-on-click="selectSubProduct">
+                        <i class='fa fa-angle-double-left'></i> Add Sub Product
+                    </button>
+                    <button class="button close-side-prod" t-on-click="cancel_add_side_product">
+                        <i class='fa fa-angle-double-right'></i> Done
+                    </button>
+                </div>
+            </div>
+			<div class="side-prod-info" style="text-align: left;display:none">
+                <div class="partnerlist-screen screen h-100 d-flex flex-column bg-100">
+                    <t t-if="!env.isMobile">
+
+                        <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                            <div class="top-content-center flex-grow-1">
+                                <h1 class="mb-0">Select Sub Products</h1>
+                            </div>
+                            <div class="top-right-buttons d-flex gap-2 justify-content-end">
+                                <div class="button btn btn-lg btn-secondary mx-2" t-on-click="doneSubProduct">
+				                    Done
+                                    <i class="fa fa-angle-double-right fa-fw"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </div>
+                <t t-if="pos.side_prod_list">
+                    <div class="product-list-container">
+                        <div t-if="pos.side_prod_list.length != 0" class="custom-list">
+                            <t t-foreach="pos.side_prod_list" t-as="product" t-key="product.id">
+                                <article t-attf-class="{{product.class}} product position-relative btn btn-light align-items-stretch p-0 m-0 text-start cursor-pointer overflow-hidden transition-base" class="product-list gap-1 p-1side-prod " t-att-data-product-id="product.id" tabindex="0" t-attf-aria-labelledby="article_product_#{product.id}" t-on-click="add_sub_product">
+
+                                    <div class="product-img">
+                                        <img t-att-src='product.image_url' alt="Product image"/>
+                                        <span class="price-tag">
+                                            <t t-esc="env.utils.formatCurrency(product.lst_price,'Product Price')+'/'+product.uom_id[1]"/>
+                                        </span>
+                                    </div>
+                                    <div class="product-name" t-attf-id="article_product_#{product.id}">
+                                        <t t-esc="product.display_name"/>
+                                    </div>
+                                </article>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</template>

@@ -21,14 +21,12 @@ class ProductOptions(models.Model):
     _name = "product.options"
     _description = "CPQ Product Options"
     _rec_name = "display_name"
-
     _parent_name = "parent_id"
     _parent_store = True
     _order = "display_name asc, sequence"
-
     # _order = "parent_path, sequence"
 
-    
+    option_id = fields.Many2one("product.attribute", string="Option Group", required=True)
 
     name = fields.Char(
         string="Title",

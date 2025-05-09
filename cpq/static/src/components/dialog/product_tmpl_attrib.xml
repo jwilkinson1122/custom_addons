@@ -53,13 +53,6 @@
                 <span t-esc="ptav.name" />
             </label>
         </div>
-        <!-- <t t-foreach="attribute.values" t-as="ptav" t-key="ptav.id">
-            <label class="form-check-label">
-                <input type="radio" name="attribute-{{ attribute.id }}" value="{{ ptav.id }}" class="form-check-input" t-on-change="(ev) => handleSelect(ev, ptav.id)" />
-                {{ ptav.formatted_name }}
-            </label>
-        </t> -->
-
     </t>
     <!-- Color Swatch Template -->
     <t t-name="cpq.ProductTmplAttrib-color" owl="1">

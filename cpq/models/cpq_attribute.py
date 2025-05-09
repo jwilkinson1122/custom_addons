@@ -1,6 +1,8 @@
 import logging
 from markupsafe import escape
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+from ..hooks import repair_cpq_attribute_links, cleanup_broken_cpq_values, fix_cpq_links, bulk_fix_is_custom_flags
 from ..helpers.cpq_custom_field_utils import CPQCustomFieldMixin
 
 _logger = logging.getLogger(__name__)
@@ -41,6 +43,11 @@ class CpqAttribute(models.Model):
     # parent_id = fields.Many2one('cpq.attribute', string='Parent Attribute', index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
     child_ids = fields.One2many('cpq.attribute', 'parent_id', string="Sub-attributes")
     # child_badge_info = fields.Json("Child Badges", compute="_compute_child_badge_info", store=False)
+    linked_product_attribute_id = fields.Many2one(
+        "product.attribute",
+        string="Linked Product Attribute",
+        help="Used for bridging CPQ attribute to product.attribute when generating virtual PTAVs."
+    )
     child_badge_info = fields.Char(
         string="Child Badges",
         compute="_compute_child_badge_info",
@@ -122,6 +129,19 @@ class CpqAttribute(models.Model):
             'context': self._context
         }
 
+    def action_repair_cpq_links(self):
+        result = repair_cpq_attribute_links(self.env)
+        # Log or return result as needed
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'CPQ Repair Complete',
+                'message': f"{len(result['values_created'])} values created, {len(result['values_skipped_existing'])} skipped.",
+                'sticky': False,
+            },
+        }
+
         
 class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
     _name = "cpq.attribute.value"
@@ -164,10 +184,34 @@ class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
         "product.options",
         string="Linked Option",
         domain="[('is_leaf', '=', True)]",
+        ondelete='cascade',
         help="Select a predefined product option this attribute value should be associated with. "
          "Used to map free-form or selectable values to structured configuration options under "
          "Custom Options (e.g., 'Heel Options', 'Top Cover Options')."
     )
+
+    # linked_option_id = fields.Many2one(
+    #     "product.attribute.value",
+    #     string="Linked Option",
+    #     domain="[('is_leaf', '=', True)]",
+    #     help="Select a predefined product option this attribute value should be associated with. "
+    #      "Used to map free-form or selectable values to structured configuration options under "
+    #      "Custom Options (e.g., 'Heel Options', 'Top Cover Options')."
+    # )
+    
+    linked_attribute_id = fields.Many2one(
+        related="linked_option_id.option_id",
+        string="Linked Attribute",
+        store=True,
+        readonly=True
+    )
+
+    # product_attribute_value_id = fields.Many2one(
+    #     "product.attribute.value",
+    #     string="Linked Product Attribute Value",
+    #     help="If set, this links the CPQ value to a corresponding product.attribute.value"
+    # )
+
 
     cpq_options_relaxed_validation = fields.Boolean(
         string="Relax Validation",
@@ -182,6 +226,25 @@ class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
         if "name" not in default:
             default["name"] = _("%s (copy)") % (self.name)
         return super().copy(default=default)
+    
+    def cleanup_cpq_values_ui(self):
+        env = self.env
+        broken_ids = cleanup_broken_cpq_values(env, auto_delete=True)
+        raise UserError(" Cleanup complete.\nDeleted %s broken CPQ value(s)." % len(broken_ids))
+    
+    @api.model
+    def fix_links_ui(self):
+        fix_cpq_links(self.env)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "CPQ Repair",
+                "message": "Link repair completed successfully.",
+                "type": "success",
+                "sticky": False,
+            },
+        }
 
 class CpqAttributeChildLink(models.Model):
     _name = "cpq.attribute.child.link"

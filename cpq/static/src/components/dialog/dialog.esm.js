@@ -5,8 +5,8 @@
 /**
  * Resolves the current order and line context for saving CPQ configurations.
  * 
- * ✅ Accepts virtual or missing `activeId` if creating (edit: false)
- * ❌ Throws error if editing (edit: true) but activeId is missing or virtual
+ * Accepts virtual or missing `activeId` if creating (edit: false)
+ * Throws error if editing (edit: true) but activeId is missing or virtual
  * 
  * Sources values from:
  *   - this.props.orderId / this.context.active_sale_order_id
@@ -60,7 +60,23 @@ export class ConfigureDialog extends Component {
     
     setup() {
         super.setup();
+
+        // Always expose for development/testing, safer fallback
+        if (typeof window !== "undefined" && !window._cpqDevDialog) {
+            const isLocal = window.location.hostname === "localhost";
+            if (isLocal) {
+                window._cpqDevDialog = this;
+                console.log("Exposed: window._cpqDevDialog");
+            }
+        }
+        
+        
+        
         validateProps(this, ConfigureDialog.props);
+        this.translate = {
+            validationErrors: _t("Validation errors:"),
+            // Add more as needed
+        };
         this.size = "xl";
         this.orm = useService("orm");
         this.rpc = useService("rpc");
@@ -117,7 +133,7 @@ export class ConfigureDialog extends Component {
         this.updatePricePreview = async () => {
             const productTemplateId = this.productTemplateId;
             if (!productTemplateId) {
-                console.warn("⛔ Skipping price preview: productTemplateId is undefined.");
+                console.warn("Skipping price preview: productTemplateId is undefined.");
                 return;
             }
             const combination = this._flattenCombination(this.state.selected);
@@ -145,10 +161,10 @@ export class ConfigureDialog extends Component {
                     return;
                 }
             } catch (err) {
-                console.warn("⚠️ Server-side price preview failed, using fallback:", err);
+                console.warn("Server-side price preview failed, using fallback:", err);
             }
         
-            // 💡 Fallback to local estimate if server fails
+            // Fallback to local estimate if server fails
             const base = this.productTemplate?.list_price || 0;
             const extras = this.summaryApi?.getSummaryState?.().priceSummary.extrasSubtotal || 0;
             const quantity = this.state.quantityToMake || 1;
@@ -196,7 +212,7 @@ export class ConfigureDialog extends Component {
             try {
                 return JSON.stringify(this.state.selected || {});
             } catch (e) {
-                console.warn("⚠️ Failed to stringify selected:", e);
+                console.warn("Failed to stringify selected:", e);
                 return "invalid-key";
             }
         };
@@ -204,7 +220,7 @@ export class ConfigureDialog extends Component {
         useSubEnv({
             updateQuantity: this.onQuantityChange.bind(this),
             state: this.state,
-            formatCurrency: this.formatCurrency,  // ✅ Expose it here
+            formatCurrency: this.formatCurrency,  // Expose it here
         });
 
         this.onLateralityChange = (ev) => {
@@ -214,7 +230,7 @@ export class ConfigureDialog extends Component {
         };
         
         useEffect(() => {
-            console.log("🔁 useEffect triggered (selected, quantityToMake, laterality, split)");
+            console.log("useEffect triggered (selected, quantityToMake, laterality, split)");
             this._validate();
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
@@ -227,58 +243,6 @@ export class ConfigureDialog extends Component {
             this.state.split,
         ]);
 
-        // onWillStart(async () => {
-        //     console.log("🧩 onWillStart props:", this.props);
-        //     console.log("🧩 onWillStart context:", this.context);
-        //     this.state.isInitializing = true;
-        
-        //     try {
-        //         const loadedData = await this._loadData();
-        //         this.title = this.props.edit
-        //             ? _t("Edit Configuration: %s", loadedData.product_tmpl_id.display_name)
-        //             : _t("Configure: %s", loadedData.product_tmpl_id.display_name);
-        
-        //         this.state.ptalIds = loadedData.ptal_ids;
-        //         this.state.productTemplateId = loadedData.product_tmpl_id.id;
-        //         this.state.productTemplate = loadedData.product_tmpl_id;
-        
-        //         if (!this.state.productTemplate?.id && this.state.productTemplateId) {
-        //             const fallback = await this.orm.call("product.template", "read", [[this.state.productTemplateId], ["name", "uom_id", "currency_id", "list_price"]]);
-        //             this.state.productTemplate = fallback?.[0] || {};
-        //         }
-        
-        //         const initialConfigRaw = this.props.cpqInitialConfig || this.props.context?.cpq_initial_config;
-        //         if (initialConfigRaw) {
-        //             const parsed = typeof initialConfigRaw === "string" ? JSON.parse(initialConfigRaw) : initialConfigRaw;
-        //             this.state.selected = parsed.selected || {};
-        //             this.state.laterality = parsed.laterality || "bilateral";
-        //             this.state.split = parsed.split || false;
-        //             this.state.quantityToMake = parsed.quantity_to_make || 1;
-        
-        //             this.initialState = {
-        //                 laterality: this.state.laterality,
-        //                 split: this.state.split,
-        //                 selected: JSON.parse(JSON.stringify(this.state.selected)),
-        //                 quantityToMake: this.state.quantityToMake,
-        //             };
-        //         }
-        
-        //         await nextTick();
-        //         if (Object.keys(this.state.selected).length > 0) {
-        //             console.warn("🧪 About to validate combination:", this._flattenCombination(this.state.selected));
-        //             await this._validate();
-        //             this.summaryApi?.computeSummary?.();
-        //             this.updatePricePreview();
-        //         }
-        
-        //     } catch (error) {
-        //         console.error("❌ Initialization error:", error);
-        //         this.notification.add("Initialization failed. Please try again.", { type: "danger" });
-        //     } finally {
-        //         this.state.isInitializing = false;
-        //     }
-        // });
-        
         onWillStart(async () => {
             this.state.isInitializing = true;
         
@@ -300,7 +264,7 @@ export class ConfigureDialog extends Component {
                 // You can store the tree if needed:
                 // this.state.attributeTree = tree;
 
-                this.state.ptalIds = tree;  // ✅ Use this as your UI render source
+                this.state.ptalIds = tree;  // Use this as your UI render source
                 this.state.productTemplateId = data.product_tmpl_id.id;
                         
                 // Primary assignment
@@ -338,13 +302,12 @@ export class ConfigureDialog extends Component {
                 }
         
             } catch (error) {
-                console.error("❌ Initialization error:", error);
+                console.error("Initialization error:", error);
                 this.notification.add("Initialization failed. Please try again.", { type: "danger" });
             } finally {
                 this.state.isInitializing = false;
             }
         });
-        
         
         this.onSplitToggle = async () => {
             const goingToShared = this.state.split;
@@ -392,12 +355,12 @@ export class ConfigureDialog extends Component {
                 }
                 if (Object.keys(filteredCopy).length > 0) {
                     this.state.selected.right = JSON.parse(JSON.stringify(filteredCopy));
-                    this.notification.add("✅ Copied Left ➡️ Right", { type: "success" });
+                    this.notification.add("Copied Left Right", { type: "success" });
                 } else {
-                    this.notification.add("⚠️ No compatible attributes to copy Left ➡️ Right.", { type: "warning" });
+                    this.notification.add("No compatible attributes to copy Left Right.", { type: "warning" });
                 }
             } else {
-                this.notification.add("⚠️ Left side has no data to copy.", { type: "warning" });
+                this.notification.add("Left side has no data to copy.", { type: "warning" });
             }
         };
 
@@ -415,12 +378,12 @@ export class ConfigureDialog extends Component {
                 }
                 if (Object.keys(filteredCopy).length > 0) {
                     this.state.selected.left = JSON.parse(JSON.stringify(filteredCopy));
-                    this.notification.add("✅ Copied Right ➡️ Left", { type: "success" });
+                    this.notification.add("Copied Right Left", { type: "success" });
                 } else {
-                    this.notification.add("⚠️ No compatible attributes to copy Right ➡️ Left.", { type: "warning" });
+                    this.notification.add("No compatible attributes to copy Right Left.", { type: "warning" });
                 }
             } else {
-                this.notification.add("⚠️ Right side has no data to copy.", { type: "warning" });
+                this.notification.add("Right side has no data to copy.", { type: "warning" });
             }
         };
 
@@ -437,8 +400,6 @@ export class ConfigureDialog extends Component {
             }, () => [this.state.quantityToMake]);
         };
         this._setupAutoRefresh();
-  
-
     }
 
     _setupAutoRefresh() {
@@ -452,17 +413,17 @@ export class ConfigureDialog extends Component {
         const newQuantity = parseInt(value, 10) || 1;
         this.state.quantityToMake = newQuantity;
     
-        console.log("🧩 Quantity updated to:", this.state.quantityToMake);
+        console.log("Quantity updated to:", this.state.quantityToMake);
     
         this.summaryApi?.computeSummary?.();
         this.updatePricePreview();
 
     }
     
- 
     increaseQuantity() {
         this.state.quantityToMake += 1;
     }
+
     decreaseQuantity() {
         if (this.state.quantityToMake > 1) {
             this.state.quantityToMake -= 1;
@@ -470,20 +431,8 @@ export class ConfigureDialog extends Component {
     }
 
     //---------------------------------------------------------------------
-    // ⚙️ Data Exchanges and Context-safe onCreate
+    // Data Exchanges and Context-safe onCreate
     //---------------------------------------------------------------------
-
-
-    // async _loadData() {
-    //     const productTemplateId = this.props.productTemplateId;
-    //     console.log("🔍 productTemplateId received:", this.props.productTemplateId);
-
-    //     if (!productTemplateId) {
-    //         console.error("❌ Missing product template ID in _loadData()");
-    //         throw new Error("Missing product template ID");
-    //     }
-    //     return this.rpc(`/cpq_product_configurator/${productTemplateId}/data`, {});
-    // }
 
     async _loadData() {
         let productTemplateId =
@@ -494,50 +443,72 @@ export class ConfigureDialog extends Component {
             null;
     
         if (!productTemplateId) {
-            console.error("❌ _loadData: Missing product template ID");
+            console.error("_loadData: Missing product template ID");
             throw new Error("Missing product template ID");
         }
     
         return this.rpc(`/cpq_product_configurator/${productTemplateId}/data`, {});
     }
     
-
     async _validate() {
         const productTemplateId = this.productTemplateId;
         if (!productTemplateId) {
-            console.warn("⛔ Skipping validation: productTemplateId is undefined.");
+            console.warn("Skipping validation: productTemplateId is undefined.");
             return;
         }
         const combination = this._flattenCombination(this.state.selected || {});
         if (!Object.keys(combination).length) {
-            console.log("⏭️ Skipping validation — selected is empty.");
+            console.log("Skipping validation — selected is empty.");
             return;
         }
-    
+        console.log("Flattened combination for validation:", combination);
+
+        const contextPayload = {
+            ...this.context,
+            skip_cpq_validate_ptav_ids: true,  // Skip strict server-side required checks
+        };
+
         try {
             const res = await this.rpc(`/cpq/${this.productTemplateId}/validate`, {
                 combination,
+                context: contextPayload,
             });
             this.state.valid = res.valid;
             this.state.errors = res.errors;
+            console.log("Validation result:", res.valid, res.errors);
+            if (!res.valid) {
+                console.warn("Validation failed with errors:");
+                for (const [k, v] of Object.entries(res.errors || {})) {
+                    console.warn(`→ ${k}: ${v}`);
+                }
+            }
+            if (res.valid) {
+                this.state.errors = {};
+            }
+            
+            
         } catch (e) {
             this.state.valid = false;
             this.state.errors = { general: "Validation RPC error." };
+            console.error("Validation failed:", e);
         }
     }
 
-    canCreate() { return this.state.valid; }
-
+    canCreate() {
+        console.log("canCreate() called, valid =", this.state.valid);
+        return this.state.valid;
+    }
+    
     onCreate = debounce(async () => {
-        console.log("🧩 onCreate() running");
-        console.log("🧩 props:", this.props);
-        console.log("🧩 context:", this.context);
+        console.log("onCreate() running");
+        console.log("props:", this.props);
+        console.log("context:", this.context);
     
         if (this.state.isLoading) return;
     
         const { orderId, activeId, isVirtual } = this._resolveOrderAndLineContext();
         if (this.props.edit && (!activeId || isVirtual)) {
-            console.warn("⛔ Cannot proceed: trying to edit without valid order line ID.");
+            console.warn("Cannot proceed: trying to edit without valid order line ID.");
             return;
         }
     
@@ -552,7 +523,7 @@ export class ConfigureDialog extends Component {
         }
     
         if (isVirtual) {
-            this.notification.add("⚠️ You’re configuring a new product before saving the order.", {
+            this.notification.add("You’re configuring a new product before saving the order.", {
                 type: "warning",
                 sticky: true,
             });
@@ -590,6 +561,9 @@ export class ConfigureDialog extends Component {
             await this.env.services.ui.block();
     
             await this._validate();
+            console.log("Validation status after _validate():", this.state.valid);
+            console.log("Selected combo before save:", this._flattenCombination(this.state.selected));
+
             if (!this.state.valid) {
                 this.notification.add("Please fix the validation errors before saving.", { type: "warning" });
                 return;
@@ -608,7 +582,7 @@ export class ConfigureDialog extends Component {
                 || this.props.productUOMId
                 || null;
     
-            console.warn("🧪 Resolved product_uom:", productUom);
+            console.warn("Resolved product_uom:", productUom);
     
             if (!productUom) {
                 this.notification.add("Product UoM is missing. Cannot continue.", { type: "danger" });
@@ -616,14 +590,18 @@ export class ConfigureDialog extends Component {
             }
     
             const config = {
+                ...this._flattenCombination(this.state.selected), // ✅ injects { "35": 35, "36": 36, ... }
                 name: this.productTemplateName,
                 laterality: this.state.laterality,
                 split: this.state.split,
-                selected: this.state.selected,
+                // selected: this.state.selected,
                 quantity_to_make: this.state.quantityToMake,
                 product_uom_qty: this.state.quantityToMake,
                 product_uom: productUom,
-                price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0,
+                // price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0,
+                price_unit: this.state.quantityToMake > 0
+                    ? parseFloat((this.state.priceBreakdown.total / this.state.quantityToMake).toFixed(2))
+                    : 0,
                 left_price: summary.left || 0,
                 right_price: summary.right || 0,
                 total_price: summary.total || 0,
@@ -637,33 +615,33 @@ export class ConfigureDialog extends Component {
                 ...(this.context || {}),
             };
     
-            console.log("🚀 Submitting CPQ config:", config);
-            console.log("🧩 Context for RPC:", contextPayload);
+            console.log("Submitting CPQ config:", config);
+            console.log("Context for RPC:", contextPayload);
     
             const response = await this.rpc(
                 `/cpq_product_configurator/${productTemplateId}/configure`,
                 { configuration: config, context: contextPayload }
             );
     
-            console.log("✅ CPQ configure response:", response);
+            console.log("CPQ configure response:", response);
 
-            // ✅ Handle matrix price override
+            // Handle matrix price override
             if (response.matrix_override === true) {
                 this.state.matrixOverrideActive = true;
                 this.state.matrixPriceTotal = response.price_breakdown?.total || null;
-                console.log("⚡ Matrix price override active:", this.state.matrixPriceTotal);
+                console.log("Matrix price override active:", this.state.matrixPriceTotal);
             } else {
                 this.state.matrixOverrideActive = false;
                 this.state.matrixPriceTotal = null;
             }
         
             if (response?.configuration) {
-                this.notification.add("✅ Configuration successfully saved to order line.", { type: "success" });
+                this.notification.add("Configuration successfully saved to order line.", { type: "success" });
     
                 if (this.props.record?.load) {
                     await this.props.record.load();
                     this.pulseElement(".cpq-config-summary");
-                    console.log("✅ Frontend record reloaded after configuration save");
+                    console.log("Frontend record reloaded after configuration save");
                 }
     
                 this._redirectToOrder(orderId);
@@ -672,14 +650,13 @@ export class ConfigureDialog extends Component {
             }
     
         } catch (error) {
-            console.error("❌ Failed to submit configuration:", error);
+            console.error("Failed to submit configuration:", error);
             this.notification.add("An error occurred while saving configuration.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
             await this.env.services.ui.unblock();
         }
     });
-    
     
     _resolveOrderAndLineContext() {
         const context = this.context || {};
@@ -693,31 +670,19 @@ export class ConfigureDialog extends Component {
             props.record?.model?.root?.resId ||
             null;
     
-        console.log("🧪 props.record:", props.record);
-        console.log("🧪 props.record?.resId:", props.record?.resId, typeof props.record?.resId);
-
-        // let activeId =
-        //     context.active_id ||
-        //     props.activeId ||
-        //     this.activeId ||
-        //     (props.record?.resId !== false ? props.record?.resId : null);
-
-        // let activeId =
-        //     context.active_id ||
-        //     props.activeId ||  
-        //     this.activeId ||
-        //     (props.record?.resId !== false ? props.record?.resId : null);
+        console.log("props.record:", props.record);
+        console.log("props.record?.resId:", props.record?.resId, typeof props.record?.resId);
 
         let activeId =
-            props.activeId ||  // ✅ Trust this first if explicitly passed
+            props.activeId ||  // Trust this first if explicitly passed
             context.active_id ||
             (props.record?.resId && typeof props.record.resId === "number" ? props.record.resId : null);
 
         // const isVirtual = typeof activeId === "string" && activeId.startsWith("virtual_");
         const isVirtual = !activeId || (typeof activeId === "string" && activeId.startsWith("virtual_"));
 
-        // 🔍 Log for diagnostics
-        console.warn("🧩 [_resolveOrderAndLineContext] Inputs:", { orderId, activeId, isVirtual });
+        // Log for diagnostics
+        console.warn("[_resolveOrderAndLineContext] Inputs:", { orderId, activeId, isVirtual });
         console.log("props.record?.resId:", props.record?.resId, typeof props.record?.resId);
         console.log("props.orderId:", props.orderId);
         console.log("props.activeId:", props.activeId);
@@ -729,10 +694,10 @@ export class ConfigureDialog extends Component {
     
         // 🚫 Only warn if we're editing (not creating) and activeId is truly missing
         if (!orderId) {
-            console.warn("⚠️ _resolveOrderAndLineContext: Missing orderId");
+            console.warn("_resolveOrderAndLineContext: Missing orderId");
         }
         if (!activeId) {
-            console.warn("⚠️ _resolveOrderAndLineContext: Missing activeId entirely");
+            console.warn("_resolveOrderAndLineContext: Missing activeId entirely");
         }
 
         // if (this.props.edit && isVirtual) {
@@ -742,7 +707,7 @@ export class ConfigureDialog extends Component {
 
         if (this.props.edit) {
             if (!activeId || isVirtual) {
-                this.notification.add("⚠️ This configuration must be saved before editing.", { type: "danger" });
+                this.notification.add("This configuration must be saved before editing.", { type: "danger" });
                 throw new Error("Missing order line ID in edit mode.");
             }
         }
@@ -750,74 +715,79 @@ export class ConfigureDialog extends Component {
         return { orderId, activeId, isVirtual };
     }
     
-    
     async _addOrUpdateSelected(sideOrId, attributeId, valueIdOrPtavId, customValue) {
-        const isSplit = typeof sideOrId === "string" && ["left", "right"].includes(sideOrId);
-        const side = isSplit ? sideOrId : null;
-        const attrId = isSplit ? attributeId : sideOrId;
-        const ptavId = parseInt(valueIdOrPtavId, 10);
+        console.groupCollapsed("_addOrUpdateSelected");
     
-        if (isNaN(ptavId)) {
-            console.warn("❌ Invalid PTAV ID:", valueIdOrPtavId);
+        const isSplit = typeof sideOrId === "string" && ["left", "right"].includes(sideOrId);
+        const isShared = sideOrId === null;
+        const side = isSplit ? sideOrId : null;
+        const attrId = isSplit ? attributeId : isShared ? attributeId : sideOrId;
+    
+        const ptavId = parseInt(valueIdOrPtavId, 10);
+        if (!ptavId || isNaN(ptavId)) {
+            console.warn("⚠️ Invalid PTAV ID:", valueIdOrPtavId);
             return;
         }
-
-        console.groupCollapsed("🔄 _addOrUpdateSelected");
-        console.log("sideOrId:", sideOrId);
-        console.log("attributeId:", attributeId);
-        console.log("valueIdOrPtavId:", valueIdOrPtavId);
-        console.log("customValue:", customValue);
-        console.log("→ resolved side:", side);
-        console.log("→ resolved attrId:", attrId);
-        console.log("→ resolved ptavId:", ptavId);
     
         const attr = this.state.ptalIds.find((a) => a.id === attrId);
         if (!attr) {
-            console.warn("⚠️ No attribute found for ID:", attrId);
-            console.groupEnd();
+            console.warn(`⚠️ Attribute ID ${attrId} not found`);
             return;
         }
     
-        const ptav = attr.ptav_ids.find((v) => v.id === ptavId);
+        const ptavList = Array.isArray(attr.ptav_ids) ? attr.ptav_ids : attr.values || [];
+        if (!ptavList.length) {
+            console.warn(`⚠️ No PTAV list found on attribute "${attr.name}"`);
+            return;
+        }
+    
+        const ptav = ptavList.find((v) => v.id === ptavId);
         if (!ptav) {
             console.warn(`⚠️ PTAV ID ${ptavId} not found in attribute "${attr.name}"`);
-            console.groupEnd();
             return;
         }
     
-        // const value = ptav.is_custom && customValue !== undefined ? customValue : ptav.name;
-        const value = ptav.is_custom && customValue !== undefined ? customValue : ptavId;
+        // Normalize value
+        let value = ptavId;
+        if (ptav.is_custom) {
+            const resolvedValue = (typeof customValue === "object" && customValue?.value !== undefined)
+                ? customValue.value
+                : customValue;
+            value = {
+                id: ptavId,
+                value: resolvedValue,
+                cpq_custom_type: ptav.cpq_custom_type || null,
+            };
+        }
+    
+        // Deep clone current state
         const newSelected = JSON.parse(JSON.stringify(this.state.selected));
     
         if (isSplit) {
             newSelected[side] = newSelected[side] || {};
-            for (const v of attr.ptav_ids) {
-                delete newSelected[side][v.id];
-            }
-            newSelected[side][ptavId] = value;
-            console.log(`🦶 Updated ${side} side for "${attr.name}":`, newSelected[side]);
+            ptavList.forEach((v) => delete newSelected[side][String(v.id)]);
+            newSelected[side][String(ptavId)] = value;
+            console.log(`[OK] Updated ${side} side → ${attr.name}:`, newSelected[side]);
         } else {
-            for (const v of attr.ptav_ids) {
-                delete newSelected[v.id];
-            }
-            newSelected[ptavId] = value;
-            console.log(`🧩 Updated shared selection for "${attr.name}":`, newSelected);
+            ptavList.forEach((v) => delete newSelected[String(v.id)]);
+            newSelected[String(ptavId)] = value;
+            console.log(`[OK] Updated shared → ${attr.name}:`, newSelected);
         }
     
         this.state.selected = newSelected;
-
-        console.log("🧠 New selected state:", JSON.stringify(this.state.selected, null, 2));
+        console.log("🧠 Updated selected state:", this.state.selected);
+    
         console.groupEnd();
     
         await nextTick();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        console.log("✅ Running validation and summary update...");
+        await new Promise(resolve => setTimeout(resolve, 0));
+        console.log("Flattened combination:", this._flattenCombination(this.state.selected));
+        console.log("⚙️ Running validation and summary update...");
         this._validate();
         this.summaryApi?.computeSummary?.();
         this.updatePricePreview();
     }
-
+    
     async _showConfirmDialog(message) {
         return new Promise(resolve => {
             this.dialogService.add(ConfirmationDialog, {
@@ -834,12 +804,12 @@ export class ConfigureDialog extends Component {
     _handleSharedSelect(attributeId, ev) {
         const ptavId = parseInt(ev.target.value, 10);
         if (isNaN(ptavId)) {
-            console.warn("❌ Skipping update: Invalid ptavId from value:", ev.target.value);
+            console.warn("Skipping update: Invalid ptavId from value:", ev.target.value);
             return;
         }
-        this._addOrUpdateSelected(attributeId, null, ptavId);  // ✅ Correct param order
+        this._addOrUpdateSelected(null, attributeId, ptavId);  // correct param order
     }
-
+    
     _cleanSide(side) {
         if (this.state.selected?.[side]) {
             delete this.state.selected[side];
@@ -872,27 +842,43 @@ export class ConfigureDialog extends Component {
     // Used to flatten split selections for backend calls.
     _flattenCombination(selected) {
         const result = {};
-        if (!selected) return result;
     
-        if (selected.left || selected.right) {
-            for (const side of ["left", "right"]) {
-                for (const [key, val] of Object.entries(selected[side] || {})) {
-                    const ptavId = parseInt(key, 10);
-                    if (!isNaN(ptavId)) result[ptavId] = val;  // ✅ preserve the value (may be string)
+        const processDict = (dict) => {
+            if (!dict) return;
+            for (const [ptavId, value] of Object.entries(dict)) {
+                const id = parseInt(ptavId, 10);
+                if (!id || isNaN(id)) {
+                    console.warn("Skipping invalid PTAV ID:", ptavId);
+                    continue;
+                }
+    
+                if (typeof value === "object" && value !== null && "value" in value) {
+                    // Custom input format
+                    result[id] = {
+                        id,
+                        value: value.value,
+                        cpq_custom_type: value.cpq_custom_type || null,
+                    };
+                } else {
+                    // Regular selection
+                    result[id] = id;
                 }
             }
-        } else {
-            for (const [key, val] of Object.entries(selected || {})) {
-                const ptavId = parseInt(key, 10);
-                if (!isNaN(ptavId)) result[ptavId] = val;  // ✅ preserve the value
-            }
-        }
+        };
     
+        if (selected.left || selected.right) {
+            processDict(selected.left);
+            processDict(selected.right);
+        } else {
+            processDict(selected);
+        }
+        console.log("Final flattened combination sent to backend:", JSON.stringify(result, null, 2));
+
         return result;
     }
     
     async _applyConfigurationResult(result) {
-        console.log("🧩 Applying configuration result:", result);
+        console.log("Applying configuration result:", result);
     
         const activeId = result?.sale_order_line_id || this.context?.active_id;
         const orderId = result?.sale_order_id || this.props.orderId;
@@ -914,20 +900,20 @@ export class ConfigureDialog extends Component {
             try {
                 await cleanGhostRecords(this.props.record, activeId);
             } catch (error) {
-                console.warn("⚠️ cleanGhostRecords failed:", error);
+                console.warn("cleanGhostRecords failed:", error);
             }
 
-            // ✅ Extra safety: ensure no virtual lines remain
+            // Extra safety: ensure no virtual lines remain
             const orderModel = this.props.record?.model?.root;
             if (orderModel?.data?.order_line?.records) {
                 orderModel.data.order_line.records = orderModel.data.order_line.records.filter(
                     (line) => line.resId === activeId
                 );
                 orderModel.data.order_line.leaveEditMode?.();
-                console.log("✅ Final frontend cleanup: Cleared virtual lines from order model");
+                console.log("Final frontend cleanup: Cleared virtual lines from order model");
             }
 
-            this.notification.add("✅ Configuration successfully saved to order line.", { type: "success" });
+            this.notification.add("Configuration successfully saved to order line.", { type: "success" });
             this.pulseElement(".cpq-config-summary");
             this.pulseElement(`[data-id="${activeId}"]`);
     
@@ -938,7 +924,7 @@ export class ConfigureDialog extends Component {
                 setTimeout(() => lineEl.classList.remove("highlight-success"), 1500);
             }
 
-            console.log("🚀 Redirecting to Sale Order:", orderId);
+            console.log("Redirecting to Sale Order:", orderId);
             await this.env.services.action.doAction({
                 type: "ir.actions.act_window",
                 res_model: "sale.order",
@@ -946,10 +932,10 @@ export class ConfigureDialog extends Component {
                 views: [[false, "form"]],
                 target: "current",
             });
-            await this.env.services.notification.add("✅ Order line updated!", { type: "success" });
+            await this.env.services.notification.add("Order line updated!", { type: "success" });
             return true;
         } catch (error) {
-            console.error("❌ Failed to apply configuration result:", error);
+            console.error("Failed to apply configuration result:", error);
             this.notification.add("An error occurred while updating the order line.", { type: "danger" });
             return false;
         } finally {
@@ -963,7 +949,7 @@ export class ConfigureDialog extends Component {
 
     async _closeDialog(force = false) {
         if (!force && this._hasUnsavedChanges?.()) {
-            const confirmed = await this._showConfirmDialog("⚠️ You have unsaved configuration changes. Exit anyway?");
+            const confirmed = await this._showConfirmDialog("You have unsaved configuration changes. Exit anyway?");
             if (!confirmed) return;
         }
 
@@ -995,7 +981,7 @@ export class ConfigureDialog extends Component {
         this.state.isLoading = true;
         
         try {
-            console.log("🔄 Resetting selections only (keeping quantity and laterality).");
+            console.log("Resetting selections only (keeping quantity and laterality).");
         
             this.state.selected = JSON.parse(JSON.stringify(this.initialState.selected));
         
@@ -1005,9 +991,9 @@ export class ConfigureDialog extends Component {
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
 
-            this.notification.add("✅ Attribute selections reset.", { type: "success" });
+            this.notification.add("Attribute selections reset.", { type: "success" });
         } catch (error) {
-            console.error("❌ Failed to reset selections:", error);
+            console.error("Failed to reset selections:", error);
             this.notification.add("An error occurred while resetting selections.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
@@ -1028,7 +1014,7 @@ export class ConfigureDialog extends Component {
         this.state.isLoading = true;
         
         try {
-            console.log("🔄 Resetting to initial state:", this.initialState);
+            console.log("Resetting to initial state:", this.initialState);
         
             this.state.laterality = this.initialState.laterality;
             this.state.split = this.initialState.split;
@@ -1040,12 +1026,12 @@ export class ConfigureDialog extends Component {
             this.summaryApi?.computeSummary?.();
             this.updatePricePreview();
 
-            this.notification.add("✅ Configuration reset to defaults.", { type: "success" });
+            this.notification.add("Configuration reset to defaults.", { type: "success" });
             this.pulseElement(".cpq-config-summary");
             this.pulseElement(".pricing-summary"); // Optional: if you want price totals to animate
-            this.summaryApi?.showToast?.("✅ Configuration reset!");
+            this.summaryApi?.showToast?.("Configuration reset!");
         } catch (error) {
-            console.error("❌ Failed to reset configuration:", error);
+            console.error("Failed to reset configuration:", error);
             this.notification.add("An error occurred while resetting.", { type: "danger" });
         } finally {
             this.state.isLoading = false;
@@ -1054,7 +1040,7 @@ export class ConfigureDialog extends Component {
     }
 
     //---------------------------------------------------------------------
-    // ⚙️ Getters and Setters
+    // Getters and Setters
     //---------------------------------------------------------------------
 
     get selectionCount() {
@@ -1108,10 +1094,10 @@ export class ConfigureDialog extends Component {
 
 export function ConfigureDialogAction(env, action) {
     const context = action.context || {};
-    console.log("🧪 [ConfigureDialogAction] context:", context);
-    console.log("🧪 activeId (from context):", context.active_id);
-    // console.log("🧪 isEdit:", isEdit);
-    // console.log("🧪 isVirtual:", isVirtual);
+    console.log("[ConfigureDialogAction] context:", context);
+    console.log("activeId (from context):", context.active_id);
+    // console.log("isEdit:", isEdit);
+    // console.log("isVirtual:", isVirtual);
 
     const rawTmpl = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
     const productTemplate = typeof rawTmpl === "object" ? rawTmpl : undefined;
@@ -1132,8 +1118,8 @@ export function ConfigureDialogAction(env, action) {
     const isVirtual = typeof activeId === "string" && activeId.startsWith("virtual_");
     const isEdit = context.edit === true && typeof activeId === "number" && activeId > 0;
 
-    console.log("🧪 isEdit:", isEdit);
-    console.log("🧪 isVirtual:", isVirtual);
+    console.log("isEdit:", isEdit);
+    console.log("isVirtual:", isVirtual);
 
     // Reject editing virtual lines
     if (isEdit && (!activeId || isVirtual)) {
@@ -1151,7 +1137,7 @@ export function ConfigureDialogAction(env, action) {
     if (!soDate) missingProps.push("soDate");
 
     if (missingProps.length) {
-        console.error("❌ Missing required fields for ConfigureDialog:", missingProps);
+        console.error("Missing required fields for ConfigureDialog:", missingProps);
         env.services.notification.add(
             _t("Cannot open configurator. Missing: ") + missingProps.join(", "),
             { type: "danger" }
@@ -1170,7 +1156,7 @@ export function ConfigureDialogAction(env, action) {
     if (activeId && orderLineData?.records) {
         orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
         orderLineData.leaveEditMode?.();
-        console.log("✅ Cleaned frontend order line data");
+        console.log("Cleaned frontend order line data");
     }
 
     const dialogProps = {
@@ -1194,12 +1180,12 @@ export function ConfigureDialogAction(env, action) {
                         name: res.configuration.name,
                     };
 
-                    console.log("📝 Writing configuration to sale.order.line:", values);
+                    console.log("Writing configuration to sale.order.line:", values);
 
                     await env.services.orm.call("sale.order.line", "onchange", [activeId, values]);
                     await env.services.orm.call("sale.order.line", "write", [activeId, values]);
 
-                    env.services.notification.add(_t("✅ Configuration applied successfully."), { type: "success" });
+                    env.services.notification.add(_t("Configuration applied successfully."), { type: "success" });
 
                     env.services.action.doAction({
                         type: "ir.actions.act_window",
@@ -1209,7 +1195,7 @@ export function ConfigureDialogAction(env, action) {
                         target: "current",
                     });
                 } catch (error) {
-                    console.error("❌ Failed to write configuration:", error);
+                    console.error("Failed to write configuration:", error);
                     env.services.notification.add(_t("Failed to apply configuration to the order line."), { type: "danger" });
                 }
             } else {
@@ -1232,7 +1218,7 @@ export function ConfigureDialogAction(env, action) {
         }),
     };
 
-    console.log("🧩 Opening ConfigureDialog with props:", dialogProps);
+    console.log("Opening ConfigureDialog with props:", dialogProps);
     env.services.dialog.add(ConfigureDialog, dialogProps);
 }
 

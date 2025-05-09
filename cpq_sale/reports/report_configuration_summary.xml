@@ -5,7 +5,7 @@
             <t t-foreach="doc.order_line" t-as="line">
                 <t t-if="line.cpq_summary_printable">
                     <div class="mt32">
-                        <h4>🧩 CPQ Configuration Summary for <t t-esc="line.name"/>:</h4>
+                        <h4>CPQ Configuration Summary for <t t-esc="line.name"/>:</h4>
                         <div t-raw="line.cpq_summary_printable"/>
                     </div>
                 </t>
@@ -17,7 +17,7 @@
             <t t-call="web.external_layout">
 
                 <div class="page">
-                    <h2>🧩 CPQ Configuration Summary</h2>
+                    <h2>CPQ Configuration Summary</h2>
 
                     <p><strong>Sale Order:</strong> <t t-esc="doc.order_id.name"/></p>
                     <p><strong>Customer:</strong> <t t-esc="doc.order_id.partner_id.name"/></p>

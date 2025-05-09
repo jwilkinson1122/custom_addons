@@ -19,6 +19,13 @@
     overflow-y: auto;
 }
 
+.o_cpq_summary_empty {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    margin-top: 12px;
+}
+
 .highlight-price {
     background-color: #fffbe6;  
     font-weight: 500;
@@ -211,3 +218,23 @@
 .ps-3 {
     padding-left: 1rem;
 }
+
+select,
+option {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+}
+
+/* .config-section select,
+.config-section option {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+} */
+
+

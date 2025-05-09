@@ -58,10 +58,10 @@ export function validateProps(component, expectedProps) {
 
         if ((value === undefined || value === null)) {
             if (!isOptional) {
-                console.warn(`⚠️ [${component.constructor.name}] Missing required prop: "${key}"`);
+                console.warn(`[${component.constructor.name}] Missing required prop: "${key}"`);
             }
         } else if (expectedType && typeof value !== expectedType) {
-            console.warn(`⚠️ [${component.constructor.name}] Prop "${key}" expected to be ${expectedType}, got ${typeof value}`);
+            console.warn(`[${component.constructor.name}] Prop "${key}" expected to be ${expectedType}, got ${typeof value}`);
         }
     }
 }
@@ -71,14 +71,14 @@ export async function waitForTargetRecord(targetResId, recordList, maxAttempts =
     while (attempt < maxAttempts) {
         const found = recordList.find((r) => r.resId === targetResId);
         if (found) {
-            console.log(`✅ Found target record after ${attempt + 1} attempt(s).`);
+            console.log(`Found target record after ${attempt + 1} attempt(s).`);
             return found;
         }
         console.log(`⏳ Attempt ${attempt + 1}: target record not found yet.`);
         attempt++;
         await new Promise(resolve => setTimeout(resolve, interval));
     }
-    console.warn("⚠️ Target record not found after maximum attempts.");
+    console.warn("Target record not found after maximum attempts.");
     return null;
 }
 
@@ -92,29 +92,29 @@ export async function cleanGhostRecords(record, activeId) {
         console.log(`🧹 Cleaning ${staleRecords.length} ghost frontend records...`);
         orderLineData.records = orderLineData.records.filter(line => line.resId === activeId);
     } else {
-        console.log("✅ No ghost records found.");
+        console.log("No ghost records found.");
     }
 
     if (typeof orderLineData.leaveEditMode === "function") {
         try {
             orderLineData.leaveEditMode();
-            console.log("✅ Left edit mode cleanly.");
+            console.log("Left edit mode cleanly.");
         } catch (error) {
-            console.warn("⚠️ leaveEditMode failed:", error);
+            console.warn("leaveEditMode failed:", error);
         }
     }
 
     const orderRoot = record.model.root;
     if (orderRoot && "isDirty" in orderRoot) {
         orderRoot.isDirty = false;
-        console.log("✅ Cleared orderRoot isDirty flag.");
+        console.log("Cleared orderRoot isDirty flag.");
     }
 }
 
 export function  getSafeConfiguratorValues(config, fallbackUomId) {
     const uomId = config.product_uom || fallbackUomId;
     if (!uomId) {
-        console.warn("⚠️ Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
+        console.warn("Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
     }
 
     const quantity = config.quantity_to_make || 1;

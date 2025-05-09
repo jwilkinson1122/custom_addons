@@ -1,12 +1,25 @@
+import logging
+ 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 # from .cpq_custom_field_utils import CPQCustomFieldMixin
 from ..helpers.cpq_custom_field_utils import CPQCustomFieldMixin
+from ..hooks import cleanup_orphaned_product_attr_vals
+
+_logger = logging.getLogger(__name__)
+
 
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
     _order = "sequence"
 
+    linked_cpq_attribute_id = fields.Many2one(
+        "cpq.attribute",
+        string="Linked CPQ Attribute",
+        help="If set, this product attribute can be used to create CPQ attribute values from its options."
+    )
+    
     create_variant = fields.Selection(
         selection=[
             ('always', 'Instantly'),
@@ -27,6 +40,39 @@ class ProductAttribute(models.Model):
         default=False,
     )
 
+    # def unlink(self):
+    #     for attr in self:
+    #         ptavs = self.env['product.template.attribute.value'].search([
+    #             ('attribute_id', '=', attr.id)
+    #         ])
+    #         if ptavs:
+    #             ptavs.unlink() 
+    #     return super().unlink()
+
+    def unlink(self):
+        PTAV = self.env['product.template.attribute.value'].sudo()
+
+        for attr in self:
+            # Step 1: Repair orphaned PTAVs by checking if their attribute still exists
+            broken_ptavs = PTAV.search([('attribute_id', '=', attr.id)])
+            if broken_ptavs:
+                _repaired = False
+                for ptav in broken_ptavs:
+                    if not ptav.attribute_id.exists():
+                        ptav.unlink()
+                        _repaired = True
+
+                if _repaired:
+                    _logger = self.env['ir.logging']._get_logger(__name__)
+                    _logger.warning("🔧 Removed orphaned PTAVs linked to attribute ID %s", attr.id)
+
+            # Step 2: Check again — block deletion if active links remain
+            remaining = PTAV.search_count([('attribute_id', '=', attr.id)])
+            if remaining:
+                raise UserError(f"Cannot delete attribute '{attr.name}' — still linked to {remaining} PTAV(s).")
+
+        return super().unlink()
+    
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
@@ -66,179 +112,6 @@ class ProductAttributeValue(models.Model, CPQCustomFieldMixin):
         default.setdefault("name", _("%s (copy)") % self.name)
         return super().copy(default=default)
 
-# class ProductAttributeValue(models.Model):
-#     _inherit = "product.attribute.value"
-
-#     active = fields.Boolean(
-#         default=True,
-#     )
-
-#     cpq_custom_type = fields.Selection(
-#         [
-#             ("integer", "Integer"),
-#             ("float", "Float"),
-#             ("char", "Text"),
-#             ("many2one", "Many2one"),
-#             ("options", "Option"),
-#         ],
-#         string="Configurable custom type",
-#     )
-
-#     linked_option_id = fields.Many2one(
-#         comodel_name="product.options",
-#         string="Option",
-#         domain="[('is_leaf', '=', True)]", 
-#     )
-
-#     cpq_options_relaxed_validation = fields.Boolean(
-#         default=False,
-#         string="Relax Options Validation",
-#         help="Allow a options record to be moved between parents",
-#     )
-
-#     @api.returns("self", lambda value: value.id)
-#     def copy(self, default=None):
-#         self.ensure_one()
-#         default = dict(default or {})
-#         if "name" not in default:
-#             default["name"] = _("%s (copy)") % (self.name)
-#         return super().copy(default=default)
-
-#     def _cpq_cast_custom(self, value):
-#         """
-#         Cast the stored custom_value into the real value.
-#         i.e. custom_value may store a int, which we need to cast into an Odoo
-#         record
-#         """
-#         self.ensure_one()
-
-#         if not self.is_custom or not self.cpq_custom_type:
-#             return value
-
-#         method = f"_cpq_cast_custom_{self.cpq_custom_type}"
-#         return getattr(self, method)(value)
-
-#     def _cpq_cast_custom_options(self, value):
-#         try:
-#             return self.env["product.options"].search(
-#                 self._cpq_sanitise_options_domain(
-#                     [
-#                         ("id", "=", int(value)),
-#                     ]
-#                 )
-#             )
-#         except (ValueError, TypeError):
-#             return self.env["product.options"]
-
-#     def _cpq_cast_custom_integer(self, value):
-#         return self._cpq_sanitise_custom_integer(value)
-
-#     def _cpq_cast_custom_float(self, value):
-#         return self._cpq_sanitise_custom_integer(value)
-
-#     def _cpq_cast_custom_char(self, value):
-#         return self._cpq_sanitise_custom_char(value)
-
-#     def _cpq_cast_custom_many2one(self, _value):
-#         return NotImplementedError()
-
-#     def _cpq_sanitise_custom(self, value):
-#         self.ensure_one()
-
-#         if not self.is_custom or not self.cpq_custom_type:
-#             return value
-
-#         method = f"_cpq_sanitise_custom_{self.cpq_custom_type}"
-#         return getattr(self, method)(value)
-
-#     def _cpq_sanitise_options_domain(self, domain):
-#         self.ensure_one()
-#         if not self.cpq_options_relaxed_validation:
-#             return expression.AND(
-#                 [
-#                     domain,
-#                     [
-#                         ("parent_id", "child_of", self.linked_option_id.id),
-#                         ("is_leaf", "=", True),
-#                     ],
-#                 ]
-#             )
-
-#         return domain
-
-#     def _cpq_sanitise_custom_options(self, value):
-#         try:
-#             return (
-#                 self.env["product.options"]
-#                 .search(
-#                     self._cpq_sanitise_options_domain(
-#                         [
-#                             ("id", "=", int(value)),
-#                         ]
-#                     )
-#                 )
-#                 .id
-#             )
-#         except (ValueError, TypeError):
-#             return False
-
-#     def _cpq_sanitise_custom_integer(self, value):
-#         return int(value)
-
-#     def _cpq_sanitise_custom_float(self, value):
-#         return float(value)
-
-#     def _cpq_sanitise_custom_char(self, value):
-#         if value is None:
-#             return ""
-#         return value.strip()
-
-#     def _cpq_sanitise_custom_many2one(self, value):
-#         raise NotImplementedError()
-
-#     def _cpq_validate_custom(self, value):
-#         self.ensure_one()
-
-#         if not self.is_custom or not self.cpq_custom_type:
-#             return True
-
-#         method = f"_cpq_validate_custom_{self.cpq_custom_type}"
-#         return getattr(self, method)(value)
-
-#     def _cpq_validate_custom_options(self, value):
-#         try:
-#             value_as_int = int(value)
-#         except (ValueError, TypeError):
-#             return False
-
-#         count = self.env["product.options"].search_count(
-#             self._cpq_sanitise_options_domain(
-#                 [
-#                     ("id", "=", value_as_int),
-#                 ]
-#             )
-#         )
-#         return count == 1
-
-#     def _cpq_validate_custom_integer(self, value):
-#         try:
-#             int(value)
-#             return True
-#         except (ValueError, TypeError):
-#             return False
-
-#     def _cpq_validate_custom_float(self, value):
-#         try:
-#             float(value)
-#             return True
-#         except (ValueError, TypeError):
-#             return False
-
-#     def _cpq_validate_custom_char(self, value):
-#         return isinstance(value, str) and len(value) > 0
-
-#     def _cpq_validate_custom_many2one(self, value):
-#         raise NotImplementedError()
 
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.product.cpq.custom.value"
@@ -284,48 +157,88 @@ class ProductTemplateAttributeValue(models.Model):
     _inherit = "product.template.attribute.value"
 
     cpq_propagate_to_variant = fields.Boolean(
-        related="attribute_id.cpq_propagate_to_variant"
+        related="attribute_id.cpq_propagate_to_variant", store=True, readonly=False
     )
     cpq_custom_type = fields.Selection(
-        related="product_attribute_value_id.cpq_custom_type"
+        related="product_attribute_value_id.cpq_custom_type", store=True, readonly=False
     )
-
     linked_option_id = fields.Many2one(
-        related="product_attribute_value_id.linked_option_id"
+        related="product_attribute_value_id.linked_option_id", store=True, readonly=False
     )
 
     # Refactored to remove duplicate code
     def _cpq_get_combination_info(self):
+        self.ensure_one()
         res = super()._cpq_get_combination_info()
+        res.update({
+            "id": self.id,
+            "name": self.name,
+            "html_color": self.html_color,
+            # "is_custom": self.is_custom,
+            "is_custom": False if self.linked_option_id else self.is_custom,
+            "price_extra": self.price_extra,
+            "excluded": False,
+            "cpq_custom_type": self.cpq_custom_type,
+        })
+
         if self.is_custom and self.cpq_custom_type == "options":
-            optionss = self.env["product.options"].search(
-                [
-                    ("parent_id", "child_of", self.linked_option_id.id),
-                    ("is_leaf", "=", True),
-                ]
-            )
-            res.update(
-                {
-                    "cpq_selection_values": [
-                        (options.id, options.display_name) for options in optionss
-                    ]
-                }
-            )
+            options = self.env["product.options"].search([
+                ("parent_id", "child_of", self.linked_option_id.id),
+                ("is_leaf", "=", True),
+            ])
+            res["cpq_selection_values"] = [(opt.id, opt.display_name) for opt in options]
 
         return res
 
+    def cleanup_ptavs_ui(self):
+        env = self.env
+        count = cleanup_orphaned_product_attr_vals(env)
+        raise UserError("Cleanup complete.\nDeleted %s orphaned PTAV(s)." % count)
+   
+    @api.model
+    def clean_orphaned_records(self):
+        broken_attr = self.search([('attribute_id', '!=', False)]).filtered(lambda r: not r.attribute_id.exists())
+        broken_value = self.search([('product_attribute_value_id', '!=', False)]).filtered(lambda r: not r.product_attribute_value_id.exists())
 
-    def _cpq_get_combination_info(self):
-        self.ensure_one()
-        ptav_id = self
+        count_attr = len(broken_attr)
+        count_value = len(broken_value)
+
+        if count_attr or count_value:
+            _logger.warning("Found %s PTAVs with broken attribute_id and %s with broken product_attribute_value_id.", count_attr, count_value)
+            _logger.debug("Broken attribute_id PTAVs: %s", broken_attr.mapped("name"))
+            _logger.debug("Broken product_attribute_value_id PTAVs: %s", broken_value.mapped("name"))
+
+            (broken_attr | broken_value).unlink()
+            _logger.info("Orphaned PTAVs removed.")
+        else:
+            _logger.info("No orphaned PTAVs found.")
 
         return {
-            "id": ptav_id.id,
-            "name": ptav_id.name,
-            "html_color": ptav_id.html_color,
-            "is_custom": ptav_id.is_custom,
-            "price_extra": ptav_id.price_extra,  # ✅ Fix is here
-            "excluded": False,
-            "cpq_custom_type": ptav_id.cpq_custom_type,
+            "broken_attribute_ids": count_attr,
+            "broken_value_ids": count_value,
+            "total_removed": count_attr + count_value,
         }
 
+
+    # @classmethod
+    # def clean_orphaned_records(cls):
+    #     broken = cls.search([
+    #         '|',
+    #         ('attribute_id', '=', False),
+    #         ('product_attribute_value_id', '=', False),
+    #     ])
+    #     if broken:
+    #         _logger.warning("Found %s orphaned PTAVs. Removing them.", len(broken))
+    #         _logger.debug("Orphaned PTAV names: %s", broken.mapped("name"))
+    #         broken.unlink()
+    #         _logger.info("Orphaned PTAVs removed.")
+    #     else:
+    #         _logger.info("No orphaned PTAVs found.")
+
+    # @api.model
+    # def clean_orphaned_records(self):
+    #     orphans = self.search([('attribute_id', '!=', False)]).filtered(lambda r: not r.attribute_id.exists())
+    #     count = len(orphans)
+    #     if count:
+    #         orphans.unlink()
+    #     return count
