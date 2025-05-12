@@ -118,6 +118,9 @@ def extract_cpq_ptavs(env, product_template, selected_dict):
         })
         virtual.price_extra = cpq_val.price_extra or 0.0
         virtual.x_virtual_cpq_id = str(cpq_val.id)
+        virtual.name = cpq_val.name  # ✅ set explicit label for rendering
+        # virtual._update_changed_values() 
+        _logger.debug("[CHECK] Virtual PTAV name after assignment: %s", virtual.name)
 
         _logger.debug("[CPQ] Virtual PTAV: attr=%s, val=%s, price=%.2f", linked_attr.name, cpq_val.name, virtual.price_extra)
         # ptav_ids |= ptav_model.browse([virtual.id])
@@ -184,6 +187,7 @@ def generate_virtual_ptavs_from_cpq(env, product_tmpl, cpq_value_ids):
             "attribute_id": product_attr.id,
             "product_attribute_value_id": pav_id,
         })
+        virtual_ptav.name = cpq_val.name
         virtual_ptav.price_extra = cpq_val.price_extra or 0.0
         virtual_ptav.x_virtual_cpq_id = str(cpq_val.id)
         virtual_ptavs += virtual_ptav
@@ -219,11 +223,12 @@ def render_summary_html(env, order, config):
         if ptav and ptav.exists():
             try:
                 pav = ptav.product_attribute_value_id
-                linked_option = None
-                if pav and pav.exists():
-                    linked_option = pav.linked_option_id if pav.linked_option_id and pav.linked_option_id.exists() else None
-                # Use ptav.name fallback if no PAV
-                value_label = ptav.name or pav.name if pav else "(unnamed)"
+                linked_option = pav.linked_option_id if pav and pav.linked_option_id and pav.linked_option_id.exists() else None
+
+                # ✅ Safely fall back: pav.name > ptav.name > "(unnamed)"
+                value_label = pav.name if pav and pav.name else (ptav.name or "(unnamed)")
+                _logger.debug("[CPQ] Resolved value label for PTAV %s: %s", ptav.id, value_label)
+
                 return (
                     ptav.attribute_id.name,
                     value_label,
@@ -233,24 +238,6 @@ def render_summary_html(env, order, config):
             except Exception as e:
                 _logger.warning("[CPQ] Failed to read PTAV %s: %s", ptav.id, e)
         return str(getattr(ptav, "id", "n/a")), "[deleted]", 0.0, None
-
-
-    # def get_label_and_value(ptav):
-    #     if ptav and ptav.exists():
-    #         try:
-    #             pav = ptav.product_attribute_value_id
-    #             linked_option = None
-    #             if pav and pav.exists():
-    #                 linked_option = pav.linked_option_id if pav.linked_option_id and pav.linked_option_id.exists() else None
-    #             return (
-    #                 ptav.attribute_id.name,
-    #                 ptav.name,
-    #                 ptav.price_extra,
-    #                 linked_option.name if linked_option else None,
-    #             )
-    #         except Exception as e:
-    #             _logger.warning("[CPQ] Failed to read PTAV %s: %s", ptav.id, e)
-    #     return str(getattr(ptav, "id", "n/a")), "[deleted]", 0.0, None
 
     def render_line(attr_label, value_label, side, price, linked_option):
         label = f"{attr_label} - {side}: <b>{value_label}</b>"
