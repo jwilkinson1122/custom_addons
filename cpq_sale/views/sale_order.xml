@@ -12,7 +12,7 @@
                 <attribute name="decoration-warning">cpq_unconfigured</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree" position="inside">
-                <field name="cpq_unconfigured" invisible="1"/>
+                <field name="cpq_unconfigured" column_invisible="1"/>
                 <field name="cpq_laterality" column_invisible="1"/>
                 <!-- <field name="cpq_laterality" column_invisible="1"/> -->
                 <button name="edit_cpq_configuration" title="Reconfigure" type="object" class="btn-secondary" icon="fa-cogs" invisible="not product_template_id_cpq_ok"/>
@@ -42,9 +42,14 @@
                 <attribute name="style">width: 600px; max-width: 800px; white-space: normal;</attribute>
             </xpath> -->
 
-            <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="after">
+            <!-- <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="after">
                 <field name="cpq_unconfigured" string="Missing Config" widget="boolean" readonly="1" invisible="not cpq_unconfigured" options="{'terminology': 'Alert'}"/>
+            </xpath> -->
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='cpq_configuration_summary']" position="after">
+                <field name="cpq_unconfigured" string="Missing Config" widget="boolean" readonly="1" column_invisible="1" options="{'terminology': 'Alert'}"/>
             </xpath>
+
 
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="replace">
                 <!-- Standard price field for non-CPQ -->
