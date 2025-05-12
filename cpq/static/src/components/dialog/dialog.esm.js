@@ -39,9 +39,12 @@ import {
     debounce, 
     safeMany2One, 
     computeLocalCPQPriceBreakdown,
+    findAttributeById,
     getActiveTriggeredAttributeIds,
     filterVisibleAttributes,
-    filterVisibleAttributeValues
+    filterVisibleAttributeValues,
+    getVisibleValueMap,
+    debugVisibleAttributes
 } from "./utils.esm";
 import { ProductAttribGroupRenderer } from "./product_attrib_group_renderer.esm";
 
@@ -743,7 +746,8 @@ export class ConfigureDialog extends Component {
             return;
         }
     
-        const attr = this.state.ptalIds.find((a) => a.id === attrId);
+        // const attr = this.state.ptalIds.find((a) => a.id === attrId);
+        const attr = findAttributeById(this.state.ptalIds, attrId);
         if (!attr) {
             console.warn(`⚠️ Attribute ID ${attrId} not found`);
             return;
@@ -816,13 +820,55 @@ export class ConfigureDialog extends Component {
     }
 
     _handleSharedSelect(attributeId, ev) {
-        const ptavId = parseInt(ev.target.value, 10);
-        if (isNaN(ptavId)) {
-            console.warn("Skipping update: Invalid ptavId from value:", ev.target.value);
+        const rawValue = ev?.target?.value;
+    
+        if (!rawValue) {
+            console.warn("⚠️ Skipping _handleSharedSelect: no value in event", ev);
             return;
         }
-        this._addOrUpdateSelected(null, attributeId, ptavId);  // correct param order
+    
+        if (typeof rawValue === "string" || typeof rawValue === "number") {
+            const ptavId = parseInt(rawValue, 10);
+            if (!isNaN(ptavId)) {
+                this._addOrUpdateSelected(null, attributeId, ptavId);
+            } else {
+                console.warn("⚠️ Invalid PTAV ID from raw value:", rawValue);
+            }
+            return;
+        }
+    
+        if (typeof rawValue === "object" && rawValue.id) {
+            this._addOrUpdateSelected(null, attributeId, rawValue.id, rawValue);
+            return;
+        }
+    
+        console.warn("⚠️ Unexpected value format for onSelect:", rawValue);
     }
+
+    _handleSelect = (...args) => {
+        if (args.length === 2) {
+            // Shared: (attributeId, ev)
+            this._handleSharedSelect(args[0], args[1]);
+        } else if (args.length === 3) {
+            // Split: (side, attributeId, ptavId)
+            this._addOrUpdateSelected(args[0], args[1], args[2]);
+        } else {
+            console.warn("⚠️ Unexpected arg count in _handleSelect", args);
+        }
+    };
+    
+    _handleCustom = (...args) => {
+        if (args.length === 4) {
+            // Split: (side, attributeId, ptavId, value)
+            this._addOrUpdateSelected(args[0], args[1], args[2], args[3]);
+        } else if (args.length === 3) {
+            // Shared: (attributeId, null, ptavId, value)
+            this._addOrUpdateSelected(args[0], null, args[1], args[2]);
+        } else {
+            console.warn("⚠️ Unexpected arg count in _handleCustom", args);
+        }
+    };
+    
     
     _cleanSide(side) {
         if (this.state.selected?.[side]) {
@@ -1092,7 +1138,6 @@ export class ConfigureDialog extends Component {
         const selected = this.state.selected || {};
         const all = this.state.ptalIds || [];
     
-        // If no values selected at all, just return all attributes
         const hasAnySelection = Object.values(selected).some(val => {
             return typeof val === "object"
                 ? Object.keys(val).length > 0
@@ -1100,13 +1145,79 @@ export class ConfigureDialog extends Component {
         });
     
         if (!hasAnySelection) {
-            console.warn("🧪 No selection yet — showing all attributes");
-            return all;
+            console.warn("🧪 No selection yet — evaluating visibility based on trigger rules");
         }
-    
+        
         const triggerMap = getActiveTriggeredAttributeIds(selected, all);
-        return filterVisibleAttributes(all, triggerMap);
+        const visible = filterVisibleAttributes(all, triggerMap);
+    
+        // 🧠 Debug flattened visible attribute IDs
+        const allVisibleIds = new Set();
+        function collectVisibleIds(attrs) {
+            for (const a of attrs) {
+                allVisibleIds.add(a.id);
+                if (a.children?.length) {
+                    collectVisibleIds(a.children);
+                }
+            }
+        }
+        collectVisibleIds(visible);
+    
+        // 🧪 Debug what's visible vs. total
+        const allAttrIds = new Set();
+        function collectAllIds(attrs) {
+            for (const a of attrs) {
+                allAttrIds.add(a.id);
+                if (a.children?.length) {
+                    collectAllIds(a.children);
+                }
+            }
+        }
+        collectAllIds(all);
+    
+        const hiddenIds = [...allAttrIds].filter(id => !allVisibleIds.has(id));
+        console.groupCollapsed("👀 CPQ Visibility Debug");
+        console.log("🟢 Visible Attribute IDs:", [...allVisibleIds]);
+        console.log("🔒 Hidden Attribute IDs:", hiddenIds);
+        console.groupEnd();
+    
+        return visible;
     }
+    
+
+    // get visibleAttributes() {
+    //     const selected = this.state.selected || {};
+    //     const all = this.state.ptalIds || [];
+    
+    //     const hasAnySelection = Object.values(selected).some(val =>
+    //         typeof val === "object" ? Object.keys(val).length > 0 : !!val
+    //     );
+    
+    //     if (!hasAnySelection) {
+    //         console.warn("🧪 No selection yet — showing all attributes");
+    //         return all.map(attr => ({
+    //             ...attr,
+    //             children: attr.children || [],
+    //             id: attr.id,
+    //             is_group: !!attr.is_group,
+    //         }));
+    //     }
+    
+    //     const triggerMap = getActiveTriggeredAttributeIds(selected, all);
+    //     const visible = filterVisibleAttributes(all, triggerMap);
+    
+    //     const allVisibleIds = new Set();
+    //     function collectIds(attrs) {
+    //         for (const a of attrs) {
+    //             allVisibleIds.add(a.id);
+    //             if (a.children?.length) collectIds(a.children);
+    //         }
+    //     }
+    //     collectIds(visible);
+    //     debugVisibleAttributes(all, allVisibleIds);
+    
+    //     return visible;
+    // }
     
     
     pulseElement(selector) {

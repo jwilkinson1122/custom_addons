@@ -392,12 +392,16 @@ class CPQAttributeController(http.Controller):
                 "children": [
                     serialize_attribute(child)
                     for child in attr.child_ids.filtered(lambda c: c.active)
-                ] if attr.is_group else [],
+                ],
+                # "children": [
+                #     serialize_attribute(child)
+                #     for child in attr.child_ids.filtered(lambda c: c.active)
+                # ] if attr.is_group else [],
             }
 
         root_attrs = template.cpq_root_attribute_ids.filtered(lambda a: a.active)
         result = [serialize_attribute(attr) for attr in root_attrs]
-
+        
         # ✅ Log the tree output (dev only)
         _logger.info("🌳 [CPQ] Serialized attribute tree for template %s:\n%s", template.id, result)
 

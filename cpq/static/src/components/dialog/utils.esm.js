@@ -150,50 +150,110 @@ export function safeMany2One(value) {
     return [false, ""];  // Safe fallback
 }
 
+export function findAttributeById(attributes, targetId) {
+    for (const attr of attributes) {
+        if (attr.id === targetId) {
+            console.log(`✅ Found attribute ID ${targetId}:`, attr.name);
+            return attr;
+        }
+        if (attr.children?.length) {
+            const found = findAttributeById(attr.children, targetId);
+            if (found) {
+                console.log(`🔎 Found nested attribute ID ${targetId} under group ${attr.name}`);
+                return found;
+            }
+        }
+    }
+    console.warn(`❌ Attribute ID ${targetId} not found in attribute tree`);
+    return null;
+}
+
 export function getActiveTriggeredAttributeIds(selected, allAttributes) {
     const activeTriggers = new Set();
-    let somethingSelected = false;
+    const triggerSources = [];
+
+    // 🔄 Normalize to flat selection
+    const flatSelected = {};
+    if (selected?.left || selected?.right) {
+        Object.assign(flatSelected, selected.left || {}, selected.right || {});
+    } else {
+        Object.assign(flatSelected, selected || {});
+    }
 
     function walk(attributes) {
         for (const attr of attributes) {
-            if (attr.is_group && attr.children?.length) {
-                walk(attr.children);
-            } else if (attr.values?.length) {
-                for (const val of attr.values) {
-                    const isSelected = selected?.[val.id] !== undefined;
-                    if (isSelected) {
-                        somethingSelected = true;
-                        for (const triggeredId of val.triggers || []) {
-                            activeTriggers.add(triggeredId);
-                        }
+            const values = attr.values || attr.ptav_ids || [];
+
+            for (const val of values) {
+                const isSelected = flatSelected?.[val.id] !== undefined;
+                if (isSelected && Array.isArray(val.triggers)) {
+                    for (const triggeredId of val.triggers) {
+                        activeTriggers.add(triggeredId);
+                        triggerSources.push({
+                            sourceValue: `${val.name} (ID ${val.id})`,
+                            sourceAttribute: `${attr.name} (ID ${attr.id})`,
+                            triggers: triggeredId,
+                        });
                     }
                 }
+            }
+
+            if (attr.children?.length) {
+                walk(attr.children);
             }
         }
     }
 
     walk(allAttributes);
 
-    if (!somethingSelected) {
-        // Show top-level non-triggered attributes
-        const rootAttrIds = allAttributes.filter(a => !a.is_group).map(a => a.id);
-        rootAttrIds.forEach(id => activeTriggers.add(id));
+    if (triggerSources.length) {
+        console.group("🔁 Triggered Attributes:");
+        triggerSources.forEach(t =>
+            console.log(`✅ "${t.sourceValue}" from "${t.sourceAttribute}" triggers attribute ID ${t.triggers}`)
+        );
+        console.groupEnd();
+    } else {
+        console.warn("⚠️ No triggers were activated.");
     }
 
     return activeTriggers;
 }
 
 
+function isTriggeredByAnything(targetAttrId, allAttrs) {
+    let triggered = false;
+
+    function walk(attrs) {
+        for (const attr of attrs) {
+            const values = attr.values || attr.ptav_ids || [];
+            for (const val of values) {
+                if (Array.isArray(val.triggers) && val.triggers.includes(targetAttrId)) {
+                    triggered = true;
+                    return;
+                }
+            }
+            if (attr.children?.length) walk(attr.children);
+        }
+    }
+
+    walk(allAttrs);
+    return triggered;
+}
+
 export function filterVisibleAttributes(allAttributes, visibleAttrIds) {
     function recurse(attrList) {
         return attrList
             .map(attr => {
-                const include = attr.is_group || visibleAttrIds.has(attr.id) || attr.required;
-                if (!include) return null;
-                return {
-                    ...attr,
-                    children: attr.children ? recurse(attr.children) : [],
-                };
+                if (attr.is_group || attr.required) {
+                    return { ...attr, children: recurse(attr.children || []) };
+                }
+
+                const triggered = isTriggeredByAnything(attr.id, allAttributes);
+                if (!triggered || visibleAttrIds.has(attr.id)) {
+                    return { ...attr, children: recurse(attr.children || []) };
+                }
+
+                return null;
             })
             .filter(Boolean);
     }
@@ -201,34 +261,74 @@ export function filterVisibleAttributes(allAttributes, visibleAttrIds) {
     return recurse(allAttributes);
 }
 
+ 
 export function filterVisibleAttributeValues(attr, selected, allAttributes) {
-    const triggeredBy = [];
+    const flatSelected = {};
+    if (selected?.left || selected?.right) {
+        Object.assign(flatSelected, selected.left || {}, selected.right || {});
+    } else {
+        Object.assign(flatSelected, selected || {});
+    }
 
-    for (const parent of allAttributes) {
-        for (const val of parent.values || []) {
-            const triggers = val.triggers || [];
-            if (triggers.includes(attr.id) && selected[val.id] !== undefined) {
-                triggeredBy.push(val.id);
-            }
+    const isTriggeredByAnything = allAttributes.some(parent =>
+        (parent.values || []).some(val => Array.isArray(val.triggers) && val.triggers.includes(attr.id))
+    );
+
+    if (!isTriggeredByAnything) return attr.values || [];
+
+    const hasTriggerActive = allAttributes.some(parent =>
+        (parent.values || []).some(
+            val => (val.triggers || []).includes(attr.id) && flatSelected[val.id] !== undefined
+        )
+    );
+
+    if (hasTriggerActive || attr.required) return attr.values || [];
+
+    return [];
+}
+
+export function getVisibleValueMap(attr, selected, allAttributes) {
+    const flatSelected = {};
+    if (selected?.left || selected?.right) {
+        Object.assign(flatSelected, selected.left || {}, selected.right || {});
+    } else {
+        Object.assign(flatSelected, selected || {});
+    }
+
+    const isTriggered = allAttributes.some(parent =>
+        (parent.values || []).some(val => Array.isArray(val.triggers) && val.triggers.includes(attr.id))
+    );
+
+    const hasActiveTrigger = allAttributes.some(parent =>
+        (parent.values || []).some(
+            val => (val.triggers || []).includes(attr.id) && flatSelected[val.id] !== undefined
+        )
+    );
+
+    const shouldShow = !isTriggered || hasActiveTrigger || attr.required;
+
+    return (attr.values || []).map(v => ({ ...v, visible: shouldShow }));
+}
+
+export function debugVisibleAttributes(allAttributes, visibleAttributeIds) {
+    const all = new Set();
+    const visible = new Set(visibleAttributeIds);
+
+    function walk(attrs) {
+        for (const attr of attrs) {
+            all.add(attr.id);
+            if (attr.children?.length) walk(attr.children);
         }
     }
 
-    // 🔁 If the attribute is actively triggered → allow values
-    if (triggeredBy.length > 0) {
-        return attr.values || [];
+    walk(allAttributes);
+
+    const hidden = [...all].filter((id) => !visible.has(id));
+    if (hidden.length > 0) {
+        console.warn("🚫 Hidden attribute IDs (not triggered):", hidden);
+    } else {
+        console.log("✅ All attributes are currently visible.");
     }
-
-    // 🔁 If the attribute is *not* gated behind triggers → allow values
-    const isTriggeredAttribute = allAttributes.some(attrCandidate =>
-        attrCandidate.values?.some(v => (v.triggers || []).includes(attr.id))
-    );
-
-    if (!isTriggeredAttribute) {
-        return attr.values || [];
-    }
-
-    // ❌ Else hide values (waiting for trigger)
-    return [];
 }
 
 

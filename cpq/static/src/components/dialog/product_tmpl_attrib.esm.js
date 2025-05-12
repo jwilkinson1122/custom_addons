@@ -2,7 +2,7 @@
 
 import { onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { filterVisibleAttributeValues } from "./utils.esm";
+import { filterVisibleAttributeValues, getVisibleValueMap } from "./utils.esm";
 const {Component} = owl;
 
 class ProductTmplAttrib extends Component {
@@ -33,13 +33,35 @@ class ProductTmplAttrib extends Component {
         }
     }
 
+    // getVisibleValues() {
+    //     return filterVisibleAttributeValues(
+    //         this.props.attribute,
+    //         this.props.selected,
+    //         this.props.allAttributes || []
+    //     );
+    // }
+
+    // getVisibleValues() {
+    //     const visible = filterVisibleAttributeValues(
+    //         this.props.attribute,
+    //         this.props.selected,
+    //         this.props.allAttributes || []
+    //     );
+    //     console.log("🔎 Visible PTAVs for", this.props.attribute.name, "→", visible.map(v => v.name));
+    //     return visible;
+    // }
+
     getVisibleValues() {
-        return filterVisibleAttributeValues(
+        const valueMap = getVisibleValueMap(
             this.props.attribute,
             this.props.selected,
             this.props.allAttributes || []
         );
+        console.log("🔎 Visible PTAVs for", this.props.attribute.name, "→", valueMap.map(v => v.name));
+        return valueMap;
     }
+    
+    
 
     isSelectedPTAVCustom() {
         return false;   

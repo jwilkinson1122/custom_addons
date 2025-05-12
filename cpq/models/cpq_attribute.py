@@ -31,8 +31,6 @@ class CpqAttribute(models.Model):
     required = fields.Boolean(default=False)
     active = fields.Boolean(default=True)
 
-    # parent_id = fields.Many2one("cpq.attribute", string="Parent Attribute", index=True, ondelete='cascade')
-    # child_ids = fields.One2many("cpq.attribute", "parent_id", string="Sub-Attributes")
     parent_id = fields.Many2one(
         'cpq.attribute',
         string='Parent Attribute',
@@ -40,9 +38,23 @@ class CpqAttribute(models.Model):
         ondelete='cascade'   
     )
 
-    # parent_id = fields.Many2one('cpq.attribute', string='Parent Attribute', index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
-    child_ids = fields.One2many('cpq.attribute', 'parent_id', string="Sub-attributes")
-    # child_badge_info = fields.Json("Child Badges", compute="_compute_child_badge_info", store=False)
+    child_ids = fields.One2many('cpq.attribute', 'parent_id', string="Child Records")
+
+    subgroup_ids = fields.One2many(
+        'cpq.attribute',
+        'parent_id',
+        string="Sub-Groups",
+        domain=[('is_group', '=', True)]
+    )
+
+    subattribute_ids = fields.One2many(
+        'cpq.attribute',
+        'parent_id',
+        string="Sub-Attributes",
+        domain=[('is_group', '=', False)]
+    )
+
+
     linked_product_attribute_id = fields.Many2one(
         "product.attribute",
         string="Linked Product Attribute",

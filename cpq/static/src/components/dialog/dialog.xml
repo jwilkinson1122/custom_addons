@@ -67,8 +67,8 @@
                                 side="state.laterality === 'bilateral' and state.split ? null : 'shared'"
                                 split="state.split"
                                 allAttributes="state.ptalIds"
-                                onSelect="(ev) => this._handleSharedSelect(attr.id, ev)"
-                                onCustom="(ptavId, ev) => this._addOrUpdateSelected(attr.id, null, ptavId, ev.target.value)"
+                                onSelect="this._handleSelect"
+                                onCustom="this._handleCustom"
                             />
                         </t>
                     </div>

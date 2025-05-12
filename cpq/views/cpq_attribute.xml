@@ -40,7 +40,7 @@
               </field>
             </page>
             <page string="Sub-Groups" invisible="not is_group">
-              <field name="child_ids" domain="[('is_group', '=', True)]">
+              <field name="subgroup_ids">
                 <tree editable="bottom">
                   <field name="sequence" widget="handle"/>
                   <field name="name"/>
@@ -50,9 +50,19 @@
                   <field name="active"/>
                 </tree>
               </field>
+              <!-- <field name="child_ids" domain="[('is_group', '=', True)]">
+                <tree editable="bottom">
+                  <field name="sequence" widget="handle"/>
+                  <field name="name"/>
+                  <field name="is_group"/>
+                  <field name="parent_id"/>
+                  <field name="display_type"/>
+                  <field name="active"/>
+                </tree>
+              </field> -->
             </page>
             <page string="Sub-Attributes" invisible="is_group">
-              <field name="child_ids" domain="[('is_group', '=', False)]">
+              <field name="subattribute_ids">
                 <tree editable="bottom">
                   <field name="sequence" widget="handle"/>
                   <field name="name"/>
@@ -62,6 +72,16 @@
                   <field name="active"/>
                 </tree>
               </field>
+              <!-- <field name="child_ids" domain="[('is_group', '=', False)]">
+                <tree editable="bottom">
+                  <field name="sequence" widget="handle"/>
+                  <field name="name"/>
+                  <field name="is_group"/>
+                  <field name="parent_id"/>
+                  <field name="display_type"/>
+                  <field name="active"/>
+                </tree>
+              </field> -->
             </page>
           </notebook>
         </sheet>
@@ -77,7 +97,6 @@
       <tree string="CPQ Attributes">
         <field name="name"/>
         <field name="parent_id"/>
-        <!-- <field name="child_ids"/> -->
         <field name="child_ids" widget="many2many_tags" options="{'no_create': True}"/>
         <field name="display_type"/>
         <field name="sequence"/>
