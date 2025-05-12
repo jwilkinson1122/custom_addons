@@ -31,12 +31,24 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import ProductTmplAttrib from "./product_tmpl_attrib.esm";
 import SummaryPanel from "./configurator_summary_panel.esm";
-import { validateProps, cleanGhostRecords, nextTick, useDebouncedInput, debounce, safeMany2One, computeLocalCPQPriceBreakdown } from "./utils.esm";
+import { 
+    validateProps, 
+    cleanGhostRecords, 
+    nextTick, 
+    useDebouncedInput, 
+    debounce, 
+    safeMany2One, 
+    computeLocalCPQPriceBreakdown,
+    getActiveTriggeredAttributeIds,
+    filterVisibleAttributes,
+    filterVisibleAttributeValues
+} from "./utils.esm";
+import { ProductAttribGroupRenderer } from "./product_attrib_group_renderer.esm";
 
 export class ConfigureDialog extends Component {
     static template = "cpq.ConfigureDialogDialog";
 
-    static components = { Dialog, ProductTmplAttrib, SummaryPanel };
+    static components = { Dialog, ProductTmplAttrib, SummaryPanel, ProductAttribGroupRenderer, };
 
     static props = {
         orderId: Number,
@@ -69,8 +81,6 @@ export class ConfigureDialog extends Component {
                 console.log("Exposed: window._cpqDevDialog");
             }
         }
-        
-        
         
         validateProps(this, ConfigureDialog.props);
         this.translate = {
@@ -308,7 +318,10 @@ export class ConfigureDialog extends Component {
                 this.state.isInitializing = false;
             }
         });
-        
+
+        // Assume this.props.attributes is your full tree of CPQ attributes from the backend
+        // this.allAttributes = this.props.attributes;
+ 
         this.onSplitToggle = async () => {
             const goingToShared = this.state.split;
             const goingToSplit = !this.state.split;
@@ -1069,6 +1082,30 @@ export class ConfigureDialog extends Component {
     
     get productTemplateName() {
         return this.productTemplate.display_name || "Configured Product";
+    }
+
+    get allAttributes() {
+        return this.state.ptalIds;
+    }
+
+    get visibleAttributes() {
+        const selected = this.state.selected || {};
+        const all = this.state.ptalIds || [];
+    
+        // If no values selected at all, just return all attributes
+        const hasAnySelection = Object.values(selected).some(val => {
+            return typeof val === "object"
+                ? Object.keys(val).length > 0
+                : !!val;
+        });
+    
+        if (!hasAnySelection) {
+            console.warn("🧪 No selection yet — showing all attributes");
+            return all;
+        }
+    
+        const triggerMap = getActiveTriggeredAttributeIds(selected, all);
+        return filterVisibleAttributes(all, triggerMap);
     }
     
     

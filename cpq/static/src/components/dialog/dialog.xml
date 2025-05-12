@@ -60,48 +60,16 @@
                     </div>
                     <!-- 🔸 Attributes Group -->
                     <div class="config-section mb-4">
-                        <t t-foreach="state.ptalIds" t-as="i" t-key="i.id">
-                            <!-- Group Header -->
-                            <t t-if="i.is_group">
-                                <div class="bg-secondary text-white px-3 py-2 rounded mb-3 mt-4 config-group-header">
-                                    <strong t-esc="i.name"/>
-                                </div>
-                            </t>
-                            <!-- Attribute Selector -->
-                            <t t-if="!i.is_group">
-                                <t t-if="state.laterality === 'bilateral' and state.split">
-                                    <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
-                                        <div class="col-4">
-                                            <strong t-esc="i.name"/>
-                                        </div>
-                                        <div class="col text-muted">
-                                            <small>
-                                                <strong>Left</strong>
-                                            </small>
-                                        </div>
-                                        <div class="col text-muted">
-                                            <small>
-                                                <strong>Right</strong>
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-4"/>
-                                        <div class="col">
-                                            <ProductTmplAttrib id="'ptav_%s_left' % i.id" attribute="i" selected="state.selected.left || {}" side="'left'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('left', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('left', i.id, ptavId, ev.target.value)" />
-                                        </div>
-                                        <div class="col">
-                                            <ProductTmplAttrib id="'ptav_%s_right' % i.id" attribute="i" selected="state.selected.right || {}" side="'right'" hideLabel="true" onSelect="(ev) => this._addOrUpdateSelected('right', i.id, ev.target.value)" onCustom="(ptavId, ev) => this._addOrUpdateSelected('right', i.id, ptavId, ev.target.value)" />
-                                        </div>
-                                    </div>
-                                </t>
-                                <t t-if="!(state.laterality === 'bilateral' and state.split)">
-                                    <div class="mb-3">
-                                        <strong t-esc="i.name"/>
-                                        <ProductTmplAttrib id="'ptav_%s_shared' % i.id" attribute="i" selected="state.selected" side="'shared'" hideLabel="true" onSelect="(ev) => this._handleSharedSelect(i.id, ev)" onCustom="(ptavId, ev) => this._addOrUpdateSelected(i.id, null, ptavId, ev.target.value)" />
-                                    </div>
-                                </t>
-                            </t>
+                        <t t-foreach="visibleAttributes" t-as="attr" t-key="attr.id">
+                            <ProductAttribGroupRenderer
+                                attribute="attr"
+                                selected="state.selected"
+                                side="state.laterality === 'bilateral' and state.split ? null : 'shared'"
+                                split="state.split"
+                                allAttributes="state.ptalIds"
+                                onSelect="(ev) => this._handleSharedSelect(attr.id, ev)"
+                                onCustom="(ptavId, ev) => this._addOrUpdateSelected(attr.id, null, ptavId, ev.target.value)"
+                            />
                         </t>
                     </div>
                 </div>
@@ -156,6 +124,86 @@
                 </button>
             </t>
         </Dialog>
+    </t>
+    
+    <t t-name="cpq.ProductAttribGroupRenderer" owl="1">
+        <t t-if="props.attribute.is_group">
+            <!-- 🔹 Group Header -->
+            <div class="bg-secondary text-white px-3 py-2 rounded mb-3 mt-4 config-group-header">
+                <strong t-esc="props.attribute.name"/>
+            </div>
+
+            <!-- 🔁 Recursively render children -->
+            <t t-foreach="props.attribute.children" t-as="child" t-key="child.id">
+                <ProductAttribGroupRenderer
+                    attribute="child"
+                    selected="props.selected"
+                    side="props.side"
+                    split="props.split"
+                    allAttributes="props.allAttributes"
+                    onSelect="props.onSelect"
+                    onCustom="props.onCustom"
+                />
+            </t>
+        </t>
+
+        <t t-if="!props.attribute.is_group">
+            <!-- 🔸 Bilateral + Split: Render L/R columns -->
+            <t t-if="props.side === null and props.split === true">
+                <div class="row fw-bold text-center mb-1 bg-light border-bottom py-1">
+                    <div class="col-4">
+                        <strong t-esc="props.attribute.name"/>
+                    </div>
+                    <div class="col text-muted">
+                        <small><strong>Left</strong></small>
+                    </div>
+                    <div class="col text-muted">
+                        <small><strong>Right</strong></small>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4"/>
+                    <div class="col">
+                        <ProductTmplAttrib
+                            attribute="props.attribute"
+                            selected="props.selected.left || {}"
+                            allAttributes="props.allAttributes"
+                            side="'left'"
+                            hideLabel="true"
+                            onSelect="(ev) => props.onSelect('left', props.attribute.id, ev.target.value)"
+                            onCustom="(ptavId, ev) => props.onCustom('left', props.attribute.id, ptavId, ev.target.value)"
+                        />
+                    </div>
+                    <div class="col">
+                        <ProductTmplAttrib
+                            attribute="props.attribute"
+                            selected="props.selected.right || {}"
+                            allAttributes="props.allAttributes"
+                            side="'right'"
+                            hideLabel="true"
+                            onSelect="(ev) => props.onSelect('right', props.attribute.id, ev.target.value)"
+                            onCustom="(ptavId, ev) => props.onCustom('right', props.attribute.id, ptavId, ev.target.value)"
+                        />
+                    </div>
+                </div>
+            </t>
+
+            <!-- 🔸 Shared (non-split) -->
+            <t t-if="props.side !== null or props.split === false">
+                <div class="mb-3">
+                    <strong t-esc="props.attribute.name"/>
+                    <ProductTmplAttrib
+                        attribute="props.attribute"
+                        selected="props.side === 'left' ? props.selected.left : props.side === 'right' ? props.selected.right : props.selected"
+                        allAttributes="props.allAttributes"
+                        side="props.side || 'shared'"
+                        hideLabel="true"
+                        onSelect="(ev) => props.onSelect(props.attribute.id, ev)"
+                        onCustom="(ptavId, ev) => props.onCustom(props.attribute.id, null, ptavId, ev.target.value)"
+                    />
+                </div>
+            </t>
+        </t>
     </t>
 
     <t t-name="cpq.ConfiguratorSummaryPanel" owl="1">

@@ -403,48 +403,6 @@ class CPQAttributeController(http.Controller):
 
         return result
 
-    # @http.route('/cpq/attribute/tree/<int:product_template_id>', type='json', auth='user')
-    # def cpq_attribute_tree(self, product_template_id):
-    #     template = request.env['product.template'].sudo().browse(product_template_id)
-    #     if not template.exists():
-    #         raise UserError("Product template not found.")
-
-    #     ptal_ids = []
-
-    #     root_attrs = template.cpq_root_attribute_ids.filtered(lambda a: a.active)
-
-    #     for group in root_attrs:
-    #         ptal_ids.append({
-    #             "id": group.id,
-    #             "name": group.name,
-    #             "is_group": True,
-    #             "sequence": group.sequence,
-    #         })
-
-    #         for attr in group.child_ids.filtered(lambda a: a.active and not a.is_group):
-    #             attr_data = {
-    #                 "id": attr.id,
-    #                 "name": attr.name,
-    #                 "is_group": False,
-    #                 "display_type": attr.display_type,
-    #                 "required": attr.required,
-    #                 "sequence": attr.sequence,
-    #                 "values": [],
-    #             }
-
-    #             for val in attr.value_ids.filtered(lambda v: v.active):
-    #                 attr_data["values"].append({
-    #                     "id": val.id,
-    #                     "name": val.name,
-    #                     "price_extra": val.price_extra,
-    #                     "triggers": [a.id for a in val.triggers_child_attribute_ids],
-    #                     "children": [],  
-    #                 })
-
-    #             ptal_ids.append(attr_data)
-
-    #     return ptal_ids
-
     @http.route("/cpq/dev/check_links", type="http", auth="user")
     def cpq_check_links(self):
         env = api.Environment(http.request.cr, SUPERUSER_ID, http.request.env.context)

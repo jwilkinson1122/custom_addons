@@ -142,32 +142,93 @@ export function getSafeConfiguratorValues(config, fallbackUomId) {
     };
 }
 
-
-// export function  getSafeConfiguratorValues(config, fallbackUomId) {
-//     const uomId = config.product_uom || fallbackUomId;
-//     if (!uomId) {
-//         console.warn("Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
-//     }
-
-//     const quantity = config.quantity_to_make || 1;
-//     const priceUnit = config.price_unit || (config.total_price / quantity) || 0;
-
-//     return {
-//         product_uom_qty: quantity,
-//         product_uom: uomId,
-//         price_unit: priceUnit,
-//         name: config.name || "Configured Product",
-//         cpq_configuration_json: JSON.stringify(config),
-//         cpq_configuration_summary: config.configuration_summary || "",
-//     };
-// }
-
 export function safeMany2One(value) {
     if (Array.isArray(value) && value.length === 2) return value;  // Proper format
     if (Array.isArray(value) && value.length === 1) return [value[0], ""];  // Only ID, missing name
     if (value && typeof value === "object" && "id" in value) return [value.id, value.display_name || ""];
     if (typeof value === "number") return [value, ""];  // Number only
     return [false, ""];  // Safe fallback
+}
+
+export function getActiveTriggeredAttributeIds(selected, allAttributes) {
+    const activeTriggers = new Set();
+    let somethingSelected = false;
+
+    function walk(attributes) {
+        for (const attr of attributes) {
+            if (attr.is_group && attr.children?.length) {
+                walk(attr.children);
+            } else if (attr.values?.length) {
+                for (const val of attr.values) {
+                    const isSelected = selected?.[val.id] !== undefined;
+                    if (isSelected) {
+                        somethingSelected = true;
+                        for (const triggeredId of val.triggers || []) {
+                            activeTriggers.add(triggeredId);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    walk(allAttributes);
+
+    if (!somethingSelected) {
+        // Show top-level non-triggered attributes
+        const rootAttrIds = allAttributes.filter(a => !a.is_group).map(a => a.id);
+        rootAttrIds.forEach(id => activeTriggers.add(id));
+    }
+
+    return activeTriggers;
+}
+
+
+export function filterVisibleAttributes(allAttributes, visibleAttrIds) {
+    function recurse(attrList) {
+        return attrList
+            .map(attr => {
+                const include = attr.is_group || visibleAttrIds.has(attr.id) || attr.required;
+                if (!include) return null;
+                return {
+                    ...attr,
+                    children: attr.children ? recurse(attr.children) : [],
+                };
+            })
+            .filter(Boolean);
+    }
+
+    return recurse(allAttributes);
+}
+
+export function filterVisibleAttributeValues(attr, selected, allAttributes) {
+    const triggeredBy = [];
+
+    for (const parent of allAttributes) {
+        for (const val of parent.values || []) {
+            const triggers = val.triggers || [];
+            if (triggers.includes(attr.id) && selected[val.id] !== undefined) {
+                triggeredBy.push(val.id);
+            }
+        }
+    }
+
+    // 🔁 If the attribute is actively triggered → allow values
+    if (triggeredBy.length > 0) {
+        return attr.values || [];
+    }
+
+    // 🔁 If the attribute is *not* gated behind triggers → allow values
+    const isTriggeredAttribute = allAttributes.some(attrCandidate =>
+        attrCandidate.values?.some(v => (v.triggers || []).includes(attr.id))
+    );
+
+    if (!isTriggeredAttribute) {
+        return attr.values || [];
+    }
+
+    // ❌ Else hide values (waiting for trigger)
+    return [];
 }
 
 

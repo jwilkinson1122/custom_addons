@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { filterVisibleAttributeValues } from "./utils.esm";
 const {Component} = owl;
 
 class ProductTmplAttrib extends Component {
-
-    
 
     setup() {
         super.setup(...arguments);
@@ -32,6 +31,14 @@ class ProductTmplAttrib extends Component {
             default:
                 return "cpq.ProductTmplAttrib-radio";
         }
+    }
+
+    getVisibleValues() {
+        return filterVisibleAttributeValues(
+            this.props.attribute,
+            this.props.selected,
+            this.props.allAttributes || []
+        );
     }
 
     isSelectedPTAVCustom() {
@@ -79,41 +86,5 @@ ProductTmplAttrib.props = {
     onSelect: { type: "function" },
     onCustom: { type: "function" },
 };
-
-
-// ProductTmplAttrib.props = {
-//     id: Number,
-//     attribute: {
-//         type: Object,
-//         shape: {
-//             id: Number,
-//             name: String,
-//             display_type: {
-//                 type: String,
-//                 validate: (type) =>
-//                     ["color", "pills", "radio", "select"].includes(type),
-//             },
-//             values: {
-//                 type: Array,
-//                 element: {
-//                     id: Number,
-//                     name: String,
-//                     html_color: [Boolean, String],
-//                     is_custom: Boolean,
-//                     price_extra: Number,
-//                     excluded: { type: Boolean, optional: true },
-//                     cpq_custom_type: [Boolean, String],
-//                     triggers: { type: Array, optional: true },
-//                     children: { type: Array, optional: true },
-//                 },
-//             },
-//         },
-//     },
-//     selected: { type: Object, optional: true },
-//     side: { type: String, optional: true },
-//     hideLabel: { type: Boolean, optional: true },
-//     onSelect: { type: "function" },
-//     onCustom: { type: "function" },
-// };
 
 export default ProductTmplAttrib;
