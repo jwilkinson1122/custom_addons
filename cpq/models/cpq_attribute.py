@@ -141,8 +141,7 @@ class CpqAttribute(models.Model):
                 'sticky': False,
             },
         }
-
-        
+   
 class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
     _name = "cpq.attribute.value"
     _description = "CPQ Attribute Value"
@@ -184,21 +183,12 @@ class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
         "product.options",
         string="Linked Option",
         domain="[('is_leaf', '=', True)]",
-        ondelete='cascade',
+        # ondelete='cascade',
         help="Select a predefined product option this attribute value should be associated with. "
          "Used to map free-form or selectable values to structured configuration options under "
          "Custom Options (e.g., 'Heel Options', 'Top Cover Options')."
     )
 
-    # linked_option_id = fields.Many2one(
-    #     "product.attribute.value",
-    #     string="Linked Option",
-    #     domain="[('is_leaf', '=', True)]",
-    #     help="Select a predefined product option this attribute value should be associated with. "
-    #      "Used to map free-form or selectable values to structured configuration options under "
-    #      "Custom Options (e.g., 'Heel Options', 'Top Cover Options')."
-    # )
-    
     linked_attribute_id = fields.Many2one(
         related="linked_option_id.option_id",
         string="Linked Attribute",
@@ -206,18 +196,37 @@ class CpqAttributeValue(models.Model, CPQCustomFieldMixin):
         readonly=True
     )
 
-    # product_attribute_value_id = fields.Many2one(
-    #     "product.attribute.value",
-    #     string="Linked Product Attribute Value",
-    #     help="If set, this links the CPQ value to a corresponding product.attribute.value"
-    # )
-
-
     cpq_options_relaxed_validation = fields.Boolean(
         string="Relax Validation",
         help="Allow a options record to be moved between parents",
         default=False,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._ensure_option_links()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        self._ensure_option_links()
+        return res
+
+    def _ensure_option_links(self):
+        """
+        Ensures that each linked_option_id has a valid option_id set based on the value's attribute.
+        """
+        for val in self:
+            option = val.linked_option_id
+            cpq_attr = val.attribute_id
+            product_attr = cpq_attr.linked_product_attribute_id
+
+            if option and not option.option_id and product_attr:
+                option.option_id = product_attr
+                _logger.info("🔗 [Auto-link] Set option_id=%s on product.options '%s' from cpq.attribute '%s'",
+                             product_attr.name, option.name, cpq_attr.name)
+
 
     @api.returns("self", lambda value: value.id)
     def copy(self, default=None):

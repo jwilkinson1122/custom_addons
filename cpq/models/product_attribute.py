@@ -166,6 +166,17 @@ class ProductTemplateAttributeValue(models.Model):
         related="product_attribute_value_id.linked_option_id", store=True, readonly=False
     )
 
+    x_virtual_cpq_id = fields.Char(
+        string="Virtual CPQ ID",
+        index=True,
+        help="ID used to match against CPQ attribute value"
+    )
+
+    # _sql_constraints = [
+    #     ("unique_virtual_cpq_id", "unique(x_virtual_cpq_id)", "Virtual CPQ ID must be unique.")
+    # ]
+
+
     # Refactored to remove duplicate code
     def _cpq_get_combination_info(self):
         self.ensure_one()

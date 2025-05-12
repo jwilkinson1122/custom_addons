@@ -593,7 +593,6 @@ export class ConfigureDialog extends Component {
             const safeSelected = JSON.parse(JSON.stringify(this.state.selected || {}));
     
             const config = {
-                ...this._flattenCombination(safeSelected), // ✅ injects { "35": 35, "36": 36, ... }
                 selected: safeSelected,
                 name: this.productTemplateName,
                 laterality: this.state.laterality,
@@ -601,7 +600,6 @@ export class ConfigureDialog extends Component {
                 quantity_to_make: this.state.quantityToMake,
                 product_uom_qty: this.state.quantityToMake,
                 product_uom: productUom,
-                // price_unit: this.state.priceBreakdown?.total / this.state.quantityToMake || 0,
                 price_unit: this.state.quantityToMake > 0
                     ? parseFloat((this.state.priceBreakdown.total / this.state.quantityToMake).toFixed(2))
                     : 0,

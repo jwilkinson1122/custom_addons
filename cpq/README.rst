@@ -71,3 +71,15 @@ Products → Configuration → CPQ Cleanup Tool
 Opens the product.template list view (tree view).
 The server action will run immediately (since it uses code).
 You’ll get a popup message showing which templates were cleaned up or skipped.
+
+
+## 🛠️ CPQ Cleanup Tools
+
+| **Action**                  | **Method Called**                | **Helps with Missing `product.attribute.value(35)`?** | **Purpose**                                                                 |
+| --------------------------- | -------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `Repair CPQ Links`          | `/cpq/dev/repair_links`          | ❌ No                                                  | Likely attempts to relink `cpq.attribute.value` to product/option records.  |
+| `Check CPQ Links`           | `/cpq/dev/check_links`           | ❌ No                                                  | Diagnostic only. May tell you something is wrong, doesn't fix it.           |
+| `Cleanup Broken CPQ Values` | `model.cleanup_cpq_values_ui()`  | ❌ No                                                  | Cleans broken/missing links in `cpq.attribute.value` (not `p.a.v`).         |
+| `Cleanup Orphaned PTAVs`    | `model.cleanup_ptavs_ui()`       | ✅ Indirectly                                          | Deletes `product.template.attribute.value` with missing PAV/attribute refs. |
+| `Fix CPQ Links`             | `model.fix_links_ui()`           | ❌ No                                                  | Repairs internal CPQ links, but not missing base `product.attribute.value`. |
+| `Clean Orphaned PTAVs`      | `model.clean_orphaned_records()` | ✅ Indirectly                                          | Removes PTAVs with broken `product_attribute_value_id` refs (like 35).      |

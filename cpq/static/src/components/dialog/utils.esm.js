@@ -111,7 +111,7 @@ export async function cleanGhostRecords(record, activeId) {
     }
 }
 
-export function  getSafeConfiguratorValues(config, fallbackUomId) {
+export function getSafeConfiguratorValues(config, fallbackUomId) {
     const uomId = config.product_uom || fallbackUomId;
     if (!uomId) {
         console.warn("Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
@@ -120,15 +120,47 @@ export function  getSafeConfiguratorValues(config, fallbackUomId) {
     const quantity = config.quantity_to_make || 1;
     const priceUnit = config.price_unit || (config.total_price / quantity) || 0;
 
+    // 🧹 Clean nested selected (avoid config.selected.selected)
+    const selected = config?.selected?.selected || config.selected || {};
+    
+    if (config?.selected?.selected) {
+        console.warn("⚠️ Detected nested selected in config. Flattening...");
+    }
+    
+    const safeConfig = {
+        ...config,
+        selected,  // overwrite with flattened version
+    };
+
     return {
         product_uom_qty: quantity,
         product_uom: uomId,
         price_unit: priceUnit,
         name: config.name || "Configured Product",
-        cpq_configuration_json: JSON.stringify(config),
+        cpq_configuration_json: JSON.stringify(safeConfig),
         cpq_configuration_summary: config.configuration_summary || "",
     };
 }
+
+
+// export function  getSafeConfiguratorValues(config, fallbackUomId) {
+//     const uomId = config.product_uom || fallbackUomId;
+//     if (!uomId) {
+//         console.warn("Missing Unit of Measure (UoM) in configurator result. Please check your dialog output.");
+//     }
+
+//     const quantity = config.quantity_to_make || 1;
+//     const priceUnit = config.price_unit || (config.total_price / quantity) || 0;
+
+//     return {
+//         product_uom_qty: quantity,
+//         product_uom: uomId,
+//         price_unit: priceUnit,
+//         name: config.name || "Configured Product",
+//         cpq_configuration_json: JSON.stringify(config),
+//         cpq_configuration_summary: config.configuration_summary || "",
+//     };
+// }
 
 export function safeMany2One(value) {
     if (Array.isArray(value) && value.length === 2) return value;  // Proper format

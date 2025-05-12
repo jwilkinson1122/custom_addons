@@ -22,6 +22,8 @@ from odoo.tools.rendering_tools import (
 )
 from odoo.tools.safe_eval import safe_eval
 
+from ..helpers.summary_helper import generate_virtual_ptavs_from_cpq
+
 DEFAULT_CPQ_REF_CODE = """# Available variables:
 #   record: The current product.product which has been created
 #   tmpl: The current product.template
@@ -438,86 +440,9 @@ class ProductTemplate(models.Model):
         _logger.info("[OK] CPQ configuration accepted without errors.")
         return True, {}
 
-
     def _cpq_generate_virtual_ptavs(self, cpq_value_ids):
-        """Generate in-memory virtual PTAVs based on cpq.attribute.value records."""
         self.ensure_one()
-        PTAV = self.env['product.template.attribute.value']
-        ProductAttr = self.env['product.attribute']
-        ProductAttrVal = self.env['product.attribute.value']
-        virtual_ptavs = PTAV.browse()
-
-        for cpq_val in cpq_value_ids:
-            if not cpq_val.exists():
-                _logger.warning("⚠️ Skipping CPQ value ID %s: record not found.", cpq_val.id)
-                continue
-
-            cpq_attr = cpq_val.attribute_id
-            if not cpq_attr or not cpq_attr.exists():
-                _logger.warning("⚠️ Skipping CPQ value '%s' (ID: %s): missing attribute.", cpq_val.name, cpq_val.id)
-                continue
-
-            product_attr = cpq_attr.linked_product_attribute_id
-            if not product_attr:
-                product_attr = ProductAttr.create({
-                    "name": cpq_attr.name,
-                    "create_variant": "no_variant",
-                })
-                cpq_attr.linked_product_attribute_id = product_attr
-                _logger.info("🔗 Created product.attribute '%s' for CPQ attribute ID %s", product_attr.name, cpq_attr.id)
-
-            pav = ProductAttrVal.search([
-                ("name", "=", cpq_val.name),
-                ("attribute_id", "=", product_attr.id),
-            ], limit=1)
-
-            if not pav:
-                _logger.warning("X No matching product.attribute.value for CPQ value '%s' under attribute '%s'", cpq_val.name, product_attr.name)
-                continue
-
-            virtual_ptav = PTAV.new({
-                "product_tmpl_id": self.id,
-                "attribute_id": product_attr.id,
-                "product_attribute_value_id": pav.id,
-            })
-            virtual_ptavs += virtual_ptav
-
-        return virtual_ptavs
-
-
-    # def _cpq_generate_virtual_ptavs(self, cpq_value_ids):
-    #     """Generate in-memory virtual PTAVs based on cpq.attribute.value records."""
-    #     self.ensure_one()
-    #     PTAV = self.env['product.template.attribute.value']
-    #     ProductAttr = self.env['product.attribute']
-    #     virtual_ptavs = PTAV.browse()
-
-    #     for cpq_val in cpq_value_ids:
-    #         if not cpq_val.exists():
-    #             _logger.warning("Skipping CPQ value ID %s: record not found.", cpq_val.id)
-    #             continue
-
-    #         cpq_attr = cpq_val.attribute_id
-    #         if not cpq_attr or not cpq_attr.exists():
-    #             _logger.warning("Skipping CPQ value %s (ID: %s): missing attribute.", cpq_val.name, cpq_val.id)
-    #             continue
-
-    #         product_attr = cpq_attr.linked_product_attribute_id
-    #         if not product_attr:
-    #             product_attr = ProductAttr.create({
-    #                 "name": cpq_attr.name,
-    #             })
-    #             cpq_attr.linked_product_attribute_id = product_attr
-    #             _logger.info("🔗 Created product.attribute '%s' for CPQ attribute ID %s", product_attr.name, cpq_attr.id)
-
-    #         virtual_ptav = PTAV.new({
-    #             "product_tmpl_id": self.id,
-    #             "attribute_id": product_attr.id,
-    #             "product_attribute_value_id": cpq_val.id,
-    #         })
-    #         virtual_ptavs += virtual_ptav
-
-    #     return virtual_ptavs
+        return generate_virtual_ptavs_from_cpq(self.env, self, cpq_value_ids)
 
     def _cpq_get_create_variant(self, ptav_ids, custom_dict):
         self.ensure_one()

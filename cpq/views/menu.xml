@@ -11,4 +11,6 @@
     <menuitem id="menu_cpq_clean_orphans" name="Clean Orphaned PTAVs" parent="sale.prod_config_main" action="action_cpq_clean_orphaned_ptavs" groups="base.group_system" sequence="101" />
     <menuitem id="menu_cpq_cleanup_ptavs" name="Cleanup Orphaned CPQ PTAVs" parent="sale.prod_config_main" action="action_cleanup_orphaned_ptavs" groups="base.group_system" sequence="102"/>
     <menuitem id="menu_cpq_fix_links" name="Fix CPQ Links" parent="sale.prod_config_main" action="action_fix_cpq_links" groups="base.group_system" sequence="103"/>
+    <menuitem id="menu_cpq_cleanup_pavs" name="Clean Orphaned PAVs" parent="sale.prod_config_main" action="action_cpq_clean_broken_pavs" groups="base.group_system" sequence="104"/>
+
 </odoo>

@@ -26,7 +26,13 @@ class ProductOptions(models.Model):
     _order = "display_name asc, sequence"
     # _order = "parent_path, sequence"
 
-    option_id = fields.Many2one("product.attribute", string="Option Group", required=True)
+    option_id = fields.Many2one("product.attribute", string="Option Group", required=False)
+   
+    product_attribute_value_id = fields.Many2one(
+        "product.attribute.value",
+        string="Linked Product Attribute Value",
+        help="Optional direct link to a legacy product.attribute.value for compatibility.",
+    )
 
     name = fields.Char(
         string="Title",
@@ -58,36 +64,6 @@ class ProductOptions(models.Model):
     comment = fields.Text()
     active = fields.Boolean(default=True)
 
-    # @api.model
-    # def reparent_node(self, dragged_id, target_id):
-    #     dragged = self.browse(dragged_id)
-    #     dragged.write({"parent_id": target_id})
-    #     return True
-    
-    # @api.model
-    # def reorder_node(self, dragged_id, target_id):
-    #     dragged = self.browse(dragged_id)
-    #     target = self.browse(target_id)
-
-    #     if dragged.parent_id != target.parent_id:
-    #         raise ValueError("Can't reorder across different parents.")
-
-    #     siblings = self.search([
-    #         ('parent_id', '=', dragged.parent_id.id)
-    #     ], order='sequence')
-
-    #     new_order = []
-    #     for sibling in siblings:
-    #         if sibling.id == target.id:
-    #             new_order.append(dragged.id)
-    #         if sibling.id != dragged.id:
-    #             new_order.append(sibling.id)
-
-    #     for index, rec_id in enumerate(new_order):
-    #         self.browse(rec_id).sequence = (index + 1) * 10
-
-    #     return True
- 
     @api.onchange("parent_id")
     def _onchange_parent_id(self):
         if self._origin and self._origin.parent_id != self.parent_id:

@@ -204,10 +204,13 @@ patch(SaleOrderLineProductField.prototype, {
             // const isEdit = typeof activeId === "number" && !isVirtual;
             const isEdit = activeId && typeof activeId === "number" && !isVirtual;
 
-            const initialConfig = this.props.record.data.cpq_configuration_json
-                ? JSON.parse(this.props.record.data.cpq_configuration_json)
-                : {};
+            // const initialConfig = this.props.record.data.cpq_configuration_json
+            //     ? JSON.parse(this.props.record.data.cpq_configuration_json)
+            //     : {};
             
+            const rawConfig = this.props.record.data.cpq_configuration_json;
+            const initialConfig = typeof rawConfig === "string" ? JSON.parse(rawConfig) : (rawConfig || {});
+
 
             console.log("Final record.resId before dialog:", this.props.record.resId);
 
@@ -221,7 +224,12 @@ patch(SaleOrderLineProductField.prototype, {
                 save: async (configResult) => {
                     try {
                         this.skipNextProductTemplateUpdate = true;
-                        const updatedValues = getSafeConfiguratorValues(configResult.configuration, this.props.productUOMId);
+                        const cleanConfig = { ...configResult.configuration };
+                        if (cleanConfig?.selected?.selected) {
+                            console.warn("⚠️ Detected nested 'selected.selected' — flattening.");
+                            cleanConfig.selected = cleanConfig.selected.selected;
+                        }
+                        const updatedValues = getSafeConfiguratorValues(cleanConfig, this.props.productUOMId);                        await this.props.record.update(updatedValues);
                         await this.props.record.update(updatedValues);
                         this.notification.add("Configuration applied successfully.", { type: "success" });
                     } catch (err) {

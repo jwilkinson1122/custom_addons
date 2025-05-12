@@ -11,9 +11,6 @@ from odoo.addons.cpq.helpers.summary_helper import render_summary_html, compute_
 _logger = logging.getLogger(__name__)
 
 
-
-
-
 # class SaleOrder(models.Model):
 #     _inherit = "sale.order"
 
@@ -86,17 +83,24 @@ class SaleOrderLine(models.Model):
         store=False,
     )
 
-    @api.depends("product_template_id.cpq_ok", "cpq_configuration_json")
-    def _compute_cpq_unconfigured(self):
-        for line in self:
-            line.cpq_unconfigured = bool(line.product_template_id.cpq_ok and not line.cpq_configuration_json)
-
 
     price_unit_display = fields.Char(
         string="Display Price",
         compute="_compute_price_unit_display",
         store=False,
     )
+
+    def _parse_config(self):
+        try:
+            return json.loads(self.cpq_configuration_json) if isinstance(self.cpq_configuration_json, str) else self.cpq_configuration_json or {}
+        except Exception as e:
+            _logger.warning(f"[CPQ] JSON parse error: {e}")
+            return {}
+
+    @api.depends("product_template_id.cpq_ok", "cpq_configuration_json")
+    def _compute_cpq_unconfigured(self):
+        for line in self:
+            line.cpq_unconfigured = bool(line.product_template_id.cpq_ok and not line.cpq_configuration_json)
 
     @api.depends("price_unit", "product_template_id.cpq_ok")
     def _compute_price_unit_display(self):
@@ -120,15 +124,13 @@ class SaleOrderLine(models.Model):
             if not line.cpq_configuration_json:
                 continue
             try:
-                config = get_cpq_config_dict(line)  # Cleaner and safe
-
+                config = get_cpq_config_dict(line.cpq_configuration_json)
                 _logger.info("[CPQ] Applying configuration to order line: %s", json.dumps(config, indent=2))
-
                 line.name = config.get("name") or line.name
                 line.product_uom_qty = config.get("quantity_to_make", line.product_uom_qty)
-
                 # Optional: add to chatter only after save
-                summary_html = render_summary_html(self.env, line.order_id, config, mode="chatter")
+                # summary_html = render_summary_html(self.env, line.order_id, config, mode="chatter")
+                summary_html = render_summary_html(self.env, line, config, mode="chatter")
 
                 _logger.info("🖨️ [CPQ] Generated Summary HTML:\n%s", summary_html)
 
@@ -143,22 +145,16 @@ class SaleOrderLine(models.Model):
             except Exception as e:
                 _logger.warning(f"Failed to parse CPQ config JSON: {e}")
 
-    @api.depends('cpq_configuration_json')
+    @api.depends("cpq_configuration_json")
     def _compute_cpq_laterality(self):
         for line in self:
-            if not line.product_id.cpq_ok:
-                line.cpq_laterality = False
-                continue  # Skip non-CPQ lines!
-            config = get_cpq_config_dict(line.cpq_configuration_json)
-            line.cpq_laterality = config.get('laterality')
-            
+            config = line._parse_config() if line.product_id.cpq_ok else {}
+            line.cpq_laterality = config.get("laterality")
+
     @api.depends("cpq_configuration_json")
     def _compute_cpq_quantity_to_make(self):
         for line in self:
-            if not line.product_id.cpq_ok:
-                line.cpq_laterality = False
-                continue  # Skip non-CPQ lines!
-            config = get_cpq_config_dict(line.cpq_configuration_json)
+            config = line._parse_config() if line.product_id.cpq_ok else {}
             line.cpq_quantity_to_make = config.get("quantity_to_make", 1)
 
     @api.onchange("product_id")
@@ -220,51 +216,18 @@ class SaleOrderLine(models.Model):
             else:
                 line.name = line.product_id.name if line.product_id else line.product_template_id.name or "Custom Product"
 
-    @api.onchange('cpq_configuration_json')
+    @api.onchange("cpq_configuration_json")
     def _onchange_cpq_pricing(self):
         for line in self:
             if not line.product_id.cpq_ok:
-                # 🚫 Skip pricing logic entirely for non-CPQ products
                 return
-
-            config = get_cpq_config_dict(line.cpq_configuration_json)
+            config = line._parse_config()
             result = compute_cpq_price_breakdown(self.env, line, config) or {}
             quantity = result.get("quantity", 1)
             total = result.get("total")
             subtotal = result.get("subtotal")
-
             line.price_unit = total / quantity if total and quantity else subtotal or 0.0
             line.product_uom_qty = quantity
-
-    @api.depends('cpq_configuration_json')
-    def _compute_cpq_configuration_summary(self):
-        for line in self:
-            if not line.product_id.cpq_ok:
-                line.cpq_laterality = False
-                continue  # Skip non-CPQ lines!
-            config = line._parse_config()
-            if not config:
-                line.cpq_configuration_summary = "No configuration available."
-                continue
-            try:
-                config = line._parse_config()
-                _logger.info(f"Generating summary for Sale Order Line {line.id}")
-                _logger.info(f"Config Data: {config}")
-
-                summary_html = render_summary_html(self.env, line.order_id, config)
-
-                line.cpq_configuration_summary = summary_html
-
-            except Exception as e:
-                _logger.warning(f"Failed to generate summary HTML: {e}")
-                config = line._parse_config()
-
-    def _parse_config(self):
-        try:
-            return json.loads(self.cpq_configuration_json) if isinstance(self.cpq_configuration_json, str) else self.cpq_configuration_json or {}
-        except Exception as e:
-            _logger.warning(f"[CPQ] JSON parse error: {e}")
-            return {}
 
     def edit_cpq_configuration(self):
         self.ensure_one()
@@ -422,16 +385,6 @@ class SaleOrderLine(models.Model):
 
         return "\n".join(parts)
 
-    @api.depends("cpq_configuration_json")
-    def _compute_cpq_total_price(self):
-        for line in self:
-            if not line.product_id.cpq_ok:
-                line.cpq_laterality = False
-                continue  # Skip non-CPQ lines!
-            config = get_cpq_config_dict(line.cpq_configuration_json)
-            breakdown = compute_cpq_price_breakdown(self.env, line, config)
-            line.cpq_total_price = breakdown.get("total", 0.0)
-
     @api.model
     def _apply_cpq_attributes_to_product(self, config, product):
         selected = config.get('selected', {})
@@ -466,3 +419,157 @@ class SaleOrderLine(models.Model):
                     _logger.info("Injected fallback product_id=%s for CPQ template_id=%s", product.id, tmpl.id)
 
         return super().create(vals_list)
+
+    @api.depends("cpq_configuration_json")
+    def _compute_cpq_configuration_summary(self):
+        for line in self:
+            if not line.product_id.cpq_ok:
+                line.cpq_configuration_summary = ""
+                continue
+            config = line._parse_config()
+            _logger.info(f"Generating summary for Sale Order Line {line.id}")
+            _logger.info(f"Config Data: {config}")
+            try:
+                line.cpq_configuration_summary = render_summary_html(self.env, line, config)
+                # line.cpq_configuration_summary = render_summary_html(self.env, line.order_id, config)
+            except Exception as e:
+                _logger.warning(f"Failed to generate summary HTML: {e}")
+                line.cpq_configuration_summary = ""
+
+    @api.depends("cpq_configuration_json")
+    def _compute_cpq_total_price(self):
+        for line in self:
+            config = line._parse_config() if line.product_id.cpq_ok else {}
+            breakdown = compute_cpq_price_breakdown(self.env, line, config)
+            line.cpq_total_price = breakdown.get("total", 0.0)
+
+
+    # @api.depends('cpq_configuration_json')
+    # def _compute_cpq_configuration_summary(self):
+    #     for line in self:
+    #         if not line.product_id.cpq_ok:
+    #             line.cpq_laterality = False
+    #             continue  
+    #         config = line._parse_config()
+    #         if not config:
+    #             line.cpq_configuration_summary = "No configuration available."
+    #             continue
+    #         try:
+    #             config = line._parse_config()
+    #             _logger.info(f"Generating summary for Sale Order Line {line.id}")
+    #             _logger.info(f"Config Data: {config}")
+    #             summary_html = render_summary_html(self.env, line.order_id, config)
+    #             line.cpq_configuration_summary = summary_html
+    #         except Exception as e:
+    #             _logger.warning(f"Failed to generate summary HTML: {e}")
+    #             config = line._parse_config()
+
+    # cleanup tools
+    def cpq_clean_broken_pav_links(self):
+        """
+        Clean up cpq_configuration_json by removing references to deleted product.attribute.value IDs.
+        """
+        cleaned = 0
+        broken_refs = {}
+
+        for line in self:
+            raw = line.cpq_configuration_json
+            try:
+                config = json.loads(raw or "{}")
+            except Exception as e:
+                _logger.warning("Skipping line %s due to JSON error: %s", line.id, e)
+                continue
+
+            selected = config.get("selected")
+            if not isinstance(selected, dict):
+                continue
+
+            removed_keys = []
+            for key in list(selected.keys()):
+                try:
+                    pav_id = int(key)
+                    if not self.env["product.attribute.value"].browse(pav_id).exists():
+                        selected.pop(key)
+                        removed_keys.append(pav_id)
+                except Exception:
+                    continue
+
+            if removed_keys:
+                line.cpq_configuration_json = json.dumps(config)
+                line._compute_cpq_configuration_summary()
+                cleaned += 1
+                broken_refs[line.id] = removed_keys
+
+        return {
+            "cleaned": cleaned,
+            "details": broken_refs,
+        }
+
+    def cpq_clean_broken_pav_links_ui(self):
+        """
+        UI wrapper to run cpq_clean_broken_pav_links and return a notification.
+        """
+        result = self.cpq_clean_broken_pav_links()
+        message = f"CPQ cleanup completed:\n- Lines cleaned: {result['cleaned']}"
+        if result["details"]:
+            for line_id, keys in result["details"].items():
+                message += f"\n  • Line {line_id}: removed {keys}"
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "CPQ Cleanup",
+                "message": message,
+                "type": "success",
+                "sticky": False,
+            },
+        }
+
+    # @api.model
+    # def action_run_cpq_clean_broken_pav(self):
+    #     SaleOrderLine = self.env['sale.order.line']
+    #     ProductAttributeValue = self.env['product.attribute.value']
+    #     fixed_lines = []
+
+    #     for line in SaleOrderLine.search([]):
+    #         config_raw = line.cpq_configuration_json
+    #         try:
+    #             config = json.loads(config_raw or "{}")
+    #         except Exception as e:
+    #             _logger.warning("[CPQ] Invalid JSON in line %s: %s", line.id, e)
+    #             continue
+
+    #         selected = config.get("selected", {})
+    #         if not isinstance(selected, dict):
+    #             continue
+
+    #         legacy_ids = [
+    #             int(k) for k in selected.keys()
+    #             if not ProductAttributeValue.browse(int(k)).exists()
+    #         ]
+    #         if not legacy_ids:
+    #             continue
+
+    #         _logger.info("[CPQ] Fixing line %s — removing deleted PAVs: %s", line.id, legacy_ids)
+
+    #         new_selected = {
+    #             k: v for k, v in selected.items()
+    #             if int(k) not in legacy_ids
+    #         }
+    #         config["selected"] = new_selected
+
+    #         line.cpq_configuration_json = json.dumps(config)
+    #         line._compute_cpq_configuration_summary()
+    #         fixed_lines.append(line.id)
+
+    #     message = _("Fixed CPQ summaries on %s sale order lines.") % len(fixed_lines)
+    #     return {
+    #         "type": "ir.actions.client",
+    #         "tag": "display_notification",
+    #         "params": {
+    #             "title": _("CPQ Repair Complete"),
+    #             "message": message,
+    #             "type": "success",
+    #             "sticky": False,
+    #         },
+    #     }
