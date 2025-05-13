@@ -1185,41 +1185,6 @@ export class ConfigureDialog extends Component {
     }
     
 
-    // get visibleAttributes() {
-    //     const selected = this.state.selected || {};
-    //     const all = this.state.ptalIds || [];
-    
-    //     const hasAnySelection = Object.values(selected).some(val =>
-    //         typeof val === "object" ? Object.keys(val).length > 0 : !!val
-    //     );
-    
-    //     if (!hasAnySelection) {
-    //         console.warn("🧪 No selection yet — showing all attributes");
-    //         return all.map(attr => ({
-    //             ...attr,
-    //             children: attr.children || [],
-    //             id: attr.id,
-    //             is_group: !!attr.is_group,
-    //         }));
-    //     }
-    
-    //     const triggerMap = getActiveTriggeredAttributeIds(selected, all);
-    //     const visible = filterVisibleAttributes(all, triggerMap);
-    
-    //     const allVisibleIds = new Set();
-    //     function collectIds(attrs) {
-    //         for (const a of attrs) {
-    //             allVisibleIds.add(a.id);
-    //             if (a.children?.length) collectIds(a.children);
-    //         }
-    //     }
-    //     collectIds(visible);
-    //     debugVisibleAttributes(all, allVisibleIds);
-    
-    //     return visible;
-    // }
-    
-    
     pulseElement(selector) {
         const element = document.querySelector(selector);
         if (!element) return;
@@ -1245,8 +1210,6 @@ export function ConfigureDialogAction(env, action) {
     const context = action.context || {};
     console.log("[ConfigureDialogAction] context:", context);
     console.log("activeId (from context):", context.active_id);
-    // console.log("isEdit:", isEdit);
-    // console.log("isVirtual:", isVirtual);
 
     const rawTmpl = context.product_tmpl_id || context.product_template_id || context.cpq_product_template_id;
     const productTemplate = typeof rawTmpl === "object" ? rawTmpl : undefined;
@@ -1310,7 +1273,6 @@ export function ConfigureDialogAction(env, action) {
 
     const dialogProps = {
         productTemplateId,
-        // productTemplate: typeof rawTmpl === "object" ? rawTmpl : null,
         productTemplate, // only if real object
         orderId,
         currencyId,

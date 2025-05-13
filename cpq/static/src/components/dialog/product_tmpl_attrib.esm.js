@@ -32,25 +32,7 @@ class ProductTmplAttrib extends Component {
                 return "cpq.ProductTmplAttrib-radio";
         }
     }
-
-    // getVisibleValues() {
-    //     return filterVisibleAttributeValues(
-    //         this.props.attribute,
-    //         this.props.selected,
-    //         this.props.allAttributes || []
-    //     );
-    // }
-
-    // getVisibleValues() {
-    //     const visible = filterVisibleAttributeValues(
-    //         this.props.attribute,
-    //         this.props.selected,
-    //         this.props.allAttributes || []
-    //     );
-    //     console.log("🔎 Visible PTAVs for", this.props.attribute.name, "→", visible.map(v => v.name));
-    //     return visible;
-    // }
-
+    
     getVisibleValues() {
         const valueMap = getVisibleValueMap(
             this.props.attribute,

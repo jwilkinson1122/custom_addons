@@ -244,22 +244,25 @@ export function filterVisibleAttributes(allAttributes, visibleAttrIds) {
     function recurse(attrList) {
         return attrList
             .map(attr => {
-                if (attr.is_group || attr.required) {
-                    return { ...attr, children: recurse(attr.children || []) };
+                if (attr.is_group) {
+                    const visibleChildren = recurse(attr.children || []);
+                    if (visibleChildren.length === 0) {
+                        return null; // ❌ Hide group if no children visible
+                    }
+                    return { ...attr, children: visibleChildren };
                 }
 
                 const triggered = isTriggeredByAnything(attr.id, allAttributes);
-                if (!triggered || visibleAttrIds.has(attr.id)) {
-                    return { ...attr, children: recurse(attr.children || []) };
-                }
+                const isVisible = !triggered || visibleAttrIds.has(attr.id) || attr.required;
 
-                return null;
+                return isVisible ? { ...attr, children: [] } : null;
             })
             .filter(Boolean);
     }
 
     return recurse(allAttributes);
 }
+
 
  
 export function filterVisibleAttributeValues(attr, selected, allAttributes) {
