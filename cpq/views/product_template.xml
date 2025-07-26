@@ -1,17 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <odoo>
 
-    <!-- <record id="view_product_template_form_cpq_price_matrix" model="ir.ui.view">
-        <field name="name">product.template.form.cpq.price.matrix</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="open_price_matrix_wizard" type="object" class="oe_stat_button" icon="fa-table" string="Add Price Matrix Line" context="{'default_product_tmpl_id': active_id}"/>
-            </xpath>
-        </field>
-    </record> -->
-
     <record id="product_template_only_form_view_inherited" model="ir.ui.view">
         <field name="name">product_template_only_form_view_inherited</field>
         <field name="model">product.template</field>
@@ -67,27 +56,13 @@
                     BoMs involved as these will not automatically change. Removing an attribute will
                     automatically archive any products which are now invalid. </p>
             </xpath>
-            <xpath expr="//page[@name='variants']//field[@name='attribute_line_ids']" position="before">
-                <group>
-                    <field name="no_create_variants" force_save="1" default="yes"/>
-                </group>
-                <group string="Configurator Settings">
-                    <!-- <field name="cpq_attribute_set_id"/> -->
-                    <!-- <field name="cpq_attribute_set_id" invisible="not cpq_ok"/> -->
-                    <!-- <field name="cpq_root_attribute_ids" widget="many2many_tags"/> -->
-                    <field name="cpq_root_attribute_ids" widget="many2many_tags" string="Root Configurator Attributes" invisible="not cpq_ok" help="These are the top-level CPQ attributes shown in the configurator UI."/>
-
-                </group>
+            <xpath expr="//page[@name='variants']//field[@name='attribute_line_ids']" position="inside">
+                <field name="no_create_variants" force_save="1" default="yes"/>
+                <field name="cpq_root_attribute_ids" widget="many2many_tags" string="Configurator Attributes" invisible="not cpq_ok" help="These are the top-level CPQ attributes shown in the configurator UI."/>
             </xpath>
-            <!-- <xpath expr="//group[@name='product_specifications']" position="after">
-                <group string="Configurator Settings">
-                    <field name="cpq_attribute_set_id"/>
-                </group>
-            </xpath> -->
-            <xpath expr="//field[@name='attribute_line_ids']" position="attributes">
+            <!-- <xpath expr="//page[@name='variants']//field[@name='attribute_line_ids']" position="attributes">
                 <attribute name="invisible">cpq_ok</attribute>
-            </xpath>
-
+            </xpath> -->
         </field>
     </record>
 
@@ -126,18 +101,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_tooltip']" position="before">
                 <field name="cpq_tooltip" string="" class="font-italic text-muted" />
-            </xpath>
-        </field>
-    </record>
-
-    <record id="product_template_search_view" model="ir.ui.view">
-        <field name="name">product_template_search_view</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_search_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='consumable']" position="after">
-                <separator/>
-                <filter string="Configurable Products" name="cpq_products" domain="[('cpq_ok', '=', True)]"/>
             </xpath>
         </field>
     </record>

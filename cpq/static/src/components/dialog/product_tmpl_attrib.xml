@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <templates xml:space="preserve">
-        <!-- Base Attribute Component -->
+    <!-- Base Attribute Component -->
     <t t-name="cpq.ProductTmplAttrib" owl="1">
         <div>
             <div class="mb-3">
@@ -56,6 +56,22 @@
             </label>
         </div>
     </t>
+    <!-- <t t-name="cpq.ProductTmplAttrib-radio" owl="1">
+        <t t-if="!props.hideLabel">
+            <strong t-esc="props.attribute.name" class="form-label d-block mb-2" />
+        </t>
+        <div t-foreach="getVisibleValues()" t-as="ptav" t-key="ptav.id" t-att-class="[
+         'form-check',
+         (!props.split || props.side === 'shared') ? 'form-check-inline' : 'mb-2',
+         !ptav.visible ? 'd-none' : ''
+     ].join(' ')">
+            <input type="radio" class="form-check-input" t-att-id="'ptav-' + ptav.id + '-' + (props.side || 'shared')" t-att-value="ptav.id" t-att-checked="props.selected[ptav.id] !== undefined" t-att-name="'ptal-' + props.attribute.id + '-' + (props.side || 'shared')" t-on-change="props.onSelect" t-attf-style="accent-color: {{ ptav.html_color || '' }}" />
+            <label class="form-check-label" t-att-for="'ptav-' + ptav.id + '-' + (props.side || 'shared')">
+                <span t-esc="ptav.name" />
+            </label>
+        </div>
+    </t> -->
+
 
     <!-- Color Swatch Template -->
     <t t-name="cpq.ProductTmplAttrib-color" owl="1">
@@ -70,6 +86,6 @@
             </li>
         </ul>
     </t>
-    
+
 </templates>
  

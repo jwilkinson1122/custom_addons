@@ -129,9 +129,13 @@
     <t t-name="cpq.ProductAttribGroupRenderer" owl="1">
         <t t-if="props.attribute.is_group">
             <!-- 🔹 Group Header -->
-            <div class="bg-secondary text-white px-3 py-2 rounded mb-3 mt-4 config-group-header">
+            <!-- <div class="bg-secondary text-white px-3 py-2 rounded mb-3 mt-4 config-group-header">
+                <strong t-esc="props.attribute.name"/>
+            </div> -->
+            <div class="bg-secondary px-3 py-2 rounded mb-3 mt-4 config-group-header">
                 <strong t-esc="props.attribute.name"/>
             </div>
+
 
             <!-- 🔁 Recursively render children -->
             <t t-foreach="props.attribute.children" t-as="child" t-key="child.id">

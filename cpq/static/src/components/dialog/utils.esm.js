@@ -264,7 +264,6 @@ export function filterVisibleAttributes(allAttributes, visibleAttrIds) {
 }
 
 
- 
 export function filterVisibleAttributeValues(attr, selected, allAttributes) {
     const flatSelected = {};
     if (selected?.left || selected?.right) {
