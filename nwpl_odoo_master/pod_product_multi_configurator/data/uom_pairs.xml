@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!-- “Pairs” in the standard “Unit(s)” category. -->
+    <record id="uom_uom_pair" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pair(s)</field>
+        <field name="uom_type">bigger</field>        
+        <field name="factor_inv" eval="2"/>  
+        <field name="rounding">1.0</field>         
+        <field name="active">True</field>
+    </record>
+</odoo>

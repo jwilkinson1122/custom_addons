@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+    <record id="inherit_res_partner_preferences_form" model="ir.ui.view">
+        <field name="name">inherit.res.partner.preferences.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button type="object" class="oe_stat_button" name="action_open_config_preferences" icon="fa-star">
+                    <field string="Configurator Preferences" name="config_pref_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook/page[@name='internal_notes']" position="after">
+                <page name="preferences" string="Preferences/Instructions">
+                    <separator string="Product Preferences"/>
+                    <div class="alert alert-info">
+                        Define default attribute preferences for specific products or globally.<br/>
+                        <b>Global</b>: Applies to parent account and sub-accounts,
+                        <b>Partner</b>: Only this account,
+                        <b>User</b>: Only this user.
+                    </div>
+
+                    <!-- IMPORTANT: use the O2M field on res.partner -->
+                    <field name="config_preference_ids" domain="[('partner_id','child_of', commercial_partner_id)]" context="{'default_partner_id': commercial_partner_id}">
+                        <tree editable="bottom" string="Configurator Preferences">
+                            <!-- add this line so the domain can “see” the field -->
+                            <field name="allowed_attribute_ids" column_invisible="1"/>
+                            <field name="active"/>
+                            <field name="product_tmpl_id"/>
+                            <field name="attribute_id" domain="[('id','in', allowed_attribute_ids)]"/>
+                            <field name="pav_id" domain="[('attribute_id','=', attribute_id)]" string="Preferred Value"/>
+                            <field name="scope"/>
+                            <field name="priority"/>
+                            <field name="note"/>
+                        </tree>
+
+                        <form string="Configurator Preference">
+                            <!-- add it here too -->
+                            <field name="allowed_attribute_ids" invisible="1"/>
+                            <group>
+                                <field name="active"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="product_tmpl_id"/>
+                                <field name="attribute_id" domain="[('id','in', allowed_attribute_ids)]"/>
+                                <field name="pav_id" domain="[('attribute_id','=', attribute_id)]"/>
+                                <field name="scope"/>
+                                <field name="priority"/>
+                                <field name="note"/>
+                            </group>
+                        </form>
+                    </field>
+
+                    <separator string="Special Instructions"/>
+                    <!-- your other instruction fields can remain below -->
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- simple list/form for rules -->
+    <record id="view_product_config_preference_tree" model="ir.ui.view">
+        <field name="name">product.config.preference.tree</field>
+        <field name="model">product.config.preference</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="allowed_attribute_ids" column_invisible="1"/>
+                <field name="active"/>
+                <field name="partner_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="attribute_id" domain="[('id','in', allowed_attribute_ids)]" readonly="not product_tmpl_id"/>
+                <field name="pav_id" domain="[('attribute_id','=',attribute_id)]" readonly="not attribute_id"/>
+                <field name="scope"/>
+                <field name="priority"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_config_preference_form" model="ir.ui.view">
+        <field name="name">product.config.preference.form</field>
+        <field name="model">product.config.preference</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="allowed_attribute_ids" invisible="1"/>
+                        <field name="active"/>
+                        <field name="partner_id" options="{'no_create': True}"/>
+                        <field name="product_tmpl_id"/>
+                    </group>
+                    <group>
+                        <field name="attribute_id" domain="[('id','in', allowed_attribute_ids)]" readonly="not product_tmpl_id"/>
+                        <field name="pav_id" domain="[('attribute_id','=',attribute_id)]" readonly="not attribute_id"/>
+                        <field name="scope"/>
+                        <field name="priority"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

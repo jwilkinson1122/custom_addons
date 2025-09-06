@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <!-- Extend core dialog -->
+  <t t-inherit="sale_product_configurator.dialog" t-inherit-mode="extension">
+    <!-- Insert the Laterality block BEFORE the first ProductList -->
+    <xpath expr="//Dialog/ProductList[1]" position="before">
+      <t t-if="this.lateralityEnabled">
+        <div class="config-section mb-4">
+          <p class="text-muted small">
+            Select the foot side(s) this configuration is for. Choose <strong>BL</strong> for both.
+          </p>
+
+          <div class="mb-4 border-bottom pb-3">
+            <label class="form-label fw-bolder">Laterality</label>
+            <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
+              <label class="text-center">
+                <input type="radio" name="laterality" class="d-none"
+                       value="left"
+                       t-att-checked="this.lateralityMode === 'left_only' ? 'checked' : undefined"
+                       t-on-change="() => this.onLateralityChange('left_only')"/>
+                <img src="nwpl_odoo_master/static/pod_product_multi_configurator/static/src/img/left_device.png"
+                     class="laterality-image"
+                     t-att-class="{'selected-laterality': this.lateralityMode === 'left_only'}"/>
+                <div class="mt-1 fw-bold">LT</div>
+              </label>
+
+              <label class="text-center">
+                <input type="radio" name="laterality" class="d-none"
+                       value="bilateral"
+                       t-att-checked="this.lateralityMode === 'bilateral' ? 'checked' : undefined"
+                       t-on-change="() => this.onLateralityChange('bilateral')"/>
+                <img src="nwpl_odoo_master/static/pod_product_multi_configurator/static/src/img/pair_device.png"
+                     class="laterality-image"
+                     t-att-class="{'selected-laterality': this.lateralityMode === 'bilateral'}"/>
+                <div class="mt-1 fw-bold">BL</div>
+              </label>
+
+              <label class="text-center">
+                <input type="radio" name="laterality" class="d-none"
+                       value="right"
+                       t-att-checked="this.lateralityMode === 'right_only' ? 'checked' : undefined"
+                       t-on-change="() => this.onLateralityChange('right_only')"/>
+                <img src="nwpl_odoo_master/static/pod_product_multi_configurator/static/src/img/right_device.png"
+                     class="laterality-image"
+                     t-att-class="{'selected-laterality': this.lateralityMode === 'right_only'}"/>
+                <div class="mt-1 fw-bold">RT</div>
+              </label>
+            </div>
+
+            <t t-if="this.lateralityMode === 'bilateral'">
+              <div class="alert alert-info small d-flex align-items-start gap-2 mb-3">
+                <i class="fa fa-info-circle mt-1"/>
+                <div>
+                  You are configuring a <strong>bilateral device</strong>. All selections apply to both sides unless you enable Split/Hybrid.
+                </div>
+              </div>
+              <div class="mt-2 d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-secondary btn-sm" t-on-click="() => this.onToggleSplit()">
+                  Customize LT / RT (All)
+                </button>
+                <span class="text-muted">Current bilateral mode: <t t-esc="this.bilateralType"/></span>
+              </div>
+            </t>
+
+            <t t-if="this.lateralityMode !== 'bilateral'">
+              <div class="alert alert-info small d-flex align-items-start gap-2 mb-3">
+                <i class="fa fa-info-circle mt-1"/>
+                <div>
+                  You are configuring a <strong>unilateral device</strong>. All selections apply to the chosen side.
+                </div>
+              </div>
+            </t>
+          </div>
+        </div>
+      </t>
+    </xpath>
+
+    <xpath expr="//ProductList[@products='this.state.products']" position="attributes">
+      <attribute name="qtyMode">this.state.qtyMode</attribute>
+      <attribute name="t-key">
+        'main-' + this.lateralityMode + '-' + this.bilateralType + '-' + (this._splitEpoch || 0)
+      </attribute>
+    </xpath>
+
+    <xpath expr="//ProductList[@products='this.state.optionalProducts']" position="attributes">
+      <attribute name="qtyMode">this.state.qtyMode</attribute>
+      <attribute name="t-key">
+        'opt-' + this.lateralityMode + '-' + this.bilateralType + '-' + (this._splitEpoch || 0)
+      </attribute>
+    </xpath>
+
+
+    <!-- Your qty/length table AFTER the first ProductList -->
+    <xpath expr="//Dialog/ProductList[2]" position="after">
+      <table t-if="this.state.qtyMode" t-ref="root"
+             class="o_section_and_note_list_view o_list_table table table-sm table-hover position-relative mb-0 o_list_table_ungrouped table-striped" width="100%">
+        <thead>
+          <tr>
+            <th class="text-right p-2">SI No</th>
+            <th class="text-right p-2">Quantity</th>
+            <th class="text-right p-2">Length</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr t-foreach="this.state.quantityList" t-as="quantity" t-key="quantity.id">
+            <td class="o_data_cell o_list_number"><span t-esc="quantity.siNo"/></td>
+            <td class="o_data_cell">
+              <input class="o_input" input_mode="decimal" name="extra_quantity" type="number" t-model="quantity.quantity"/>
+            </td>
+            <td class="o_data_cell">
+              <input class="o_input" input_mode="decimal" name="length" type="number"
+                     t-model="quantity.length"
+                     t-on-keydown="(ev) => this.handleTabOnLength(ev, quantity)"/>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-link" t-on-click="() => this.removeQuantity(quantity.id)">
+                <i class="fa fa-trash"/>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="o_field_x2many_list_row_add">
+              <button class="btn" t-on-click="() => this.onButtonClick()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </xpath>
+
+  </t>
+</templates>

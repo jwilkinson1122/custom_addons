@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!--
+    This template is the "Group/Attribute Switchboard" for the CPQ configurator.
+    - Always pass only selection "buckets" (never the root selected object) to attribute inputs.
+    - Handles recursive rendering of attribute groups, bilateral splits, and shared/unilateral attributes.
+    - Maintains a clean separation of group/leaf logic.
+    - Changing laterality or split mode will always result in correct rendering and prop passing.
+-->
+
+    <t t-name="cpq.ConfigureDialogDialog" owl="1">
+        <!-- <Dialog t-att-size="size or 'xl'" t-att-title="title or 'Configure Product'"> -->
+        <Dialog size="size or 'xl'" title="title or 'Configure Product'">
+            <div class="row position-relative">
+                <!-- <div class="col"> -->
+                <div class="col-md-7">
+
+                    <!-- 🔹 Product Header -->
+                    <h3 class="fw-bold mb-3">
+                        <div t-if="!state.valid &amp;&amp; typeof state.errors === 'object' &amp;&amp; Object.keys(state.errors).length > 0" class="alert alert-warning" role="alert">
+                            <ul class="list-unstyled mb-0">
+                                <t t-foreach="Object.entries(state.errors)" t-as="e" t-key="e[0]">
+                                    <li t-esc="e[1]" />
+                                </t>
+                            </ul>
+                        </div>
+                        <t t-if="productTemplate and productTemplate.description_sale">
+                            <div class="mb-3" t-esc="productTemplate.description_sale" />
+                        </t>
+                    </h3>
+                    <p class="text-muted small">
+                        Select the foot side(s) this configuration is for. Choose <strong>BL</strong> if you're configuring for both left and right.
+                    </p>
+                    <!-- 🔸 Laterality Selection -->
+                    <div class="config-section mb-4">
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bolder">Laterality</label>
+                            <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
+                                <label class="text-center">
+                                    <input type="radio" name="laterality" class="d-none"
+                                        value="left" t-att-checked="state.laterality === 'left' ? 'checked' : undefined"
+                                        t-on-change="onLateralityChange"/>
+                                    <img src="nwpl_odoo_master/static/cpq/static/src/img/left_device.png" class="laterality-image" t-att-title="'Left Only'"
+                                        t-att-class="{'selected-laterality': state.laterality === 'left'}"/>
+                                    <div class="mt-1 fw-bold">LT</div>
+                                </label>
+                                <label class="text-center">
+                                    <input type="radio" name="laterality" class="d-none"
+                                        value="bilateral" t-att-checked="state.laterality === 'bilateral' ? 'checked' : undefined"
+                                        t-on-change="onLateralityChange"/>
+                                    <img src="nwpl_odoo_master/static/cpq/static/src/img/pair_device.png" class="laterality-image" t-att-title="'Bilateral'"
+                                        t-att-class="{'selected-laterality': state.laterality === 'bilateral'}"/>
+                                    <div class="mt-1 fw-bold">BL</div>
+                                </label>
+                                <label class="text-center">
+                                    <input type="radio" name="laterality" class="d-none"
+                                        value="right" t-att-checked="state.laterality === 'right' ? 'checked' : undefined"
+                                        t-on-change="onLateralityChange"/>
+                                    <img src="nwpl_odoo_master/static/cpq/static/src/img/right_device.png" class="laterality-image" t-att-title="'Right Only'"
+                                        t-att-class="{'selected-laterality': state.laterality === 'right'}"/>
+                                    <div class="mt-1 fw-bold">RT</div>
+                                </label>
+                            </div>
+                        </div>
+                        <t t-if="state.laterality === 'bilateral'">
+                            <div class="alert alert-info small d-flex align-items-start gap-2 mb-3">
+                                <i class="fa fa-info-circle mt-1" />
+                                <div>
+                                    You are configuring a <strong>bilateral device</strong>. All selections apply to both the Left and Right side. <strong><t t-esc="state.laterality.toUpperCase()" /></strong> side only.<br/>
+                                    Use <strong>Customize LT / RT (All)</strong> to configure all attributes separately for Left and Right.
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="state.laterality === 'left' or state.laterality === 'right'">
+                            <div class="alert alert-info small d-flex align-items-start gap-2 mb-3">
+                                <i class="fa fa-info-circle mt-1" />
+                                <div>
+                                    You are configuring a <strong>unilateral device</strong>. All selections apply to the <strong><t t-esc="state.laterality.toUpperCase()" /></strong> side only.
+                                </div>
+                            </div>
+                        </t>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <!-- Minus Button -->
+                                <button class="btn btn-sm d-flex align-items-center justify-content-center py-0" 
+                                        style="height: 38px; width: 38px;" 
+                                        t-on-click="() => onDecreaseQuantity()">
+                                    <i class="fa fa-2x fa-minus-square-o text-primary" aria-hidden="true"></i>
+                                </button>
+                                <!-- Quantity Input -->
+                                <input class="form-control text-center text-bg-light"
+                                    style="width: 60px; height: 30px; font-size: 1rem; padding: 5px;"
+                                    name="product_quantity"
+                                    type="number"
+                                    t-att-value="state.quantityToMake"
+                                    t-on-change="onQuantityChange" />
+                                <!-- Plus Button -->
+                                <button class="btn btn-sm d-flex align-items-center justify-content-center py-0"
+                                        style="height: 38px; width: 38px;" 
+                                        t-on-click="() => onIncreaseQuantity()">
+                                    <i class="fa fa-2x fa-plus-square-o text-primary" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <!-- 🖊️ Global split button -->
+                            <t t-if="state.laterality === 'bilateral'">
+                                <button class="btn btn-sm d-flex align-items-center gap-2"
+                                    t-att-class="state.split ? 'btn-primary' : 'btn-outline-primary'"
+                                    t-on-click="onSplitToggle"
+                                    title="Customize left and right sides independently">
+                                    <i class="fa fa-pencil-square-o" />
+                                    <t t-esc="state.split ? 'Split Enabled' : 'Customize LT / RT (All)'" />
+                                </button>
+                            </t>
+                        </div>
+                        <!-- <t t-if="state.split">
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-primary" t-on-click="copyLeftToRight">Copy LT → RT</button>
+                                <button class="btn btn-sm btn-outline-primary" t-on-click="copyRightToLeft">Copy RT → LT</button>
+                                <t t-if="state.undoCache.left or state.undoCache.right">
+                                    <button class="btn btn-sm btn-outline-warning" t-on-click="_restoreUndoCache">↩️ Undo Last Split</button>
+                                </t>
+                            </div>
+                        </t> -->
+                    </div>
+                    <!-- 🔸 Attributes Group  -->
+                    <div class="config-section mb-4">
+                        <div class="alert alert-secondary small mt-3">
+                            <strong>Legend:</strong>
+                            <ul class="mb-0 ps-3">
+                                <li><span class="text-green ms-2">★</span> – This value is preselected based on customer preferences.</li>
+                                <li><i class="fa fa-info-circle me-1"></i> – This value has a special note or instruction.</li>
+                            </ul>
+                        </div>
+                        <t t-foreach="visibleAttributes" t-as="attr" t-key="attr.id">
+                            <ProductAttribGroupRenderer
+                                attribute="attr"
+                                selected="state.selected"
+                                side="state.laterality === 'bilateral' ? undefined : state.laterality"
+                                split="state.splitByAttrMap?.[attr.id] === true"
+                                laterality="state.laterality"
+                                splitByAttrMap="state.splitByAttrMap"
+                                onToggleSplit="toggleAttributeSplit.bind(this)"
+                                allAttributes="state.ptalIds"
+                                onSelect="_handleSelect"
+                                onCustom="_handleCustom"
+                            />
+                        </t>
+                    </div>
+
+                </div>
+                <t t-if="!state.isInitializing">
+                    <div class="col-md-5 border-start ps-3">
+                        <div class="sticky-summary shadow-sm p-2 bg-white rounded">
+                            <t t-set="summaryKeyVal" t-value="summaryKey()" />
+                            <t t-if="state.ptalIds and Array.isArray(state.ptalIds)">
+                                <SummaryPanel 
+                                    lineId="state.lineId or this.props.activeId"
+                                    ptalIds="state.ptalIds" 
+                                    selected="state.selected" 
+                                    laterality="state.laterality" 
+                                    split="state.split" 
+                                    splitByAttrMap="state.splitByAttrMap or {}" 
+                                    productTemplate="state.productTemplate" 
+                                    quantityToMake="state.quantityToMake" 
+                                    matrixPriceTotal="state.matrixPriceTotal" 
+                                    matrixOverrideActive="state.matrixOverrideActive" 
+                                    register="registerSummaryPanel or (() => {})"
+                                    formatCurrency="formatCurrency or ((v) => v)"
+                                    t-key="summaryKeyVal"
+                                />
+                            </t>
+                        </div>
+                        <t t-if="state.errors and Object.keys(state.errors).length">
+                            <div class="alert alert-danger mt-3" role="alert" aria-live="assertive">
+                                <strong>
+                                    <t t-esc="translate.validationErrors"/>
+                                </strong>
+
+                                <ul>
+                                    <t t-foreach="Object.entries(state.errors)" t-as="pair" t-key="pair[0]">
+                                        <li>
+                                            <t t-esc="pair[1]"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                
+                <t t-if="isInitializing">
+                    <div class="d-flex justify-content-center align-items-center p-3">
+                        <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                        <span class="ms-2">Loading configuration...</span>
+                    </div>
+                </t>
+                <t t-if="state.isLoading">
+                    <div class="position-fixed top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center">
+                        <div>
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="text-center mt-2">Saving configuration...</div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <t t-if="true">
+                    <button class="btn btn-primary" t-on-click="onCreate" t-att-disabled="isDisabled">
+                        <t t-if="state.isLoading">Saving...</t>
+                        <t t-else="">Confirm</t>
+                    </button>
+                </t>
+                <button class="btn btn-secondary" t-on-click="onClose" t-att-disabled="isDisabled">Cancel</button>
+                <t t-set="resetButtonDisabled" t-value="state.isLoading or !initialState"/>
+                <button class="btn btn-secondary" t-att-title="'Reset this configuration back to its original state.'" t-on-click="resetToDefaults" t-att-disabled="resetButtonDisabled">
+                    <t t-if="state.isLoading">Resetting...</t>
+                    <t t-else="">Reset</t>
+                </button>
+            </t>
+        </Dialog>
+    </t>
+    
+    <t t-name="cpq.ProductAttribGroupRenderer" owl="1">
+        <!-- ✅ GROUP HEADER -->
+        <t t-if="props.attribute?.is_group">
+            <div class="bg-secondary px-3 py-2 rounded mb-3 mt-4 config-group-header">
+                <strong t-esc="props.attribute.name"/>
+            </div>
+
+            <!-- ✅ SAFE RENDERING OF CHILDREN -->
+            <t t-foreach="props.attribute.children || []" t-as="child" t-key="child.id">
+                <t t-if="child?.id and (!child.values || child.values.every(v => typeof v === 'object'))">
+                    <ProductAttribGroupRenderer attribute="child" selected="props.selected" side="props.side" split="props.splitByAttrMap?.[child.id] === true" laterality="props.laterality" splitByAttrMap="props.splitByAttrMap" onToggleSplit="props.onToggleSplit" allAttributes="props.allAttributes" onSelect="props.onSelect" onCustom="props.onCustom" />
+                </t>
+            </t>
+        </t>
+
+        <!-- ✅ FLAT ATTRIBUTE -->
+        <t t-if="props.attribute and !props.attribute.is_group">
+            <div class="d-flex justify-content-between align-items-center mb-2 border-bottom py-1">
+                <strong t-esc="props.attribute.name"/>
+            </div>
+
+            <!-- Bilateral Split -->
+            <t t-if="props.side == null and props.laterality === 'bilateral' and (props.split || props.splitByAttrMap?.[props.attribute.id])">
+                <div class="row fw-bold text-left mb-1 bg-light">
+                    <div class="col-6">⬅️ Left</div>
+                    <div class="col-6">➡️ Right</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <ProductTmplAttrib attribute="normalizeAttribute(props.attribute)" selected="leftSelected" side="'left'" hideLabel="true" onSelect="(ev) => props.onSelect('left', props.attribute.id, ev.target.value)" onCustom="(ptavId, ev) => props.onCustom('left', props.attribute.id, ptavId, ev.target.value)" />
+                    </div>
+                    <div class="col-6">
+                        <ProductTmplAttrib attribute="normalizeAttribute(props.attribute)" selected="rightSelected" side="'right'" hideLabel="true" onSelect="(ev) => props.onSelect('right', props.attribute.id, ev.target.value)" onCustom="(ptavId, ev) => props.onCustom('right', props.attribute.id, ptavId, ev.target.value)" />
+                    </div>
+                </div>
+            </t>
+
+            <!-- Shared / Unilateral -->
+            <t t-if="!(props.side == null and props.laterality === 'bilateral' and (props.split || props.splitByAttrMap?.[props.attribute.id]))">
+                <div class="mb-3">
+                    <ProductTmplAttrib attribute="normalizeAttribute(props.attribute)" selected="flatSelected" side="props.side || 'shared'" hideLabel="true" onSelect="(ev) => props.onSelect(props.attribute.id, ev)" onCustom="(ptavId, ev) => props.onCustom(props.attribute.id, null, ptavId, ev.target.value)" />
+                </div>
+            </t>
+        </t>
+    </t>
+
+
+    <t t-name="cpq.ConfiguratorSummaryPanel" owl="1">
+        <div class="config-summary-panel overflow-auto" style="max-height: 60vh;">
+            <div t-if="state.toastMessage" class="cpq-toast-message">
+                <span t-esc="state.toastMessage"/>
+            </div>
+            <div class="text-center mb-2">
+                <t t-if="productTemplate and productTemplate.display_name">
+                    <h6 class="fw-bold mb-0" style="white-space: pre-line;" t-out="productTemplate.display_name" />
+                </t>
+            </div>
+            <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+                <img t-if="productTemplate?.id"
+                    t-att-src="'/web/image/product.template/' + productTemplate.id + '/image_128'"
+                    class="img-fluid rounded shadow-sm"
+                    style="max-width: 120px;" />
+                <t t-if="lineId">
+                    <div id="cpq-canonical-qr" style="width:128px; height:128px;"></div>
+                </t>
+                <t t-else="">
+                    <div class="d-flex flex-column align-items-center justify-content-center border rounded shadow-sm"
+                        style="width: 128px; height: 128px; background-color: #f8f9fa;">
+                        <i class="fa fa-qrcode fa-2x text-muted mb-1" />
+                        <small class="text-muted text-center">QR will appear<br/>after saving</small>
+                    </div>
+                </t>
+            </div>
+
+            <h5 class="mb-3 d-flex justify-content-between align-items-center">
+                Configuration Summary
+                <div class="d-flex gap-2 align-items-center">
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="printSummary" title="Print this configuration for customer quote.">
+                        🖨️ Print
+                    </button>
+                    <button class="btn btn-link btn-sm p-0" t-on-click="toggleExpand">
+                        <t t-esc="state.expanded ? '▲ Collapse' : '▼ Expand'" />
+                    </button>
+                </div>
+            </h5>
+            <!-- ⛳️ DEBUG: dump raw summary JSON -->
+            <!-- <pre class="small text-muted" t-if="state.summary">
+                <t t-esc="summaryJson()" />
+            </pre> -->
+            
+            <t t-if="state.summary.length > 0">
+                <div class="summary-table-wrapper" t-ref="summaryWrapper">
+                    <table class="table table-sm table-bordered align-middle text-center mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Attribute</th>
+                                <th>LT</th>
+                                <th>RT</th>
+                                <th>Split</th>
+                                <th>Match</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.summary" t-as="s" t-key="s.key">
+                                <tr>
+                                    <td class="text-start fw-bold">
+                                        <t t-esc="s.label"/>
+                                        <t t-if="s.isSplit">
+                                            <t t-if="s.isPreferredLeft">
+                                                <span class="text-green ms-2">★ LT</span>
+                                            </t>
+                                            <t t-if="s.isPreferredRight">
+                                                <span class="text-green ms-2">★ RT</span>
+                                            </t>
+                                        </t>
+                                        <t t-elif="s.isPreferred">
+                                            <span class="text-green ms-2">★</span>
+                                        </t>
+                                        <t t-if="s.isSplit">
+                                            <span class="badge text-bg-info ms-2">L/R</span>
+                                        </t>
+                                        <t t-elif="!s.isSplit and s.shared !== '-'">
+                                            <span class="badge text-bg-info ms-2">BL</span>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.left or '-'"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.right or '-'"/>
+                                    </td>
+                                    <td>
+                                        <t t-if="s.isSplit">
+                                            <t t-if="s.left === s.right and s.left !== '-'">
+                                                <span class="cpq-pill">L/R</span>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-check text-success fa-lg" title="Split"></i>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted">—</span>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-if="s.isSplit">
+                                            <t t-if="s.left === s.right and s.left !== '-'">
+                                                <i class="fa fa-check text-success fa-lg" title="Match"></i>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-times text-danger fa-lg" title="Mismatch"></i>
+                                            </t>
+                                        </t>
+                                        <t t-elif="s.match">
+                                            <i class="fa fa-check text-success fa-lg" title="Match"></i>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="text-muted">—</span>
+                                        </t>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <span t-esc="(s.priceExtra ?? 0).toFixed(2)"/>$
+                                    </td>
+                                </tr>
+                                <t t-if="s.noteLeft">
+                                    <tr><td colspan="6" class="text-muted small text-start">
+                                        <i class="fa fa-info-circle me-1"></i>
+                                        LT Note: <t t-esc="s.noteLeft"/>
+                                    </td></tr>
+                                </t>
+                                <t t-if="s.noteRight">
+                                    <tr><td colspan="6" class="text-muted small text-start">
+                                        <i class="fa fa-info-circle me-1"></i>
+                                        RT Note: <t t-esc="s.noteRight"/>
+                                    </td></tr>
+                                </t>
+                                <t t-if="s.note">
+                                    <tr><td colspan="6" class="text-muted small text-start">
+                                        <i class="fa fa-info-circle me-1"></i>
+                                        <t t-esc="s.note"/>
+                                    </td></tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+
+            <div class="mt-3 border-top pt-2">
+                <h6 class="fw-bold d-flex justify-content-between align-items-center">Pricing Summary
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="toggleExtras">
+                        <t t-esc="state.showExtras ? '− Hide Details' : '+ Show Details'" />
+                    </button>
+                </h6>
+                <ul class="list-group mt-3">
+                    <t t-if="state.priceSummary.base > 0">
+                        <li class="list-group-item d-flex justify-content-between">
+                            💵 Base Price:
+                            <span class="fw-semibold" t-esc="formatCurrency(state.priceSummary.base)"/>
+                        </li>
+                    </t>
+                    <t t-if="state.priceSummary.extrasSubtotal > 0">
+                        <li class="list-group-item d-flex justify-content-between">
+                            🧮 Subtotal (Extras Only):
+                            <span class="fw-semibold" t-esc="formatCurrency(state.priceSummary.extrasSubtotal)"/>
+                        </li>
+                    </t>
+                    <li class="list-group-item d-flex justify-content-between">
+                        📊 Total x <t t-esc="props.quantityToMake"/>:
+                        <span class="fw-bold" t-esc="formatCurrency(state.priceSummary.total)"/>
+                    </li>
+                    <t t-if="props.matrixOverrideActive">
+                        <li class="list-group-item text-center bg-warning-subtle text-dark">
+                                    Price overridden by matrix
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="text-end mt-2">
+                <a href="#" class="small text-decoration-none" t-on-click.prevent="toggleExpand">
+                    <t t-esc="state.expanded ? '▲ Show Less' : '▼ Show More'" />
+                </a>
+            </div>
+            <t t-if="state.expanded">
+                <hr class="my-3"/>
+                <h6>Structured Group View</h6>
+                <t t-foreach="props.ptalIds.filter(g => g.is_group)" t-as="group" t-key="group.id">
+                    <t t-out="renderGroupHtmlString(group)"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="cpq.PrintPreviewPanel">
+        <div class="rx-preview p-4 border rounded bg-white text-dark" t-att-class="printOnly ? 'print-mode' : ''">
+            <h2 class="fw-bold mb-3 text-center">Custom Orthotic Rx</h2>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <strong>Patient Name:</strong>
+                    <t t-esc="patientName or '________________'"/>
+                </div>
+                <div class="col">
+                    <strong>Date:</strong>
+                    <t t-esc="orderDate or '__________'"/>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <strong>Laterality:</strong>
+                <ul class="list-unstyled mb-0">
+                    <li>
+                        <t t-if="laterality === 'left'">✔️</t> Left Only</li>
+                    <li>
+                        <t t-if="laterality === 'right'">✔️</t> Right Only</li>
+                    <li>
+                        <t t-if="laterality === 'bilateral'">✔️</t> Bilateral</li>
+                </ul>
+            </div>
+
+            <!-- Quantity -->
+            <div class="mb-3">
+                <strong>Pairs to Make:</strong>
+                <t t-esc="quantity or 1"/>
+            </div>
+
+            <!-- Selections by Attribute -->
+            <t t-foreach="summary" t-as="row" t-key="row.key or row.label">
+                <div class="mb-3">
+                    <strong>
+                        <t t-esc="row.label"/>:</strong>
+                    <span> 
+                        <t t-if="split and row.left !== row.right">
+                            <t t-if="row.isPreferredLeft">
+                                <span class="text-green ms-2">★ LT</span>
+                            </t>
+                            <t t-if="row.isPreferredRight">
+                                <span class="text-green ms-2">★ RT</span>
+                            </t>
+                        </t>
+                        <t t-elif="row.isPreferred">
+                            <span class="text-green ms-2">★</span>
+                        </t>
+                    </span>
+                    <t t-if="split and row.left !== row.right">
+                        <div class="ms-3">
+                            <div>Left: <t t-esc="(row.left and row.left.trim()) ? row.left.trim() : '-'"/></div>
+                            <div>Right: <t t-esc="(row.right and row.right.trim()) ? row.right.trim() : '-'"/></div>
+                        </div>
+                    </t>
+                    <t t-if="row.note">
+                        <div class="ms-3 text-muted small">
+                            <i class="fa fa-info-circle me-1"></i>
+                            <t t-esc="row.note"/>
+                        </div>
+                    </t>
+                    <div class="ms-3 small">
+                        <strong>Price:</strong> $<t t-esc="(row.priceExtra or 0).toFixed(2)"/>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Price Summary (Optional) -->
+            <t t-if="priceSummary">
+                <hr/>
+                <div>
+                    <strong>💵 Left Total:</strong> $                <t t-esc="priceSummary.left.toFixed(2)"/>
+                </div>
+                <div>
+                    <strong>💵 Right Total:</strong> $                <t t-esc="priceSummary.right.toFixed(2)"/>
+                </div>
+                <div class="fw-bold">
+                    <strong>📊 Combined Total:</strong> $                <t t-esc="priceSummary.total.toFixed(2)"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

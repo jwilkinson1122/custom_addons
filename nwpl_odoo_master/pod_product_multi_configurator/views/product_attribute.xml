@@ -1,0 +1,26 @@
+<odoo>
+    <!-- Add group field to native product.attribute form -->
+   <record id="product_attribute_view_form_group" model="ir.ui.view">
+        <field name="name">product.attribute.form.group</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main_fields']" position="inside">
+                <!-- <field name="attribute_group_id" options="{'no_create': False}"/> -->
+                <group name="sale_main_fields">
+                    <!-- <label for="name" string="Attribute Name"/> -->
+                    <field name="attribute_group_id" options="{'no_create': False}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu/action to manage groups -->
+    <record id="action_product_attribute_groups" model="ir.actions.act_window">
+        <field name="name">Attribute Groups</field>
+        <field name="res_model">product.attribute.group</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_product_attribute_group_root" name="Attribute Groups" parent="sale.prod_config_main" action="action_product_attribute_groups" sequence="5"/>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Configurable Product Template -->
+    <record id="product_template_superglass_flex" model="product.template">
+        <field name="name">Superglass Flex (CONFIG)</field>
+        <field name="categ_id" ref="product_category_superglass_orthotics" />
+        <field name="product_brand_id" ref="product_brand_superglass"/>
+        <field name="available_in_pos" eval="True"/>
+        <field name="is_custom_product" eval="True"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="config_ok" eval="True" />
+        <field name="type">consu</field>
+        <field name="list_price" eval="56.50" />
+        <field name="image_1920" type="base64" file="pod_odoo_master/pod_product_configurator/static/img/superglass.webp" />
+    </record>
+
+    <!-- Related Products (Optional: if you have additional models or options) -->
+    <record id="product_superglass_flex" model="product.product">
+        <field name="name">Superglass Flex</field>
+        <field name="type">consu</field>
+        <field name="categ_id" ref="product_category_superglass_orthotics" />
+        <field name="lst_price" eval="56.50" />
+        <field name="image_1920" type="base64" file="pod_odoo_master/pod_product_configurator/static/img/superglass.webp" />
+    </record>
+
+    <!-- TODO: Workaround until we add more demo data Services + Products -->
+    <record id="pod_odoo_master.product_template_superglass_flex" model="product.template">
+        <field name="type">product</field>
+        <field eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]" name="route_ids" />
+    </record>
+
+    <record id="pod_odoo_master.product_superglass_flex" model="product.product">
+        <field name="type">product</field>
+    </record>
+
+</odoo>

@@ -22,7 +22,6 @@ class HomeExtended(Home):
         response.headers.remove("Cache-Control")
         return response
 
-
 class CustomerPortal(CustomerPortal):
 
     def _prepare_prsit_add_contact_address(self):
@@ -71,94 +70,6 @@ class CustomerPortal(CustomerPortal):
             child_data_vals = self._prepare_prsit_submit_contact_address(kwargs)
             request.env["res.partner"].sudo().create(child_data_vals)
         return request.redirect("/my/account")
-
-
-class PrescriptionPortal(portal.CustomerPortal):
-    """Provide portal access for partners to view prescriptions, sales orders, and invoices."""
-
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        if "prescriptions_count" in counters:
-            prescriptions_count = (
-                request.env["prescription.order"].sudo().search_count([])
-            )
-            values["prescriptions_count"] = prescriptions_count
-        return values
-
-    @http.route(["/my/prescriptions"], type="http", auth="user", website=True)
-    def portal_my_prescriptions(self, **kwargs):
-        if request.env.ref("base.group_partner_manager") in request.env.user.groups_id:
-            domain = []
-        elif request.env.ref("base.group_user") in request.env.user.groups_id:
-            domain = [
-                (
-                    "contact_id",
-                    "=",
-                    request.env.user.partner_id.id,
-                )
-            ]
-        else:
-            domain = [("patient_id", "=", request.env.user.partner_id.id)]
-        prescriptions = request.env["prescription.order"].sudo().search(domain)
-        return request.render(
-            "nwpl_odoo_master.portal_my_prescriptions",
-            {"prescriptions": prescriptions, "page_name": "prescriptions"},
-        )
-
-    @http.route(
-        ["/view/prescriptions/<int:id>"], type="http", auth="public", website=True
-    )
-    def view_prescriptions(self, id):
-        """View prescriptions based on the provided ID.
-        :param id: The ID of the sale order to view.
-        :return: Rendered template with sale order details."""
-        prescription_order = request.env["prescription.order"].browse(id)
-        return request.render(
-            "nwpl_odoo_master.prescription_portal_template",
-            {
-                "prescription_details": prescription_order,
-                "page_name": "prescription_order",
-            },
-        )
-
-
-class LoginAs(web_home.Home):
-
-    @http.route("/web/login_as/<int:user_id>", type="http", auth="user", sitemap=False)
-    def switch_to_user(self, user_id, **kwargs):  # @UnusedVariable
-        uid = request.env.user.id  # @UndefinedVariable
-        if request.env.user._is_system():  # @UndefinedVariable
-            request.session.impersonate_uid = uid
-            uid = request.session.uid = user_id
-            # invalidate session token cache as we've changed the uid
-            request.env.registry.clear_cache()
-            request.session.session_token = security.compute_session_token(
-                request.session, request.env
-            )
-
-            _logger.info(
-                "User %s Logged in as %s"
-                % (request.env.user.name, request.env["res.users"].browse(user_id).name)
-            )
-
-        return request.redirect(self._login_redirect(uid))
-
-    @http.route("/web/login_back", type="http", auth="user", sitemap=False)
-    def switch_back(self, **kwargs):  # @UnusedVariable
-        uid = request.env.user.id  # @UndefinedVariable
-        if request.session.impersonate_uid:  # @UndefinedVariable
-            uid = request.session.uid = (
-                request.session.impersonate_uid
-            )  # @UndefinedVariable
-            request.session.impersonate_uid = False
-            # invalidate session token cache as we've changed the uid
-            request.env.registry.clear_cache()
-            request.session.session_token = security.compute_session_token(
-                request.session, request.env
-            )
-
-        return request.redirect(self._login_redirect(uid) + "?debug=1")
-
 
 class PartnerHierarchyController(http.Controller):
     _managers_level = 5  # FP request
@@ -284,3 +195,41 @@ class PartnerHierarchyController(http.Controller):
         else:
             res = partner.child_ids.ids
         return res
+
+class LoginAs(web_home.Home):
+
+    @http.route("/web/login_as/<int:user_id>", type="http", auth="user", sitemap=False)
+    def switch_to_user(self, user_id, **kwargs):  # @UnusedVariable
+        uid = request.env.user.id  # @UndefinedVariable
+        if request.env.user._is_system():  # @UndefinedVariable
+            request.session.impersonate_uid = uid
+            uid = request.session.uid = user_id
+            # invalidate session token cache as we've changed the uid
+            request.env.registry.clear_cache()
+            request.session.session_token = security.compute_session_token(
+                request.session, request.env
+            )
+
+            _logger.info(
+                "User %s Logged in as %s"
+                % (request.env.user.name, request.env["res.users"].browse(user_id).name)
+            )
+
+        return request.redirect(self._login_redirect(uid))
+
+    @http.route("/web/login_back", type="http", auth="user", sitemap=False)
+    def switch_back(self, **kwargs):  # @UnusedVariable
+        uid = request.env.user.id  # @UndefinedVariable
+        if request.session.impersonate_uid:  # @UndefinedVariable
+            uid = request.session.uid = (
+                request.session.impersonate_uid
+            )  # @UndefinedVariable
+            request.session.impersonate_uid = False
+            # invalidate session token cache as we've changed the uid
+            request.env.registry.clear_cache()
+            request.session.session_token = security.compute_session_token(
+                request.session, request.env
+            )
+
+        return request.redirect(self._login_redirect(uid) + "?debug=1")
+

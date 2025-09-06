@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class CustomerStatementConfig(models.Model):
     _name = "customer.statement.config"
+    _description = "Customer Statement Configuration"
 
     name = fields.Char("Title")
     partner_ids = fields.Many2many("res.partner", string="Customer")

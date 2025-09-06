@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="ir_cron_cpq_autosync" model="ir.cron">
+            <field name="name">CPQ: Auto Sync Product → CPQ</field>
+            <field name="model_id" ref="nwpl_odoo_master.model_cpq_sync_service"/>
+            <field name="state">code</field>
+            <field name="code">model.run_autosync(refresh_existing=True, push_images=True)</field>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- <record id="ir_cron_cpq_price_backfill" model="ir.cron">
+            <field name="name">CPQ: Backfill PTAV Prices</field>
+            <field name="model_id" ref="nwpl_odoo_master.model_cpq_sync_service"/>
+            <field name="state">code</field>
+            <field name="code">model.backfill_ptav_prices_from_cpq(ptav_limit=100000)</field>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record> -->
+
+
+        <record id="ir_cron_cpq_backfill_links" model="ir.cron">
+            <field name="name">CPQ: Backfill Links</field>
+            <field name="model_id" ref="nwpl_odoo_master.model_cpq_sync_service"/>
+            <field name="state">code</field>
+            <field name="code">model.backfill_cpq_value_links()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

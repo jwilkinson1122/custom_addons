@@ -1,0 +1,600 @@
+/* CPQ Attribute Tree */
+
+/* =========================
+   CPQ List Views – Attribute & Value Trees
+   Scope all rules under .cpq_value_tree to avoid leaking globally
+   ========================= */
+
+/* ---- Cell basics + vertical centering (works for all columns) ---- */
+.o_list_view.cpq_value_tree .o_data_row > td {
+  vertical-align: middle;
+  /* optional: small horizontal breathing room for every cell */
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+/* ---- Name column: make it reasonably wide ---- */
+.o_list_view.cpq_value_tree th[data-name="name"],
+.o_list_view.cpq_value_tree td[data-name="name"] {
+  width: 20%;
+  min-width: 220px;
+}
+
+/* ---- Boolean cols: keep headers centered; cells are auto-centered by checkbox rules below ---- */
+.o_list_view.cpq_value_tree th[data-name="is_custom"],
+.o_list_view.cpq_value_tree th[data-name="cpq_options_relaxed_validation"] {
+  text-align: center;
+}
+
+/* Keep checkboxes centered nicely in their cells */
+.o_list_view.cpq_value_tree td[data-name="is_custom"] .o_checkbox,
+.o_list_view.cpq_value_tree td[data-name="cpq_options_relaxed_validation"] .o_checkbox {
+  display: inline-block;
+}
+
+/* ---- Text input padding (edit mode) ---- */
+.o_list_view.cpq_value_tree .o_data_cell.o_list_char > .o_field_widget.o_field_char .o_input {
+  padding-left: 8px;
+  box-sizing: border-box;
+}
+
+/* Selected row has aggressive resets; re-apply padding with a higher‑specificity rule */
+.o_list_view.cpq_value_tree .o_list_renderer .o_list_table
+.o_data_row.o_selected_row > .o_data_cell.o_list_char
+> .o_field_widget.o_field_char .o_input {
+  padding-left: 8px;
+}
+
+/* “Being edited” state should keep the same feel */
+.o_list_view.cpq_value_tree .o_data_cell.o_list_char.o_edited_cell
+> .o_field_widget.o_field_char .o_input {
+  padding-left: 8px;
+}
+
+/* Read‑only text (no input) should visually match */
+.o_list_view.cpq_value_tree .o_data_cell.o_list_char > .o_field_widget.o_field_char.o_readonly_modifier {
+  padding-left: 8px;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* ---- Image column: fixed box, consistent padding, no row stretching ---- */
+.o_list_view.cpq_value_tree td[data-name="image_128"] {
+  /* space around the image box */
+  padding: 4px 8px;
+  line-height: 1;          /* prevent inherited tall line heights */
+}
+
+/* The image widget has wrappers; standardize them all to a 70×70 box */
+.o_list_view.cpq_value_tree td[data-name="image_128"] img,
+.o_list_view.cpq_value_tree td[data-name="image_128"] .o_image,
+.o_list_view.cpq_value_tree td[data-name="image_128"] .o_field_image {
+  width: 70px !important;
+  height: 70px !important;
+  max-width: 70px !important;
+  max-height: 70px !important;
+  object-fit: contain;      /* letterbox, no crop */
+  object-position: center;
+  display: inline-block;
+  background: #fff;
+  border-radius: 4px;
+  padding: 2px;             /* inner padding inside the box */
+  box-sizing: border-box;
+}
+
+/* Odoo sometimes puts .img-fluid; neutralize max-width so our 70px box wins */
+.o_list_view.cpq_value_tree td[data-name="image_128"] img.img-fluid {
+  max-width: none !important;
+}
+
+/* If you want a consistent row height matching the 70px image box */
+.o_list_view.cpq_value_tree .o_data_row {
+  height: 78px; /* 70 image + 2px inner padding + vertical paddings */
+}
+
+/* Add a little visual cushion inside image widgets on forms */
+.o_form_view .cpq-image img {
+  padding: 2px;
+  border-radius: 4px;
+}
+
+/* =========================
+   Kanban customizations
+   ========================= */
+
+.openerp .oe_kanban_view .oe_kanban_status {
+    position: relative;
+    top: -1px;
+}
+
+/* .o_kanban_record .oe_kanban_details {
+  display: flex;
+  min-height: 48px;       
+}
+
+.o_kanban_record .o_kanban_record_headings {
+  display: block;
+  line-height: 1.25;      
+}
+
+.o_kanban_record .o_kanban_record_title {
+  display: inline-block;
+  line-height: 1.25;       
+  padding: 2px 0;          
+  white-space: normal;
+  word-break: break-word;
+} */
+
+/* ----- ONLY product.options kanban ----- */
+.o_kanban_cpq_options .oe_kanban_card { position: relative; }
+
+/* Put headings, then badges, then body */
+.o_kanban_cpq_options .oe_kanban_details {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  row-gap: 4px;
+}
+
+/* Title row */
+.o_kanban_cpq_options .o_kanban_record_headings {
+  line-height: 1.25;
+}
+.o_kanban_cpq_options .o_kanban_record_title {
+  line-height: 1.25;
+  padding: 2px 0;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Badges row (just under the title) */
+.o_kanban_cpq_options .cpq-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+
+
+/* --- Ribbon (top-right) -------------------------------------------------- */
+.ribbon {
+  position: absolute;
+  width: 77px;
+  height: 81px;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ribbon-group {
+  background-color: #2196F3;  
+}
+.ribbon-attribute {
+  background-color: #FF9800;  
+}
+
+.ribbon-leaf {
+  background-color: #2196F3;  
+}
+.ribbon-option {
+  background-color: #28a745;  
+}
+
+/* top right*/
+.ribbon-top-right {
+  top: 0px;
+  right: 0px;
+  margin-top: 0px;
+}
+.ribbon-top-right::before,
+.ribbon-top-right::after {
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-top-right::before {
+  top: 0;
+  left: 0;
+}
+.ribbon-top-right::after {
+  bottom: 0;
+  right: 0;
+}
+
+.ribbon-top-right span {
+    left: 0px;
+    top: -25px;
+    font-weight: bolder;
+    font-size: 11px;
+    transform: rotate(45deg);
+    padding: 0px 10px;
+    height: 22px;
+    /* padding-left: 7px; */
+}
+
+.ribbon-top-right {
+    margin-top: 0px;
+    right: 0;
+}
+
+/*===================*/
+/* WOOBLE VERTICAL /
+*===================*/
+@-webkit-keyframes wobble-vertical-on-hover {
+    16.65% {
+      -webkit-transform: translateY(8px);
+      transform: translateY(8px);
+    }
+    33.3% {
+      -webkit-transform: translateY(-6px);
+      transform: translateY(-6px);
+    }
+    49.95% {
+      -webkit-transform: translateY(4px);
+      transform: translateY(4px);
+    }
+    66.6% {
+      -webkit-transform: translateY(-2px);
+      transform: translateY(-2px);
+    }
+    83.25% {
+      -webkit-transform: translateY(1px);
+      transform: translateY(1px);
+    }
+    100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+    }
+  }
+  @keyframes wobble-vertical-on-hover {
+    16.65% {
+      -webkit-transform: translateY(8px);
+      transform: translateY(8px);
+    }
+    33.3% {
+      -webkit-transform: translateY(-6px);
+      transform: translateY(-6px);
+    }
+    49.95% {
+      -webkit-transform: translateY(4px);
+      transform: translateY(4px);
+    }
+    66.6% {
+      -webkit-transform: translateY(-2px);
+      transform: translateY(-2px);
+    }
+    83.25% {
+      -webkit-transform: translateY(1px);
+      transform: translateY(1px);
+    }
+    100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+    }
+  }
+  .wobble-vertical-on-hover {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    cursor: pointer;
+  }
+  .wobble-vertical-on-hover:hover, .wobble-vertical-on-hover:focus, .wobble-vertical-on-hover:active {
+    -webkit-animation-name: wobble-vertical-on-hover;
+    animation-name: wobble-vertical-on-hover;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+  }
+
+
+
+
+/* CPQ Configurator */
+.summary-table-wrapper {
+    max-height: 80vh;
+    overflow-y: auto;
+    /* transition: none;   */
+}
+
+.sticky-summary {
+    position: sticky;
+    top: 1rem;
+    z-index: 1;
+    /* z-index: 100; */
+    background-color: #fff;
+    border-radius: 0.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.o_cpq_summary_empty {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    margin-top: 12px;
+}
+
+.highlight-price {
+    background-color: #fffbe6;  
+    font-weight: 500;
+}
+
+.highlight-price .text-warning {
+    font-weight: bold;
+}
+
+.cpq-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cpq-loading-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+}
+
+.cpq-loading-overlay .loading-text {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.highlight-success {
+    animation: highlightSuccess 1s ease;
+}
+
+@keyframes highlightSuccess {
+    0% {
+        background-color: #d4edda;
+    }
+    50% {
+        background-color: #c3e6cb;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.cpq-toast-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0.95;
+    animation: fadeOutToast 2s ease-out forwards;
+}
+
+@keyframes fadeOutToast {
+    0% { opacity: 0.95; }
+    75% { opacity: 0.95; }
+    100% { opacity: 0; }
+}
+
+.cpq-config-summary:hover {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 rgba(0, 123, 255, 0.7); }
+    70% { box-shadow: 0 0 10px rgba(0, 123, 255, 0.7); }
+    100% { box-shadow: 0 0 0 rgba(0, 123, 255, 0.7); }
+}
+
+.pricing-summary-box {
+    transition: all 0.3s ease;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-summary-box .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background-color: #0d6efd;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.75em;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background-color: #0d6efd;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.75em;
+}
+
+.pricing-summary-box.fade-in {
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.config-group-header {
+    /* font-size: 1rem; */
+    border-left: 5px solid var(--bs-secondary);
+}
+
+.config-section {
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 1rem;
+    background: #fcfcfc;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.config-section:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.config-section label {
+    display: block;
+    margin-bottom: 0.75rem;
+    /* font-weight: 600;
+    font-size: 1.125rem; */
+}
+
+.config-section .form-check-label {
+    margin-right: 1.5rem;
+}
+
+.cpq-rx-sheet {
+    font-size: 14px;
+    max-width: 850px;
+    margin: auto;
+    background: #fff;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  @media print {
+    .o_web_client, .o_main_navbar, .breadcrumb, .o_control_panel, .btn, .o_action_manager {
+      display: none !important;
+    }
+    .cpq-rx-sheet {
+      box-shadow: none;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+}
+
+.border-start {
+    border-left: 2px solid #ccc;
+}
+.ps-3 {
+    padding-left: 1rem;
+}
+
+select,
+option {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+}
+
+.laterality-image {
+    width: 120px;
+    height: 180px;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: box-shadow 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+
+.selected-laterality {
+    border-color: #0d6efd;
+    box-shadow: 0 0 8px 2px rgba(13, 110, 253, 0.4);
+}
+
+.ptav-preferred {
+    border: 2px solid #28a745;
+    background-color: #e8f5e9;
+    font-weight: bold;
+}
+
+.ptav-option small {
+    display: block;
+    color: #666;
+    font-size: 0.8em;
+    margin-top: 2px;
+}
+
+/* .badge.text-bg-info {
+    background-color: #0dcaf0 !important;
+    color: #000;
+    font-size: 0.75rem;
+} */
+
+/* Highlight preferred values with a distinct badge and border */
+.cpq-preferred-label {
+    border: 2px dashed #0dcaf0; 
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+    background-color: rgba(13, 202, 240, 0.1); 
+    color: #0d6efd; 
+}
+
+.cpq-preferred-badge {
+    background-color: #0dcaf0;
+    color: #fff;
+    padding: 0.2em 0.4em;
+    font-size: 0.75em;
+    margin-left: 0.25em;
+    border-radius: 0.25em;
+    font-weight: 600;
+}
+
+.cpq-attr-img {
+    width: 48px;
+    height: 48px;
+    margin-right: 8px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.cpq-attr-bilateral-split {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.cpq-attr-bilateral-split > * {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.cpq-attr-bilateral-split > *:first-child::before {
+    content: "Left";
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #0d6efd;
+    font-size: 0.95em;
+}
+
+.cpq-attr-bilateral-split > *:last-child::before {
+    content: "Right";
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #198754;
+    font-size: 0.95em;
+}
+

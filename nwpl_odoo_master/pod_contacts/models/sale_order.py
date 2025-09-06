@@ -1,22 +1,17 @@
+
+import logging
+import json
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import timedelta
 
-
-# class SaleOrder(models.Model):
-#     _inherit = "sale.order"
-
-#     @api.model_create_multi
-#     def create(self, vals_list):
-#         res = super().create(vals_list)
-#         for record in res:
-#             partners = record.partner_id | record.partner_id.commercial_partner_id
-#             partners._increase_rank("customer_rank")
-#         return res
+_logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
-
+    
+    po_ref = fields.Many2one('purchase.order', string='PO Ref')
+    
     is_reorder = fields.Boolean("Is Reorder")
 
     is_enable_reorder = fields.Boolean(
@@ -91,21 +86,24 @@ class SaleOrder(models.Model):
     @api.depends("order_history_ids")
     def _compute_limited_order_history(self):
         """Fetch limited order history based on configurable constraints."""
-        last_days = int(
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("nwpl_odoo_master.last_no_of_days_orders", "3")
+        param_value = self.env["ir.config_parameter"].sudo().get_param(
+            "nwpl_odoo_master.last_no_of_days_orders", "7"
         )
-        stages = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("nwpl_odoo_master.stages", "all")
-        )
+
+        try:
+            last_days = int(param_value)
+            if last_days < 1:
+                _logger.warning("Invalid last_no_of_days_orders: %s. Using default value 3.", last_days)
+                last_days = 3  # Use a fallback value
+        except ValueError:
+            _logger.warning("Non-numeric value found for last_no_of_days_orders: %s. Using default value 3.", param_value)
+            last_days = 3
+
+        stages = self.env["ir.config_parameter"].sudo().get_param("nwpl_odoo_master.stages", "all")
         last_orders = int(
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("nwpl_odoo_master.last_no_of_orders", "10")
+            self.env["ir.config_parameter"].sudo().get_param("nwpl_odoo_master.last_no_of_orders", "10")
         )
+
         recent_dates = self.get_recent_dates(last_days)
 
         for record in self:
@@ -222,23 +220,121 @@ class SaleOrder(models.Model):
             "target": "current",
         }
 
-    # def get_recent_dates(self, n):
-    #     """Return a list of recent dates."""
-    #     today = fields.Date.today()
-    #     return [(today - timedelta(days=i)) for i in range(n)]
-
     def get_recent_dates(self, n):
         """Return a list of recent dates."""
-        if n < 1:
-            raise ValueError("Number of days must be greater than 0.")
+        if not isinstance(n, int) or n < 1:
+            _logger.warning("Invalid last_days value: %s. Using default value 3.", n)
+            n = 3  # Default fallback
         today = fields.Date.today()
         return [(today - timedelta(days=i)) for i in range(n)]
 
+    def action_delete_canceled(self):
+        # allow multi selection from tree
+        orders = self
 
+        # 1) Only cancelled
+        not_canceled = orders.filtered(lambda o: o.state != "cancel")
+        if not_canceled:
+            raise UserError(_("Only cancelled quotations/orders can be deleted."))
+
+        # 2) Make sure related docs are also canceled/draft
+        blocking = []
+        for o in orders:
+            bad_invoices  = o.invoice_ids.filtered(lambda m: m.state not in ("cancel", "draft"))
+            bad_pickings  = o.picking_ids.filtered(lambda p: p.state not in ("cancel", "draft"))
+            bad_mos       = getattr(o, 'mrp_production_ids', self.env['mrp.production']).filtered(lambda m: m.state not in ("cancel", "draft")) if hasattr(o, 'mrp_production_ids') else self.env['mrp.production']
+            if bad_invoices or bad_pickings or bad_mos:
+                blocking.append(o.name)
+        if blocking:
+            raise UserError(_(
+                "You can only delete canceled orders when all related documents "
+                "are also canceled (or draft).\nBlocking orders: %s"
+            ) % ", ".join(blocking))
+        if any(o.state == 'sale' for o in orders): 
+            raise UserError(_("You cannot delete confirmed sales orders."))
+        # 3) Clean dependent rows that have a required FK to sale.order
+        self.env["order.history"].sudo().search([("sale_order_id", "in", orders.ids)]).unlink()
+
+        # 4) Delete (order lines/attachments/followers will cascade)
+        count = len(orders)
+        orders.unlink()
+
+        # 5) Toast
+        return self.env["ir.actions.client"].create({
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Deleted"),
+                "message": _("Deleted %s cancelled record(s).") % count,
+                "type": "success",
+                "sticky": False,
+            },
+        })
+      
+    # measurement_ids = fields.One2many('pod.measurement.group', 'sale_order_id', string='Measurements')
+
+    # def add_measurement_category(self, measurement_values):
+    #     if isinstance(measurement_values, str):
+    #         try:
+    #             measurement_values = json.loads(measurement_values)
+    #         except json.JSONDecodeError:
+    #             raise ValidationError("Invalid JSON format")
+
+    #     if not isinstance(measurement_values, list) or not measurement_values:
+    #         raise ValidationError("Invalid data format; list of dictionaries expected.")
+
+    #     required_keys = {'date', 'category_id', 'measurement_unit', 'measurement_ids'}
+    #     for values in measurement_values:
+    #         if not required_keys.issubset(values.keys()):
+    #             missing = required_keys - set(values.keys())
+    #             raise ValidationError(f"Missing required keys: {', '.join(missing)}")
+
+    #         measurement_cat = self.env['pod.measurement.group'].create({
+    #             'date': values.get('date'),
+    #             'sale_order_id': self.id,
+    #             'category_id': values.get('category_id'),
+    #             'measurement_unit': int(values.get('measurement_unit'))
+    #         })
+
+    #         if measurement_cat:
+    #             measurements = [
+    #                 {
+    #                     'measurement_cat_id': measurement_cat.id,
+    #                     'measurement_type': m.get('measurement_type'),
+    #                     'measurement': m.get('measurement_value')
+    #                 }
+    #                 for m in values.get('measurement_ids', [])
+    #             ]
+    #             self.env['measurement.measurement'].create(measurements)
+
+    # def get_measurements(self):
+    #     measurements = []
+    #     for record in self:
+    #         measurement_lines = self.env['pod.measurement.group'].search([('sale_order_id', '=', record.id)])
+    #         for line in measurement_lines:
+    #             measurements.append({
+    #                 'date': line.date,
+    #                 'category': line.category_id.name,
+    #                 'unit': line.measurement_unit.name,
+    #                 'values': [{'id': m.id, 'name': m.measurement_type.name, 'value': m.measurement} for m in line.measurement_ids]
+    #             })
+    #     return measurements
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-
+    
     order_line_history_ids = fields.One2many(
         "order.history", "line_id", string="Order History Lines"
     )
+
+    # measurement_ids = fields.Many2many('measurement.measurement', string='Measurements')
+    # measurement_display = fields.Char(string='Measurements Display', compute='_compute_measurement_display')
+ 
+    # @api.depends('measurement_ids')
+    # def _compute_measurement_display(self):
+    #     for line in self:
+    #         if line.measurement_ids:
+    #             measurements = ', '.join([f"{m.measurement_type.name}: {m.measurement}" for m in line.measurement_ids])
+    #             line.measurement_display = measurements
+    #         else:
+    #             line.measurement_display = ''

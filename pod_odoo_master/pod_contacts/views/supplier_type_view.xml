@@ -1,0 +1,21 @@
+<odoo>
+    <record id="supplier_type_tree_view" model="ir.ui.view">
+        <field name="name">supplier.type.tree.view</field>
+        <field name="model">supplier.type</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="supplier_type_action" model="ir.actions.act_window">
+        <field name="name">Supplier Type</field>
+        <field name="res_model">supplier.type</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="supplier_type_menu" name="Supplier Type" parent="contacts.menu_contacts" action="supplier_type_action" groups="pod_odoo_master.access_group_supplier_type" sequence="2"/>
+
+    <menuitem id="contacts.res_partner_menu_config" name="Configuration" parent="contacts.menu_contacts" groups="base.group_system" sequence="3"/>
+</odoo>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_cpq_rules_product" model="ir.actions.act_window">
+        <field name="name">Product Preferences</field>
+        <field name="res_model">cpq.rules.product</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="inherit_res_partner_preferences_form" model="ir.ui.view">
+        <field name="name">inherit.res.partner.preferences.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="4"/>
+        <field name="arch" type="xml">
+            <!-- <div name="button_box" position="inside">
+                <button name="action_view_wishlists" type="object" class="oe_stat_button" icon="fa-pencil" invisible="wishlists_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="wishlists_count" />
+                        </span>
+                        <span class=s"o_stat_text">Wishlists</span>
+                    </div>
+                </button>
+            </div> -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_cpq_rules_product)d" type="action" string="Preferences" class="btn-primary" context="{'default_partner_id': active_id}"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='internal_notes']" position="after">
+                <page name="preferences" string="Preferences/Instructions" invisible="is_patient or is_supplier">
+                    <!-- Product Attribute Preferences -->
+                    <separator string="Product Preferences"/>
+                    <div class="alert alert-info">
+                                Define default attribute preferences for specific products or globally.<br></br>
+                        <b>Global</b>: Applies to parent account and sub-accounts, <b>Partner</b>: Applies only to this account, sub-accounts do not inherit, <b>User</b>: Applies only to this user, <b>product_tmpl_id</b>: Limits preference to one product if set
+                    </div>
+                    <field name="cpq_rules_product">
+                        <tree editable="bottom">
+                            <field name="scope"/>
+                            <field name="product_tmpl_id"/>
+                            <field name="attribute_id"/>
+                            <field name="value_id" domain="[('attribute_id', '=', attribute_id)]"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+
+                    <!-- Inherited Preferences -->
+                    <div class="inherited-preferences-container" invisible="is_account">
+                        <separator string="Inherited Product Preferences"/>
+                        <div class="alert alert-info">
+                                                    These are inherited preferences from parent accounts. They cannot be overridden. To change them, edit the parent account's preferences.
+                        </div>
+                        <field name="inherited_cpq_rules_product" nolabel="1">
+                            <tree editable="false">
+                                <field name="scope"/>
+                                <field name="product_tmpl_id"/>
+                                <field name="attribute_id"/>
+                                <field name="value_id"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                    </div>
+                    <separator string="Special Instructions"/>
+                    <div class="alert alert-info">
+                                Add general instructions to include on orders. These are textual notes that may be shown to manufacturing or billing.
+                    </div>
+                    <field name="cpq_rules_order_note" context="{'default_partner_id': id if not is_contact else parent_id, 'default_contact_id': id if is_contact else False}">
+                        <tree editable="bottom">
+                            <field name="scope"/>
+                            <field name="note"/>
+                            <field name="condition_json"/>
+                        </tree>
+                    </field>
+                    <separator string="Conditional Logic Rules"/>
+                    <div class="alert alert-info">
+                                Define logic-based triggers for CPQ behavior. These can show or hide options or override selections conditionally.
+                    </div>
+                    <field name="cpq_rules_logic" context="{'default_partner_id': id if not is_contact else parent_id, 'default_contact_id': id if is_contact else False}">
+                        <tree editable="bottom">
+                            <field name="scope"/>
+                            <field name="note"/>
+                            <field name="condition_json"/>
+                        </tree>
+                    </field>
+                    <separator string="Other Instructions"/>
+                    <div class="alert alert-info">
+                                Add general instructions that are not tied to a product or order — e.g., reminders.
+                    </div>
+                    <field name="cpq_rules_nonproduct" context="{'default_partner_id': id if not is_contact else parent_id, 'default_contact_id': id if is_contact else False}">
+                        <tree editable="bottom">
+                            <field name="scope"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

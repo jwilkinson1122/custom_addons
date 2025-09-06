@@ -1987,6 +1987,58 @@ class ResPartner(models.Model):
             except Exception as e:
                 _logger.error("%s", e)
 
+    # Account Visibility Rule
+    # • Accounts (top company) → is_owner = True → accounting shows, accounting_disabled hides.
+    # • Affiliates and their children (they have a parent_id) → not owner → accounting_disabled shows.
+    # • Suppliers → accounting shows (even if they’re part of a hierarchy), which matches your requirement.
+    # • Patients/Contacts → both hidden.
+    
+    # If later you decide mid‑level Affiliates should own invoicing for their subtree (i.e., not just the top Account), 
+    # change the is_owner condition to something like:
+    # is_owner = p.is_supplier or p.is_account or (p.is_company and (not p.parent_id or p.child_ids))
+    # This would grant “owner” status to any company that has children.
+    
+    
+    show_accounting_page = fields.Boolean(compute="_compute_accounting_vis")
+    show_accounting_disabled_page = fields.Boolean(compute="_compute_accounting_vis")
+    
+    # helper: does this partner have any company children?
+    has_company_children = fields.Boolean(compute="_compute_has_company_children", store=True)
+
+    @api.depends('child_ids.is_company')
+    def _compute_has_company_children(self):
+        for p in self:
+            p.has_company_children = any(c.is_company for c in p.child_ids)
+
+    # visibility flags used by the view
+    show_accounting_page = fields.Boolean(compute="_compute_accounting_vis")
+    show_accounting_disabled_page = fields.Boolean(compute="_compute_accounting_vis")
+
+    @api.depends(
+        'is_company', 'is_account', 'is_patient', 'is_contact',
+        'is_supplier', 'parent_id', 'has_company_children'
+    )
+    def _compute_accounting_vis(self):
+        for p in self:
+            # Patients & Contacts never show either page
+            if p.is_patient or p.is_contact:
+                p.show_accounting_page = False
+                p.show_accounting_disabled_page = False
+                continue
+
+            # “Owner” shows the real Accounting page:
+            # - Accounts
+            # - Suppliers
+            # - Any company that is a root (no parent) OR has company children
+            is_owner = (
+                p.is_supplier
+                or p.is_account
+                or (p.is_company and (not p.parent_id or p.has_company_children))
+            )
+
+            p.show_accounting_page = bool(is_owner)
+            # Non-owners that have a parent show the disabled page
+            p.show_accounting_disabled_page = (not is_owner) and bool(p.parent_id)
 
 class FilterCustomerStateMent(models.Model):
     _name = "res.partner.filter.statement"

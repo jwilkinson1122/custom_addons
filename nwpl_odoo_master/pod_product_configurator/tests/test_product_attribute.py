@@ -64,10 +64,10 @@ class ProductAttributes(TransactionCase):
             Method: onchange_custom_type()",
         )
 
-    def test_02_onchange_val_custom(self):
-        self.ProductAttributeFuel.val_custom = False
+    def test_02_onchange_custom(self):
+        self.ProductAttributeFuel.custom = False
         self.ProductAttributeFuel.custom_type = "integer"
-        self.ProductAttributeFuel.onchange_val_custom_field()
+        self.ProductAttributeFuel.onchange_custom_field()
         self.assertFalse(
             self.ProductAttributeFuel.custom_type, "custom_type is not False"
         )

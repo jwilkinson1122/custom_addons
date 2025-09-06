@@ -73,8 +73,6 @@ class PartnerHierarchyController(http.Controller):
         values['managers'].reverse()
         return values
 
-
-
     # Affiliates
     @http.route('/partner/get_affiliates', type='json', auth='user')
     def get_affiliates(self, partner_id, affiliates_type=None, **kw):

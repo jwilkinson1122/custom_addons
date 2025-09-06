@@ -16,28 +16,18 @@ class ProductTemplate(models.Model):
 
     @api.depends("product_variant_ids.product_tmpl_id")
     def _compute_product_variant_count(self):
-        """For configurable products return the number of variants configured or
-        1 as many views and methods trigger only when a template has at least
-        one variant attached. Since we create them from the template we should
-        have access to them always"""
-        result = super()._compute_product_variant_count()
+        super()._compute_product_variant_count()  # No need to store result
         for product_tmpl in self:
-            config_ok = product_tmpl.config_ok
-            variant_count = product_tmpl.product_variant_count
-            if config_ok and not variant_count:
+            if product_tmpl.config_ok and not product_tmpl.product_variant_count:
                 product_tmpl.product_variant_count = 1
-        return result
 
     @api.depends("attribute_line_ids.value_ids")
     def _compute_template_attr_vals(self):
-        """Compute all attribute values added in attribute line on
-        product template"""
         for product_tmpl in self:
-            if product_tmpl.config_ok:
-                value_ids = product_tmpl.attribute_line_ids.mapped("value_ids")
-                product_tmpl.attribute_line_val_ids = value_ids
-            else:
-                product_tmpl.attribute_line_val_ids = False
+            product_tmpl.attribute_line_val_ids = (
+                product_tmpl.attribute_line_ids.mapped("value_ids")
+                if product_tmpl.config_ok else False
+            )
 
     @api.constrains("attribute_line_ids", "attribute_value_line_ids")
     def check_attr_value_ids(self):
@@ -62,9 +52,11 @@ class ProductTemplate(models.Model):
         """Check for duplicate configurations for the same
         attribute value in image lines"""
         for template in self:
-            attr_val_line_vals = template.attribute_value_line_ids.read(
-                ["value_id", "value_ids"], load=False
-            )
+            attr_val_line_vals = [
+                (line.value_id.id, tuple(line.value_ids.ids))
+                for line in template.attribute_value_line_ids
+            ]
+
             attr_val_line_vals = [
                 (line["value_id"], tuple(line["value_ids"]))
                 for line in attr_val_line_vals
@@ -74,7 +66,7 @@ class ProductTemplate(models.Model):
                     _("You cannot have a duplicate configuration for the same value")
                 )
 
-    config_ok = fields.Boolean(string="Can be Configured")
+    config_ok = fields.Boolean(string="Sequenced Product")
 
     config_line_ids = fields.One2many(
         comodel_name="product.config.line",
@@ -124,6 +116,7 @@ class ProductTemplate(models.Model):
         search="_search_weight",
         store=False,
     )
+
     weight_dummy = fields.Float(
         string="Manual Weight",
         digits="Stock Weight",
@@ -131,11 +124,9 @@ class ProductTemplate(models.Model):
     )
 
     def _compute_weight(self):
-        config_products = self.filtered(lambda template: template.config_ok)
-        for product in config_products:
-            product.weight = product.weight_dummy
-        standard_products = self - config_products
-        return super(ProductTemplate, standard_products)._compute_weight()
+        for product in self:
+            product.weight = product.weight_dummy if product.config_ok else super()._compute_weight()
+
 
     def _set_weight(self):
         for product_tmpl in self:
@@ -182,16 +173,11 @@ class ProductTemplate(models.Model):
                 ) from exc
 
     def toggle_config(self):
-        for record in self:
-            record.config_ok = not record.config_ok
+        self.write({"config_ok": not self.config_ok})
 
     def _create_variant_ids(self):
-        """Prevent configurable products from creating variants as these serve
-        only as a template for the product configurator"""
-        templates = self.filtered(lambda t: not t.config_ok)
-        if not templates:
-            return None
-        return super(ProductTemplate, templates)._create_variant_ids()
+        """Prevent configurable products from creating variants automatically"""
+        return super()._create_variant_ids() if not self.config_ok else None
 
     def unlink(self):
         """- Prevent the removal of configurable product templates
@@ -431,13 +417,6 @@ class ProductProduct(models.Model):
         for product in self:
             if not product.config_ok:
                 continue
-
-            # At the moment, I don't have enough confidence with my
-            # understanding of binary attributes, so will leave these
-            # as not matching...
-            # In theory, they should just work, if they are set to "non search"
-            # in custom field def!
-            # TODO: Check the logic with binary attributes
             config_session_obj = product.env["product.config.session"]
             ptav_ids = product.product_template_attribute_value_ids.mapped(
                 "product_attribute_value_id"
@@ -519,13 +498,26 @@ class ProductProduct(models.Model):
     config_name = fields.Char(
         string="Configuration Name", compute="_compute_config_name"
     )
+   
     weight_extra = fields.Float(compute="_compute_product_weight_extra")
+   
     weight_dummy = fields.Float(string="Manual Weight", digits="Stock Weight")
+   
     weight = fields.Float(
         compute="_compute_product_weight",
         inverse="_inverse_product_weight",
         search="_search_product_weight",
         store=False,
+    )
+
+    laterality = fields.Selection(
+        selection=[
+            ("left", "Left Only"),
+            ("right", "Right Only"),
+            ("bilateral", "Bilateral"),
+        ],
+        string="Laterality",
+        help="Indicates whether this product is configured for the left foot, right foot, or both.",
     )
 
     # product preset

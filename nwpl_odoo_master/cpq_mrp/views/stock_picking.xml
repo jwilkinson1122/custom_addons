@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <record id="vpicktree_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.tree.sale.primary</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <!-- <field name="origin" position="after">
+                <field name="sale_primary_id" optional="show"/>
+            </field> -->
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="sale_primary_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">view.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button type="object" name="action_open_cpq_summaries" class="oe_stat_button" icon="fa-list" invisible="cpq_summary_count == 0" >
+                    <field name="cpq_summary_count" widget="statinfo" string="CPQ Summaries"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="sale_primary_id"/>
+            </xpath>
+            <xpath expr="//field[@name='use_create_lots']" position="after">
+                <field name="has_cpq_phantom" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='description_picking']" position="after">
+                <field name="cpq_description" optional="show" column_invisible="not parent.has_cpq_phantom" />
+            </xpath>
+        </field>
+    </record>
+    <record id="stock_picking_kanban_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.kanban.sale.primary</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="arch" type="xml">
+            <!-- <field name="name" position="after">
+                <field name="sale_primary_id"/>
+            </field> -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="sale_primary_id"/>
+            </xpath>
+            <xpath expr="//t[@t-esc='record.name.value']/parent::span" position="after">
+                <t t-if="record.sale_primary_id.raw_value">
+                    <!-- Adding comma, to not be glued to picking name. -->
+                    <span>, </span><span t-esc="record.sale_primary_id.value"/>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

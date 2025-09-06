@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_attribute_group_manager,product.attribute.group manager,model_product_attribute_group,base.group_system,1,1,1,1
+access_product_attribute_group_user,product.attribute.group user,model_product_attribute_group,base.group_user,1,0,0,0
+access_product_attribute_set_manager,product.attribute.set manager,model_product_attribute_set,base.group_system,1,1,1,1
+access_product_attribute_set_user,product.attribute.set user,model_product_attribute_set,base.group_user,1,0,0,0
+access_product_attribute_manager,product.attribute manager,model_product_attribute,base.group_system,1,1,1,1
+access_product_attribute_user,product.attribute user,model_product_attribute,base.group_user,1,0,0,0
+access_product_config_preference_user,access_product_config_preference_user,model_product_config_preference,base.group_user,1,1,1,1

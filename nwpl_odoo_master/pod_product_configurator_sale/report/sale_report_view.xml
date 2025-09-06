@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+
+    <!-- <tr>
+    <th>Product</th>
+    <th>Qty</th>
+    <th>Left Foot Price</th>
+    <th>Right Foot Price</th>
+    <th>Total</th>
+</tr>
+<t t-foreach="doc.order_line" t-as="line">
+    <tr>
+        <td t-esc="line.product_id.display_name"/>
+        <td t-esc="line.product_uom_qty"/>
+        <td t-esc="format_amount(line.price_left, doc.currency_id)"/>
+        <td t-esc="format_amount(line.price_right, doc.currency_id)"/>
+        <td t-esc="format_amount(line.price_total, doc.currency_id)"/>
+    </tr>
+</t> -->
+
+
+        <xpath expr="//tbody[hasclass('sale_tbody')]" position="after">
+            <t t-if="grouped_lines.get('left')">
+                <h3>Left Foot Configurations</h3>
+                <table class="table table-condensed">
+                    <t t-foreach="grouped_lines.get('left')" t-as="line">
+                        <tr>
+                            <td t-esc="line.product_id.display_name"/>
+                            <td t-esc="line.product_uom_qty"/>
+                            <td t-esc="line.price_total"/>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+
+            <t t-if="grouped_lines.get('right')">
+                <h3>Right Foot Configurations</h3>
+                <table class="table table-condensed">
+                    <t t-foreach="grouped_lines.get('right')" t-as="line">
+                        <tr>
+                            <td t-esc="line.product_id.display_name"/>
+                            <td t-esc="line.product_uom_qty"/>
+                            <td t-esc="line.price_total"/>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+
+            <t t-if="grouped_lines.get('bilateral')">
+                <h3>Bilateral Configurations</h3>
+                <table class="table table-condensed">
+                    <t t-foreach="grouped_lines.get('bilateral')" t-as="line">
+                        <tr>
+                            <td t-esc="line.product_id.display_name"/>
+                            <td t-esc="line.product_uom_qty"/>
+                            <td t-esc="line.price_total"/>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+
+        </xpath>
+    </template>
+</odoo>

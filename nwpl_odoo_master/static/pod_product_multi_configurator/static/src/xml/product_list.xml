@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-inherit="sale_product_configurator.saleProductConfigurator.productList" t-inherit-mode="extension">
+    <!-- Header: hide Quantity when qtyMode -->
+    <xpath expr="//table/thead" position="replace">
+      <thead t-if="!this.props.areProductsOptional">
+        <tr>
+          <th class="px-0 border-bottom-0" colspan="2">Product</th>
+          <th t-if="!this.props.qtyMode" class="px-0 text-end border-bottom-0">Quantity</th>
+          <th class="px-0 text-end border-bottom-0">Price</th>
+        </tr>
+      </thead>
+    </xpath>
+    <xpath expr="//table/tbody" position="replace">
+      <tbody class="border-top-0">
+        <!-- ✅ make the key unique by including the side (and fall back to 'shared') -->
+        <tr t-foreach="this.props.products" t-as="product" t-key="(product.product_tmpl_id or 'tmpl') + '-' + (product._side or 'shared')">
+          <Product t-props="product" optional="this.props.areProductsOptional" qtyMode="this.props.qtyMode"/>
+        </tr>
+        <tr t-if="!this.props.areProductsOptional">
+          <td t-att-colspan="this.props.qtyMode ? 3 : 4" class="border-bottom-0 text-end">
+            <h4>Total: <span t-out="getFormattedTotal()"/>
+            </h4>
+          </td>
+        </tr>
+      </tbody>
+    </xpath>
+  </t>
+</templates>

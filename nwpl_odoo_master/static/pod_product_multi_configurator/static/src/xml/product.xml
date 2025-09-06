@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-inherit="sale_product_configurator.product" t-inherit-mode="extension">
+
+    <xpath expr="//td[3]" position="attributes">
+      <attribute name="t-if">!this.props.qtyMode</attribute>
+    </xpath>
+
+    <xpath expr="//t[@t-foreach='this.props.attribute_lines']" position="replace">
+      <t t-if="!(
+                env.laterality and env.laterality.enabled and
+                env.laterality.mode() === 'bilateral' and
+                env.laterality.isGlobalSplit() and
+                this.props.product_tmpl_id === env.mainProductTmplId
+              )">
+        <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
+          <PTAL t-props="ptal" productTmplId="this.props.product_tmpl_id"/>
+        </t>
+      </t>
+      <t t-else="">
+        <t t-if="this.props.product_tmpl_id === env.mainProductTmplId and
+                (this.props._side or 'left') === 'left' and
+                !this.props.optional">
+          <!-- <div class="alert alert-info p-2 my-2 __lr_probe__">
+            Split branch active · groups=
+            <t t-esc="(env.lrUI.groups() or []).length"/>
+          </div> -->
+          <div class="mt-3">
+            <t t-foreach="env.lrUI.groups()" t-as="grp" t-key="grp.key">
+              <div class="alert alert-info p-2 my-2 __lr_probe__">
+                <div class="fw-bold mt-2">
+                  <t t-esc="grp.name"/>
+                </div>
+              </div>
+              <!-- <div class="fw-bold mt-2">
+                <t t-esc="grp.name"/>
+              </div> -->
+              <div class="row mt-2 mb-3">
+                <div class="col-6">
+                  <div class="small text-muted mb-1">LT</div>
+                  <t t-foreach="grp.attrs" t-as="line" t-key="line.attribute_id + '-L'">
+                    <div class="mb-2">
+                      <div class="fw-bold small" t-esc="line.attribute_name"/>
+                      <div class="d-flex flex-wrap gap-2 mt-1">
+                        <t t-foreach="line.attribute_values" t-as="val" t-key="val.id + '-L'">
+                          <div class="d-inline-flex align-items-center gap-1">
+                            <!-- LEFT side -->
+                          <label class="form-check form-check-inline align-middle me-2">
+                            <input class="form-check-input"
+                                  type="radio"
+                                  t-att-name="'attr_'+line.attribute_id+'_L'"             
+                                  t-att-checked="(env.lrUI.leftSel()[line.attribute_id] || 0) === val.id"
+                                  t-on-change.stop.prevent="() => env.lrUI.pick('left', line.attribute_id, val.id)"/>
+                            <span class="form-check-label">
+                              <t t-esc="val.name"/>
+                            </span>
+                            <a class="ms-1 text-decoration-none"
+                              title="Preferred for this customer (Left)"
+                              t-on-click.stop.prevent="
+                                () => this.togglePreferred(
+                                  line,
+                                  val,
+                                  !(env.prefByPtav and (env.prefByPtav.get(val.id)?.left || env.prefByPtav.get(val.id)?.any))
+                                )
+                              ">
+                              <i class="fa"
+                                t-att-class="(env.prefByPtav and (env.prefByPtav.get(val.id)?.left || env.prefByPtav.get(val.id)?.any))
+                                              ? 'fa-star text-warning' : 'fa-star-o text-muted'"/>
+                            </a>
+                          </label>
+
+                            <!-- <button type="button" class="btn btn-sm" t-att-class="{
+                                'btn-primary': (env.lrUI.leftSel()[line.attribute_id] || 0) === val.id,
+                                'btn-outline-secondary': (env.lrUI.leftSel()[line.attribute_id] || 0) !== val.id
+                              }" t-on-click.stop.prevent="() => env.lrUI.pick('left', line.attribute_id, val.id)">
+                              <t t-esc="val.name"/>
+                            </button>
+                            <button type="button" class="btn btn-link p-0" title="Preferred for this customer (Left)" t-on-click.stop.prevent="
+                                      () => this.togglePreferred(
+                                        line,
+                                        val,
+                                        !(env.prefByPtav and (env.prefByPtav.get(val.id)?.left || env.prefByPtav.get(val.id)?.any))
+                                      )
+                                    ">
+                              <i class="fa" t-att-class="(env.prefByPtav and (env.prefByPtav.get(val.id)?.left or env.prefByPtav.get(val.id)?.any))
+                                              ? 'fa-star text-warning' : 'fa-star-o text-muted'"/>
+                            </button> -->
+
+                          </div>
+                        </t>
+                      </div>
+                    </div>
+                  </t>
+                </div>
+                <div class="col-6">
+                  <div class="small text-muted mb-1">RT</div>
+                  <t t-foreach="grp.attrs" t-as="line" t-key="line.attribute_id + '-R'">
+                    <div class="mb-2">
+                      <div class="fw-bold small" t-esc="line.attribute_name"/>
+                      <div class="d-flex flex-wrap gap-2 mt-1">
+                        <t t-foreach="line.attribute_values" t-as="val" t-key="val.id + '-R'">
+                          <div class="d-inline-flex align-items-center gap-1">
+                          <label class="form-check form-check-inline align-middle me-2">
+                            <input class="form-check-input"
+                                  type="radio"
+                                  t-att-name="'attr_'+line.attribute_id+'_R'"
+                                  t-att-checked="(env.lrUI.rightSel()[line.attribute_id] || 0) === val.id"
+                                  t-on-change.stop.prevent="() => env.lrUI.pick('right', line.attribute_id, val.id)"/>
+                            <span class="form-check-label">
+                              <t t-esc="val.name"/>
+                            </span>
+                            <a class="ms-1 text-decoration-none"
+                              title="Preferred for this customer (Right)"
+                              t-on-click.stop.prevent="
+                                () => this.togglePreferred(
+                                  line,
+                                  val,
+                                  !(env.prefByPtav and (env.prefByPtav.get(val.id)?.right || env.prefByPtav.get(val.id)?.any))
+                                )
+                              ">
+                              <i class="fa"
+                                t-att-class="(env.prefByPtav and (env.prefByPtav.get(val.id)?.right || env.prefByPtav.get(val.id)?.any))
+                                              ? 'fa-star text-warning' : 'fa-star-o text-muted'"/>
+                            </a>
+                          </label>
+
+                            <!-- <button type="button" class="btn btn-sm" t-att-class="{
+                                'btn-primary': (env.lrUI.rightSel()[line.attribute_id] || 0) === val.id,
+                                'btn-outline-secondary': (env.lrUI.rightSel()[line.attribute_id] || 0) !== val.id
+                              }" t-on-click.stop.prevent="() => env.lrUI.pick('right', line.attribute_id, val.id)">
+                              <t t-esc="val.name"/>
+                            </button>
+                            <button type="button" class="btn btn-link p-0" title="Preferred for this customer (Right)" t-on-click.stop.prevent="
+                                      () => this.togglePreferred(
+                                        line,
+                                        val,
+                                        !(env.prefByPtav and (env.prefByPtav.get(val.id)?.right || env.prefByPtav.get(val.id)?.any))
+                                      )
+                                    ">
+                              <i class="fa" t-att-class="(env.prefByPtav and (env.prefByPtav.get(val.id)?.right or env.prefByPtav.get(val.id)?.any))
+                                              ? 'fa-star text-warning' : 'fa-star-o text-muted'"/>
+                            </button> -->
+
+                          </div>
+                        </t>
+                      </div>
+                    </div>
+                  </t>
+                </div>
+              </div>
+            </t>
+          </div>
+        </t>
+      </t>
+    </xpath>
+
+    <xpath expr="//td[hasclass('o_sale_product_configurator_img')]" position="attributes">
+      <attribute name="t-if">
+        !(
+          env.laterality and env.laterality.enabled and
+          env.laterality.mode() === 'bilateral' and
+          env.laterality.isGlobalSplit() and
+          this.props.product_tmpl_id === env.mainProductTmplId and
+          (this.props._side or 'left') === 'right'
+        )
+      </attribute>
+    </xpath>
+
+    <xpath expr="//div[@name='o_sale_product_configurator_name']" position="attributes">
+      <attribute name="t-if">
+        !(
+          env.laterality and env.laterality.enabled and
+          env.laterality.mode() === 'bilateral' and
+          env.laterality.isGlobalSplit() and
+          this.props.product_tmpl_id === env.mainProductTmplId and
+          (this.props._side or 'left') === 'right'
+        )
+      </attribute>
+    </xpath>
+
+    <xpath expr="//td[hasclass('o_sale_product_configurator_price')]" position="replace">
+      <td class="o_sale_product_configurator_price py-3 px-0 text-end" name="price" t-if="!(
+            env.laterality and env.laterality.enabled and
+            env.laterality.mode() === 'bilateral' and
+            env.laterality.isGlobalSplit() and
+            this.props.product_tmpl_id === env.mainProductTmplId and
+            (this.props._side or 'left') === 'right'
+          )">
+        <div t-if="!this.props.optional" class="input-group justify-content-end">
+          <!-- <h5 class="text-nowrap" t-out="this._displayPrice()"/> -->
+          <h5 class="text-nowrap" t-out="this.showPrice"/>
+        </div>
+        <div t-else="">
+          <button class="btn btn-secondary" t-att-class="{'disabled': !this.env.isPossibleCombination(this.props)}" t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)">
+            <i class="fa fa-plus"/>
+ Add
+          </button>
+        </div>
+      </td>
+    </xpath>
+
+    <xpath expr="//td[hasclass('p-3')]" position="attributes">
+      <attribute name="t-if">
+        !(
+          env.laterality and env.laterality.enabled and
+          env.laterality.mode() === 'bilateral' and
+          env.laterality.isGlobalSplit() and
+          this.props.product_tmpl_id === env.mainProductTmplId and
+          (this.props._side or 'left') === 'right'
+        )
+      </attribute>
+    </xpath>
+
+  </t>
+</templates>
+
+
+<!-- <xpath expr="//td[hasclass('o_sale_product_configurator_price')]" position="attributes">
+      <attribute name="t-if">
+        !(
+          this.props.optional and
+          env.laterality and env.laterality.enabled and
+          env.laterality.mode() === 'bilateral' and
+          env.laterality.isGlobalSplit() and
+          this.props.product_tmpl_id === env.mainProductTmplId and
+          (this.props._side or 'left') === 'right'
+        )
+      </attribute>
+    </xpath> -->

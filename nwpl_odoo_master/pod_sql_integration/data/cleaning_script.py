@@ -117,10 +117,10 @@ def clean_data(file_path):
         # Save cleaned file
         cleaned_path = file_path.replace(".csv", "_cleaned.csv")
         df.to_csv(cleaned_path, index=False, encoding="utf-8-sig")
-        print(f"✅ Cleaned file saved: {cleaned_path}")
+        print(f" Cleaned file saved: {cleaned_path}")
 
     except Exception as e:
-        print(f"❌ Error processing {file_path}: {e}")
+        print(f" Error processing {file_path}: {e}")
 
 
 if __name__ == "__main__":
@@ -129,4 +129,4 @@ if __name__ == "__main__":
         if os.path.exists(file_path):
             clean_data(file_path)
         else:
-            print(f"❌ File not found: {file_path}")
+            print(f" File not found: {file_path}")

@@ -44,7 +44,7 @@ class DownloadStatementReport(http.Controller):
         ]
         if report_type == "pdf" and download:
             filename = "%s.pdf" % (
-                re.sub("\W+", "-", model._get_cfs_report_base_filename())
+                re.sub(r"\W+", "-", model._get_cfs_report_base_filename())
             )
             reporthttpheaders.append(
                 ("Content-Disposition", content_disposition(filename))
@@ -73,7 +73,7 @@ class DownloadStatementReport(http.Controller):
         ]
         if report_type == "pdf" and download:
             filename = "%s.pdf" % (
-                re.sub("\W+", "-", model._get_cs_report_base_filename())
+                re.sub(r"\W+", "-", model._get_cs_report_base_filename())
             )
             reporthttpheaders.append(
                 ("Content-Disposition", content_disposition(filename))
@@ -102,7 +102,7 @@ class DownloadStatementReport(http.Controller):
         ]
         if report_type == "pdf" and download:
             filename = "%s.pdf" % (
-                re.sub("\W+", "-", model._get_cds_report_base_filename())
+                re.sub(r"\W+", "-", model._get_cds_report_base_filename())
             )
             reporthttpheaders.append(
                 ("Content-Disposition", content_disposition(filename))

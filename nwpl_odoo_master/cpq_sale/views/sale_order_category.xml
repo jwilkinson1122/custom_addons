@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_form_order_category" model="ir.ui.view">
+        <field name="name">Category Form</field>
+        <field name="model">sale.order.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group name="group_left">
+                        <field name="name"/>
+                        <field name="parent_id" string="Sub Category of"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_tree_order_category" model="ir.ui.view">
+        <field name="name">Category Tree</field>
+        <field name="model">sale.order.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="parent_id" string="Sub Category of"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_order_category" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Category</field>
+        <field name="res_model">sale.order.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_sale_order_category_order" name="Category" parent="sale.menu_sale_config" sequence="199" action="action_sale_order_category" />
+
+</odoo>

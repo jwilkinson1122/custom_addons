@@ -1,10 +1,11 @@
+import traceback
 import logging
 import base64
 import json
 from dateutil.relativedelta import relativedelta
 from lxml import etree
-from odoo import _, models, fields, tools, api, exceptions
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo import Command, _, models, fields, tools, api, exceptions
+from odoo.exceptions import AccessError, UserError, ValidationError, RedirectWarning
 from odoo.modules.module import get_module_resource
 from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
@@ -14,13 +15,21 @@ _logger = logging.getLogger(__name__)
 
 
 INVOICE = "invoice"
+ADDRESS_FIELDS = ("street", "street2", "city", "zip", "state_id", "country_id")
 
 
 class Partner(models.Model):
-    _inherit = ["res.partner", "incrementing.sequence.mixin"]
+    _inherit = ["multi.company.abstract", "incrementing.sequence.mixin", "res.partner"]
     _name = "res.partner"
     _sequence_group = "parent_id"
     # _inherit = "res.partner"
+    
+    # _sql_constraints = [
+    #     ('single_type_check', "CHECK((is_account::int + is_affiliate::int + is_contact::int + is_patient::int) = 1)", "Partner must belong to exactly one category."),
+    # ]
+    # _sql_constraints = [
+    #     ('customer_code_unique', 'unique(customer_code)', 'Customer Code must be unique.'),
+    # ]
 
     # Boolean Fields
     is_new_record = fields.Boolean(compute="_compute_is_new_record", store=False)
@@ -50,15 +59,28 @@ class Partner(models.Model):
     use_parent_shipping_address = fields.Boolean(
         string="Use Parent Shipping Address", default=False
     )
+    use_patient_shipping_address = fields.Boolean(
+        string="Use Patient Shipping Address", default=False
+    )
 
     ref = fields.Char(string="Ref", index=True)
+    # customer_code = fields.Char(
+    #     string="Customer ID", readonly=True, default=lambda self: _("New")
+    # )
     customer_code = fields.Char(
-        string="Customer Code", readonly=True, default=lambda self: _("New")
+        string="Customer Code",
+        copy=False,
+        index=True,
+        default=lambda self: _("New"),  
+        readonly=True,
     )
-    legacy_customer_code = fields.Char("Legacy ID", readonly=True)
-
+    
+    
+    
+    # legacy_customer_code = fields.Char("Legacy ID", readonly=True)
+    legacy_customer_code = fields.Char("Legacy ID")
     partner_company_type = fields.Many2one(
-        comodel_name="partner.company.type",
+        comodel_name="res.partner.company.type",
         help="Specify the type of company this belongs to.",
     )
     partner_relation_label = fields.Char(
@@ -85,8 +107,6 @@ class Partner(models.Model):
         related="partner_type_id.contacts_label", readonly=True
     )
 
-    group_id = fields.Many2one("res.partner.groups", string="Group")
-
     type = fields.Selection(
         selection_add=[
             ("contact", "Contact Address"),
@@ -101,19 +121,6 @@ class Partner(models.Model):
         default=False,
     )
 
-    # type = fields.Selection(
-    #     selection_add=[
-    #         ("account", "Account Address"),
-    #         ("affiliate", "Affiliate Address"),
-    #         ("supplier", "Supplier Address"),
-    #         ("patient", "Patient Address"),
-    #         ("other",),
-    #     ],
-    #     string="Address Type",
-    #     store=True,
-    #     default=False,
-    # )
-
     company_address_type = fields.Selection(
         selection=[
             ("invoice", "Invoice"),
@@ -126,9 +133,7 @@ class Partner(models.Model):
         inverse="_inverse_company_address_type",
         store=True,
     )
-
-    # parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
-
+    
     parent_id = fields.Many2one(
         "res.partner",
         index=True,
@@ -180,10 +185,16 @@ class Partner(models.Model):
         compute_sudo=True,
     )
 
+    # contacts
     child_ids = fields.One2many(
         comodel_name="res.partner",
         inverse_name="parent_id",
-        domain=[("active", "=", True), ("is_company", "=", False)],
+        domain=[
+            ("active", "=", True),
+            ("is_company", "=", False),
+            ("is_contact", "=", True),  # Ensure only contacts are included
+            ("is_patient", "=", False),  # Explicitly exclude patients
+        ],
         string="Contacts",
     )
 
@@ -216,30 +227,26 @@ class Partner(models.Model):
         context={"primary_contact_selection": True},
     )
 
-    contact_role_ids = fields.Many2many(string="Roles", comodel_name="contact.role")
-
-    # contact_role_ids = fields.Many2many(
-    #     string="Roles",
-    #     comodel_name="contact.role",
-    #     relation="res_partner_contact_role_rel",
-    #     column1="partner_id",
-    #     column2="role_id"
-    # )
+    contact_role_ids = fields.Many2many(string="Roles", comodel_name="res.partner.role")
 
     department_id = fields.Many2one("res.partner.contact.department", "Department")
 
     contact_point_ids = fields.One2many(
         "res.partner.contact_point", "partner_id", "Contact Points"
     )
+    
     email = fields.Char(
         compute="_compute_contact_points", inverse="_set_email", store=True
     )
+    
     phone = fields.Char(
         compute="_compute_contact_points", inverse="_set_phone", store=True
     )
+    
     mobile = fields.Char(
         compute="_compute_contact_points", inverse="_set_mobile", store=True
     )
+    
     fax_number = fields.Char(string="Fax")
 
     document_ids = fields.One2many(
@@ -251,7 +258,7 @@ class Partner(models.Model):
         string="Document Count",
         help="Get the documents count",
     )
-
+    
     @api.depends("document_ids")
     def _compute_total_documents_count(self):
         """Get the document count on smart tab"""
@@ -272,55 +279,85 @@ class Partner(models.Model):
             "context": {"create": False},
         }
 
-    @api.depends("contact_point_ids.name", "contact_point_ids.is_default")
+    # Contact Points            
+    @api.depends("contact_point_ids.name", "contact_point_ids.is_default", "contact_point_ids.contact_point_type")
     def _compute_contact_points(self):
         for partner in self:
-            for cptype, label in CONTACT_POINT_TYPES:
-                partner[cptype] = partner.contact_point_ids.filtered(
+            for cptype, _label in CONTACT_POINT_TYPES:
+                # always pick at most one default
+                default_cp = partner.contact_point_ids.filtered(
                     lambda cp: cp.contact_point_type == cptype and cp.is_default
-                ).name
+                )[:1]
+                partner[cptype] = default_cp.name if default_cp else False
 
     def _set_contact_point(self, contact_point_type):
-        if self[contact_point_type]:
-            contact_point = self.contact_point_ids.filtered(
-                lambda cp: cp.name == self[contact_point_type]
-                and cp.contact_point_type == contact_point_type
+        """Multi-safe inverse: for each partner, make sure the typed value exists as a contact point
+        and is flagged as default, unflagging other defaults of the same type."""
+        ContactPoint = self.env["res.partner.contact_point"]
+        for partner in self:
+            value = partner[contact_point_type]
+            if not value:
+                continue
+
+            # exact match on this partner & type
+            existing = partner.contact_point_ids.filtered(
+                lambda cp: cp.contact_point_type == contact_point_type and cp.name == value
             )
-            if not contact_point:
-                self.contact_point_ids.create(
-                    {
-                        "name": self[contact_point_type],
-                        "partner_id": self.id,
-                        "contact_point_type": contact_point_type,
-                        "is_default": True,
-                    }
+
+            if existing:
+                # ensure it's default, and unset defaults on others of the same type
+                if not existing[0].is_default:
+                    existing[0].is_default = True
+                others = (partner.contact_point_ids - existing).filtered(
+                    lambda cp: cp.contact_point_type == contact_point_type and cp.is_default
                 )
-            elif not contact_point.is_default:
-                contact_point.is_default = True
+                if others:
+                    others.write({"is_default": False})
+            else:
+                # create new as default and unset any previous default of same type
+                others = partner.contact_point_ids.filtered(
+                    lambda cp: cp.contact_point_type == contact_point_type and cp.is_default
+                )
+                if others:
+                    others.write({"is_default": False})
+                ContactPoint.create({
+                    "name": value,
+                    "partner_id": partner.id,
+                    "contact_point_type": contact_point_type,
+                    "is_default": True,
+                })
 
     def get_fields_contact_points(self):
         return {"phone", "mobile", "email"}
 
-    patient_id = fields.Many2one(
-        "res.partner",
-        string="Related Contact",
-        domain=[("is_patient", "=", True)],
-        help="Link to the related patient.",
-    )
+    def _set_email(self):
+        for partner in self:
+            partner._set_contact_point("email")
 
-    patient_ids = fields.One2many(
-        "res.partner", "parent_id", domain=[("is_patient", "=", True)]
-    )
-    sub_patient_ids = fields.One2many(
-        comodel_name="res.partner",
-        string="Sub-Patients",
-        compute="_compute_sub_patient_ids",
-    )
+    def _set_phone(self):
+        for partner in self:
+            partner._set_contact_point("phone")
 
-    patients_count = fields.Integer(
-        "Number of Patients", compute="_compute_patients_count"
-    )
-    patient_text = fields.Char(compute="_compute_patient_text")
+    def _set_mobile(self):
+        for partner in self:
+            partner._set_contact_point("mobile")
+
+    def action_show_contact_points(self):
+        contact_point_type = self._context.get("default_contact_point_type")
+        partner_id = self._context.get("default_partner_id")
+        return {
+            "name": "%ss" % dict(CONTACT_POINT_TYPES).get(contact_point_type),
+            "type": "ir.actions.act_window",
+            "res_model": "res.partner.contact_point",
+            "view_mode": "tree",
+            "view_id": False,
+            "domain": [
+                ("contact_point_type", "=", contact_point_type),
+                ("partner_id", "=", partner_id),
+            ],
+            "context": dict(self._context),
+        }
+
 
     def _compute_is_new_record(self):
         for record in self:
@@ -333,6 +370,8 @@ class Partner(models.Model):
         res = super().default_get(fields)
         if res.get("is_affiliate") and not res.get("parent_id"):
             res["parent_id"] = False
+        if res.get('is_supplier') and not res.get('company_address_type'):
+            res['company_address_type'] = 'supplier'
         return res
 
     # Generic Count Computation
@@ -371,14 +410,28 @@ class Partner(models.Model):
             )  # Indirect affiliates
             partner.sub_affiliate_ids = all_sub_affiliates - direct_affiliates
 
+    @api.depends("sub_affiliate_ids")
+    def _compute_sub_affiliates_count(self):
+        """Compute the count of sub-affiliates."""
+        for record in self:
+            record.sub_affiliates_count = len(record.sub_affiliate_ids)
+
     # Contacts
     @api.depends("child_ids")
     def _compute_contacts_count(self):
-        self._compute_count(
-            "child_ids",
-            "contacts_count",
-            filters=lambda r: r.is_contact and not r.is_company and not r.is_patient,
-        )
+        for record in self:
+            contacts = record.child_ids.filtered(
+                lambda r: r.is_contact and not r.is_patient and not r.is_company
+            )
+
+            _logger.info("Computing contacts count for: %s", record.name)
+            _logger.info("Contacts found: %s", contacts.mapped("name"))
+            _logger.info(
+                "Contacts incorrectly counted: %s",
+                record.child_ids.filtered(lambda r: r.is_contact).mapped("name"),
+            )
+
+            record.contacts_count = len(contacts)
 
     def _get_all_sub_contacts(self):
         sub_contacts = self.env["res.partner"]
@@ -398,14 +451,97 @@ class Partner(models.Model):
                 nonlocal all_sub_contacts
                 for affiliate in partner.affiliate_ids:
                     all_sub_contacts |= affiliate.child_ids.filtered(
-                        lambda r: r.is_contact and not r.is_company and not r.is_patient
+                        lambda r: r.is_contact
+                        and not r.is_account
+                        and not r.is_company
+                        and not r.is_patient
                     )
                     get_indirect_contacts(affiliate)
 
             get_indirect_contacts(partner)
             partner.sub_contact_ids = all_sub_contacts
 
+    @api.depends("sub_contact_ids")
+    def _compute_sub_contacts_count(self):
+        """Compute the count of sub-contacts."""
+        for record in self:
+            record.sub_contacts_count = len(record.sub_contact_ids)
+
     # Patients
+        patient_id = fields.Many2one(
+        "res.partner",
+        string="Related Contact",
+        domain=[("is_patient", "=", True)],
+        help="Link to the related patient.",
+    )
+
+    # Patients
+    patient_ids = fields.One2many(
+        "res.partner", "parent_id", domain=[("is_patient", "=", True)]
+    )
+    
+    sub_patient_ids = fields.One2many(
+        comodel_name="res.partner",
+        string="Sub-Patients",
+        compute="_compute_sub_patient_ids",
+    )
+    patients_count = fields.Integer(
+        "Number of Patients", compute="_compute_patients_count"
+    )
+
+    photo = fields.Binary(string="Picture")
+    image1 = fields.Binary("Right Photo")
+    image2 = fields.Binary("Left Photo")
+    left_obj_model = fields.Binary("Left Obj")
+    left_obj_file_name = fields.Char("Left Obj File Name")
+    right_obj_model = fields.Binary("Right Obj")
+    right_obj_file_name = fields.Char("Right Obj File Name")
+
+    height = fields.Integer("Height", store=True, copy=True)
+    weight = fields.Float("Weight", store=True, copy=True)
+    shoe_size = fields.Float("Shoe Size", store=True, copy=True)
+    shoe_type = fields.Selection([
+        ('dress', 'Dress'), ('casual', 'Casual'),
+        ('athletic', 'Athletic'), ('other', 'Other')
+    ], string='Shoe Type')
+    shoe_width = fields.Selection([
+        ("wide", "Wide"), ("xwide", "Extra Wide"), ("narrow", "Narrow")
+    ], string="Shoe Width")
+
+    gender = fields.Selection([
+        ("male", "Male"), ("female", "Female"), ("other", "Other")
+    ], string="Gender")
+    birth_date = fields.Date("DOB")
+    patient_age = fields.Integer("Age", compute="_compute_age", store=True)
+    notes = fields.Text("Notes")
+
+    patient_flag_ids = fields.One2many("res.partner.flag", "patient_id", string="Flags")
+    patient_flag_count = fields.Integer("Flag Count", compute="_compute_flag_count")
+    
+    image1 = fields.Binary("Right photo")
+    image2 = fields.Binary("Left photo")
+    left_obj_model = fields.Binary("Left Obj")
+    left_obj_file_name = fields.Char(string="Left Obj File Name")
+    right_obj_model = fields.Binary("Right Obj")
+    right_obj_file_name = fields.Char(string="Right Obj File Name")
+    
+    # measurement_ids = fields.One2many('pod.measurement.group', 'partner_id', 'Measurement')
+
+
+    @api.depends('birth_date')
+    def _compute_age(self):
+        today = fields.Date.today()
+        for rec in self:
+            if rec.birth_date:
+                rec.patient_age = relativedelta(today, rec.birth_date).years
+            else:
+                rec.patient_age = 0
+
+    @api.depends('patient_flag_ids')
+    def _compute_flag_count(self):
+        for rec in self:
+            rec.patient_flag_count = len(rec.patient_flag_ids)
+            
     @api.depends("patient_ids")
     def _compute_patients_count(self):
         self._compute_count("patient_ids", "patients_count")
@@ -425,15 +561,67 @@ class Partner(models.Model):
             all_sub_patients = partner._get_all_sub_patients()
             partner.sub_patient_ids = all_sub_patients - partner.patient_ids
 
+    # def add_measurement_category(self, measurement_values):
+    #     """Create measurement categories and measurements based on provided values."""
+    #     if isinstance(measurement_values, str):
+    #         try:
+    #             measurement_values = json.loads(measurement_values)
+    #         except json.JSONDecodeError:
+    #             raise ValidationError("Invalid JSON format")
+
+    #     if not isinstance(measurement_values, list) or not measurement_values:
+    #         raise ValidationError("Invalid data format; list of dictionaries expected.")
+
+    #     required_keys = {'date', 'category_id', 'measurement_unit', 'measurement_ids'}
+    #     for values in measurement_values:
+    #         if not required_keys.issubset(values.keys()):
+    #             missing = required_keys - set(values.keys())
+    #             raise ValidationError(f"Missing required keys: {', '.join(missing)}")
+
+    #         measurement_cat = self.env['pod.measurement.group'].create({
+    #             'date': values.get('date'),
+    #             'partner_id': self.id,
+    #             'category_id': values.get('category_id'),
+    #             'measurement_unit': int(values.get('measurement_unit'))
+    #         })
+
+    #         if measurement_cat:
+    #             measurements = [
+    #                 {
+    #                     'measurement_cat_id': measurement_cat.id,
+    #                     'measurement_type': m.get('measurement_type'),
+    #                     'measurement': m.get('measurement_value')
+    #                 }
+    #                 for m in values.get('measurement_ids', [])
+    #             ]
+    #             self.env['measurement.measurement'].create(measurements)
+
+    # def get_measurements(self):
+    #     measurements = []
+    #     for record in self:
+    #         measurement_lines = self.env['pod.measurement.group'].search([('partner_id', '=', record.id)])
+    #         for line in measurement_lines:
+    #             measurements.append({
+    #                 'date': line.date,
+    #                 'category': line.category_id.name,
+    #                 'unit': line.measurement_unit.name,
+    #                 'values': [{'id': m.id, 'name': m.measurement_type.name, 'value': m.measurement} for m in line.measurement_ids]
+    #             })
+    #     return measurements
+
     # Compute and Inverse Methods
+    
+    
+    
+    
     @api.depends("type")
     def _compute_company_address_type(self):
         for record in self:
-            if not record.company_address_type:  # ✅ Only set if empty
+            if not record.company_address_type:  #  Only set if empty
                 if record.type in dict(self._fields["company_address_type"].selection):
                     record.company_address_type = record.type
                 else:
-                    record.company_address_type = False  # ✅ Keep it empty if not set
+                    record.company_address_type = False  #  Keep it empty if not set
 
     def _inverse_company_address_type(self):
         for record in self:
@@ -461,37 +649,14 @@ class Partner(models.Model):
                 if record.create_date:  # Ensure the record has been saved
                     raise ValidationError(_("Affiliates must have a parent account."))
 
-    # Billing Address Fields
-    # billing_street = fields.Char("Billing Street")
-    # billing_street2 = fields.Char("Billing Street 2")
-    # billing_city = fields.Char("Billing City")
-    # billing_state_id = fields.Many2one("res.country.state", "Billing State")
-    # billing_zip = fields.Char("Billing ZIP")
-    # billing_country_id = fields.Many2one("res.country", "Billing Country")
-
-    # Shipping Address Fields
-    # shipping_street = fields.Char("Shipping Street")
-    # shipping_street2 = fields.Char("Shipping Street 2")
-    # shipping_city = fields.Char("Shipping City")
-    # shipping_state_id = fields.Many2one("res.country.state", "Shipping State")
-    # shipping_zip = fields.Char("Shipping ZIP")
-    # shipping_country_id = fields.Many2one("res.country", "Shipping Country")
-
-    # Boolean Field to Copy Billing Address to Shipping
-    # same_as_billing = fields.Boolean("Same As Billing Address?", default=False)
-
     # Onchange Methods
-    # @api.onchange("same_as_billing")
-    # def _onchange_same_as_billing(self):
-    #     if self.same_as_billing:
-    #         self.shipping_street = self.billing_street
-    #         self.shipping_street2 = self.billing_street2
-    #         self.shipping_city = self.billing_city
-    #         self.shipping_state_id = self.billing_state_id
-    #         self.shipping_zip = self.billing_zip
-    #         self.shipping_country_id = self.billing_country_id
-
-    # Onchange Methods
+    
+    @api.onchange('is_supplier', 'company_type')
+    def _onchange_supplier_default_address_type(self):
+        for p in self:
+            if p.is_supplier and p.is_company and not p.company_address_type:
+                p.company_address_type = 'supplier'
+            
     @api.onchange("company_type")
     def _onchange_company_type(self):
         """Update partner_type_id based on the selected company_type using boolean fields."""
@@ -507,51 +672,100 @@ class Partner(models.Model):
 
     @api.onchange("partner_type_id")
     def _onchange_partner_type(self):
-        if self.partner_type_id:
-            self.update(self._get_inherit_values(self.partner_type_id))
-            if self.partner_type_id.type == "contact":
-                self.is_contact = True
-                self.type = False
-            else:
-                self.is_contact = False
-                self.type = (
-                    self.partner_type_id.type
-                    if self.partner_type_id.type
-                    in dict(self._fields["type"].selection).keys()
-                    else False
-                )
+        if not self.partner_type_id:
+            return
 
-    @api.onchange("parent_id")
-    def _onchange_parent_id(self):
-        """Handles changes in parent_id:
-        - Updates customer_code if parent changes.
-        - Stores previous parent_id for tracking.
-        - Filters primary_contact_id to only show contacts of the selected parent.
+        # Apply inherited field values
+        self.update(self._get_inherit_values(self.partner_type_id))
+
+        # Normalize the `type` field from the partner type (if valid)
+        type_selection = dict(self._fields["type"].selection)
+        selected_type = self.partner_type_id.type if self.partner_type_id.type in type_selection else False
+
+        # Apply boolean flags and type
+        is_person_type = self.partner_type_id.company_type == "person"
+        is_contact_type = selected_type == "contact"
+
+        self.is_contact = is_person_type and is_contact_type
+        self.is_company = not self.is_contact
+        self.type = False if self.is_contact else selected_type
+        
+        
+        
+    def _clear_address_fields(self):
+        for f in ADDRESS_FIELDS:
+            self[f] = False    
+
+
+    @api.onchange('parent_id')
+    def onchange_parent_id(self):
         """
+        One unified handler that:
+        • Skips base address prefill for Affiliates unless user opted in with
+            use_parent_invoice_address/use_parent_shipping_address (or context guard).
+        • Keeps your primary_contact domain and customer_code/previous_parent_id handling.
+        • Lets base behavior run for non-Affiliates (or opted-in Affiliates).
+        """
+        self.ensure_one()
 
+        # Decide whether to bypass base's address copy
+        skip_prefill = (
+            (self.is_affiliate and not (self.use_parent_invoice_address or self.use_parent_shipping_address))
+            or self.env.context.get('no_address_prefill')
+        )
+
+        # Call base onchange only when we do NOT want to skip prefill
+        if self.parent_id and not skip_prefill:
+            super(Partner, self).onchange_parent_id()
+
+        # ---- Your logic (always applied) ---------------------------------------
+        # Primary contact selection
         self.apply_contact_logic()
 
-        # ✅ Update domain for primary_contact_id
+        # Domain for primary_contact_id
         domain = [("is_contact", "=", True), ("is_company", "=", False)]
         if self.parent_id:
             domain.append(("parent_id", "=", self.parent_id.id))
 
-            # ✅ Update customer_code safely when parent changes
+            # Customer code + previous_parent tracking
             if self.previous_parent_id and self.previous_parent_id != self.parent_id:
                 _logger.info(
-                    f"Reassigning parent for {self.name} from {self.previous_parent_id.name} to {self.parent_id.name}"
+                    "Reassigning parent for %s from %s to %s",
+                    self.name,
+                    self.previous_parent_id.name,
+                    self.parent_id.name,
                 )
-
-                # Store previous code before updating
                 if self.customer_code and self.customer_code != _("New"):
                     self.legacy_customer_code = self.customer_code
 
-                self.customer_code = self._generate_customer_code()
+                # Generate using your role-aware method
+                self.customer_code = self._generate_customer_code({
+                    "parent_id": self.parent_id.id,
+                    "is_account": self.is_account,
+                    "is_affiliate": self.is_affiliate,
+                    "is_contact": self.is_contact,
+                    "is_patient": self.is_patient,
+                })
                 self._update_related_records()
 
-            # ✅ Store the new parent as previous_parent_id
+            # Store current as previous
             self.previous_parent_id = self.parent_id
 
+            # ---- Address behavior ----------------------------------------------
+            if self.is_affiliate:
+                # Default: no prefill. Only copy if user opted in via the flags.
+                if self.use_parent_invoice_address or self.use_parent_shipping_address:
+                    # Apply the chosen parent address
+                    self._onchange_parent_address_flags()
+                else:
+                    # Make sure nothing auto-filled remains
+                    self._clear_address_fields()
+            else:
+                # Non-Affiliates: base might have filled; respect flags too
+                if self.use_parent_invoice_address or self.use_parent_shipping_address:
+                    self._onchange_parent_address_flags()
+
+        # Return domain for single-record form
         return {"domain": {"primary_contact_id": domain}}
 
     def apply_contact_logic(self):
@@ -603,220 +817,504 @@ class Partner(models.Model):
                 raise ValidationError(_("Affiliates must have a parent account."))
 
     # Address Flags
-    @api.onchange(
-        "parent_id", "use_parent_invoice_address", "use_parent_shipping_address"
-    )
-    def _onchange_parent_address_flags(self):
-        _logger.debug(
-            f"Triggered onchange for parent_id: {self.parent_id}, use_parent_invoice_address: {self.use_parent_invoice_address}, use_parent_shipping_address: {self.use_parent_shipping_address}"
-        )
+    # @api.onchange("use_parent_invoice_address", "use_parent_shipping_address", "parent_id", "is_affiliate")
+    # def _onchange_parent_address_flags(self):
+    #     """Only copy when the user asks. Otherwise, keep blank."""
+    #     for rec in self:
+    #         if rec.use_parent_invoice_address and rec.use_parent_shipping_address:
+    #             rec.use_parent_shipping_address = False
 
-        if self.use_parent_invoice_address and self.parent_id:
-            self._apply_parent_address(address_type="invoice")
-        if self.use_parent_shipping_address and self.parent_id:
-            self._apply_parent_address(address_type="shipping")
+    #         if not rec.parent_id:
+    #             continue
 
-    def _apply_parent_address(self, address_type):
-        address_fields = ["street", "street2", "city", "zip", "state_id", "country_id"]
+    #         if rec.is_affiliate:
+    #             if rec.use_parent_invoice_address:
+    #                 rec._apply_parent_address(address_type="invoice")
+    #             elif rec.use_parent_shipping_address:
+    #                 rec._apply_parent_address(address_type="shipping")
+    #             else:
+    #                 rec._clear_address_fields()
+    #         else:
+    #             if rec.use_parent_invoice_address:
+    #                 rec._apply_parent_address(address_type="invoice")
+    #             if rec.use_parent_shipping_address:
+    #                 rec._apply_parent_address(address_type="shipping")
+                
+
+    def _address_is_empty(self):
+        """True if all address fields are empty."""
+        self.ensure_one()
+        return not any(self[f] for f in ADDRESS_FIELDS)
+
+    # def _apply_parent_address(self, address_type):
+    #     address_fields = ["street", "street2", "city", "zip", "state_id", "country_id"]
+    #     parent = self.parent_id
+
+    #     if address_type == "invoice":
+    #         _logger.debug(f"Applying parent invoice address from: {parent.name}")
+    #     elif address_type == "shipping":
+    #         _logger.debug(f"Applying parent shipping address from: {parent.name}")
+
+    #     for field in address_fields:
+    #         parent_value = getattr(parent, field, False)
+    #         if field in ["state_id", "country_id"]:
+    #             parent_value = parent_value.id if parent_value else False
+    #         self[field] = parent_value
+    
+    def _apply_parent_address(self, address_type, *, replace=False):
+        """
+        Copy parent's address onto current record.
+        - replace=False  → only fill empty fields (non-destructive)
+        - replace=True   → overwrite everything
+        Returns True if at least one field was written.
+        """
+        self.ensure_one()
+        if not self.parent_id:
+            return False
+
         parent = self.parent_id
+        copied_any = False
+        for field in ADDRESS_FIELDS:
+            parent_val = getattr(parent, field, False)
+            if field in ("state_id", "country_id"):
+                parent_val = parent_val.id if parent_val else False
+            if replace or not self[field]:
+                self[field] = parent_val
+                copied_any = True
+        return copied_any
 
-        if address_type == "invoice":
-            _logger.debug(f"Applying parent invoice address from: {parent.name}")
-        elif address_type == "shipping":
-            _logger.debug(f"Applying parent shipping address from: {parent.name}")
+    @api.onchange("use_parent_invoice_address", "use_parent_shipping_address", "parent_id", "is_affiliate")
+    def _onchange_parent_address_flags(self):
+        """
+        Affiliates: do nothing by default. If a flag is checked, *fill-only-blank* by default.
+        Never clobber user input unless explicitly asked (replace=True).
+        """
+        warnings = []
+        for rec in self:
+            # make the flags mutually exclusive if you want
+            if rec.use_parent_invoice_address and rec.use_parent_shipping_address:
+                rec.use_parent_shipping_address = False
 
-        for field in address_fields:
-            parent_value = getattr(parent, field, False)
-            if field in ["state_id", "country_id"]:
-                parent_value = parent_value.id if parent_value else False
-            self[field] = parent_value
+            if not rec.parent_id:
+                continue
 
-    @api.model
-    def create(self, vals):
-        """Create a partner with validations, rollback safety, and address handling."""
-        _logger.debug("Received vals for create: %s", vals)
+            # Default behavior: non-destructive copy (only fill empty fields)
+            if rec.is_affiliate:
+                if rec.use_parent_invoice_address:
+                    wrote = rec._apply_parent_address("invoice", replace=False)
+                    if not wrote and not rec._address_is_empty():
+                        warnings.append(_("Parent invoice address not applied because fields already have values."))
+                elif rec.use_parent_shipping_address:
+                    wrote = rec._apply_parent_address("shipping", replace=False)
+                    if not wrote and not rec._address_is_empty():
+                        warnings.append(_("Parent shipping address not applied because fields already have values."))
+                else:
+                    # user opted out; keep whatever is on the form
+                    pass
+            else:
+                # Non-affiliates: same non-destructive rule (or keep your previous behavior if preferred)
+                if rec.use_parent_invoice_address:
+                    rec._apply_parent_address("invoice", replace=False)
+                if rec.use_parent_shipping_address:
+                    rec._apply_parent_address("shipping", replace=False)
 
-        # Ensure `is_contact` is NOT set when creating an Account, Affiliate, or Patient
-        if vals.get("is_account") or vals.get("is_affiliate") or vals.get("is_patient"):
-            vals.pop(
-                "is_contact", None
-            )  # Completely remove is_contact to avoid conflicts
+        if warnings:
+            return {"warning": {"title": _("Address not replaced"), "message": "\n".join(warnings)}}
+       
+       
+    def action_replace_with_parent_invoice(self):
+        for rec in self.filtered(lambda r: r.parent_id):
+            rec._apply_parent_address("invoice", replace=True)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"title": _("Address updated"),
+                    "message": _("Invoice address replaced with parent’s."),
+                    "type": "success"}
+        }
 
-        # Ensure parent_id is an integer if provided as a string
-        if vals.get("parent_id") and isinstance(vals["parent_id"], str):
-            vals["parent_id"] = int(vals["parent_id"])
+    def action_replace_with_parent_shipping(self):
+        for rec in self.filtered(lambda r: r.parent_id):
+            rec._apply_parent_address("shipping", replace=True)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"title": _("Address updated"),
+                    "message": _("Shipping address replaced with parent’s."),
+                    "type": "success"}
+        }
 
-        with self.env.cr.savepoint():  # Ensures rollback if any error occurs
-            if vals.get("customer_code", _("New")) == _("New"):
-                vals["customer_code"] = self._generate_customer_code(vals)
-                _logger.debug("Generated customer_code: %s", vals["customer_code"])
+    
+    # CRUD
+    # --- Helpers --------------------------------------------------------------
+    def _aff_base_code(self, parent):
+        code = parent.customer_code or ""
+        parts = code.split("-")
+        return "-".join(parts[:2]) if len(parts) > 2 else code
 
-            partner = super().create(vals)
+    def _next_aff_suffix(self, parent):
+        """Return the next numeric suffix for this parent, with a row lock to serialize."""
+        # Lock the parent row so two concurrent transactions don’t hand out the same number
+        self.env.cr.execute("SELECT id FROM res_partner WHERE id=%s FOR UPDATE", (parent.id,))
+        # Read existing affiliate codes under this parent (visible in this tx)
+        existing = self.env["res.partner"].sudo().search_read(
+            [("parent_id", "=", parent.id), ("is_affiliate", "=", True), ("customer_code", "!=", False)],
+            ["customer_code"]
+        )
+        max_n = 0
+        for rec in existing:
+            code = rec["customer_code"] or ""
+            suffix = code.split("-")[-1]  # expect ...-NN at the end
+            if suffix.isdigit():
+                max_n = max(max_n, int(suffix))
+        return max_n + 1
 
-            # Handle address inheritance
-            if (
-                partner.use_parent_invoice_address
-                or partner.use_parent_shipping_address
-            ):
+    def _assign_affiliate_codes_batch(self):
+        """
+        Assign unique customer_code to new affiliates that still have placeholder values,
+        handing out sequential suffixes per parent in one go.
+        """
+        PLACEHOLDERS = {False, "", "/", _("New")}
+        todo = self.filtered(lambda p: p.is_affiliate and (p.customer_code in PLACEHOLDERS))
+        if not todo:
+            return
+
+        for parent in todo.mapped("parent_id"):
+            children = todo.filtered(lambda p: p.parent_id == parent)
+            if not parent or not parent.customer_code or not children:
+                continue
+            start = self._next_aff_suffix(parent)
+            base = self._aff_base_code(parent)
+            # Give 01, 02, 03... to this batch in a deterministic order
+            for i, child in enumerate(children, start=start):
+                child.with_context(_skip_customer_code_sync=True).write({"customer_code": f"{base}-{i:02d}"})
+
+
+    # --- Overrides ------------------------------------------------------------
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Keep 'New' while editing. After real create, assign codes:
+        - Accounts via sequence (ID####)
+        - Affiliates via parent-based increment (batch-safe)
+        - Contacts/Patients via their sequences
+        Also handles the case where affiliates are created on an unsaved Account:
+        after assigning the Account code, we sweep its new affiliates and number them.
+        """
+        PLACEHOLDERS = {False, "", "/", _("New")}
+
+        # Normalize incoming values but DO NOT pre-generate affiliate codes
+        for vals in vals_list:
+            _logger.info("[CREATE] Creating partner: %s", vals)
+            self._amend_company_id(vals)
+
+            # Inline child creation: default to contact if no role given
+            if vals.get("parent_id") and not any(vals.get(f) for f in ("is_affiliate", "is_account", "is_patient", "is_contact")):
+                vals["is_contact"] = True
+                vals.setdefault("is_company", False)
+                vals.setdefault("company_type", "person")
+
+            # Role enforcement
+            role_flags = ("is_affiliate", "is_contact", "is_account", "is_patient")
+            if any(vals.get(flag) for flag in role_flags):
+                if vals.get("is_patient"):
+                    vals.update({"is_company": False, "is_affiliate": False, "is_account": False, "is_contact": False, "company_type": "person"})
+                elif vals.get("is_contact"):
+                    vals.update({"is_company": False, "is_affiliate": False, "is_account": False, "is_patient": False, "company_type": "person"})
+                elif vals.get("is_affiliate"):
+                    vals.update({"is_company": True, "is_account": False, "is_contact": False, "is_patient": False, "company_type": "company"})
+                else:
+                    vals.setdefault("company_type", "person")
+
+            # Prevent accidental company flag for people
+            if vals.get("company_type") == "company" and (vals.get("is_contact") or vals.get("is_patient")):
+                _logger.warning("Forcing company_type='person' to prevent implicit is_company=True")
+                vals["company_type"] = "person"
+
+            # Ensure we keep 'New' until save
+            if "customer_code" not in vals or vals["customer_code"] in PLACEHOLDERS:
+                vals["customer_code"] = _("New")
+
+        partners = super().create(vals_list)
+
+        # Accounts → ID#### (use your sequence)
+        accounts = partners.filtered(lambda p: p.is_account and (p.customer_code in PLACEHOLDERS))
+        if accounts:
+            for p in accounts:
+                seq_raw = self.env["ir.sequence"].next_by_code("res.partner.account") or "0"
+                code = f"ID{seq_raw.zfill(4)}"
+                p.with_context(_skip_customer_code_sync=True).write({"customer_code": code})
+
+            # Important: affiliates created on the same form *before* the account was saved
+            # still have placeholders; now that the parent has a real code, number them.
+            for acc in accounts:
+                acc.affiliate_ids.filtered(lambda a: a.customer_code in PLACEHOLDERS)._assign_affiliate_codes_batch()
+
+        # Contacts / Patients (global sequences – no collision in batch)
+        contacts = partners.filtered(lambda p: p.is_contact and not p.is_patient and (p.customer_code in PLACEHOLDERS))
+        if contacts:
+            for p in contacts:
+                p.with_context(_skip_customer_code_sync=True).write({
+                    "customer_code": self.env["ir.sequence"].next_by_code("res.partner.contact")
+                })
+
+        patients = partners.filtered(lambda p: p.is_patient and (p.customer_code in PLACEHOLDERS))
+        if patients:
+            for p in patients:
+                p.with_context(_skip_customer_code_sync=True).write({
+                    "customer_code": self.env["ir.sequence"].next_by_code("res.partner.patient")
+                })
+
+        # Affiliates created standalone (or on forms where parent already had a code)
+        partners._assign_affiliate_codes_batch()
+
+        # Post-create side-effects you already had
+        for partner, vals in zip(partners, vals_list):
+            if partner.use_parent_invoice_address or partner.use_parent_shipping_address:
                 partner._onchange_parent_address_flags()
+            if self.get_fields_contact_points().intersection(vals.keys()) and not self._context.get("compute_contact_points"):
+                partner.with_context(compute_contact_points=True)._compute_contact_points()
 
-            # Force recompute contact points for phone, mobile, and email
-            if self.get_fields_contact_points().intersection(
-                vals.keys()
-            ) and not self._context.get("compute_contact_points"):
-                partner.with_context(
-                    compute_contact_points=True
-                )._compute_contact_points()
+        return partners
 
-        return partner
 
     def write(self, vals):
-        """Update partner and apply relevant changes, including address inheritance and customer code generation."""
-        _logger.info("Updating partner(s) with values: %s", vals)
+        """
+        - Keep your validations, role protections, parent reassignment guard, etc.
+        - If a record still has a placeholder ('New', '/', '', False) after write and
+        it now has a clear role/parent, assign a real code (once).
+        - When parent changes on an existing record, regenerate code per your rule.
+        - Batch-assign affiliate suffixes safely.
+        """
+        PLACEHOLDERS = {False, "", "/", _("New")}
 
-        # Ensure patients are NOT misclassified as contacts
+        if vals.get("is_company") is True:
+            _logger.warning(
+                "[TRACE] write() received is_company=True on partner ID(s): %s\nVALS: %s",
+                self.ids, vals
+            )
+
+        _logger.info("[WRITE] Updating partner(s) with values: %s", vals)
+
+        # Safety / role conflict cleanup
         if vals.get("is_patient"):
-            vals.pop("is_contact", None)  # Remove `is_contact` key completely
+            vals.pop("is_contact", None)
+        if vals.get("is_contact") and vals.get("is_company"):
+            raise ValidationError("A contact cannot be marked as a company.")
+        if "is_company" in vals:
+            for partner in self:
+                if (partner.is_contact or vals.get("is_contact")) and vals["is_company"]:
+                    raise ValidationError("Contacts cannot be marked as companies.")
 
+        # Prevent archiving linked users
+        if vals.get("active") is False and not self._context.get("from_create_profile"):
+            self.invalidate_recordset(["user_ids"])
+            users = self.env["res.users"].sudo().search([("partner_id", "in", self.ids)])
+            if users:
+                if self.env["res.users"].sudo(False).check_access_rights("write", raise_exception=False):
+                    raise RedirectWarning(
+                        _("You cannot archive contacts linked to an active user.\n"
+                        "You first need to archive their associated user.\n\n"
+                        "Linked active users : %(names)s",
+                        names=", ".join(u.display_name for u in users)),
+                        users._action_show(), _("Go to users"),
+                    )
+                else:
+                    raise ValidationError(_(
+                        "You cannot archive contacts linked to an active user.\n"
+                        "Ask an administrator to archive their associated user first.\n\n"
+                        "Linked active users :\n%(names)s",
+                        names=", ".join(u.display_name for u in users)
+                    ))
+
+        # Parent reassignment & circular checks + code regeneration on true parent switch
         if "parent_id" in vals:
             new_parent = self.env["res.partner"].browse(vals["parent_id"])
             for partner in self:
-                if new_parent and partner.id == new_parent.id:
+                if partner.id == new_parent.id:
                     raise ValidationError("A partner cannot be its own parent.")
-
                 if partner._is_circular_reference(new_parent):
-                    raise ValidationError(
-                        "Circular reference detected in the hierarchy."
-                    )
-
-                # Only regenerate customer_code when the parent is changed
+                    raise ValidationError("Circular reference detected in the hierarchy.")
                 if partner.parent_id and partner.parent_id != new_parent:
-                    vals["customer_code"] = self._generate_customer_code(vals)
+                    # regenerate this partner's code on true parent move
+                    if partner.customer_code in PLACEHOLDERS or partner.is_affiliate:
+                        new_code = partner._generate_customer_code({
+                            "parent_id": new_parent.id,
+                            "is_account": partner.is_account,
+                            "is_affiliate": partner.is_affiliate,
+                            "is_contact": partner.is_contact,
+                            "is_patient": partner.is_patient,
+                        })
+                        if new_code:
+                            partner.with_context(_skip_customer_code_sync=True).write({"customer_code": new_code})
                     partner._update_child_codes()
 
-        result = super().write(vals)
+        if vals.get("website"):
+            vals["website"] = self._clean_website(vals["website"])
+        if vals.get("parent_id"):
+            vals["company_name"] = False
 
-        # Apply address inheritance logic if necessary
-        if (
-            "use_parent_invoice_address" in vals
-            or "use_parent_shipping_address" in vals
-            or "parent_id" in vals
-        ):
+        # Company sync
+        if "company_id" in vals:
+            company_id = vals["company_id"]
+            for partner in self:
+                if company_id and partner.user_ids:
+                    company = self.env["res.company"].browse(company_id)
+                    user_companies = {user.company_id for user in partner.user_ids}
+                    if len(user_companies) > 1 or company not in user_companies:
+                        raise UserError("The selected company is not compatible with the companies of the related user(s).")
+                if partner.child_ids:
+                    partner.child_ids.write({"company_id": company_id})
+
+        # Execute write (preserve your sudo/is_company tweak)
+        result = True
+        if "is_company" in vals and self.user_has_groups("base.group_partner_manager") and not self.env.su:
+            is_company = vals.pop("is_company")
+            result = super(Partner, self.sudo()).write({"is_company": is_company})
+        if not self._context.get("from_create_profile"):
+            result = result and super().write(vals)
+
+        # Post-write syncing
+        for partner in self:
+            if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
+                self.env["res.users"].check_access_rights("write")
+            partner._fields_sync(vals)
+
+        if {"use_parent_invoice_address", "use_parent_shipping_address", "parent_id"} & set(vals):
             self._onchange_parent_address_flags()
 
         self._validate_affiliate_parent()
         self._update_children(vals)
 
-        # Force recompute contact points when relevant fields change
-        if self.get_fields_contact_points().intersection(
-            vals.keys()
-        ) and not self._context.get("compute_contact_points"):
+        if self.get_fields_contact_points().intersection(vals.keys()) and not self._context.get("compute_contact_points"):
             for partner in self:
-                partner.with_context(
-                    compute_contact_points=True
-                )._compute_contact_points()
+                partner.with_context(compute_contact_points=True)._compute_contact_points()
 
-        _logger.info("Partner(s) updated successfully.")
+        # Assign real codes to any placeholders that slipped through (non-affiliates)
+        still_placeholder = self.filtered(lambda p: (p.customer_code in PLACEHOLDERS) and (p.is_account or p.is_contact or p.is_patient) and not p.is_affiliate)
+        for p in still_placeholder:
+            real_code = p._generate_customer_code({
+                "parent_id": p.parent_id.id,
+                "is_account": p.is_account,
+                "is_affiliate": p.is_affiliate,
+                "is_contact": p.is_contact,
+                "is_patient": p.is_patient,
+            })
+            if real_code:
+                p.with_context(_skip_customer_code_sync=True).write({"customer_code": real_code})
+                _logger.info("[WRITE] Assigned customer_code for %s -> %s", p.display_name, real_code)
+
+        # Finally, (re)number affiliates with placeholders in batch (safe with FOR UPDATE)
+        self._assign_affiliate_codes_batch()
+
+        _logger.info("[WRITE] Partner(s) updated successfully.")
         return result
 
-    # @api.model
-    # def create(self, vals):
-    #     """Create a partner with validations, rollback safety, and address handling."""
-    #     _logger.debug("Received vals for create: %s", vals)
+    def copy(self, default=None):
+        """When duplicating, keep the placeholder so the duplicate gets a fresh code on save."""
+        default = dict(default or {})
+        default.setdefault("customer_code", _("New"))
+        return super().copy(default)
 
-    #     if vals.get("is_account") or vals.get("is_affiliate"):
-    #         vals["is_contact"] = False
 
-    #     if vals.get("parent_id"):
-    #         vals["parent_id"] = int(vals["parent_id"])
+    @api.model
+    def _commercial_fields(self):
+        """Add company_ids to the commercial fields that will be synced with
+         childs. Ideal would be that this field is isolated from company field,
+         but it involves a lot of development (default value, incoherences
+         parent/child...).
+        :return: List of field names to be synced.
+        """
+        commercial_fields = super()._commercial_fields()
+        commercial_fields += ["company_ids"]
+        return commercial_fields
 
-    #     with self.env.cr.savepoint():
-    #         if vals.get("customer_code", _("New")) == _("New"):
-    #             vals["customer_code"] = self._generate_customer_code(vals)
-    #             _logger.debug("Generated customer_code: %s", vals["customer_code"])
+    @api.depends("is_commercial_partner", "parent_id")
+    def _compute_commercial_partner(self):
+        for partner in self:
+            if partner.is_commercial_partner or not partner.parent_id:
+                partner.commercial_partner_id = partner
+            elif partner.parent_id.id == partner.id:  # Prevent recursion
+                partner.commercial_partner_id = partner
+            else:
+                partner.commercial_partner_id = partner.parent_id.commercial_partner_id
 
-    #         partner = super().create(vals)
+    def _commercial_sync_to_children(self, visited=None):
+        """Recursively sync commercial fields to all non-company child contacts."""
 
-    #         if (
-    #             partner.use_parent_invoice_address
-    #             or partner.use_parent_shipping_address
-    #         ):
-    #             partner._onchange_parent_address_flags()
+        visited = visited or set()
 
-    #         if self.get_fields_contact_points().intersection(
-    #             vals.keys()
-    #         ) and not self._context.get("compute_contact_points"):
-    #             partner.with_context(
-    #                 compute_contact_points=True
-    #             )._compute_contact_points()
+        # Prevent infinite recursion
+        if self.id in visited:
+            return False
 
-    #     return partner
+        visited.add(self.id)
 
-    # def write(self, vals):
-    #     """Update partner and apply relevant changes, including address inheritance and customer code generation."""
-    #     _logger.info("Updating partner(s) with values: %s", vals)
+        # Get commercial field values from the current commercial partner
+        commercial_vals = self.commercial_partner_id._update_fields_values(self._commercial_fields())
 
-    #     if "parent_id" in vals:
-    #         new_parent = self.env["res.partner"].browse(vals["parent_id"])
-    #         for partner in self:
-    #             if new_parent and partner.id == new_parent.id:
-    #                 raise ValidationError("A partner cannot be its own parent.")
+        # Filter children that should inherit commercial values
+        children_to_sync = self.child_ids.filtered(lambda child: not child.is_company)
 
-    #             if partner._is_circular_reference(new_parent):
-    #                 raise ValidationError(
-    #                     "Circular reference detected in the hierarchy."
-    #                 )
+        # Apply values and recurse
+        for child in children_to_sync:
+            child.write(commercial_vals)
+            child._compute_commercial_partner()
+            child._commercial_sync_to_children(visited=visited)
 
-    #             vals["customer_code"] = self._generate_customer_code(vals)
-    #             partner._update_child_codes()
+        return True
 
-    #     result = super().write(vals)
+    @api.model
+    def _amend_company_id(self, vals):
+        if "company_ids" in vals:
+            if not vals["company_ids"]:
+                vals["company_id"] = False
+            else:
+                for item in vals["company_ids"]:
+                    if item[0] in (Command.UPDATE, Command.LINK):
+                        vals["company_id"] = item[1]
+                    elif item[0] in (Command.DELETE, Command.UNLINK, Command.CLEAR):
+                        vals["company_id"] = False
+                    elif item[0] == Command.SET:
+                        if item[2]:
+                            vals["company_id"] = item[2][0]
+                        else:  # pragma: no cover
+                            vals["company_id"] = False
+        elif "company_id" not in vals:
+            vals["company_ids"] = False
+        return vals
 
-    #     if (
-    #         "use_parent_invoice_address" in vals
-    #         or "use_parent_shipping_address" in vals
-    #         or "parent_id" in vals
-    #     ):
-    #         self._onchange_parent_address_flags()
+    @api.constrains("company_ids")
+    def _check_company_id(self):
+        for rec in self:
+            if rec.user_ids:
+                user_company_ids = set(rec.user_ids.mapped("company_ids").ids)
+                partner_company_ids = set(rec.company_ids.ids)
 
-    #     self._validate_affiliate_parent()
-    #     self._update_children(vals)
+                if (
+                    not user_company_ids.issubset(partner_company_ids)
+                    and partner_company_ids
+                ):
+                    raise ValidationError(
+                        _(
+                            "The partner must have at least all the companies "
+                            "associated with the user."
+                        )
+                    )
 
-    #     if self.get_fields_contact_points().intersection(
-    #         vals.keys()
-    #     ) and not self._context.get("compute_contact_points"):
-    #         for partner in self:
-    #             partner.with_context(
-    #                 compute_contact_points=True
-    #             )._compute_contact_points()
+    def _inverse_company_id(self):
+        if self.env.context.get("from_res_users"):
+            # don't delete all partner company_ids when
+            # the user's related company_id is modified.
+            for record in self:
+                company = record.company_id
+                if company:
+                    record.company_ids = [Command.link(company.id)]
+            return
+        else:
+            return super()._inverse_company_id()
 
-    #     _logger.info("Partner(s) updated successfully.")
-    #     return result
 
-    def _set_email(self):
-        self._set_contact_point("email")
-
-    def _set_phone(self):
-        self._set_contact_point("phone")
-
-    def _set_mobile(self):
-        self._set_contact_point("mobile")
-
-    def action_show_contact_points(self):
-        contact_point_type = self._context.get("default_contact_point_type")
-        partner_id = self._context.get("default_partner_id")
-        return {
-            "name": "%ss" % dict(CONTACT_POINT_TYPES).get(contact_point_type),
-            "type": "ir.actions.act_window",
-            "res_model": "res.partner.contact_point",
-            "view_mode": "tree",
-            "view_id": False,
-            "domain": [
-                ("contact_point_type", "=", contact_point_type),
-                ("partner_id", "=", partner_id),
-            ],
-            "context": dict(self._context),
-        }
 
     def _update_related_records(self):
         """Update contacts, patients, and orders when the parent changes."""
@@ -825,26 +1323,30 @@ class Partner(models.Model):
             record.parent_id = self.parent_id
 
     def _generate_customer_code(self, vals):
-        """Generate customer codes ensuring that each Account's Affiliates increment independently."""
+        """Generate a customer_code for Accounts, Affiliates, Patients, Contacts, or fallback."""
 
-        # ✅ Ensure `is_contact` is NOT set when creating an Account or Affiliate
-        if vals.get("is_account") or vals.get("is_affiliate"):
-            vals["is_contact"] = False  # ❌ Prevent accidental setting of is_contact
+        def next_seq(code):
+            return self.env["ir.sequence"].next_by_code(code)
 
-        # ✅ Accounts get a unique sequence (ID0001, ID0002, etc.)
-        if vals.get("is_account"):
-            return f"ID{self.env['ir.sequence'].next_by_code('res.partner.account').zfill(4)}"
+        # Normalize booleans for safety (e.g., False if unset)
+        is_account = bool(vals.get("is_account"))
+        is_affiliate = bool(vals.get("is_affiliate"))
+        is_contact = bool(vals.get("is_contact"))
+        is_patient = bool(vals.get("is_patient"))
+        parent_id = vals.get("parent_id")
+        parent = self.env["res.partner"].browse(parent_id) if parent_id else None
 
-        parent = (
-            self.env["res.partner"].browse(vals.get("parent_id"))
-            if vals.get("parent_id")
-            else None
-        )
+        # ░ Safeguard: prevent misassigned `is_contact`
+        if is_account or is_affiliate:
+            vals["is_contact"] = False
 
-        # ✅ Ensure Affiliates increment within the Account, not across all Affiliates globally
-        if vals.get("is_affiliate") and parent and parent.customer_code:
-            # 🔹 Find the last used affiliate number **for this specific Account**
-            existing_affiliates = self.env["res.partner"].search(
+        # 🔹 Accounts: global sequential ID
+        if is_account:
+            return f"ID{next_seq('res.partner.account').zfill(4)}"
+
+        # 🔹 Affiliates: scoped under parent.account
+        if is_affiliate and parent and parent.customer_code:
+            last_affiliate = self.env["res.partner"].search(
                 [
                     ("parent_id", "=", parent.id),
                     ("is_affiliate", "=", True),
@@ -854,94 +1356,32 @@ class Partner(models.Model):
                 limit=1,
             )
 
-            # Extract the last affiliate's number and increment it
-            if existing_affiliates:
-                last_code_parts = existing_affiliates.customer_code.split("-")
-                last_number = (
-                    int(last_code_parts[-1]) if last_code_parts[-1].isdigit() else 0
-                )
-                new_number = f"{last_number + 1:02d}"  # Use 2-digit format (01, 02, 03)
+            if last_affiliate:
+                last_number = last_affiliate.customer_code.split("-")[-1]
+                next_number = f"{int(last_number) + 1:02d}" if last_number.isdigit() else "01"
             else:
-                new_number = "01"  # Start fresh if no Affiliates exist yet
+                next_number = "01"
 
-            # 🔹 **Limit Nesting Depth** (Prevent long codes like ID0001-001-001-001)
-            max_depth = 2  # Limit depth to 2 levels (e.g., ID0001-01, ID0001-01-01)
+            # 🔹 Limit affiliate nesting to max 2 levels
             code_parts = parent.customer_code.split("-")
+            base_code = "-".join(code_parts[:2]) if len(code_parts) > 2 else parent.customer_code
+            return f"{base_code}-{next_number}"
 
-            if len(code_parts) >= max_depth + 1:
-                base_code = "-".join(code_parts[:max_depth])
-            else:
-                base_code = parent.customer_code
+        # 🔹 Patients
+        if is_patient:
+            return next_seq("res.partner.patient")
 
-            return f"{base_code}-{new_number}"
+        # 🔹 Contacts
+        if is_contact:
+            return next_seq("res.partner.contact")
 
-        # ✅ Ensure correct sequence assignment for Patients and Contacts
-        if vals.get("is_patient"):
-            return self.env["ir.sequence"].next_by_code("res.partner.patient")
+        # 🔹 Fallbacks
+        if parent and parent.customer_code:
+            _logger.warning("Unclassified child record defaulting to contact sequence")
+            return next_seq("res.partner.contact")
 
-        if vals.get("is_contact"):
-            return self.env["ir.sequence"].next_by_code("res.partner.contact")
-
-        # ✅ Default fallback if no specific type is found
-        return self.env["ir.sequence"].next_by_code("res.partner.generic")
-
-    # def _generate_customer_code(self, vals):
-    #     """Generate customer codes ensuring that each Account's Affiliates increment independently."""
-
-    #     sequence_map = {
-    #         "is_account": "res.partner.account",
-    #         "is_affiliate": "res.partner.affiliate",
-    #         "is_contact": "res.partner.contact",
-    #         "is_patient": "res.partner.patient",
-    #     }
-
-    #     if vals.get("is_account") or vals.get("is_affiliate"):
-    #         vals["is_contact"] = False
-
-    #     if vals.get("is_account"):
-    #         return f"ID{self.env['ir.sequence'].next_by_code('res.partner.account').zfill(4)}"
-
-    #     parent = (
-    #         self.env["res.partner"].browse(vals.get("parent_id"))
-    #         if vals.get("parent_id")
-    #         else None
-    #     )
-
-    #     if vals.get("is_affiliate") and parent and parent.customer_code:
-    #         existing_affiliates = self.env["res.partner"].search(
-    #             [
-    #                 ("parent_id", "=", parent.id),
-    #                 ("is_affiliate", "=", True),
-    #                 ("customer_code", "!=", False),
-    #             ],
-    #             order="customer_code DESC",
-    #             limit=1,
-    #         )
-
-    #         if existing_affiliates:
-    #             last_code_parts = existing_affiliates.customer_code.split("-")
-    #             last_number = (
-    #                 int(last_code_parts[-1]) if last_code_parts[-1].isdigit() else 0
-    #             )
-    #             new_number = f"{last_number + 1:02d}"
-    #         else:
-    #             new_number = "01"
-
-    #         max_depth = 2
-    #         code_parts = parent.customer_code.split("-")
-
-    #         if len(code_parts) >= max_depth + 1:
-    #             base_code = "-".join(code_parts[:max_depth])
-    #         else:
-    #             base_code = parent.customer_code
-
-    #         return f"{base_code}-{new_number}"
-
-    #     for key, seq_code in sequence_map.items():
-    #         if vals.get(key):
-    #             return self.env["ir.sequence"].next_by_code(seq_code)
-
-    #     return self.env["ir.sequence"].next_by_code("res.partner.generic")
+        _logger.warning("Generating generic code due to missing flags: %s", vals)
+        return next_seq("res.partner.generic")
 
     def _update_child_codes(self):
         """Recursively update customer codes for children when a parent changes."""
@@ -1050,11 +1490,24 @@ class Partner(models.Model):
     @api.model
     def get_view(self, view_id=None, view_type="form", **options):
         result = super(Partner, self).get_view(view_id, view_type, **options)
+
+        # Modify the view XML
+        doc = etree.XML(result["arch"])
+        for node in doc.xpath("//field[@name='child_ids']"):
+            node.set(
+                "domain",
+                "[('is_contact', '=', True), ('is_patient', '=', False), ('is_company', '=', False)]",
+            )
+
+        result["arch"] = etree.tostring(doc)
+
+        # Update metadata if necessary
         node = etree.fromstring(result["arch"])
         view_fields = set(
             el.get("name") for el in node.xpath(".//field[not(ancestor::field)]")
         )
         result["fields"] = self.fields_get(view_fields)
+
         return self._update_fields_view_get_result(result, view_type)
 
     @api.depends(
@@ -1112,7 +1565,13 @@ class Partner(models.Model):
         if not args:
             args = [("id", "!=", 0)]
 
-        domain = ["|", ("name", operator, name), ("customer_code", operator, name)]
+        domain = [
+            "|",
+            ("name", operator, name),
+            "|",
+            ("customer_code", operator, name),
+            ("legacy_customer_code", operator, name),
+        ]
         return self.search(domain + args, limit=limit).name_get()
 
     def _search(self, args, offset=0, limit=None, order=None, count=False):
@@ -1125,79 +1584,8 @@ class Partner(models.Model):
             args, offset=offset, limit=limit, order=order
         )
 
-    # Roles
-    is_role_required = fields.Boolean(
-        compute="_compute_is_role_required",
-        inverse="_inverse_is_role_required",
-        string="Is Role Required",
-        store=False,
-    )
-
-    @api.depends("is_contact", "is_patient", "contact_role_ids")
-    def _compute_is_role_required(self):
-        for record in self:
-            record.is_role_required = (
-                record.is_contact
-                and not record.is_patient
-                and not record.contact_role_ids
-            )
-
-    def _inverse_is_role_required(self):
-        """
-        Ensure that roles are set as required when applicable.
-        """
-        for record in self:
-            _logger.debug(
-                f"Processing _inverse_is_role_required for record ID {record.id}:"
-            )
-            _logger.debug(
-                f"Current is_role_required: {record.is_role_required}, Contact roles: {record.contact_role_ids}"
-            )
-            if record.is_role_required and not record.contact_role_ids:
-                _logger.error("ValidationError: Roles are required for contacts.")
-                raise ValidationError("Roles are required for contacts.")
-
-    @api.constrains("is_contact", "contact_role_ids")
-    def _check_contact_roles(self):
-        for record in self:
-            if (
-                record.is_contact
-                and not record.is_patient
-                and not record.contact_role_ids
-            ):
-                raise ValidationError(_("Roles are required for contacts."))
-
-    @api.depends("is_commercial_partner", "parent_id")
-    def _compute_commercial_partner(self):
-        for partner in self:
-            if partner.is_commercial_partner or not partner.parent_id:
-                partner.commercial_partner_id = partner
-            elif partner.parent_id.id == partner.id:  # Prevent recursion
-                partner.commercial_partner_id = partner
-            else:
-                partner.commercial_partner_id = partner.parent_id.commercial_partner_id
-
-    def _commercial_sync_to_children(self, visited=None):
-        """Handle sync of commercial fields to descendants"""
-        if visited is None:
-            visited = set()
-        if self.id in visited:
-            return
-
-        visited.add(self.id)
-        commercial_partner = self.commercial_partner_id
-        sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
-        sync_children = self.child_ids.filtered(lambda c: not c.is_company)
-
-        for child in sync_children:
-            child._commercial_sync_to_children(visited=visited)
-
-        res = sync_children.write(sync_vals)
-        sync_children._compute_commercial_partner()
-        return res
-
     # Partner Flags
-    partner_flag_ids = fields.One2many("partner.flag", inverse_name="partner_id")
+    partner_flag_ids = fields.One2many("res.partner.flag", inverse_name="partner_id")
     partner_flag_count = fields.Integer(compute="_compute_partner_flag_count")
 
     @api.depends("partner_flag_ids")
@@ -1218,7 +1606,7 @@ class Partner(models.Model):
             result["res_id"] = self.partner_flag_ids.id
         return result
 
-    # Create Users
+    # Portal Users
     create_users_button = fields.Boolean(
         compute="_compute_create_users_button",
         store=False,
@@ -1237,6 +1625,131 @@ class Partner(models.Model):
         string="Related User",
         readonly=True,
     )
+    
+    x_signature_template_id = fields.Many2one(
+        'sign.template',
+        string='Signature Agreement',
+        tracking=True
+    )
+
+    has_portal_access = fields.Boolean(
+        string='Has Portal Access',
+        compute='_compute_has_portal_access',
+    )
+    
+    activation_link = fields.Char(
+        string='Portal Activation Link',
+        compute='_compute_activation_link',
+    )
+    
+    @api.depends('user_ids', 'user_ids.active')
+    def _compute_has_portal_access(self):
+        for partner in self:
+            # Check if partner has portal user
+            portal_user = self.env['res.users'].sudo().search_count([
+                ('partner_id', '=', partner.id),
+                ('active', '=', True)
+            ])
+            if portal_user > 0:
+                partner.has_portal_access = True
+            else:
+                partner.has_portal_access = False
+            _logger.info('Computing portal access for partner %s (ID: %s): %s', 
+                        partner.name, partner.id, partner.has_portal_access)
+
+    @api.depends('has_portal_access')
+    def _compute_activation_link(self):
+        for partner in self:
+            if partner.has_portal_access:
+                signup_url = partner.with_context(signup_force_type_in_url='signup')._get_signup_url_for_action()
+                partner.activation_link = signup_url.get(partner.id, '')
+            else:
+                partner.activation_link = False
+
+    def toggle_portal_access(self):
+        self.ensure_one()
+        
+        _logger.info(
+            'Toggling portal access for partner %s (ID: %s). Current status: %s', 
+            self.name, self.id, self.has_portal_access
+        )
+
+        if not self.email:
+            raise ValidationError('Please add an email address before granting portal access.')
+
+        if not self.name:
+            raise ValidationError('Contact must have a name before granting portal access.')
+
+        Users = self.env['res.users'].sudo()
+        portal_group = self.env.ref("base.group_portal")
+
+        if self.has_portal_access:
+            portal_user = Users.search([('partner_id', '=', self.id), ('active', '=', True)], limit=1)
+            if portal_user:
+                _logger.info('Deactivating portal user: %s', portal_user.id)
+                portal_user.write({'active': False})
+                portal_user.groups_id -= portal_group
+        else:
+            portal_user = Users.search([('partner_id', '=', self.id)], limit=1)
+            if not portal_user:
+                _logger.info('Creating new portal user for %s', self.email)
+                portal_user = Users.create({
+                    'name': self.name,
+                    'login': self.email,
+                    'email': self.email,
+                    'partner_id': self.id,
+                    'groups_id': [(6, 0, [portal_group.id])]
+                })
+            else:
+                _logger.info('Reactivating existing portal user %s', portal_user.id)
+                portal_user.write({'active': True})
+                portal_user.groups_id |= portal_group
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+            }
+
+    def action_send_agreement(self):
+        if self.x_signature_template_id and self.email:
+            template = self.x_signature_template_id
+
+            # Get roles from template's signature items
+            roles = template.sign_item_ids.mapped('responsible_id')
+            if not roles:
+                raise ValidationError('The selected template has no signature roles defined. Please configure the template first.')
+
+            # Create signature request
+            sign_request = self.env['sign.request'].create({
+                'template_id': template.id,
+                'subject': f'Signature Request: {template.name}',
+                'reference': template.name,
+                'request_item_ids': [(0, 0, {
+                    'role_id': role.id,
+                    'partner_id': self.id,
+                }) for role in roles],
+            })
+
+            # Reset the template field after sending
+            self.x_signature_template_id = False
+
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Success',
+                    'message': f'Signature request sent to {self.email}',
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
+        elif not self.email:
+            raise ValidationError('Please add an email address before requesting signature.')
+        elif not self.x_signature_template_id:
+            raise ValidationError('Please select a signature template before requesting signature.')
 
     @api.depends("partner_id.user_ids")
     def _compute_create_users_button(self):
@@ -1245,25 +1758,30 @@ class Partner(models.Model):
             record.create_users_button = not bool(record.partner_id.user_ids)
 
     def create_portal_user(self):
-        """Create a portal user for the partner."""
+        """Create a portal user for the partner if one does not already exist."""
         self.ensure_one()
         if self.user_ids:
             raise UserError(_("A user for this partner already exists."))
 
-        portal_user_group = self.env.ref("base.group_portal")
-        group_ids = [portal_user_group.id]
+        portal_group = self.env.ref("base.group_portal")
+
+        user = self.env['res.users'].sudo().create({
+            'name': self.name,
+            'login': self.email,
+            'email': self.email,
+            'partner_id': self.id,
+            'groups_id': [(6, 0, [portal_group.id])]
+        })
 
         return {
-            "type": "ir.actions.act_window",
-            "name": _("Create Login"),
-            "view_mode": "form",
-            "view_id": self.env.ref("nwpl_odoo_master.view_create_user_wizard_form").id,
-            "target": "new",
-            "res_model": "res.users",
-            "context": {
-                "default_partner_id": self.id,
-                "default_groups_id": [(6, 0, group_ids)],
-            },
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Portal User Created',
+                'message': f'Portal user {user.name} has been created.',
+                'type': 'success',
+                'sticky': False,
+            }
         }
 
     def open_parent(self):
@@ -1315,63 +1833,85 @@ class Partner(models.Model):
         action["res_id"] = partner.id
         return action
 
+    # Roles
+    is_role_required = fields.Boolean(
+        compute="_compute_is_role_required",
+        inverse="_inverse_is_role_required",
+        string="Is Role Required",
+        store=False,
+    )
+    
+    @api.depends("is_contact", "is_patient", "contact_role_ids")
+    def _compute_is_role_required(self):
+        for record in self:
+            record.is_role_required = (
+                record.is_contact
+                and not record.is_patient
+                and not record.contact_role_ids
+            )
+
+    def _inverse_is_role_required(self):
+        # no raise here; constraint already enforces it
+        return
+
+    @api.constrains("is_contact", "is_patient", "contact_role_ids")
+    def _check_contact_roles(self):
+        for record in self:
+            if record.is_contact and not record.is_patient and not record.contact_role_ids:
+                raise ValidationError(_("Roles are required for contacts."))
+
     # Sales Orders
+    # Raw link
     sale_order_ids = fields.One2many(
-        "sale.order",
-        "partner_id",
-        string="Sale Orders",
+        "sale.order", "partner_id", string="Sale Orders"
     )
 
+    # Buckets
     current_sale_order_ids = fields.One2many(
-        "sale.order",
-        compute="_compute_current_sale_order_ids",
-        string="Current Orders",
-        store=False,
+        "sale.order", compute="_compute_current_sale_order_ids", string="Current Orders", store=False
     )
-
+    completed_sale_order_ids = fields.One2many(
+        "sale.order", compute="_compute_completed_sale_order_ids", string="Completed Orders", store=False
+    )
+    canceled_sale_order_ids = fields.One2many(
+        "sale.order", compute="_compute_canceled_sale_order_ids", string="Canceled Quotes/Orders", store=False
+    )
     historic_sale_order_ids = fields.One2many(
-        "sale.order",
-        compute="_compute_historic_sale_order_ids",
-        string="Historic Orders",
-        store=False,
+        "sale.order", compute="_compute_historic_sale_order_ids", string="Historic Orders (Re-orderable)", store=False
     )
 
-    reorder_count = fields.Integer(
-        compute="_compute_reorder_order_count",
-        string="Reorder",
-    )
+    reorder_count = fields.Integer(compute="_compute_reorder_order_count", string="Reorder")
 
     def _compute_current_sale_order_ids(self):
-        """
-        Compute method to populate the 'current_sale_order_ids' field.
-        Includes all sales orders that are not done or canceled.
-        """
         for partner in self:
             partner.current_sale_order_ids = partner.sale_order_ids.filtered(
-                lambda order: order.state not in ("done", "cancel")
+                lambda so: so.state not in ("done", "cancel")
+            )
+
+    def _compute_completed_sale_order_ids(self):
+        for partner in self:
+            partner.completed_sale_order_ids = partner.sale_order_ids.filtered(
+                lambda so: so.state == "done"
+            )
+
+    def _compute_canceled_sale_order_ids(self):
+        for partner in self:
+            partner.canceled_sale_order_ids = partner.sale_order_ids.filtered(
+                lambda so: so.state == "cancel"
             )
 
     def _compute_historic_sale_order_ids(self):
-        """
-        Compute method to populate the 'historic_sale_order_ids' field.
-        Includes all sales orders that are done or canceled and can be reordered.
-        """
+        """Historic & re-orderable (your original intent)."""
         for partner in self:
             partner.historic_sale_order_ids = partner.sale_order_ids.filtered(
-                lambda order: order.state in ("done", "cancel") and order.is_reorder
+                lambda so: so.state in ("done", "cancel") and so.is_reorder
             )
 
     def _compute_reorder_order_count(self):
-        """
-        Compute the count of reorderable historic sale orders for the partner.
-        """
         for partner in self:
             partner.reorder_count = len(partner.historic_sale_order_ids)
 
     def open_sale_from_view_action(self):
-        """
-        Open the sale orders action filtered by reorder sales for the partner.
-        """
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action["domain"] = [
             ("partner_id", "=", self.id),

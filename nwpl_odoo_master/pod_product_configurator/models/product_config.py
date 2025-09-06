@@ -14,25 +14,31 @@ class ProductConfigDomain(models.Model):
 
     @api.depends("implied_ids")
     def _get_trans_implied(self):
-        """Computes the transitive closure of relation implied_ids"""
-
-        def linearize(domains):
-            trans_domains = domains
+        """Computes the transitive closure of relation implied_ids, preventing circular dependencies."""
+        
+        def linearize(domains, visited=None):
+            if visited is None:
+                visited = set()
+            
+            trans_domains = set(domains)
             for domain in domains:
+                if domain.id in visited:
+                    continue  # Prevent infinite recursion
+                visited.add(domain.id)
                 implied_domains = domain.implied_ids - domain
                 if implied_domains:
-                    trans_domains |= linearize(implied_domains)
+                    trans_domains |= linearize(implied_domains, visited)
             return trans_domains
 
         for domain in self:
-            domain.trans_implied_ids = linearize(domain)
+            domain.trans_implied_ids = [(6, 0, [d.id for d in linearize(domain)])]
 
+
+    # TODO: Enable the usage of OR operators between implied_ids
+    # TODO: Add implied_ids sequence field to enforce order of operations
+    # TODO: Prevent circular dependencies
     def compute_domain(self):
-        """Returns a list of domains defined on a
-        product.config.domain_line_ids and all implied_ids"""
-        # TODO: Enable the usage of OR operators between implied_ids
-        # TODO: Add implied_ids sequence field to enforce order of operations
-        # TODO: Prevent circular dependencies
+        """Returns a list of domains defined on a product.config.domain_line_ids and all implied_ids"""
         computed_domain = []
         for domain in self:
             lines = domain.trans_implied_ids.mapped("domain_line_ids").sorted()
@@ -52,7 +58,16 @@ class ProductConfigDomain(models.Model):
                     lines[-1].value_ids.ids,
                 )
             )
+
+        # Ensure `laterality_config_ids` are included in the computed domain
+        laterality_filters = self.env["product.configurator.laterality.line"].search([])
+        for laterality in laterality_filters:
+            computed_domain.append(
+                (laterality.attribute_id.id, "in", [laterality.value_id.id])
+            )
+
         return computed_domain
+
 
     name = fields.Char(required=True)
     domain_line_ids = fields.One2many(
@@ -76,7 +91,6 @@ class ProductConfigDomain(models.Model):
         column2="parent_id",
         string="Transitively inherits",
     )
-
 
 class ProductConfigDomainLine(models.Model):
     _name = "product.config.domain.line"
@@ -153,7 +167,6 @@ class ProductConfigDomainLine(models.Model):
         default=1,
         help="Set the order of operations for evaluation domain lines",
     )
-
 
 class ProductConfigLine(models.Model):
     _name = "product.config.line"
@@ -235,7 +248,6 @@ class ProductConfigLine(models.Model):
                     )
                 )
 
-
 class ProductConfigImage(models.Model):
     _name = "product.config.image"
     _inherit = ["image.mixin"]
@@ -275,7 +287,6 @@ class ProductConfigImage(models.Model):
                     % cfg_img.name
                 ) from exc
 
-
 class ProductConfigStep(models.Model):
     _name = "product.config.step"
     _description = "Product Config Steps"
@@ -284,7 +295,6 @@ class ProductConfigStep(models.Model):
     #       step with higher sequence than the dependency
 
     name = fields.Char(required=True, translate=True)
-
 
 class ProductConfigStepLine(models.Model):
     _name = "product.config.step.line"
@@ -325,11 +335,18 @@ class ProductConfigStepLine(models.Model):
                     _("Cannot have a configuration step defined twice.")
                 )
 
-
 class ProductConfigSession(models.Model):
     _name = "product.config.session"
     _description = "Product Config Session"
 
+    def unlink(self):
+        for session in self:
+            if session.state != "done":
+                _logger.warning(f"Prevented deletion of session {session.id} in 'draft' state.")
+                continue  
+        return super().unlink()
+
+        
     @api.depends(
         "value_ids",
         "product_tmpl_id.list_price",
@@ -445,178 +462,186 @@ class ProductConfigSession(models.Model):
             )
 
     name = fields.Char(string="Configuration Session Number", readonly=True)
+    
     config_step = fields.Char(string="Configuration Step ID")
-    config_step_name = fields.Char(
-        compute="_compute_config_step_name", string="Configuration Step"
+    
+    config_step_name = fields.Char(compute="_compute_config_step_name", string="Configuration Step")
+
+    state = fields.Selection(
+        required=True,
+        selection=[("draft", "Draft"), ("done", "Done")],
+        default="draft",
     )
+
     product_id = fields.Many2one(
         comodel_name="product.product",
         name="Configured Variant",
         ondelete="cascade",
     )
+
     product_tmpl_id = fields.Many2one(
-        comodel_name="product.template",
-        domain=[("config_ok", "=", True)],
-        string="Configurable Template",
-        required=True,
-    )
+        "product.template", 
+        string="Product Template", 
+        required=True, 
+        default=False
+        )
+
     value_ids = fields.Many2many(
         comodel_name="product.attribute.value",
         relation="product_config_session_attr_values_rel",
         column1="cfg_session_id",
         column2="attr_val_id",
     )
+
     user_id = fields.Many2one(comodel_name="res.users", required=True, string="User")
+    
     custom_value_ids = fields.One2many(
         comodel_name="product.config.session.custom.value",
         inverse_name="cfg_session_id",
         string="Custom Values",
     )
+    
+    laterality_config_ids = fields.One2many(
+        "product.configurator.laterality.line",
+        "config_session_id",  
+        string="Laterality Configurations",
+    )
+    
     price = fields.Float(
         compute="_compute_cfg_price",
         store=True,
         digits="Product Price",
     )
+    
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Currency",
         compute="_compute_currency_id",
     )
-    state = fields.Selection(
-        required=True,
-        selection=[("draft", "Draft"), ("done", "Done")],
-        default="draft",
-    )
+
     weight = fields.Float(compute="_compute_cfg_weight", digits="Stock Weight")
-    # Product preset
+    
     product_preset_id = fields.Many2one(
         comodel_name="product.product",
         string="Preset",
         domain="[('product_tmpl_id', '=', product_tmpl_id),\
             ('config_preset_ok', '=', True)]",
     )
+    
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company
     )
 
     def action_confirm(self, product_id=None):
+        """Confirm session by storing laterality at the order level instead of requiring a variant."""
         for session in self:
-            if product_id is None:
-                product_id = session.create_get_variant()
-            session.write({"state": "done", "product_id": product_id.id})
+            #  If no product_id is provided, use base variant
+            if product_id is None and not session.laterality_config_ids:
+                product_id = session.product_tmpl_id.product_variant_id  
+
+            #  Ensure at least laterality or product exists
+            if not session.laterality_config_ids and not product_id:
+                raise ValidationError(_("Finished configuration session must have a product_id or laterality configuration."))
+
+            session.write({
+                "state": "done",
+                "product_id": product_id.id if product_id else False
+            })
         return True
 
     @api.constrains("state")
     def _check_product_id(self):
+        """Allow sessions to be completed without a product_id if laterality is used."""
         for session in self.filtered(lambda s: s.state == "done"):
-            if not session.product_id:
-                raise ValidationError(
-                    _("Finished configuration session must have a " "product_id linked")
-                )
+            if not session.product_id and not session.laterality_config_ids:
+                raise ValidationError(_("Finished configuration session must have a product_id or laterality configuration."))
 
     def update_session_configuration_value(self, vals, product_tmpl_id=None):
-        """Update value of configuration in current session
-
-        :param: vals: Dictionary of fields(of configution wizard) and values
-        :param: product_tmpl_id: record set of preoduct template
-        :return: True/False
-        """
+        """Update configuration values in the session, ensuring laterality selections persist."""
         self.ensure_one()
+
         if not product_tmpl_id:
             product_tmpl_id = self.product_tmpl_id
 
-        product_configurator_obj = self.env["product.configurator"]
-        field_prefix = product_configurator_obj._prefixes.get("field_prefix")
-        custom_field_prefix = product_configurator_obj._prefixes.get(
-            "custom_field_prefix"
-        )
+        _logger.info(f"[UPDATE SESSION] Incoming Vals: {vals} for Configurator ID {self.id}")
 
-        custom_val = self.get_custom_value_id()
+        configurator = self.env["product.configurator.sale"].browse(self.id)
+        if not configurator.exists():
+            _logger.error(f" [UPDATE SESSION] Configurator ID {self.id} does not exist. Cannot apply laterality.")
+            return
+
+        if "laterality_config_ids" in vals:
+            new_laterality_values = vals["laterality_config_ids"]
+            existing_laterality = {f"{rec.side}_{rec.attribute_id.id}": rec for rec in self.laterality_config_ids}
+
+            updated_laterality = []
+            for config in new_laterality_values:
+                if isinstance(config, tuple) and config[0] == 0:  
+                    side = config[2]["side"]
+                    attr_id = config[2]["attribute_id"]
+                    val_id = config[2]["value_id"]
+                    key = f"{side}_{attr_id}"
+
+                    if key in existing_laterality:
+                        existing_laterality[key].value_id = val_id  
+                    else:
+                        updated_laterality.append((0, 0, {**config[2], "configurator_id": self.id}))  
+
+            if updated_laterality:
+                _logger.info(f" [UPDATE SESSION] Applying Laterality: {updated_laterality} for Configurator ID {self.id}")
+                self.write({"laterality_config_ids": updated_laterality})
+        else:
+            _logger.info(" [UPDATE SESSION] No laterality updates detected, retaining existing selections.")
 
         attr_val_dict = {}
         custom_val_dict = {}
+        custom_val = self.get_custom_value_id()
+
+        field_prefix = self.env["product.configurator"]._prefixes.get("field_prefix")
+        custom_field_prefix = self.env["product.configurator"]._prefixes.get("custom_field_prefix")
+
         for attr_line in product_tmpl_id.attribute_line_ids:
             attr_id = attr_line.attribute_id.id
             field_name = field_prefix + str(attr_id)
             custom_field_name = custom_field_prefix + str(attr_id)
+
             if field_name not in vals and custom_field_name not in vals:
                 continue
 
-            # Add attribute values from the client except custom attribute
-            # If a custom value is being written, but field name is not in
-            #   the write dictionary, then it must be a custom value!
             if vals.get(field_name, custom_val.id) != custom_val.id:
                 if attr_line.multi and isinstance(vals[field_name], list):
-                    if not vals[field_name]:
-                        field_val = None
-                    else:
-                        value_ids = self.value_ids.filtered(
-                            lambda value: value.attribute_id.id
-                            == attr_line.attribute_id.id
-                        )
-                        field_val = value_ids and value_ids.ids or []
-                        for field_vals in vals[field_name]:
-                            if field_vals and field_vals[0] == 6:
-                                field_val += field_vals[2] or []
-                            elif field_vals and field_vals[0] == 4:
-                                field_val.append(field_vals[1])
-                            elif (
-                                field_vals
-                                and field_vals[0] == 3
-                                and field_vals[1] in field_val
-                            ):
-                                field_val.remove(field_vals[1])
-                        # field_val = [
-                        #     i[1] for i in vals[field_name] if vals[field_name][0]
-                        # ] or vals[field_name][0][1]
-                elif not attr_line.multi and isinstance(vals[field_name], int):
-                    field_val = vals[field_name]
-                else:
-                    raise UserError(
-                        _("An error occurred while parsing value for attribute %s")
-                        % attr_line.attribute_id.name
-                    )
-                attr_val_dict.update({attr_id: field_val})
-                # Ensure there is no custom value stored if we have switched
-                # from custom value to selected attribute value.
-                if attr_line.custom:
-                    custom_val_dict.update({attr_id: False})
-            elif attr_line.custom:
-                val = vals.get(custom_field_name, False)
-                if attr_line.attribute_id.custom_type == "binary":
-                    # TODO: Add widget that enables multiple file uploads
-                    val = [{"name": "custom", "datas": vals[custom_field_name]}]
-                custom_val_dict.update({attr_id: val})
-                # Ensure there is no standard value stored if we have switched
-                # from selected value to custom value.
-                attr_val_dict.update({attr_id: False})
+                    field_val = set(self.value_ids.filtered(lambda v: v.attribute_id.id == attr_id).ids)
 
-        self.update_config(attr_val_dict, custom_val_dict)
+                    for operation in vals[field_name]:
+                        if operation[0] == 6:
+                            field_val.update(operation[2])  
+                        elif operation[0] == 4:
+                            field_val.add(operation[1]) 
+                        elif operation[0] == 3 and operation[1] in field_val:
+                            field_val.remove(operation[1]) 
+
+                    attr_val_dict[attr_id] = list(field_val)
+                elif not attr_line.multi and isinstance(vals[field_name], int):
+                    attr_val_dict[attr_id] = vals[field_name]
+                else:
+                    raise UserError(_("Error parsing attribute %s value.") % attr_line.attribute_id.name)
+
+                if attr_line.custom:
+                    custom_val_dict[attr_id] = False  
+
+            elif attr_line.custom:
+                custom_value = vals.get(custom_field_name, False)
+                if attr_line.attribute_id.custom_type == "binary":
+                    custom_value = [{"name": "custom", "datas": vals[custom_field_name]}]
+
+                custom_val_dict[attr_id] = custom_value
+                attr_val_dict[attr_id] = False  
+
+        if attr_val_dict or custom_val_dict:
+            _logger.info(f" Applying Attribute Updates: {attr_val_dict} | Custom: {custom_val_dict}")
+            self.update_config(attr_val_dict, custom_val_dict)
 
     def update_config(self, attr_val_dict=None, custom_val_dict=None):
-        """Update the session object with the given value_ids and custom values.
-
-        Use this method instead of write in order to prevent incompatible
-        configurations as this removed duplicate values for the same attribute.
-
-        :param attr_val_dict: Dictionary of the form {
-            int (attribute_id): attribute_value_id OR [attribute_value_ids]
-        }
-
-        :custom_val_dict: Dictionary of the form {
-            int (attribute_id): {
-                'value': 'custom val',
-                OR
-                'attachment_ids': {
-                    [{
-                        'name': 'attachment name',
-                        'datas': base64_encoded_string
-                    }]
-                }
-            }
-        }
-
-        """
         if attr_val_dict is None:
             attr_val_dict = {}
         if custom_val_dict is None:
@@ -705,9 +730,7 @@ class ProductConfigSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals["name"] = self.env["ir.sequence"].next_by_code(
-                "product.config.session"
-            ) or _("New")
+            vals["name"] = self.env["ir.sequence"].next_by_code("product.config.session") or _("New")
             product_tmpl = (
                 self.env["product.template"]
                 .browse(vals.get("product_tmpl_id"))
@@ -730,8 +753,6 @@ class ProductConfigSession(models.Model):
                         final=False,
                         product_tmpl_id=product_tmpl.id,
                     )
-                    # TODO: Remove if cond when PR with
-                    # raise error on github is merged
                 except ValidationError as exc:
                     raise ValidationError(_("%s") % exc.name) from exc
                 except Exception as exc:
@@ -743,20 +764,13 @@ class ProductConfigSession(models.Model):
                     ) from exc
                 vals.update({"value_ids": [(6, 0, default_val_ids)]})
         return super().create(vals_list)
+    
+    def create_get_variant(self, value_ids=None, custom_vals=None, laterality=None):
+        """Fetches the base product variant and applies laterality at the order level instead of creating a new variant."""
+        
+        if laterality is None:
+            laterality = self.env.context.get("laterality", "bilateral")
 
-    def create_get_variant(self, value_ids=None, custom_vals=None):
-        """Creates a new product variant with the attributes passed
-        via value_ids and custom_values or retrieves an existing
-        one based on search result
-
-            :param value_ids: list of product.attribute.values ids
-            :param custom_vals: dict {product.attribute.id: custom_value}
-
-            :returns: new/existing product.product recordset
-
-        """
-        if self.product_tmpl_id.config_ok:
-            self.validate_configuration()
         if value_ids is None:
             value_ids = self.value_ids.ids
 
@@ -766,28 +780,26 @@ class ProductConfigSession(models.Model):
         try:
             self.validate_configuration()
         except ValidationError as exc:
-            raise ValidationError(_("%s") % exc.name) from exc
-        except Exception as exc:
-            raise ValidationError(_("Invalid Configuration")) from exc
+            raise ValidationError(_("Invalid Configuration: %s") % exc)
 
-        duplicates = self.search_variant(
-            value_ids=value_ids, product_tmpl_id=self.product_tmpl_id
-        )
-        if duplicates:
-            return duplicates[:1]
+        #  Always return the base variant (avoid variant explosion)
+        base_variant = self.product_tmpl_id.product_variant_id
 
-        vals = self.get_variant_vals(value_ids, custom_vals)
-        product_obj = (
-            self.env["product.product"].sudo().with_context(mail_create_nolog=True)
-        )
-        variant = product_obj.sudo().create(vals)
+        #  Store Laterality Configuration at Sale Order Level
+        order_line_vals = {
+            "product_id": base_variant.id,
+            "laterality": laterality,
+            "laterality_config_ids": [(0, 0, {
+                "side": line.side,
+                "attribute_id": line.attribute_id.id,
+                "value_id": line.value_id.id
+            }) for line in self.laterality_config_ids]
+        }
 
-        variant.message_post(
-            body=_("Product created via configuration wizard"),
-            author_id=self.env.user.partner_id.id,
-        )
+        #  Instead of `self.config_session_id.write()`, update `self` directly
+        self.write({"state": "done", "product_id": base_variant.id})
 
-        return variant
+        return order_line_vals  # Return order_line_vals instead of a variant
 
     def _get_option_values(self, pricelist, value_ids=None):
         """Return only attribute values that have products attached with a
@@ -831,31 +843,24 @@ class ProductConfigSession(models.Model):
             prices["taxes"] += taxes
             prices["total"] += total_included
         return prices
-
+    
     @api.model
-    def get_cfg_price(self, value_ids=[], custom_vals=None):
-        """Computes the price of the configured product based on the
-            configuration passed in via value_ids and custom_values
+    def get_cfg_price(self, value_ids=None, custom_vals=None, laterality=None):
+        """Compute price based on laterality selection at the order level."""
 
-        :param value_ids: list of attribute value_ids
-        :param custom_vals: dictionary of custom attribute values
-        :returns: final configuration price"""
-        if not value_ids:
+        if laterality is None:
+            laterality = self.env.context.get("laterality", "bilateral")
+
+        if value_ids is None:
             value_ids = self.value_ids.ids
 
         if custom_vals is None:
             custom_vals = {}
-        value_ids = value_ids + self.value_ids.ids
-        if self.env.context.get("tobe_remove_attr", []):
-            value_ids = self.flatten_val_ids(value_ids)
-            value_ids = set(value_ids) - set(
-                self.env.context.get("tobe_remove_attr", [])
-            )
-            value_ids = list(value_ids)
-        product_tmpl = self.product_tmpl_id
-        self = self.with_context(active_id=product_tmpl.id)
 
         value_ids = self.flatten_val_ids(value_ids)
+
+        product_tmpl = self.product_tmpl_id
+        self = self.with_context(active_id=product_tmpl.id)
 
         price_extra = 0.0
         attr_val_obj = self.env["product.attribute.value"]
@@ -863,20 +868,18 @@ class ProductConfigSession(models.Model):
         extra_prices = attr_val_obj.get_attribute_value_extra_prices(
             product_tmpl_id=product_tmpl.id, pt_attr_value_ids=av_ids
         )
-        price_extra = sum(extra_prices.values())
-        return product_tmpl.list_price + price_extra
+
+        base_price = product_tmpl.list_price
+
+        # Adjust pricing based on laterality
+        if laterality == "left" or laterality == "right":
+            total_price = base_price + sum(extra_prices.values())  # Single foot pricing
+        elif laterality == "bilateral":
+            total_price = (base_price + sum(extra_prices.values())) * 2  # Both feet
+
+        return total_price
 
     def _get_config_image(self, value_ids=None, custom_vals=None, size=None):
-        """
-        Retreive the image object that most closely resembles the configuration
-        code sent via value_ids list
-
-        The default image object is the template (self)
-        :param value_ids: a list representing the ids of attribute values
-                         (usually stored in the user's session)
-        :param custom_vals: dictionary of custom attribute values
-        :returns: path to the selected image
-        """
         # TODO: Also consider custom values for image change
         if value_ids is None:
             value_ids = self.value_ids.ids
@@ -895,11 +898,6 @@ class ProductConfigSession(models.Model):
         return img_obj
 
     def get_config_image(self, value_ids=None, custom_vals=None, size=None):
-        """
-        Retreive the image object that most closely resembles the configuration
-        code sent via value_ids list
-        For more information check _get_config_image
-        """
         config_image_id = self._get_config_image(
             value_ids=value_ids, custom_vals=custom_vals
         )
@@ -907,13 +905,6 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def get_variant_vals(self, value_ids=None, custom_vals=None, **kwargs):
-        """Hook to alter the values of the product variant before creation
-
-        :param value_ids: list of product.attribute.values ids
-        :param custom_vals: dict {product.attribute.id: custom_value}
-
-        :returns: dictionary of values to pass to product.create() method
-        """
         self.ensure_one()
 
         if value_ids is None:
@@ -937,27 +928,106 @@ class ProductConfigSession(models.Model):
         }
         return vals
 
-    def get_session_search_domain(self, product_tmpl_id, state="draft", parent_id=None):
-        """Return domain to search session linked to given
-        product template and current login user"""
-        domain = [
-            ("product_tmpl_id", "=", product_tmpl_id),
-            ("user_id", "=", self.env.uid),
-            ("state", "=", state),
-            ("company_id", "=", self.env.company.id),
-        ]
+    # def get_session_search_domain(self, product_tmpl_id, state="draft", parent_id=None):
+    #     """Return domain to search session linked to given
+    #     product template and current login user"""
+    #     domain = [
+    #         ("product_tmpl_id", "=", product_tmpl_id),
+    #         ("user_id", "=", self.env.uid),
+    #         ("state", "=", state),
+    #         ("company_id", "=", self.env.company.id),
+    #     ]
+    #     if parent_id:
+    #         domain.append(("parent_id", "=", parent_id))
+    #     return domain
+
+    def get_session_search_domain(self, product_tmpl_id=None, state="draft", parent_id=None):
+        """Return domain to search session linked to given product template and current login user."""
+        
+        domain = [("user_id", "=", self.env.uid), ("state", "=", state), ("company_id", "=", self.env.company.id)]
+        
+        # Allow sessions without a product template
+        if product_tmpl_id:
+            domain.append(("product_tmpl_id", "=", product_tmpl_id))
+
         if parent_id:
             domain.append(("parent_id", "=", parent_id))
+
         return domain
 
-    def get_session_vals(self, product_tmpl_id, parent_id=None, user_id=None):
-        """Return the values for creating session"""
+    def get_session_vals(self, product_tmpl_id=None, parent_id=None, user_id=None):
+        """Return the values for creating session, allowing for no preselected product template."""
+        
         if not user_id:
             user_id = self.env.user.id
-        vals = {"product_tmpl_id": product_tmpl_id, "user_id": user_id}
+
+        vals = {
+            "product_tmpl_id": product_tmpl_id if product_tmpl_id else False,  # Allow sessions without templates
+            "user_id": user_id,
+        }
+
         if parent_id:
             vals.update(parent_id=parent_id)
+
         return vals
+
+    # def get_next_step(
+    #     self,
+    #     state,
+    #     product_tmpl_id=False,
+    #     value_ids=False,
+    #     custom_value_ids=False,
+    # ):
+    #     if not product_tmpl_id:
+    #         product_tmpl_id = self.product_tmpl_id
+    #     if value_ids is False:
+    #         value_ids = self.value_ids
+    #     if custom_value_ids is False:
+    #         custom_value_ids = self.custom_value_ids
+    #     if not state:
+    #         state = self.config_step
+
+    #     cfg_step_lines = product_tmpl_id.config_step_line_ids
+    #     if not cfg_step_lines:
+    #         if (value_ids or custom_value_ids) and state != "select":
+    #             return False
+    #         elif not (value_ids or custom_value_ids) and state != "select":
+    #             raise UserError(
+    #                 _(
+    #                     "You must select at least one "
+    #                     "attribute in order to configure a product"
+    #                 )
+    #             )
+    #         else:
+    #             return "configure"
+
+    #     adjacent_steps = self.get_adjacent_steps()
+    #     next_step = adjacent_steps.get("next_step")
+    #     open_step_lines = list(
+    #         map(lambda x: "%s" % (x), self.get_open_step_lines().ids)
+    #     )
+
+    #     session_config_step = self.config_step
+    #     if (
+    #         session_config_step
+    #         and state != session_config_step
+    #         and session_config_step in open_step_lines
+    #     ):
+    #         next_step = self.config_step
+    #     else:
+    #         next_step = str(next_step.id) if next_step else None
+    #     if next_step:
+    #         pass
+    #     elif not (value_ids or custom_value_ids):
+    #         raise UserError(
+    #             _(
+    #                 "You must select at least one "
+    #                 "attribute in order to configure a product"
+    #             )
+    #         )
+    #     else:
+    #         return False
+    #     return next_step
 
     def get_next_step(
         self,
@@ -966,39 +1036,44 @@ class ProductConfigSession(models.Model):
         value_ids=False,
         custom_value_ids=False,
     ):
-        """Find and return next step if it exists. This usually
-        implies the next configuration step (if any) defined via the
-        config_step_line_ids on the product.template.
-        """
-
         if not product_tmpl_id:
             product_tmpl_id = self.product_tmpl_id
         if value_ids is False:
-            value_ids = self.value_ids
+            value_ids = self.value_ids.ids  # Convert to list of IDs
         if custom_value_ids is False:
             custom_value_ids = self.custom_value_ids
+
         if not state:
             state = self.config_step
 
         cfg_step_lines = product_tmpl_id.config_step_line_ids
+
         if not cfg_step_lines:
             if (value_ids or custom_value_ids) and state != "select":
                 return False
             elif not (value_ids or custom_value_ids) and state != "select":
-                raise UserError(
-                    _(
-                        "You must select at least one "
-                        "attribute in order to configure a product"
+                # Automatically assign default attribute values if none are selected
+                _logger.warning("No attribute values selected. Assigning default values.")
+                default_values = [
+                    (6, 0, product_tmpl_id.attribute_line_ids.mapped("value_ids").ids)
+                ]
+
+                if default_values and any(default_values[0][2]):  # Ensure valid selections
+                    self.write({"value_ids": default_values})
+                    _logger.info(f"Assigned default attribute values: {default_values}")
+                else:
+                    raise UserError(
+                        _(
+                            "You must select at least one attribute "
+                            "to configure a product, and no defaults are available."
+                        )
                     )
-                )
             else:
                 return "configure"
 
         adjacent_steps = self.get_adjacent_steps()
         next_step = adjacent_steps.get("next_step")
-        open_step_lines = list(
-            map(lambda x: "%s" % (x), self.get_open_step_lines().ids)
-        )
+        open_step_lines = list(map(lambda x: "%s" % (x), self.get_open_step_lines().ids))
 
         session_config_step = self.config_step
         if (
@@ -1009,25 +1084,23 @@ class ProductConfigSession(models.Model):
             next_step = self.config_step
         else:
             next_step = str(next_step.id) if next_step else None
+
         if next_step:
-            pass
-        elif not (value_ids or custom_value_ids):
+            return next_step
+
+        if not (value_ids or custom_value_ids):
             raise UserError(
                 _(
-                    "You must select at least one "
-                    "attribute in order to configure a product"
+                    "You must select at least one attribute "
+                    "in order to configure a product."
                 )
             )
-        else:
-            return False
-        return next_step
 
-    # TODO: Should be renamed to get_active_step_line
+        return False
+
 
     @api.model
     def get_active_step(self):
-        """Attempt to return product.config.step.line object that has the id
-        of the config session step stored as string"""
         cfg_step_line_obj = self.env["product.config.step.line"]
 
         try:
@@ -1041,58 +1114,42 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def get_open_step_lines(self, value_ids=None):
-        """
-        Returns a recordset of configuration step lines open for access given
-        the configuration passed through value_ids
-
-        e.g: Field A and B from configuration step 2 depend on Field C
-        from configuration step 1. Since fields A and B require action from
-        the previous step, configuration step 2 is deemed closed and redirect
-        is made for configuration step 1.
-
-        :param value_ids: list of value.ids representing the
-                          current configuration
-        :returns: recordset of accesible configuration steps
-        """
-
+        """Identify open configuration steps based on attribute availability."""
         if value_ids is None:
             value_ids = self.value_ids.ids
+        
+        _logger.info(f"[DEBUG] Fetching open steps for Value IDs: {value_ids}")
 
         open_step_lines = self.env["product.config.step.line"]
 
+        # Ensure the product template has valid steps
+        if not self.product_tmpl_id.config_step_line_ids:
+            _logger.warning("No config step lines defined for this product template!")
+            return open_step_lines
+
+
         for cfg_line in self.product_tmpl_id.config_step_line_ids:
             for attr_line in cfg_line.attribute_line_ids:
-                available_vals = self.values_available(
-                    attr_line.value_ids.ids, value_ids
-                )
-                # TODO: Refactor when adding restriction to custom values
+                available_vals = self.values_available(attr_line.value_ids.ids, value_ids)
                 if available_vals or attr_line.custom:
                     open_step_lines |= cfg_line
                     break
+
+        if not open_step_lines:
+            _logger.warning("No open steps identified! Configuration may be incomplete.")
 
         return open_step_lines.sorted()
 
     @api.model
     def get_all_step_lines(self, product_tmpl_id=None):
-        """
-        Returns a recordset of configuration step lines of product_tmpl_id
-
-        :param product_tmpl_id: record-set of product.template
-        :returns: recordset of all configuration steps
-        """
         if not product_tmpl_id:
             product_tmpl_id = self.product_tmpl_id
 
         open_step_lines = product_tmpl_id.config_step_line_ids
         return open_step_lines.sorted()
 
-    @api.model
     def get_adjacent_steps(self, value_ids=None, active_step_line_id=None):
-        """Returns the previous and next steps given the configuration passed
-        via value_ids and the active step line passed via cfg_step_line_id."""
-
-        # If there is no open step return empty dictionary
-
+        """Finds the next and previous steps in the configuration process."""
         if value_ids is None:
             value_ids = self.value_ids.ids
 
@@ -1102,37 +1159,34 @@ class ProductConfigSession(models.Model):
         config_step_lines = self.product_tmpl_id.config_step_line_ids
 
         if not config_step_lines:
+            _logger.warning("No config steps available. Returning empty adjacent steps.")
             return {}
 
-        active_cfg_step_line = config_step_lines.filtered(
-            lambda line: line.id == active_step_line_id
-        )
+        active_cfg_step_line = config_step_lines.filtered(lambda line: line.id == active_step_line_id)
 
         open_step_lines = self.get_open_step_lines(value_ids)
 
+        # Handle case where no steps are found
+        if not open_step_lines:
+            _logger.warning("No open steps found! Returning empty adjacent steps.")
+            return {"next_step": None, "previous_step": None}
+
+        # If no active step is found, return first available step
         if not active_cfg_step_line:
-            return {"next_step": open_step_lines[0]}
+            return {"next_step": open_step_lines[0], "previous_step": None}
 
         nr_steps = len(open_step_lines)
-
-        adjacent_steps = {}
+        adjacent_steps = {"next_step": None, "previous_step": None}
 
         for i, cfg_step in enumerate(open_step_lines):
             if cfg_step == active_cfg_step_line:
-                adjacent_steps.update(
-                    {
-                        "next_step": None
-                        if i + 1 == nr_steps
-                        else open_step_lines[i + 1],
-                        "previous_step": None if i == 0 else open_step_lines[i - 1],
-                    }
-                )
+                adjacent_steps["next_step"] = None if i + 1 == nr_steps else open_step_lines[i + 1]
+                adjacent_steps["previous_step"] = None if i == 0 else open_step_lines[i - 1]
+
+        _logger.info(f"[DEBUG] Adjacent Steps Found: {adjacent_steps}")
         return adjacent_steps
 
     def check_and_open_incomplete_step(self, value_ids=None, custom_value_ids=None):
-        """Check and open incomplete step if any
-        :param value_ids: recordset of product.attribute.value
-        """
         if value_ids is None:
             value_ids = self.value_ids
         if custom_value_ids is None:
@@ -1163,9 +1217,6 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def get_variant_search_domain(self, product_tmpl_id, value_ids=None):
-        """Method called by search_variant used to search duplicates in the
-        database"""
-
         if value_ids is None:
             value_ids = self.value_ids.ids
 
@@ -1189,9 +1240,6 @@ class ProductConfigSession(models.Model):
 
         if value_ids is None:
             value_ids = self.value_ids.ids
-
-        # process domains as shown in this wikipedia pseudocode:
-        # https://en.wikipedia.org/wiki/Polish_notation#Order_of_operations
         stack = []
         for domain in reversed(domains):
             if type(domain) == tuple:
@@ -1206,76 +1254,38 @@ class ProductConfigSession(models.Model):
                         continue
                 stack.append(True)
             else:
-                # evaluate operator and previous 2 operands
-                # compute_domain() only inserts 'or' operators
-                # compute_domain() enforces 2 operands per operator
                 operand1 = stack.pop()
                 operand2 = stack.pop()
                 stack.append(operand1 or operand2)
-
-        # 'and' operator is implied for remaining stack elements
         avail = True
         while stack:
             avail &= stack.pop()
         return avail
 
     @api.model
-    def values_available(
-        self,
-        check_val_ids=None,
-        value_ids=None,
-        custom_vals=None,
-        product_tmpl_id=None,
-    ):
-        """Determines whether the attr_values from the product_template
-        are available for selection given the configuration ids and the
-        dependencies set on the product template
-
-        :param check_val_ids: list of attribute value ids to check for
-                              availability
-        :param value_ids: list of attribute value ids
-        :param custom_vals: custom values dict {attr_id: custom_val}
-
-        :returns: list of available attribute values
-        """
-        if check_val_ids is None:
-            check_val_ids = self.value_ids.ids
-        elif check_val_ids:
-            check_val_ids = check_val_ids.copy()
-        if not self.product_tmpl_id:
-            product_tmpl = self.env["product.template"].browse(product_tmpl_id)
-        else:
-            product_tmpl = self.product_tmpl_id
-
+    def values_available(self, check_val_ids=None, value_ids=None, custom_vals=None, product_tmpl_id=None):
+        """Determine available attribute values based on template restrictions."""
+        check_val_ids = check_val_ids or self.value_ids.ids
+        value_ids = value_ids or self.value_ids.ids
+        product_tmpl = self.product_tmpl_id or self.env["product.template"].browse(product_tmpl_id)
         product_tmpl.ensure_one()
-
-        if value_ids is None:
-            value_ids = self.value_ids.ids
-        elif value_ids:
-            value_ids = value_ids.copy()
-
-        if custom_vals is None:
-            custom_vals = self._get_custom_vals_dict()
-
+        
+        custom_vals = custom_vals or self._get_custom_vals_dict()
         avail_val_ids = []
+
         for attr_val_id in check_val_ids:
-            config_lines = product_tmpl.config_line_ids.filtered(
-                lambda line: attr_val_id in line.value_ids.ids
-            )
+            config_lines = product_tmpl.config_line_ids.filtered(lambda line: attr_val_id in line.value_ids.ids)
             domains = config_lines.mapped("domain_id").compute_domain()
-            avail = self.validate_domains_against_sels(domains, value_ids, custom_vals)
-            if avail:
+            
+            if self.validate_domains_against_sels(domains, value_ids, custom_vals):
                 avail_val_ids.append(attr_val_id)
-            elif attr_val_id in value_ids:
-                value_ids.remove(attr_val_id)
+            else:
+                _logger.warning(f"Attribute Value {attr_val_id} is restricted for the current configuration.")
 
         return avail_val_ids
 
     @api.model
     def get_extra_attribute_line_ids(self, product_template_id):
-        """Retrieve attribute lines defined on the product_template_id
-        which are not assigned to configuration steps"""
-
         extra_attribute_line_ids = (
             product_template_id.attribute_line_ids
             - product_template_id.config_step_line_ids.mapped("attribute_line_ids")
@@ -1310,132 +1320,93 @@ class ProductConfigSession(models.Model):
                     )
 
     @api.model
-    def validate_configuration(
-        self,
-        value_ids=None,
-        custom_vals=None,
-        product_tmpl_id=False,
-        final=True,
-    ):
-        """Verifies if the configuration values passed via value_ids and
-        custom_vals are valid
+    def validate_configuration(self, value_ids=None, custom_vals=None, product_tmpl_id=False, final=True):
+        """Ensure valid attribute selections while handling bilateral laterality properly."""
 
-        :param value_ids: list of attribute value ids
-        :param custom_vals: custom values dict {attr_id: custom_val}
-        :param final: boolean marker to check required attributes.
-                      pass false to check non-final configurations
-
-        :returns: Error dict with reason of validation failure
-                  or True
-        """
-        # TODO: Raise ConfigurationError with reason
-        # Check if required values are missing for final configuration
         if value_ids is None:
             value_ids = self.value_ids.ids
-
-        if product_tmpl_id:
-            product_tmpl = self.env["product.template"].browse(product_tmpl_id)
-        else:
-            product_tmpl = self.product_tmpl_id
-
+        product_tmpl = self.product_tmpl_id or self.env["product.template"].browse(product_tmpl_id)
         product_tmpl.ensure_one()
 
         if custom_vals is None:
             custom_vals = self._get_custom_vals_dict()
+
         open_step_lines = self.get_open_step_lines()
+
+        if not open_step_lines:
+            _logger.warning("No open steps found. Skipping validation.")
+            return True
+
         attribute_line_ids = open_step_lines.mapped("attribute_line_ids")
-        attribute_line_ids += self.get_extra_attribute_line_ids(
-            product_template_id=product_tmpl
-        )
-        self.check_attributes_configuration(
-            attribute_line_ids, custom_vals, value_ids, final=final
-        )
+        attribute_line_ids += self.get_extra_attribute_line_ids(product_template_id=product_tmpl)
 
-        # Check if all all the values passed are not restricted
-        avail_val_ids = self.values_available(
-            value_ids, value_ids, product_tmpl_id=product_tmpl_id
-        )
-        if set(value_ids) - set(avail_val_ids):
-            restrict_val = list(set(value_ids) - set(avail_val_ids))
-            product_att_values = self.env["product.attribute.value"].browse(
-                restrict_val
-            )
-            group_by_attr = {}
+        self.check_attributes_configuration(attribute_line_ids, custom_vals, value_ids, final=final)
+
+        # **Validate restricted attribute values**
+        avail_val_ids = self.values_available(value_ids, value_ids, product_tmpl_id=product_tmpl_id)
+        restricted_vals = set(value_ids) - set(avail_val_ids)
+
+        if restricted_vals:
+            product_att_values = self.env["product.attribute.value"].browse(restricted_vals)
+            grouped_restrict = {}
+
             for val in product_att_values:
-                if val.attribute_id in group_by_attr:
-                    group_by_attr[val.attribute_id] += val
-                else:
-                    group_by_attr[val.attribute_id] = val
+                grouped_restrict.setdefault(val.attribute_id, []).append(val)
 
-            message = _("The following values are not available:")
-            for attr, val in group_by_attr.items():
-                message += "\n {}: {}".format(attr.name, ", ".join(val.mapped("name")))
+            message = _("The following values are not available:\n") + "\n".join(
+                f"{attr.name}: {', '.join(vals.mapped('name'))}" for attr, vals in grouped_restrict.items()
+            )
             raise ValidationError(message)
 
-        # Check if custom values are allowed
-        custom_attr_ids = (
-            product_tmpl.attribute_line_ids.filtered("custom")
-            .mapped("attribute_id")
-            .ids
-        )
-        if not set(custom_vals.keys()) <= set(custom_attr_ids):
-            custom_attrs_with_error = list(
-                set(custom_vals.keys()) - set(custom_attr_ids)
-            )
-            custom_attrs_with_error = self.env["product.attribute"].browse(
-                custom_attrs_with_error
-            )
-            error_message = _(
-                "The following custom values are not permitted "
-                "according to the product template - %s.\n\nIt is possible "
-                "that a change has been made to allowed custom values "
-                "while your configuration was in process. Please reset your "
-                "current session and start over or contact your administrator"
-                " in order to proceed."
-            )
-            message_vals = ""
-            for attr_id in custom_attrs_with_error:
-                message_vals += f"\n {attr_id.name}: {custom_vals.get(attr_id.id)}"
-            raise ValidationError(error_message % (message_vals))
+        # **Validate custom values**
+        custom_attr_ids = {line.attribute_id.id for line in product_tmpl.attribute_line_ids if line.custom}
+        invalid_customs = set(custom_vals.keys()) - custom_attr_ids
 
-        # Check if there are multiple values passed for non-multi attributes
-        mono_attr_lines = product_tmpl.attribute_line_ids.filtered(
-            lambda line: not line.multi
-        )
-        attrs_with_error = {}
-        for line in mono_attr_lines:
-            if len(set(line.value_ids.ids) & set(value_ids)) > 1:
-                wrong_vals = self.env["product.attribute.value"].browse(
-                    set(line.value_ids.ids) & set(value_ids)
-                )
-                attrs_with_error[line.attribute_id] = wrong_vals
-        if attrs_with_error:
-            error_message = _(
-                "The following multi values are not permitted "
-                "according to the product template - %s.\n\nIt is possible "
-                "that a change has been made to allowed multi values "
-                "while your configuration was in process. Please reset your "
-                "current session and start over or contact your administrator"
-                " in order to proceed."
+        if invalid_customs:
+            invalid_attrs = self.env["product.attribute"].browse(invalid_customs)
+            message = _("The following custom values are not permitted:\n") + "\n".join(
+                f"{attr.name}: {custom_vals.get(attr.id)}" for attr in invalid_attrs
             )
-            message_vals = ""
-            for attr_id, vals in attrs_with_error.items():
-                message_vals += "\n {}: {}".format(
-                    attr_id.name, ", ".join(vals.mapped("name"))
-                )
-            raise ValidationError(error_message % (message_vals))
+            raise ValidationError(message)
+
+        # **Check for Invalid Multi-Selection (Handle Bilateral Case Separately)**
+        multi_violation = {}
+        bilateral_attributes = {}
+
+        for line in product_tmpl.attribute_line_ids.filtered(lambda l: not l.multi):
+            selected_values = set(line.value_ids.ids) & set(value_ids)
+
+            if len(selected_values) > 1:
+                if self.laterality == "bilateral":
+                    # Allow separate left & right values for bilateral laterality
+                    left_values = set(
+                        self.laterality_config_ids.filtered(lambda l: l.side == "left" and l.attribute_id == line.attribute_id).mapped("value_id.id")
+                    )
+                    right_values = set(
+                        self.laterality_config_ids.filtered(lambda l: l.side == "right" and l.attribute_id == line.attribute_id).mapped("value_id.id")
+                    )
+
+                    if left_values and right_values and left_values != right_values:
+                        _logger.info(f"Bilateral Selection: Left={left_values}, Right={right_values} for {line.attribute_id.name}")
+                        bilateral_attributes[line.attribute_id] = {
+                            "left": left_values,
+                            "right": right_values,
+                        }
+                    else:
+                        multi_violation[line.attribute_id] = self.env["product.attribute.value"].browse(selected_values)
+                else:
+                    multi_violation[line.attribute_id] = self.env["product.attribute.value"].browse(selected_values)
+
+        if multi_violation:
+            message = _("The following attributes should not have multiple values:\n") + "\n".join(
+                f"{attr.name}: {', '.join(vals.mapped('name'))}" for attr, vals in multi_violation.items()
+            )
+            raise ValidationError(message)
+
         return True
 
     @api.model
     def search_variant(self, value_ids=None, product_tmpl_id=None):
-        """Searches product.variants with given value_ids and custom values
-        given in the custom_vals dict
-
-        :param value_ids: list of product.attribute.values ids
-        :param custom_vals: dict {product.attribute.id: custom_value}
-
-        :returns: product.product recordset of products matching domain
-        """
         if value_ids is None:
             value_ids = self.value_ids.ids
 
@@ -1456,57 +1427,66 @@ class ProductConfigSession(models.Model):
             product_tmpl_id=product_tmpl_id, value_ids=value_ids
         )
         products = self.env["product.product"].search(domain)
-
-        # At this point, we might have found products with all of the passed
-        # in values, but it might have more attributes!  These are NOT
-        # matches
         more_attrs = products.filtered(
             lambda p: len(p.product_template_attribute_value_ids) != len(value_ids)
         )
         products -= more_attrs
         return products
 
-    def search_session(self, product_tmpl_id, parent_id=None):
-        domain = self.get_session_search_domain(
-            product_tmpl_id=product_tmpl_id, parent_id=parent_id
-        )
+    def search_session(self, product_tmpl_id=None, parent_id=None):
+        """Search for an existing session, allowing for sessions without a product template."""
+        
+        domain = self.get_session_search_domain(product_tmpl_id=product_tmpl_id, parent_id=parent_id)
         session = self.search(domain, order="create_date desc", limit=1)
+
         return session
 
+    # @api.model
+    # def create_get_session(self, product_tmpl_id, parent_id=None, force_create=False, user_id=None):
+    #     if not force_create:
+    #         session = self.search_session(
+    #             product_tmpl_id=product_tmpl_id, parent_id=parent_id
+    #         )
+    #         if session:
+    #             return session
+    #     vals = self.get_session_vals(
+    #         product_tmpl_id=product_tmpl_id,
+    #         parent_id=parent_id,
+    #         user_id=user_id,
+    #     )
+    #     return self.create(vals)
+
     @api.model
-    def create_get_session(
-        self, product_tmpl_id, parent_id=None, force_create=False, user_id=None
-    ):
+    def create_get_session(self, product_tmpl_id=None, parent_id=None, force_create=False, user_id=None):
+        """Retrieve an existing configuration session or create a new one, allowing sessions to start without a product template."""
+
         if not force_create:
-            session = self.search_session(
-                product_tmpl_id=product_tmpl_id, parent_id=parent_id
-            )
+            session = self.search_session(product_tmpl_id=product_tmpl_id, parent_id=parent_id)
             if session:
+                _logger.info(f"Using existing session: ID = {session.id}")
                 return session
-        vals = self.get_session_vals(
-            product_tmpl_id=product_tmpl_id,
-            parent_id=parent_id,
-            user_id=user_id,
-        )
+
+        _logger.info(f"No existing session found (force_create={force_create}). Creating a new one.")
+
+        vals = self.get_session_vals(product_tmpl_id=product_tmpl_id, parent_id=parent_id, user_id=user_id)
+
         return self.create(vals)
 
-    # TODO: Disallow duplicates
-
     def flatten_val_ids(self, value_ids):
-        """Return a list of value_ids from a list with a mix of ids
-        and list of ids (multiselection)
+        """Return a list of unique value_ids from a mix of ids and lists.
 
-        :param value_ids: list of value ids or mix of ids and list of ids
-                           (e.g: [1, 2, 3, [4, 5, 6]])
-        :returns: flattened list of ids ([1, 2, 3, 4, 5, 6])"""
-        flatList = []
+        :param value_ids: List of value ids or mix of ids and list of ids
+                        (e.g: [1, 2, 3, [4, 5, 6, 2], 3])
+        :returns: Flattened list of unique ids ([1, 2, 3, 4, 5, 6])
+        """
+        flat_list = set()  # Using a set to prevent duplicates
         for value in value_ids:
             if isinstance(value, list):
-                for sub in value:
-                    flatList.append(sub)
+                flat_list.update(value)  # Add list elements to the set
             else:
-                flatList.append(value)
-        return flatList
+                flat_list.add(value)  # Add individual values
+
+        return list(flat_list)  # Convert back to list for return
 
     def formatPrices(self, prices=None, dp="Product Price"):
         if prices is None:
@@ -1521,19 +1501,12 @@ class ProductConfigSession(models.Model):
         return prices
 
     def encode_custom_values(self, custom_vals):
-        """Hook to alter the values of the custom values before creating
-        or writing
-        :param custom_vals: dict {product.attribute.id: custom_value}
-        :returns: list of custom values compatible with write and create
-        """
         attr_obj = self.env["product.attribute"]
         binary_attribute_ids = attr_obj.search([("custom_type", "=", "binary")]).ids
         custom_lines = []
 
         for key, val in custom_vals.items():
             custom_vals = {"attribute_id": key}
-            # TODO: Is this extra check neccesairy as we already make
-            # the check in validate_configuration?
             attr_obj.browse(key).validate_custom_val(val)
             if key in binary_attribute_ids:
                 custom_vals.update({"attachment_ids": [(6, 0, val.ids)]})
@@ -1555,31 +1528,13 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def get_onchange_specifications(self, model):
-        """return onchange specification
-        - same functionality by _onchange_spec
-        - needed this method because odoo don't add specification for fields
-        one2many or many2many there is view-reference(using : tree_view_ref)
-        intead of view in that field"""
         model_obj = self.env[model]
         specs = model_obj._onchange_spec()
-
-        # TODO :- Commented a code and ths code already base in a odoo base modules.
-        # for name, field in model_obj._fields.items():
-        #     if field.type not in ["one2many", "many2many"]:
-        #         continue
-        #     ch_specs = self.get_child_specification(
-        #         model=field.comodel_name, parent=name
-        #     )
-        #     specs.update(ch_specs)
 
         return specs
 
     @api.model
     def get_vals_to_write(self, values, model):
-        """Return values in formate excepted by write/create methods
-        - same functionality by _convert_to_write
-        - needed this method because odoo don't call convert to write
-        for the many2many/one2many fields"""
         model_obj = self.env[model]
         values = model_obj._convert_to_write(values)
         fields = model_obj._fields
@@ -1599,7 +1554,6 @@ class ProductConfigSession(models.Model):
             values[key] = new_lst
         return values
 
-
 class ProductConfigSessionCustomValue(models.Model):
     _name = "product.config.session.custom.value"
     _rec_name = "attribute_id"
@@ -1607,10 +1561,10 @@ class ProductConfigSessionCustomValue(models.Model):
 
     @api.depends("attribute_id", "attribute_id.uom_id")
     def _compute_val_name(self):
-        for attr_val_custom in self:
-            uom = attr_val_custom.attribute_id.uom_id.name
-            attr_val_custom.name = "{}{}".format(
-                attr_val_custom.value,
+        for attr_custom in self:
+            uom = attr_custom.attribute_id.uom_id.name
+            attr_custom.name = "{}{}".format(
+                attr_custom.value,
                 (" %s" % uom) or "",
             )
 
@@ -1661,17 +1615,6 @@ class ProductConfigSessionCustomValue(models.Model):
                 raise ValidationError(
                     _("Configuration cannot have the " "same value inserted twice")
                 )
-
-    # @api.constrains('cfg_session_id.value_ids')
-    # def custom_only(self):
-    #     """Verify that the attribute_id is not present in vals as well"""
-    #     import ipdb;ipdb.set_trace()
-    #     if self.cfg_session_id.value_ids.filtered(
-    #             lambda x: x.attribute_id == self.attribute_id):
-    #         raise ValidationError(
-    #             _("Configuration cannot have a selected option and a custom "
-    #               "value with the same attribute")
-    #         )
 
     @api.constrains("attachment_ids", "value")
     def check_custom_type(self):

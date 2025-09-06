@@ -111,14 +111,18 @@
         </field>
     </record>
     <record id="product_template_form_brand_add" model="ir.ui.view">
-        <field name="name">product.template.product.form</field>
+        <field name="name">product.template.add.brand.after.options</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <field name="sale_ok" position="before">
-                <field name="product_brand_id" placeholder="Brand" />
-                <div />
-            </field>
+            <xpath expr="//div[@name='options']" position="before">
+                <div class="mt-2 mb-3">
+                    <label for="product_brand_id" string="Product Brand" class="oe_edit_only"/>
+                    <div>
+                        <field name="product_brand_id" placeholder="Brand"/>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
     <record id="view_product_template_kanban_brand" model="ir.ui.view">

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="statement_config_setting_view" model="ir.ui.view">
+        <field name="name">res.config.settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="before">
+                <block title="Customer Statements" id="statement_settings">
+
+                    <setting id="display_due_statement" string="Due/Overdue Statement Display" help="Enable or disable the display of due and overdue statements">
+                        <field name="display_due_statement" />
+                    </setting>
+
+                    <setting id="display_customer_statement" string="Account Statement Menu in Portal" help="Enable or disable the display of the account statement menu in the portal">
+                        <field name="display_customer_statement" />
+                    </setting>
+
+                    <setting id="cust_create_log_history" string="Mail Log History" help="Enable the creation of mail log history for statements">
+                        <field name="cust_create_log_history" />
+                    </setting>
+
+                    <setting id="cust_due_create_log_history" string="Due Mail Log History" help="Enable the creation of due mail log history for statements">
+                        <field name="cust_due_create_log_history" />
+                    </setting>
+
+                    <div class="mt16">
+                        <button name="%(pod_odoo_master.customer_mail_history_action)d" type="action" string="See All Mail Log History" class="btn-link" />
+                    </div>
+
+                    <setting id="customer_statement_auto_send" string="Auto Send Customer Statements" help="Enable auto-sending customer statements">
+                        <field name="customer_statement_auto_send" />
+                        <div class="mt8" invisible="not customer_statement_auto_send">
+                            <field name="customer_statement_action" />
+                            <div class="mt4">
+                                <field name="cus_daily_statement_template_id" invisible="customer_statement_action != 'daily'" />
+                                <field name="cust_week_day" invisible="customer_statement_action != 'weekly'" />
+                                <field name="cust_weekly_statement_template_id" invisible="customer_statement_action != 'weekly'" />
+                                <field name="cust_monthly_date" invisible="customer_statement_action != 'monthly'" />
+                                <field name="cust_monthly_template_id" invisible="customer_statement_action != 'monthly'" />
+                                <field name="cust_yearly_date" invisible="customer_statement_action != 'yearly'" />
+                                <field name="cust_yearly_template_id" invisible="customer_statement_action != 'yearly'" />
+                            </div>
+                        </div>
+                    </setting>
+
+                    <setting id="customer_due_statement_auto_send" string="Auto Send Due Statements" help="Enable auto-sending due statements">
+                        <field name="customer_due_statement_auto_send" />
+                        <div class="mt8" invisible="not customer_due_statement_auto_send">
+                            <field name="customer_due_statement_action" />
+                            <div class="mt4">
+                                <field name="cus_due_daily_statement_template_id" invisible="customer_due_statement_action != 'daily'" />
+                                <field name="cust_due_week_day" invisible="customer_due_statement_action != 'weekly'" />
+                                <field name="cust_due_weekly_statement_template_id" invisible="customer_due_statement_action != 'weekly'" />
+                                <field name="cust_due_monthly_date" invisible="customer_due_statement_action != 'monthly'" />
+                                <field name="cust_due_monthly_template_id" invisible="customer_due_statement_action != 'monthly'" />
+                                <field name="cust_due_yearly_date" invisible="customer_due_statement_action != 'yearly'" />
+                                <field name="cust_due_yearly_template_id" invisible="customer_due_statement_action != 'yearly'" />
+                            </div>
+                        </div>
+                    </setting>
+
+                    <setting id="statement_signature" string="Statement Send Configuration" help="Enable or disable statement send configurations">
+                        <field name="statement_signature" />
+                        <field name="display_message_in_chatter" />
+                        <field name="statement_pdf_in_message" />
+                        <field name="statement_url_in_message" />
+                    </setting>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

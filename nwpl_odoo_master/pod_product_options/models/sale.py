@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import _, api, fields, models
-from odoo.addons import decimal_precision as dp
+
+# from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 import logging
 
@@ -19,12 +20,14 @@ class SaleOrderLine(models.Model):
     sale_options_price = fields.Float(
         string="Price",
         compute="_compute_options_price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
+        # digits=dp.get_precision("Product Price"),
         help="Price for the product option.",
     )
     non_discount_option_price = fields.Float(
         string="Non Discount Option Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
+        # digits=dp.get_precision("Product Price"),
         help="Price for the non discount with product options product price.",
     )
 

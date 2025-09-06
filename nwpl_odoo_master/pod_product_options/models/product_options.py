@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import _, api, fields, models
-from odoo.addons import decimal_precision as dp
+
+# from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -67,7 +68,8 @@ class ProductOptions(models.Model):
 
     price = fields.Float(
         string="Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
+        # digits=dp.get_precision("Product Price"),
         help="Price for the product option.",
     )
     product_options_value_ids = fields.One2many(
@@ -110,7 +112,8 @@ class ProductOptionsValue(models.Model):
     )
     price = fields.Float(
         string="Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
+        # digits=dp.get_precision("Product Price"),
         help="Price for the product option value.",
     )
     product_option_id = fields.Many2one(
@@ -152,7 +155,8 @@ class SaleProductOptions(models.Model):
     )
     price = fields.Float(
         string="Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
+        # digits=dp.get_precision("Product Price"),
         help="Price for the product option value.",
     )
     input_data = fields.Text(string="Input")

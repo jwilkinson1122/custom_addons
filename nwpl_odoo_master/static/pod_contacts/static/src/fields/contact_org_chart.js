@@ -58,40 +58,6 @@ export class PartnerOrgChart extends Component {
         await this.fetchPartnerData(this.state.partner_id, forceReload);
     }
 
-    // async fetchPartnerData(partnerId, force = false) {
-    //     if (!partnerId) {
-    //         this.managers = [];
-    //         this.affiliates = [];
-    //         this.children = [];
-    //         if (this.view_partner_id) {
-    //             this.render(true);
-    //         }
-    //         this.view_partner_id = null;
-    //     } else if (partnerId !== this.view_partner_id || force) {
-    //         this.view_partner_id = partnerId;
-    //         let orgData = await this.rpc(
-    //             '/partner/get_partner_hierarchy',
-    //             {
-    //                 partner_id: partnerId,
-    //                 context: this.user.context,
-    //             }
-    //         );
-    //         if (Object.keys(orgData).length === 0) {
-    //             orgData = {
-    //                 managers: [],
-    //                 affiliates: [],
-    //                 children: [],
-    //             }
-    //         }
-    //         this.managers = orgData.managers;
-    //         this.affiliates = orgData.affiliates;
-    //         this.children = orgData.children;
-    //         this.managers_more = orgData.managers_more;
-    //         this.self = orgData.self;
-    //         this.render(true);
-    //     }
-    // }
-
     async fetchPartnerData(partnerId, force = false) {
         if (!partnerId) {
             this.managers = [];

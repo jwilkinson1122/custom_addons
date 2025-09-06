@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <!-- Example: extend the value “pill” or radio item -->
+  <t t-extend="sale_product_configurator.ValuePill">
+    <t t-jquery="." t-operation="append">
+      <button type="button" class="btn btn-link p-0 ms-1"
+              t-att-class="{'text-warning': value.isPreferred}"
+              t-on-click="() => this.togglePreferred(line, value, !value.isPreferred)"
+              title="Mark as preferred for this customer">
+        <i class="fa" t-att-class="value.isPreferred ? 'fa-star' : 'fa-star-o'"/>
+      </button>
+    </t>
+  </t>
+</templates>

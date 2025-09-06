@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//page[@name='order_lines']/field[@name='order_line']" position="before">
+                <button class="oe_highlight" name="action_config_start" string="Configure Product" style="margin-top: 15px;" type="object" />
+            </xpath> -->
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <!-- <field name="laterality_mode"/> -->
+                <field name="laterality_payload" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="after">
+                <field name="laterality_mode" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="length"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='price_subtotal']" position="attributes">
+                <attribute name="string">Subtotal</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='price_total']" position="attributes">
+                <attribute name="string">Total</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree" position="attributes">
+                <attribute name="editable">bottom</attribute>
+            </xpath>
+            <!-- <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree//field[@name='product_template_id']" position="after">
+                <button invisible="state not in ['draft','sent']" class="fa-lg" help="Reconfigure" icon="fa-cogs" name="reconfigure_product" type="object" title="Reconfigure" />
+            </xpath> -->
+            <xpath expr="//field[@name='order_line']/form" position="inside">
+                <field name="laterality_mode" invisible="1"/>
+                <field name="laterality_payload" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

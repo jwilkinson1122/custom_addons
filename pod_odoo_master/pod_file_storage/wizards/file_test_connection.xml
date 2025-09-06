@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="file_test_connection_form_view" model="ir.ui.view">
+        <field name="name">file.test.connection.form</field>
+        <field name="model">file.test.connection</field>
+        <field name="arch" type="xml">
+            <form string="Test Connection">
+                <group>
+                    <field name="storage_id" readonly="1" />
+                    <field name="check_connection_method" />
+                </group>
+                <footer>
+                    <button type="object" name="action_test_config" string="Test connection" />
+                    <button string="Close" class="btn-secondary" special="cancel" />
+
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="act_open_file_test_connection_view">
+        <field name="name">File Test Connection</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">file.test.connection</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

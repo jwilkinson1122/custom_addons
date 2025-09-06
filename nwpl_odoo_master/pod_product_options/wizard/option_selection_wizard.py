@@ -3,7 +3,8 @@
 import base64
 
 from odoo import _, api, fields, models
-from odoo.addons import decimal_precision as dp
+
+# from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -56,7 +57,8 @@ class SaleOptionSelectionWizard(models.TransientModel):
 
     price = fields.Float(
         string="Price",
-        digits=dp.get_precision("Product Price"),
+        digits="Product Price",
+        # digits=dp.get_precision("Product Price"),
         help="Price for the product option.",
     )
 

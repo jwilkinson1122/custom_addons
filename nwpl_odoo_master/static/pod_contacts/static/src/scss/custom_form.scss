@@ -1,0 +1,56 @@
+
+ 
+    
+.o_form_view .o_contacts_format {
+        width: 100%;
+ 
+    }
+
+ .o_form_view {
+    .o_form_sheet_bg .o_form_sheet {
+        max-width: none !important;
+        width: auto !important;
+    }
+    .o_FormRenderer_chatterContainer {
+        max-width: none;
+    }
+}
+
+// .o_field_binary.patient-scan-button {
+//     width: 100%;
+//     max-width: 200px;
+//     text-align: center;
+// }
+
+// .o_field_binary.patient-scan-button > label.o_select_file_button {
+//     width: 100%;
+//     display: inline-block;
+//     text-align: center;
+// }
+
+.o_form_view {
+  .patient-scan-button {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+
+    > label.o_select_file_button {
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+    }
+  }
+
+  // Optional: unify image height with button height padding
+  .o_field_image {
+    max-width: 200px;
+
+    img {
+      max-height: 150px;
+      width: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}

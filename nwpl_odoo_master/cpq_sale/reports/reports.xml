@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <report id="cpq_configuration_summary" string="Custom Configuration Summary" model="sale.order.line" report_type="qweb-pdf" name="cpq_sale.report_cpq_configuration_summary" file="cpq_sale.report_cpq_configuration_summary" print_report_name="'CPQ Summary - %s' % (object.order_id.name or 'Order')" />
+    <!-- <report id="sale_order" string="Sale Order" model="sale.order" report_type="qweb-pdf" file="optical_erp.sale_order_report" name="optical_erp.sale_order_report" /> -->
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Configuration Domains -->
+
+    <record id="product_config_domain_vinyl" model="product.config.domain">
+        <field name="name">Vinyl</field>
+    </record>
+
+    <record id="product_config_domain_line_1" model="product.config.domain.line">
+        <field name="domain_id" ref="product_config_domain_vinyl" />
+        <field name="attribute_id" ref="product_attribute_top_cover_material" />
+        <field name="condition">in</field>
+        <field name="operator">and</field>
+        <field name="value_ids" eval="[(6, 0, [
+            ref('pav_top_cover_material_vinyl')])]" />
+    </record>
+
+
+    <record id="product_config_domain_leather" model="product.config.domain">
+        <field name="name">Leather</field>
+    </record>
+
+    <record id="product_config_domain_line_2" model="product.config.domain.line">
+        <field name="domain_id" ref="product_config_domain_leather" />
+        <field name="attribute_id" ref="product_attribute_top_cover_material" />
+        <field name="condition">in</field>
+        <field name="operator">and</field>
+        <field name="value_ids" eval="[(6, 0, [
+            ref('pav_top_cover_material_leather')])]" />
+    </record>
+
+    <record id="product_config_domain_microsuede" model="product.config.domain">
+        <field name="name">Microsuede</field>
+    </record>
+
+    <record id="product_config_domain_line_3" model="product.config.domain.line">
+        <field name="domain_id" ref="product_config_domain_microsuede" />
+        <field name="attribute_id" ref="product_attribute_top_cover_material" />
+        <field name="condition">in</field>
+        <field name="operator">and</field>
+        <field name="value_ids" eval="[(6, 0, [
+            ref('pav_top_cover_material_microsuede')])]" />
+    </record>
+
+
+
+
+</odoo>
