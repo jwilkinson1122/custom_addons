@@ -141,25 +141,7 @@
         "pod_merge_quotations/security/ir.model.access.csv",
         "pod_merge_quotations/wizard/merge_quotations.xml",
         
-        # product secondary uom
-        # "pod_product_secondary_uom/security/ir.model.access.csv",
-        # "pod_product_secondary_uom/views/product_views.xml",
-        
         # product configurator
-        # "pod_product_configurator/security/configurator_security.xml",
-        # "pod_product_configurator/security/ir.model.access.csv",
-        # "pod_product_configurator/views/res_config_settings_view.xml",
-        # "pod_product_configurator/data/menu_configurable_product.xml",
-        # "pod_product_configurator/data/ir_sequence_data.xml",
-        # "pod_product_configurator/data/ir_config_parameter_data.xml",
-        # "pod_product_configurator/data/product_attribute.xml",
-        # "pod_product_configurator/views/product_view.xml",
-        # "pod_product_configurator/views/product_attribute_view.xml",
-        # "pod_product_configurator/views/product_config_view.xml",
-        # "pod_product_configurator/wizard/product_configurator_view.xml",
-        # "pod_product_configurator/views/sale_order_view.xml",
-        # "pod_product_configurator/report/sale_report_view.xml",
-        # "pod_product_configurator/views/mrp_view.xml",
 
         # product brand
         "pod_product_brand/security/ir.model.access.csv",

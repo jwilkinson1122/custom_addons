@@ -1,4 +1,0 @@
-id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-access_crm_account_import,access_crm_account_import,model_crm_account_import,base.group_system,1,1,1,1
-access_sql_integration,SQL Integration,model_sql_integration,base.group_user,1,1,1,1
-access_sql_integration_line,SQL Integration Line,model_sql_integration_line,base.group_user,1,1,1,1

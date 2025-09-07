@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_server_config,access_server_config,model_server_config,base.group_user,1,0,0,0
-access_server_config_manager,access_server_config_manger,model_server_config,base.group_system,1,1,1,1
-access_file_storage_edit,file_storage edit,model_file_storage,base.group_system,1,1,1,1
-access_file_test_connection,file.test.connection.access,model_file_test_connection,base.group_system,1,1,1,1

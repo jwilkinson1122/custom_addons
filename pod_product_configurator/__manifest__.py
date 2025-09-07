@@ -1,0 +1,48 @@
+{
+    "name": "Product Configurator",
+    "version": "17.0.1.0.0",
+    "category": "Generic Modules/Base",
+    "summary": "Base for product configuration interface modules",
+    "external_dependencies": {
+        "python": [
+            "mako",
+        ]
+    },
+    "depends": ["account", "stock"],
+    "data": [
+        "security/configurator_security.xml",
+        "security/ir.model.access.csv",
+        "views/res_config_settings_view.xml",
+        "data/menu_configurable_product.xml",
+        "data/product_attribute.xml",
+        "data/ir_sequence_data.xml",
+        "data/ir_config_parameter_data.xml",
+        "views/product_view.xml",
+        "views/product_attribute_view.xml",
+        "views/product_config_view.xml",
+        "wizard/product_configurator_view.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "/pod_product_configurator/static/src/scss/form_widget.scss",
+            "/pod_product_configurator/static/src/js/form_widgets.js",
+            "/pod_product_configurator/static/src/js/boolean_button_widget.js",
+            "/pod_product_configurator/static/src/js/boolean_button_widget.xml",
+            "/pod_product_configurator/static/src/js/kanban_widgets.js",
+            "/pod_product_configurator/static/src/js/list_widgets.js",
+        ]
+    },
+    "demo": [
+        "demo/product_template.xml",
+        "demo/product_attribute.xml",
+        "demo/product_config_domain.xml",
+        "demo/product_config_lines.xml",
+        "demo/product_config_step.xml",
+        "demo/config_image_ids.xml",
+    ],
+    # "images": ["static/description/cover.png"],
+    "post_init_hook": "post_init_hook",
+    "installable": True,
+    "application": True,
+    "auto_install": False,
+}

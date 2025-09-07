@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pod_odoo_master.access_linked_record_wizard,access_linked_record_wizard,pod_odoo_master.model_linked_record_wizard,base.group_user,1,1,1,1
